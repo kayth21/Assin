@@ -3,14 +3,11 @@ package com.ceaver.tradeadvisor.trades.input
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
 import com.ceaver.tradeadvisor.IntentKeys
+import com.ceaver.tradeadvisor.MainActivity
 import com.ceaver.tradeadvisor.R
 import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeRepository
-import com.ceaver.tradeadvisor.trades.active.ActiveTradesActivity
 import com.ceaver.tradeadvisor.util.CalendarHelper
 import com.ceaver.tradeadvisor.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
@@ -67,7 +64,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun exitActivity() {
-        val intent = Intent(this, ActiveTradesActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

@@ -1,4 +1,4 @@
-package com.ceaver.tradeadvisor.trades.active
+package com.ceaver.tradeadvisor.trades
 
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
@@ -6,25 +6,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
-import com.ceaver.tradeadvisor.DaggerAppComponent
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.trades.Trade
-import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.util.CalendarHelper
-import java.text.SimpleDateFormat
-import javax.inject.Inject
 
-class ActiveTradesAdapter(private val onClickListener: ActiveTradesActivity.OnItemClickListener) : RecyclerView.Adapter<ActiveTradesAdapter.ViewHolder>() {
+class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
 
-    private var activeTrades: List<Trade>
+    private var tradeList: List<Trade>
     var currentLongClickTrade: Trade? = null
 
     init {
-        activeTrades = TradeRepository.loadTrades()
+        tradeList = TradeRepository.loadTrades()
     }
 
     fun refresh() {
-        activeTrades = TradeRepository.loadTrades()
+        tradeList = TradeRepository.loadTrades()
         notifyDataSetChanged()
     }
 
@@ -33,14 +28,14 @@ class ActiveTradesAdapter(private val onClickListener: ActiveTradesActivity.OnIt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(activeTrades[position], onClickListener)
+        holder.bindItem(tradeList[position], onClickListener)
         holder.itemView.setOnLongClickListener {
-            currentLongClickTrade = activeTrades[position]
+            currentLongClickTrade = tradeList[position]
             false
         }
     }
 
-    override fun getItemCount() = activeTrades.size
+    override fun getItemCount() = tradeList.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
 
@@ -48,7 +43,7 @@ class ActiveTradesAdapter(private val onClickListener: ActiveTradesActivity.OnIt
             menu!!.add(0, v!!.getId(), 0, "Delete")//groupId, itemId, order, title
         }
 
-        fun bindItem(trade: Trade, onClickListener: ActiveTradesActivity.OnItemClickListener) {
+        fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
             (view.findViewById(R.id.nameTextView) as TextView).text = "Bitcoin (BTC)"
             (view.findViewById(R.id.purchaseDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
             (view.findViewById(R.id.purchaseAmountTextView) as TextView).text = trade.purchaseAmount.toString()
