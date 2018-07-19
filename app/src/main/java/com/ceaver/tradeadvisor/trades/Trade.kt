@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "trade")
 data class Trade(//
-        @ColumnInfo(name = "id")@PrimaryKey(autoGenerate = true) var id: Long,
+        @ColumnInfo(name = "id")@PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "coinmarketcapId") val coinmarketcapId: Int, //
         @ColumnInfo(name = "tradeDate") val tradeDate: Date, //
         @ColumnInfo(name = "purchasePrice") val purchasePrice: Double, //

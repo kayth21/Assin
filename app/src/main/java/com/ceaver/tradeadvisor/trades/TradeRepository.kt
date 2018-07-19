@@ -1,7 +1,6 @@
 package com.ceaver.tradeadvisor.trades
 
 import com.ceaver.tradeadvisor.database.Database
-import javax.inject.Inject
 
 object TradeRepository {
 

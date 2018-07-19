@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".trades.TradeListFragment">
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:id="@+id/tradeList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/createTradeButton"
@@ -12,19 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         app:backgroundTint="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-    <android.support.v7.widget.RecyclerView
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        android:id="@+id/activeTradesList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

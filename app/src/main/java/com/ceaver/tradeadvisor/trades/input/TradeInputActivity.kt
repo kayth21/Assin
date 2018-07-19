@@ -24,10 +24,8 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
         val tradeId = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
-        if (tradeId > 0) {
-            val trade = TradeRepository.loadTrade(tradeId)
-            publishFields(trade)
-        }
+        if (tradeId > 0)
+            publishFields(TradeRepository.loadTrade(tradeId))
 
         saveButton.setOnClickListener {
             // TODO Replace with some generic code / better implementation

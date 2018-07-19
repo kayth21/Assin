@@ -1,4 +1,4 @@
-package com.ceaver.tradeadvisor.trades
+package com.ceaver.tradeadvisor.trades.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
@@ -7,18 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import com.ceaver.tradeadvisor.R
+import com.ceaver.tradeadvisor.trades.Trade
+import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.util.CalendarHelper
 
 class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
 
-    private var tradeList: List<Trade>
+    private var tradeList: List<Trade> = ArrayList()
     var currentLongClickTrade: Trade? = null
 
-    init {
-        tradeList = TradeRepository.loadTrades()
-    }
-
-    fun refresh() {
+    fun reload() {
         tradeList = TradeRepository.loadTrades()
         notifyDataSetChanged()
     }
@@ -40,7 +38,7 @@ class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClic
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(0, v!!.getId(), 0, "Delete")//groupId, itemId, order, title
+            menu!!.add(0, v!!.getId(), 0, "Delete")
         }
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
