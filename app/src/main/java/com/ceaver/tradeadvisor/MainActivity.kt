@@ -14,12 +14,10 @@ import com.ceaver.tradeadvisor.trades.list.TradeListFragment
 import com.ceaver.tradeadvisor.trades.TradeRepository
 import java.util.*
 
-
 class MainActivity : AppCompatActivity() {
 
     init {
-        TradeRepository.deleteAllTrades() // TODO Temporary Helper - Remove!
-        TradeRepository.insertTrade(Trade(0,1, Date(), 5.0, 5.0)) // TODO Temporary Helper - Remove!
+        TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                 else -> null
             }
         }
+
         override fun getItem(position: Int): Fragment? {
             return when (position) {
                 0 -> TradeListFragment()

@@ -11,15 +11,10 @@ import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.util.CalendarHelper
 
-class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
+internal class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
 
-    private var tradeList: List<Trade> = ArrayList()
+    var tradeList: List<Trade> = ArrayList()
     var currentLongClickTrade: Trade? = null
-
-    fun reload() {
-        tradeList = TradeRepository.loadTrades()
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.trade_list_row, parent, false))

@@ -13,6 +13,10 @@ import com.ceaver.tradeadvisor.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
 import java.util.*
 import com.ceaver.tradeadvisor.extensions.*
+import com.ceaver.tradeadvisor.trades.TradeEvents
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
 
@@ -22,10 +26,25 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trade_input)
 
+        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus)
+                DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag)
+        }
+        purchaseDateEditText.setKeyListener(null) // hack to disable user input
+
+        // TODO Start: Remove
+        coinmarketcapIdEditText.setText("Bitcoin (BTC)")
+        coinmarketcapIdEditText.setKeyListener(null) // hack to disable user input
+        // TODO End
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this);
+
         val tradeId = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
-        if (tradeId > 0)
-            publishFields(TradeRepository.loadTrade(tradeId))
+        if (tradeId > 0) TradeRepository.loadTrade(tradeId) else validateFields()
 
         saveButton.setOnClickListener {
             // TODO Replace with some generic code / better implementation
@@ -36,22 +55,24 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
             TradeRepository.saveTrade(trade)
             exitActivity()
         }
+    }
 
-        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus)
-                DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag)
-        }
-        purchaseDateEditText.setKeyListener(null) // hack to disable user input
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this);
+    }
 
-        coinmarketcapIdEditText.validate({ s -> (s.length >= 1) }, "Please select asset")
-        purchaseDateEditText.validate({ s -> (s.length >= 1) }, "Please enter purchase date")
-        purchasePriceEditText.validate({ s -> (s.length >= 1) }, "Please enter price")
-        purchaseAmountEditText.validate({ s -> (s.length >= 1) }, "Please enter amount")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.Load) {
+        publishFields(event.trade)
+        validateFields()
+    }
 
-        // TODO Start: Remove
-        coinmarketcapIdEditText.setText("Bitcoin (BTC)")
-        coinmarketcapIdEditText.setKeyListener(null) // hack to disable user input
-        // TODO End
+    private fun validateFields() {
+        coinmarketcapIdEditText.validateFields({ s -> (s.length >= 1) }, "Please select asset")
+        purchaseDateEditText.validateFields({ s -> (s.length >= 1) }, "Please enter purchase date")
+        purchasePriceEditText.validateFields({ s -> (s.length >= 1) }, "Please enter price")
+        purchaseAmountEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
     }
 
     private fun publishFields(trade: Trade) {

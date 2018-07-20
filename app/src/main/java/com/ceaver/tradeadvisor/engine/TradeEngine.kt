@@ -9,13 +9,13 @@ import java.util.*
 object TradeEngine {
 
     fun run() {
-        for (trade in TradeRepository.loadTrades()) {
-            val purchasePrice = trade.purchasePrice
-            val currentPrice = TokenProvider.lookupPrice(trade.coinmarketcapId)
-
-            if (currentPrice > 2 * purchasePrice) {
-                AdviceRepository.insertAdvice(Advice(0, Date()))
-            }
-        }
+//        for (trade in TradeRepository.loadTrades()) {
+//            val purchasePrice = trade.purchasePrice
+//            val currentPrice = TokenProvider.lookupPrice(trade.coinmarketcapId)
+//
+//            if (currentPrice > 2 * purchasePrice) {
+//                AdviceRepository.insertAdvice(Advice(0, Date()))
+//            }
+//        }
     }
 }

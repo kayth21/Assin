@@ -23,7 +23,7 @@ abstract class Database : RoomDatabase() {
         fun getInstance(): Database {
             if (INSTANCE == null) {
                 synchronized(Database::class) {
-                    INSTANCE = Room.databaseBuilder(MyApplication.appContext!!, Database::class.java, "database").allowMainThreadQueries().build()
+                    INSTANCE = Room.databaseBuilder(MyApplication.appContext!!, Database::class.java, "database").build()
                 }
             }
             return INSTANCE!!

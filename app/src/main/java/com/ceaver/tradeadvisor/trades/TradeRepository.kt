@@ -1,11 +1,15 @@
 package com.ceaver.tradeadvisor.trades
 
 import com.ceaver.tradeadvisor.database.Database
+import com.ceaver.tradeadvisor.trades.input.TradeInputActivity
+import io.reactivex.Maybe
+import org.greenrobot.eventbus.EventBus
+
 
 object TradeRepository {
 
-    fun loadTrades(): List<Trade> {
-        return getTradeDao().loadTrades()
+    fun loadAllTrades() {
+        Thread(Runnable { val trades = getTradeDao().loadTradesFlowable(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }).start()
     }
 
     fun saveTrade(trade: Trade) {
@@ -13,23 +17,23 @@ object TradeRepository {
     }
 
     fun insertTrade(trade: Trade) {
-        getTradeDao().insertTrade(trade)
+        Thread(Runnable { getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert()) }).start()
     }
 
     fun updateTrade(trade: Trade) {
-        getTradeDao().updateTrade(trade)
+        Thread(Runnable { getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update()) }).start()
     }
 
     fun deleteTrade(trade: Trade) {
-        getTradeDao().deleteTrade(trade)
+        Thread(Runnable { getTradeDao().deleteTrade(trade); EventBus.getDefault().post(TradeEvents.Delete()) }).start()
     }
 
     fun deleteAllTrades() {
-        getTradeDao().deleteAllTrades()
+        Thread(Runnable { getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll()) }).start()
     }
 
-    fun loadTrade(id: Long): Trade {
-        return getTradeDao().loadTrade(id)
+    fun loadTrade(id: Long) {
+        Thread(Runnable { val trade =  getTradeDao().loadTrade(id); EventBus.getDefault().post(TradeEvents.Load(trade)) }).start()
     }
 
     private fun getTradeDao(): TradeDao {
