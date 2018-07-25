@@ -27,7 +27,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val date = LocalDate.of(year, month, dayOfMonth)
+        val date = LocalDate.of(year, month+1, dayOfMonth)
         callback!!.onDatePickerFragmentDateSelected(tag, date)
     }
 
