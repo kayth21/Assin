@@ -1,15 +1,14 @@
 package com.ceaver.tradeadvisor.trades
 
 import com.ceaver.tradeadvisor.database.Database
-import com.ceaver.tradeadvisor.trades.input.TradeInputActivity
-import io.reactivex.Maybe
+import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 
 
 object TradeRepository {
 
     fun loadAllTrades() {
-        Thread(Runnable { val trades = getTradeDao().loadTradesFlowable(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }).start()
+        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadTradesFlowable(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }
     }
 
     fun saveTrade(trade: Trade) {
@@ -17,23 +16,23 @@ object TradeRepository {
     }
 
     fun insertTrade(trade: Trade) {
-        Thread(Runnable { getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert()) }).start()
+        BackgroundThreadExecutor.execute { getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert()) }
     }
 
     fun updateTrade(trade: Trade) {
-        Thread(Runnable { getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update()) }).start()
+        BackgroundThreadExecutor.execute { getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update()) }
     }
 
     fun deleteTrade(trade: Trade) {
-        Thread(Runnable { getTradeDao().deleteTrade(trade); EventBus.getDefault().post(TradeEvents.Delete()) }).start()
+        BackgroundThreadExecutor.execute { getTradeDao().deleteTrade(trade); EventBus.getDefault().post(TradeEvents.Delete()) }
     }
 
     fun deleteAllTrades() {
-        Thread(Runnable { getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll()) }).start()
+        BackgroundThreadExecutor.execute { getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll()) }
     }
 
     fun loadTrade(id: Long) {
-        Thread(Runnable { val trade =  getTradeDao().loadTrade(id); EventBus.getDefault().post(TradeEvents.Load(trade)) }).start()
+        BackgroundThreadExecutor.execute { val trade =  getTradeDao().loadTrade(id); EventBus.getDefault().post(TradeEvents.Load(trade)) }
     }
 
     private fun getTradeDao(): TradeDao {
