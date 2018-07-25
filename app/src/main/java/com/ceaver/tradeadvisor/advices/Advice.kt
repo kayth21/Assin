@@ -3,10 +3,10 @@ package com.ceaver.tradeadvisor.advices
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.util.*
+import java.time.LocalDate
 
 @Entity(tableName = "advice")
 data class Advice(//
         @ColumnInfo(name = "id")@PrimaryKey(autoGenerate = true) var id: Long,
-        @ColumnInfo(name = "adviceDate") val adviceDate: Date) {
+        @ColumnInfo(name = "adviceDate") val adviceDate: LocalDate) {
 }

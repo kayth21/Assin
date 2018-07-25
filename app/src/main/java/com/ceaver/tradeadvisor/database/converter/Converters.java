@@ -2,16 +2,17 @@ package com.ceaver.tradeadvisor.database.converter;
 
 import android.arch.persistence.room.TypeConverter;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Converters {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static LocalDate daysFromEpochToLocalDate(Long daysFromEpoch) {
+        return daysFromEpoch == null ? null : LocalDate.MIN.plusDays(daysFromEpoch);
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
+    public static Long localDateToDaysFromEpoch(LocalDate date) {
+        return date == null ? null : ChronoUnit.DAYS.between(LocalDate.MIN, date);
     }
 }

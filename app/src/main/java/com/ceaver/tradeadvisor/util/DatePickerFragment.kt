@@ -6,12 +6,13 @@ import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
+import java.time.LocalDate
 import java.util.*
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     interface DatePickerFragementCallback {
-        fun onDatePickerFragmentDateSelected(tag: String, date: Date)
+        fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate)
     }
 
     var callback : DatePickerFragementCallback? = null
@@ -26,7 +27,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val date = CalendarHelper.convertDate(dayOfMonth, month, year)
+        val date = LocalDate.of(year, month, dayOfMonth)
         callback!!.onDatePickerFragmentDateSelected(tag, date)
     }
 

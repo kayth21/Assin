@@ -17,6 +17,7 @@ import com.ceaver.tradeadvisor.trades.TradeEvents
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.time.LocalDate
 
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
 
@@ -95,7 +96,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         return Trade(tradeId, coinmarketcapId, tradeDate, purchasePrice, purchaseAmount)
     }
 
-    override fun onDatePickerFragmentDateSelected(tag: String, date: Date) {
+    override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {
         if (purchaseDatePickerFragmentTag.equals(tag)) {
             purchaseDateEditText.setText(CalendarHelper.convertDate(date))
         }
