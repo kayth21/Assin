@@ -26,10 +26,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trade_input)
 
-        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus)
-                DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag)
-        }
+        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
         purchaseDateEditText.setKeyListener(null) // hack to disable user input
 
         // TODO Start: Remove

@@ -37,7 +37,7 @@ class TradeListFragment : Fragment() {
         EventBus.getDefault().register(this);
         tradeList.adapter = tradeListAdapter
         tradeList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        createTradeButton.setOnClickListener(OnCreateTradeClickListener())
+        createTradeButton.setOnClickListener { startActivity(Intent(activity.application, TradeInputActivity::class.java)) }
         TradeRepository.loadAllTrades()
     }
 
@@ -77,13 +77,6 @@ class TradeListFragment : Fragment() {
         override fun onItemClick(item: Trade) {
             val intent = Intent(activity.application, TradeInputActivity::class.java);
             intent.putExtra(IntentKeys.TRADE_ID, item.id)
-            startActivity(intent)
-        }
-    }
-
-    private inner class OnCreateTradeClickListener : View.OnClickListener {
-        override fun onClick(v: View?) {
-            val intent = Intent(activity.application, TradeInputActivity::class.java)
             startActivity(intent)
         }
     }

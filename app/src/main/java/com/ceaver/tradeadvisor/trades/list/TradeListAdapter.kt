@@ -22,10 +22,7 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(tradeList[position], onClickListener)
-        holder.itemView.setOnLongClickListener {
-            currentLongClickTrade = tradeList[position]
-            false
-        }
+        holder.itemView.setOnLongClickListener {currentLongClickTrade = tradeList[position]; false }
     }
 
     override fun getItemCount() = tradeList.size
