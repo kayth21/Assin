@@ -7,7 +7,7 @@ import com.ceaver.tradeadvisor.advices.Advice
 @Dao
 interface AdviceDao {
     @Query("select * from advice")
-    fun loadAdvices(): List<Advice>
+    fun loadAllAdvices(): List<Advice>
 
     @Insert(onConflict = FAIL)
     fun insertAdvice(advice: Advice)

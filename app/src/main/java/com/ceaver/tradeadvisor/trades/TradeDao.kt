@@ -9,10 +9,7 @@ import io.reactivex.Maybe
 @Dao
 interface TradeDao {
     @Query("select * from trade")
-    fun loadTrades(): Maybe<List<Trade>>
-
-    @Query("select * from trade")
-    fun loadTradesFlowable(): List<Trade>
+    fun loadAllTrades(): List<Trade>
 
     @Insert(onConflict = FAIL)
     fun insertTrade(trade: Trade)

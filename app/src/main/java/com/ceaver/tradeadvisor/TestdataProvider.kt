@@ -1,5 +1,8 @@
 package com.ceaver.tradeadvisor
 
+import com.ceaver.adviceadvisor.advices.AdviceRepository
+import com.ceaver.tradeadvisor.advices.Advice
+import com.ceaver.tradeadvisor.advices.AdviceEvents
 import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeEvents
 import com.ceaver.tradeadvisor.trades.TradeRepository
@@ -16,6 +19,7 @@ object TestdataProvider {
 
     fun cleanDatabaseAndInsertSomeDataAfterwards() {
         TradeRepository.deleteAllTrades()
+        AdviceRepository.deleteAllAdvices()
     }
 
     @Subscribe
@@ -24,5 +28,10 @@ object TestdataProvider {
         TradeRepository.insertTrade(Trade(0,1, LocalDate.now(), 25.0, 1.0))
         TradeRepository.insertTrade(Trade(0,1, LocalDate.now(), 14.0, 50.0))
         TradeRepository.insertTrade(Trade(0,1, LocalDate.now(), 115.0, 2.5))
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: AdviceEvents.DeleteAll) {
+        AdviceRepository.insertAdvice(Advice(0,LocalDate.now()))
     }
 }

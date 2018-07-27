@@ -22,6 +22,8 @@ import com.ceaver.tradeadvisor.trades.TradeEvents
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import android.support.v4.widget.SwipeRefreshLayout
+import android.util.Log
 
 
 class TradeListFragment : Fragment() {
@@ -39,6 +41,7 @@ class TradeListFragment : Fragment() {
         tradeList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener { startActivity(Intent(activity.application, TradeInputActivity::class.java)) }
         TradeRepository.loadAllTrades()
+        swipeRefreshLayout.setOnRefreshListener { TradeRepository.loadAllTrades() }
     }
 
     override fun onStop() {
@@ -46,6 +49,7 @@ class TradeListFragment : Fragment() {
         EventBus.getDefault().unregister(this);
         tradeList.adapter = null
         createTradeButton.setOnClickListener(null)
+        swipeRefreshLayout.setOnRefreshListener(null)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -67,6 +71,7 @@ class TradeListFragment : Fragment() {
     fun onMessageEvent(event: TradeEvents.LoadAll) {
         tradeListAdapter.tradeList = event.trades
         tradeListAdapter.notifyDataSetChanged()
+        swipeRefreshLayout.isRefreshing = false
     }
 
     interface OnItemClickListener {

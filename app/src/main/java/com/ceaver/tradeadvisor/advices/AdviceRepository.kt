@@ -2,11 +2,14 @@ package com.ceaver.adviceadvisor.advices
 
 import com.ceaver.tradeadvisor.database.Database
 import com.ceaver.tradeadvisor.advices.Advice
+import com.ceaver.tradeadvisor.advices.AdviceEvents
+import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
+import org.greenrobot.eventbus.EventBus
 
 object AdviceRepository {
 
-    fun loadAdvices(): List<Advice> {
-        return getAdviceDao().loadAdvices()
+    fun loadAllAdvices() {
+        BackgroundThreadExecutor.execute { val advices = getAdviceDao().loadAllAdvices(); EventBus.getDefault().post(AdviceEvents.LoadAll(advices)) }
     }
 
     fun saveAdvice(advice: Advice) {
@@ -14,23 +17,23 @@ object AdviceRepository {
     }
 
     fun insertAdvice(advice: Advice) {
-        getAdviceDao().insertAdvice(advice)
+        BackgroundThreadExecutor.execute { getAdviceDao().insertAdvice(advice); EventBus.getDefault().post(AdviceEvents.Insert()) }
     }
 
     fun updateAdvice(advice: Advice) {
-        getAdviceDao().updateAdvice(advice)
+        BackgroundThreadExecutor.execute { getAdviceDao().updateAdvice(advice); EventBus.getDefault().post(AdviceEvents.Update()) }
     }
 
     fun deleteAdvice(advice: Advice) {
-        getAdviceDao().deleteAdvice(advice)
+        BackgroundThreadExecutor.execute { getAdviceDao().deleteAdvice(advice); EventBus.getDefault().post(AdviceEvents.Delete()) }
     }
 
     fun deleteAllAdvices() {
-        getAdviceDao().deleteAllAdvices()
+        BackgroundThreadExecutor.execute { getAdviceDao().deleteAllAdvices(); EventBus.getDefault().post(AdviceEvents.DeleteAll()) }
     }
 
-    fun loadAdvice(id: Long): Advice {
-        return getAdviceDao().loadAdvice(id)
+    fun loadAdvice(id: Long) {
+        BackgroundThreadExecutor.execute { val advice =  getAdviceDao().loadAdvice(id); EventBus.getDefault().post(AdviceEvents.Load(advice)) }
     }
 
     private fun getAdviceDao(): AdviceDao {

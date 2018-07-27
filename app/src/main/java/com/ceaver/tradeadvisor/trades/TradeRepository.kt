@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.EventBus
 object TradeRepository {
 
     fun loadAllTrades() {
-        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadTradesFlowable(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }
+        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }
     }
 
     fun saveTrade(trade: Trade) {
