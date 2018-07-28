@@ -6,6 +6,13 @@ import com.ceaver.tradeadvisor.advices.Advice
 
 @Dao
 interface AdviceDao {
+
+    @Query("select * from advice where id = :id")
+    fun loadAdvice(id: Long): Advice
+
+    @Query("select * from advice where tradeId = :tradeId")
+    fun loadAdvicesFromTrade(tradeId: Long): List<Advice>
+
     @Query("select * from advice")
     fun loadAllAdvices(): List<Advice>
 
@@ -21,6 +28,4 @@ interface AdviceDao {
     @Query("delete from advice")
     fun deleteAllAdvices()
 
-    @Query("select * from advice where id = :id")
-    fun loadAdvice(id: Long): Advice
 }

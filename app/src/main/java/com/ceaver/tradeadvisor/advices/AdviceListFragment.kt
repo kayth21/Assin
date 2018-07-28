@@ -13,6 +13,8 @@ import com.ceaver.tradeadvisor.IntentKeys
 
 import com.ceaver.tradeadvisor.R
 import com.ceaver.tradeadvisor.engine.TradeAdviceEngine
+import com.ceaver.tradeadvisor.trades.Trade
+import com.ceaver.tradeadvisor.trades.TradeEvents
 import kotlinx.android.synthetic.main.fragment_advice_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -51,6 +53,11 @@ class AdviceListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Delete) {
+        loadAllAdvices()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.Delete) {
         loadAllAdvices()
     }
 

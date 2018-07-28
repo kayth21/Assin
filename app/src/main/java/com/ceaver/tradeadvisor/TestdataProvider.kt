@@ -31,9 +31,4 @@ object TestdataProvider {
         TradeRepository.insertTrade(Trade(0,1, LocalDate.of(2018, 7, 3), 5000.0, 10.0, TradeStrategy.DOUBLE_OUT))
         TradeRepository.insertTrade(Trade(0,1, LocalDate.of(2018, 5, 2), 7500.0, 5.0, TradeStrategy.ASAP_NO_LOSSES))
     }
-
-    @Subscribe
-    fun onMessageEvent(event: AdviceEvents.DeleteAll) {
-        AdviceRepository.insertAdvice(Advice(0,LocalDate.now()))
-    }
 }
