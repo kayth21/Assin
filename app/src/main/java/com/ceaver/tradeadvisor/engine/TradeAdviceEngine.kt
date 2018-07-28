@@ -5,11 +5,28 @@ import com.ceaver.tradeadvisor.advices.Advice
 import com.ceaver.tradeadvisor.services.TokenRepository
 import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
 import com.ceaver.tradeadvisor.trades.Trade
+import com.ceaver.tradeadvisor.trades.TradeEvents
 import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.trades.TradeStrategy
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.time.LocalDate
 
 object TradeAdviceEngine {
+
+    init {
+        EventBus.getDefault().register(this)
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: TradeEvents.Update) {
+        run()
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: TradeEvents.Insert) {
+        run()
+    }
 
     fun run() {
         TradeRepository.loadAllTrades { onAllTradesLoaded(it) }
