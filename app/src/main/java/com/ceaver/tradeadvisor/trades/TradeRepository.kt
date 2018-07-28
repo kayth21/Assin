@@ -1,5 +1,7 @@
 package com.ceaver.tradeadvisor.trades
 
+import android.os.Handler
+import android.os.Looper
 import com.ceaver.tradeadvisor.database.Database
 import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
@@ -8,11 +10,11 @@ import org.greenrobot.eventbus.EventBus
 object TradeRepository {
 
     fun loadTrade(id: Long, callback: (Trade) -> Unit) {
-        BackgroundThreadExecutor.execute { val trade =  getTradeDao().loadTrade(id); callback.invoke(trade) }
+        BackgroundThreadExecutor.execute { val trade = getTradeDao().loadTrade(id); Handler(Looper.getMainLooper()).post { callback.invoke(trade) } }
     }
 
     fun loadAllTrades(callback: (List<Trade>) -> Unit) {
-        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); callback.invoke(trades) }
+        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); Handler(Looper.getMainLooper()).post { callback.invoke(trades) } }
     }
 
     fun saveTrade(trade: Trade) {
