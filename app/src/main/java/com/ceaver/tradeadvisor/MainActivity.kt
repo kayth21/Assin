@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import com.ceaver.tradeadvisor.advices.AdviceListFragment
+import com.ceaver.tradeadvisor.engine.TradeAdviceEngine
 import com.ceaver.tradeadvisor.trades.TradeListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = MainPagerAdapter(supportFragmentManager)
         val tabLayout = findViewById<View>(R.id.tablayout) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
+
+        TradeAdviceEngine.run()
     }
 
     private class MainPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {

@@ -1,8 +1,6 @@
 package com.ceaver.tradeadvisor
 
 import com.ceaver.adviceadvisor.advices.AdviceRepository
-import com.ceaver.tradeadvisor.advices.Advice
-import com.ceaver.tradeadvisor.advices.AdviceEvents
 import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeEvents
 import com.ceaver.tradeadvisor.trades.TradeRepository
