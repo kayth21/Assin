@@ -37,6 +37,33 @@
         android:hint="Purchase Price"
         android:inputType="numberDecimal" />
 
+    <RadioGroup
+        android:id="@+id/strategyRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/hodlStrategyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="HODL" />
+
+        <RadioButton
+            android:id="@+id/doubleOutStrategyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Double Out" />
+
+        <RadioButton
+            android:id="@+id/asapNoLossesRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ASAP (without losses)" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"

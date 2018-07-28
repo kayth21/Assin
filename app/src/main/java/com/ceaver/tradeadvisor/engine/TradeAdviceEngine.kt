@@ -24,7 +24,7 @@ object TradeAdviceEngine {
             val purchasePrice = trade.purchasePrice
             val currentPrice = TokenRepository.lookupPrice(trade.coinmarketcapId)
 
-            if (currentPrice > 2 * purchasePrice) {
+            if (trade.strategy.test(purchasePrice, currentPrice)) {
                 AdviceRepository.insertAdvice(Advice(0, LocalDate.now()))
             }
         }

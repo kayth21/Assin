@@ -35,7 +35,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
         val tradeId = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
-        if (tradeId > 0) TradeRepository.loadTrade(tradeId) { publishFields(it); validateFields() } else validateFields()
+        if (tradeId > 0) TradeRepository.loadTrade(tradeId) { publishFields(it); validateFields() } else hodlStrategyRadioButton.isChecked = true; validateFields()
 
         saveButton.setOnClickListener {
             // TODO Replace with some generic code / better implementation
@@ -60,6 +60,12 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         purchaseDateEditText.setText(CalendarHelper.convertDate(trade.tradeDate))
         purchaseAmountEditText.setText(trade.purchaseAmount.toString())
         purchasePriceEditText.setText(trade.purchasePrice.toString())
+        when(trade.strategy) {
+            TradeStrategy.HODL -> hodlStrategyRadioButton.isChecked = true
+            TradeStrategy.DOUBLE_OUT -> doubleOutStrategyRadioButton.isChecked = true
+            TradeStrategy.ASAP_NO_LOSSES -> asapNoLossesRadioButton.isChecked = true
+            else -> throw NotImplementedError("no radio button for ${trade.strategy}")
+        }
     }
 
     private fun exitActivity() {
@@ -74,8 +80,9 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         val coinmarketcapId = 1 // TODO
         val tradeDate = CalendarHelper.convertDate(purchaseDateEditText.text.toString())
         val purchasePrice = purchasePriceEditText.text.toString().toDouble()
+        val tradeStrategy: TradeStrategy = if (strategyRadioGroup.checkedRadioButtonId == hodlStrategyRadioButton.id) TradeStrategy.HODL else if (strategyRadioGroup.checkedRadioButtonId == doubleOutStrategyRadioButton.id) TradeStrategy.DOUBLE_OUT else TradeStrategy.ASAP_NO_LOSSES // TODO :) Binding?
 
-        return Trade(tradeId, coinmarketcapId, tradeDate, purchasePrice, purchaseAmount)
+        return Trade(tradeId, coinmarketcapId, tradeDate, purchasePrice, purchaseAmount, tradeStrategy)
     }
 
     override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {
