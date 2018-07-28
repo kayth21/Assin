@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.tradeadvisor.IntentKeys
 
@@ -55,6 +56,7 @@ class AdviceListFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Delete) {
         loadAllAdvices()
+        Toast.makeText(getActivity(), "Advice deleted..", Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -65,6 +67,7 @@ class AdviceListFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Insert) {
         loadAllAdvices()
+        Toast.makeText(getActivity(), "New Advice!", Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
