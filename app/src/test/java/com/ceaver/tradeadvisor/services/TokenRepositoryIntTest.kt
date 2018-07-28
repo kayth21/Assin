@@ -2,9 +2,9 @@ package com.ceaver.tradeadvisor.services
 
 import org.junit.Test
 
-class TokenProviderIntTest {
+class TokenRepositoryIntTest {
     @Test
     fun justAnExample() {
-       println(TokenProvider.lookupPrice(1))
+       println(TokenRepository.lookupPrice(1))
     }
 }

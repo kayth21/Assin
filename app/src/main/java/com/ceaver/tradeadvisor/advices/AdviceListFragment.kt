@@ -12,6 +12,7 @@ import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.tradeadvisor.IntentKeys
 
 import com.ceaver.tradeadvisor.R
+import com.ceaver.tradeadvisor.engine.TradeAdviceEngine
 import kotlinx.android.synthetic.main.fragment_advice_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -30,7 +31,7 @@ class AdviceListFragment : Fragment() {
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
-        swipeRefreshLayout.setOnRefreshListener { loadAllAdvices() }
+        swipeRefreshLayout.setOnRefreshListener { TradeAdviceEngine.run() }
     }
 
     private fun loadAllAdvices() {
