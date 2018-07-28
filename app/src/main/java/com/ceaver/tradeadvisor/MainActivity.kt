@@ -9,10 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import com.ceaver.tradeadvisor.advices.AdviceListFragment
-import com.ceaver.tradeadvisor.trades.Trade
-import com.ceaver.tradeadvisor.trades.list.TradeListFragment
-import com.ceaver.tradeadvisor.trades.TradeRepository
-import java.util.*
+import com.ceaver.tradeadvisor.trades.TradeListFragment
 
 class MainActivity : AppCompatActivity() {
 

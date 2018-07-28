@@ -1,4 +1,4 @@
-package com.ceaver.tradeadvisor.trades.list
+package com.ceaver.tradeadvisor.trades
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,7 @@ import android.view.ViewGroup
 import com.ceaver.tradeadvisor.IntentKeys
 
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.trades.Trade
-import com.ceaver.tradeadvisor.trades.TradeRepository
-import com.ceaver.tradeadvisor.trades.input.TradeInputActivity
 import kotlinx.android.synthetic.main.fragment_trade_list.*
-import com.ceaver.tradeadvisor.trades.TradeEvents
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

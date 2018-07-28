@@ -1,4 +1,4 @@
-package com.ceaver.tradeadvisor.trades.list
+package com.ceaver.tradeadvisor.trades
 
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.trades.Trade
-import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.util.CalendarHelper
 
 internal class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {

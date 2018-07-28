@@ -1,4 +1,4 @@
-package com.ceaver.tradeadvisor.trades.input
+package com.ceaver.tradeadvisor.trades
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,17 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import com.ceaver.tradeadvisor.IntentKeys
 import com.ceaver.tradeadvisor.MainActivity
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.trades.Trade
-import com.ceaver.tradeadvisor.trades.TradeRepository
 import com.ceaver.tradeadvisor.util.CalendarHelper
 import com.ceaver.tradeadvisor.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
 import java.util.*
 import com.ceaver.tradeadvisor.extensions.*
-import com.ceaver.tradeadvisor.trades.TradeEvents
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.time.LocalDate
 
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
