@@ -14,8 +14,8 @@ object AdviceRepository {
         BackgroundThreadExecutor.execute { val advice = getAdviceDao().loadAdvice(id); Handler(Looper.getMainLooper()).post{callback.invoke(advice)} }
     }
 
-    fun loadAdvicesFromTrade(tradeAdvice: Long, callback: (List<Advice>) -> Unit) {
-        BackgroundThreadExecutor.execute { val advices = getAdviceDao().loadAdvicesFromTrade(tradeAdvice); Handler(Looper.getMainLooper()).post{callback.invoke(advices)} }
+    fun loadAdvicesFromTrade(tradeId: Long) : List<Advice> {
+        return getAdviceDao().loadAdvicesFromTrade(tradeId)
     }
 
     fun loadAllAdvices(callback: (List<Advice>) -> Unit) {

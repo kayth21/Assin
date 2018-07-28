@@ -6,6 +6,7 @@ import com.ceaver.tradeadvisor.services.TokenRepository
 import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
 import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeRepository
+import com.ceaver.tradeadvisor.trades.TradeStrategy
 import java.time.LocalDate
 
 object TradeAdviceEngine {
@@ -23,14 +24,22 @@ object TradeAdviceEngine {
         fun analyze() {
             val purchasePrice = trade.purchasePrice
             val currentPrice = TokenRepository.lookupPrice(trade.coinmarketcapId)
+            val advices = AdviceRepository.loadAdvicesFromTrade(trade.id)
 
-            if (trade.strategy.test(purchasePrice, currentPrice)) {
-                AdviceRepository.loadAdvicesFromTrade(trade.id) {onAdvicesOfTradeLoaded(it) }
-            }
+            checkExistingAdvicesByStrategy(trade.strategy, advices, purchasePrice, currentPrice)
+            checkNewAdviceByStrategy(advices, purchasePrice, currentPrice)
         }
 
-        private fun onAdvicesOfTradeLoaded(it: List<Advice>) {
-            if(it.isEmpty()) AdviceRepository.insertAdvice(Advice(0, trade.id, LocalDate.now()))
+        private fun checkNewAdviceByStrategy(advices: List<Advice>, purchasePrice: Double, currentPrice: Double) {
+            if (advices.stream().noneMatch { it.strategy.equals(trade.strategy) } && trade.strategy.test(purchasePrice, currentPrice))
+                AdviceRepository.insertAdvice(Advice(0, trade.id, LocalDate.now(), trade.strategy))
+        }
+
+        private fun checkExistingAdvicesByStrategy(strategy: TradeStrategy, advices: List<Advice>, purchasePrice: Double, currentPrice: Double) {
+            advices.forEach {
+                if (!it.strategy.equals(strategy) || !it.strategy.test(purchasePrice, currentPrice))
+                    AdviceRepository.deleteAdvice(it)
+            }
         }
     }
 
