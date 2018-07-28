@@ -6,9 +6,9 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 object BackgroundThreadExecutor : ThreadPoolExecutor(
-        Runtime.getRuntime().availableProcessors() * 2,
-        Runtime.getRuntime().availableProcessors() * 2,
-        10, TimeUnit.SECONDS,
+        Math.max(2, Math.min(Runtime.getRuntime().availableProcessors() - 1, 4)),
+        Runtime.getRuntime().availableProcessors() * 2 + 1 ,
+        30, TimeUnit.SECONDS,
         LinkedBlockingQueue<Runnable>(),
         BackgroundPriorityThreadFactory()) {
 }
