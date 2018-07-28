@@ -33,7 +33,7 @@ class AdviceListFragment : Fragment() {
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
-        swipeRefreshLayout.setOnRefreshListener { TradeAdviceEngine.run() }
+        swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false; TradeAdviceEngine.run() }
     }
 
     private fun loadAllAdvices() {
@@ -41,7 +41,8 @@ class AdviceListFragment : Fragment() {
     }
 
     private fun onAllAdvicesLoaded(trades: List<Advice>) {
-        adviceListAdapter.adviceList = trades; adviceListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
+        adviceListAdapter.adviceList = trades;
+        adviceListAdapter.notifyDataSetChanged();
     }
 
     override fun onStop() {
@@ -70,7 +71,6 @@ class AdviceListFragment : Fragment() {
     fun onMessageEvent(event: AdviceEvents.Update) {
         loadAllAdvices()
     }
-
 
     interface OnItemClickListener {
         fun onItemClick(item: Advice)
