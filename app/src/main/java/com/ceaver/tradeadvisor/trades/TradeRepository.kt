@@ -7,8 +7,12 @@ import org.greenrobot.eventbus.EventBus
 
 object TradeRepository {
 
-    fun loadAllTrades() {
-        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); EventBus.getDefault().post(TradeEvents.LoadAll(trades)) }
+    fun loadTrade(id: Long, callback: (Trade) -> Unit) {
+        BackgroundThreadExecutor.execute { val trade =  getTradeDao().loadTrade(id); callback.invoke(trade) }
+    }
+
+    fun loadAllTrades(callback: (List<Trade>) -> Unit) {
+        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); callback.invoke(trades) }
     }
 
     fun saveTrade(trade: Trade) {
@@ -29,10 +33,6 @@ object TradeRepository {
 
     fun deleteAllTrades() {
         BackgroundThreadExecutor.execute { getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll()) }
-    }
-
-    fun loadTrade(id: Long) {
-        BackgroundThreadExecutor.execute { val trade =  getTradeDao().loadTrade(id); EventBus.getDefault().post(TradeEvents.Load(trade)) }
     }
 
     private fun getTradeDao(): TradeDao {

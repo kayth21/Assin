@@ -4,12 +4,17 @@ import com.ceaver.tradeadvisor.database.Database
 import com.ceaver.tradeadvisor.advices.Advice
 import com.ceaver.tradeadvisor.advices.AdviceEvents
 import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
+import com.ceaver.tradeadvisor.trades.Trade
 import org.greenrobot.eventbus.EventBus
 
 object AdviceRepository {
 
-    fun loadAllAdvices() {
-        BackgroundThreadExecutor.execute { val advices = getAdviceDao().loadAllAdvices(); EventBus.getDefault().post(AdviceEvents.LoadAll(advices)) }
+    fun loadAdvice(id: Long, callback: (Advice) -> Unit) {
+        BackgroundThreadExecutor.execute { val advice = getAdviceDao().loadAdvice(id); callback.invoke(advice) }
+    }
+
+    fun loadAllAdvices(callback: (List<Advice>) -> Unit) {
+        BackgroundThreadExecutor.execute { val advices = getAdviceDao().loadAllAdvices(); callback.invoke(advices) }
     }
 
     fun saveAdvice(advice: Advice) {
@@ -30,10 +35,6 @@ object AdviceRepository {
 
     fun deleteAllAdvices() {
         BackgroundThreadExecutor.execute { getAdviceDao().deleteAllAdvices(); EventBus.getDefault().post(AdviceEvents.DeleteAll()) }
-    }
-
-    fun loadAdvice(id: Long) {
-        BackgroundThreadExecutor.execute { val advice =  getAdviceDao().loadAdvice(id); EventBus.getDefault().post(AdviceEvents.Load(advice)) }
     }
 
     private fun getAdviceDao(): AdviceDao {

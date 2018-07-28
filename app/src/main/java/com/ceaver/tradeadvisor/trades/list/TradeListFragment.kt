@@ -1,6 +1,5 @@
 package com.ceaver.tradeadvisor.trades.list
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.ceaver.tradeadvisor.IntentKeys
 
 import com.ceaver.tradeadvisor.R
@@ -22,8 +20,6 @@ import com.ceaver.tradeadvisor.trades.TradeEvents
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 
 
 class TradeListFragment : Fragment() {
@@ -40,8 +36,16 @@ class TradeListFragment : Fragment() {
         tradeList.adapter = tradeListAdapter
         tradeList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener { startActivity(Intent(activity.application, TradeInputActivity::class.java)) }
-        TradeRepository.loadAllTrades()
-        swipeRefreshLayout.setOnRefreshListener { TradeRepository.loadAllTrades() }
+        loadAllTrades()
+        swipeRefreshLayout.setOnRefreshListener { loadAllTrades() }
+    }
+
+    private fun loadAllTrades() {
+        TradeRepository.loadAllTrades { onAllTradesLoaded(it) }
+    }
+
+    private fun onAllTradesLoaded(trades: List<Trade>) {
+        tradeListAdapter.tradeList = trades; tradeListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {
@@ -54,24 +58,17 @@ class TradeListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Delete) {
-        TradeRepository.loadAllTrades()
+        loadAllTrades()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Insert) {
-        TradeRepository.loadAllTrades()
+        loadAllTrades()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Update) {
-        TradeRepository.loadAllTrades()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.LoadAll) {
-        tradeListAdapter.tradeList = event.trades
-        tradeListAdapter.notifyDataSetChanged()
-        swipeRefreshLayout.isRefreshing = false
+        loadAllTrades()
     }
 
     interface OnItemClickListener {

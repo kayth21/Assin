@@ -6,14 +6,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.tradeadvisor.IntentKeys
 
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.trades.TradeRepository
 import kotlinx.android.synthetic.main.fragment_advice_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -31,8 +29,16 @@ class AdviceListFragment : Fragment() {
         EventBus.getDefault().register(this);
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        AdviceRepository.loadAllAdvices()
-        swipeRefreshLayout.setOnRefreshListener { AdviceRepository.loadAllAdvices() }
+        loadAllAdvices()
+        swipeRefreshLayout.setOnRefreshListener { loadAllAdvices() }
+    }
+
+    private fun loadAllAdvices() {
+        AdviceRepository.loadAllAdvices { onAllAdvicesLoaded(it) }
+    }
+
+    private fun onAllAdvicesLoaded(trades: List<Advice>) {
+        adviceListAdapter.adviceList = trades; adviceListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {
@@ -44,24 +50,19 @@ class AdviceListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Delete) {
-        AdviceRepository.loadAllAdvices()
+        loadAllAdvices()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Insert) {
-        AdviceRepository.loadAllAdvices()
+        loadAllAdvices()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AdviceEvents.Update) {
-        AdviceRepository.loadAllAdvices()
+        loadAllAdvices()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AdviceEvents.LoadAll) {
-        adviceListAdapter.adviceList = event.advices
-        adviceListAdapter.notifyDataSetChanged()
-    }
 
     interface OnItemClickListener {
         fun onItemClick(item: Advice)

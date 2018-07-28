@@ -38,11 +38,10 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
 
         val tradeId = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
-        if (tradeId > 0) TradeRepository.loadTrade(tradeId) else validateFields()
+        if (tradeId > 0) TradeRepository.loadTrade(tradeId) { publishFields(it); validateFields() } else validateFields()
 
         saveButton.setOnClickListener {
             // TODO Replace with some generic code / better implementation
@@ -53,17 +52,6 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
             TradeRepository.saveTrade(trade)
             exitActivity()
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Load) {
-        publishFields(event.trade)
-        validateFields()
     }
 
     private fun validateFields() {

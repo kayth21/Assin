@@ -25,21 +25,10 @@ class AdviceInputActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
 
         val adviceId = intent.getLongExtra(IntentKeys.ADVICE_ID, 0)
 
-        if (adviceId > 0) AdviceRepository.loadAdvice(adviceId)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AdviceEvents.Load) {
-        publishFields(event.advice)
+        if (adviceId > 0) AdviceRepository.loadAdvice(adviceId, { publishFields(it) })
     }
 
     private fun publishFields(advice: Advice) {
