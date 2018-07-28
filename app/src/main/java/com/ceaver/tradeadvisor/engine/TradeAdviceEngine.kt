@@ -25,8 +25,12 @@ object TradeAdviceEngine {
             val currentPrice = TokenRepository.lookupPrice(trade.coinmarketcapId)
 
             if (trade.strategy.test(purchasePrice, currentPrice)) {
-                AdviceRepository.insertAdvice(Advice(0, trade.id, LocalDate.now()))
+                AdviceRepository.loadAdvicesFromTrade(trade.id) {onAdvicesOfTradeLoaded(it) }
             }
+        }
+
+        private fun onAdvicesOfTradeLoaded(it: List<Advice>) {
+            if(it.isEmpty()) AdviceRepository.insertAdvice(Advice(0, trade.id, LocalDate.now()))
         }
     }
 
