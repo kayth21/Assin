@@ -15,6 +15,11 @@ enum class TradeStrategy {
         override fun test(purchasePrice: Double, currentPrice: Double): Boolean {
             return currentPrice >= purchasePrice
         }
+    },
+    BAD_TRADE {
+        override fun test(purchasePrice: Double, currentPrice: Double): Boolean {
+            return currentPrice < purchasePrice * 0.8
+        }
     };
 
     abstract fun test(purchasePrice: Double, currentPrice: Double): Boolean

@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import com.ceaver.tradeadvisor.IntentKeys
 import com.ceaver.tradeadvisor.MainActivity
 import com.ceaver.tradeadvisor.R
+import com.ceaver.tradeadvisor.extensions.validateFields
 import com.ceaver.tradeadvisor.util.CalendarHelper
 import com.ceaver.tradeadvisor.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
-import java.util.*
-import com.ceaver.tradeadvisor.extensions.*
 import java.time.LocalDate
+import java.util.*
 
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
 
@@ -60,11 +60,14 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         purchaseDateEditText.setText(CalendarHelper.convertDate(trade.tradeDate))
         purchaseAmountEditText.setText(trade.purchaseAmount.toString())
         purchasePriceEditText.setText(trade.purchasePrice.toString())
-        when(trade.strategy) {
-            TradeStrategy.HODL -> hodlStrategyRadioButton.isChecked = true
-            TradeStrategy.DOUBLE_OUT -> doubleOutStrategyRadioButton.isChecked = true
-            TradeStrategy.ASAP_NO_LOSSES -> asapNoLossesRadioButton.isChecked = true
-            else -> throw NotImplementedError("no radio button for ${trade.strategy}")
+        trade.strategies.forEach {
+            when (it) {
+                TradeStrategy.HODL -> hodlStrategyRadioButton.isChecked = true
+                TradeStrategy.DOUBLE_OUT -> doubleOutStrategyRadioButton.isChecked = true
+                TradeStrategy.ASAP_NO_LOSSES -> asapNoLossesRadioButton.isChecked = true
+                TradeStrategy.BAD_TRADE -> badTradeNotificationCheckbox.isChecked = true
+                else -> throw NotImplementedError("no radio button for ${it}")
+            }
         }
     }
 
@@ -81,8 +84,9 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         val tradeDate = CalendarHelper.convertDate(purchaseDateEditText.text.toString())
         val purchasePrice = purchasePriceEditText.text.toString().toDouble()
         val tradeStrategy: TradeStrategy = if (strategyRadioGroup.checkedRadioButtonId == hodlStrategyRadioButton.id) TradeStrategy.HODL else if (strategyRadioGroup.checkedRadioButtonId == doubleOutStrategyRadioButton.id) TradeStrategy.DOUBLE_OUT else TradeStrategy.ASAP_NO_LOSSES // TODO :) Binding?
+        val badTradeNotification = badTradeNotificationCheckbox.isChecked
 
-        return Trade(tradeId, coinmarketcapId, tradeDate, purchasePrice, purchaseAmount, tradeStrategy)
+        return Trade(tradeId, coinmarketcapId, tradeDate, purchasePrice, purchaseAmount, if (badTradeNotification) setOf(tradeStrategy, TradeStrategy.BAD_TRADE) else setOf(tradeStrategy))
     }
 
     override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {

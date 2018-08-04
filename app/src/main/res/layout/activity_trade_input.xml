@@ -62,7 +62,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="ASAP (without losses)" />
+
     </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/badTradeNotificationCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bad Trade Notification? (-20%)" />
 
     <Button
         android:id="@+id/saveButton"

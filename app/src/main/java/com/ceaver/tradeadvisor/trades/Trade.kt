@@ -12,4 +12,4 @@ data class Trade(//
         @ColumnInfo(name = "tradeDate") val tradeDate: LocalDate, //
         @ColumnInfo(name = "purchasePrice") val purchasePrice: Double, //
         @ColumnInfo(name = "purchaseAmount") val purchaseAmount: Double, //
-        @ColumnInfo(name = "strategy") val strategy: TradeStrategy) //
+        @ColumnInfo(name = "strategies") val strategies: Set<TradeStrategy>)
