@@ -35,7 +35,10 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
         val tradeId = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
-        if (tradeId > 0) TradeRepository.loadTrade(tradeId) { publishFields(it); validateFields() } else hodlStrategyRadioButton.isChecked = true; validateFields()
+        if (tradeId > 0)
+            TradeRepository.loadTradeAsync(tradeId, true) { publishFields(it); validateFields() }
+        else
+            hodlStrategyRadioButton.isChecked = true; validateFields()
 
         saveButton.setOnClickListener {
             // TODO Replace with some generic code / better implementation
@@ -43,7 +46,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
                 return@setOnClickListener
             }
             val trade = createTrade(tradeId)
-            TradeRepository.saveTrade(trade)
+            TradeRepository.saveTradeAsync(trade)
             exitActivity()
         }
     }

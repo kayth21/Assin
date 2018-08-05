@@ -11,10 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.tradeadvisor.IntentKeys
-
 import com.ceaver.tradeadvisor.R
-import com.ceaver.tradeadvisor.engine.TradeAdviceEngine
-import com.ceaver.tradeadvisor.trades.Trade
+import com.ceaver.tradeadvisor.engine.EngineEvents
 import com.ceaver.tradeadvisor.trades.TradeEvents
 import kotlinx.android.synthetic.main.fragment_advice_list.*
 import org.greenrobot.eventbus.EventBus
@@ -34,11 +32,11 @@ class AdviceListFragment : Fragment() {
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
-        swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false; TradeAdviceEngine.run() }
+        swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(EngineEvents.Run()) }
     }
 
     private fun loadAllAdvices() {
-        AdviceRepository.loadAllAdvices { onAllAdvicesLoaded(it) }
+        AdviceRepository.loadAllAdvicesAsync(true) { onAllAdvicesLoaded(it) }
     }
 
     private fun onAllAdvicesLoaded(trades: List<Advice>) {

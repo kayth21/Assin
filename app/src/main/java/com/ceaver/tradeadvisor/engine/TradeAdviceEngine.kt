@@ -3,45 +3,50 @@ package com.ceaver.tradeadvisor.engine
 import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.tradeadvisor.advices.Advice
 import com.ceaver.tradeadvisor.services.TokenRepository
-import com.ceaver.tradeadvisor.threading.BackgroundThreadExecutor
 import com.ceaver.tradeadvisor.trades.Trade
 import com.ceaver.tradeadvisor.trades.TradeEvents
 import com.ceaver.tradeadvisor.trades.TradeRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.time.LocalDate
 
 object TradeAdviceEngine {
+
+    fun wakeup() {
+        // hack because object is lazy initialized
+    }
 
     init {
         EventBus.getDefault().register(this)
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMessageEvent(event: EngineEvents.Run) {
+        runSynchronized()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: TradeEvents.Update) {
-        run()
+        runSynchronized()
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: TradeEvents.Insert) {
-        run()
+        runSynchronized()
     }
 
-    fun run() {
-        TradeRepository.loadAllTrades { onAllTradesLoaded(it) }
-    }
-
-    private fun onAllTradesLoaded(trades: List<Trade>) {
-        // TODO groupby coinmarketcapId (to avoid multiple network connections for the same token)
-
-        trades.forEach { BackgroundThreadExecutor.execute { TradeAnalyzer(it).analyze() } }
+    @Synchronized
+    fun runSynchronized() {
+        val allTrades = TradeRepository.loadAllTrades()
+        allTrades.forEach { TradeAnalyzer(it).analyze() }
     }
 
     private class TradeAnalyzer(val trade: Trade) {
         fun analyze() {
             val purchasePrice = trade.purchasePrice
             val currentPrice = TokenRepository.lookupPrice(trade.coinmarketcapId)
-            val advices = AdviceRepository.loadAdvicesFromTrade(trade.id)
+            val advices = AdviceRepository.loadAdvicesOfTrade(trade.id)
 
             advices.forEach { advice ->
                 if (trade.strategies.contains(advice.strategy).not() || advice.strategy.test(purchasePrice, currentPrice).not()) {
@@ -54,7 +59,6 @@ object TradeAdviceEngine {
                     AdviceRepository.insertAdvice(Advice(0, trade.id, LocalDate.now(), tradeStrategy))
                 }
             }
-
         }
     }
 }

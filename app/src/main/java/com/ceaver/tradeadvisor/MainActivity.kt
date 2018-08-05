@@ -1,12 +1,12 @@
 package com.ceaver.tradeadvisor
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.ceaver.tradeadvisor.advices.AdviceListFragment
 import com.ceaver.tradeadvisor.engine.TradeAdviceEngine
@@ -15,7 +15,8 @@ import com.ceaver.tradeadvisor.trades.TradeListFragment
 class MainActivity : AppCompatActivity() {
 
     init {
-        TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards()
+        TradeAdviceEngine.wakeup()
+        TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +27,6 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = MainPagerAdapter(supportFragmentManager)
         val tabLayout = findViewById<View>(R.id.tablayout) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
-
-        TradeAdviceEngine.run()
     }
 
     private class MainPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {

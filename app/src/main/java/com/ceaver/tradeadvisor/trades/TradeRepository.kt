@@ -9,32 +9,73 @@ import org.greenrobot.eventbus.EventBus
 
 object TradeRepository {
 
-    fun loadTrade(id: Long, callback: (Trade) -> Unit) {
-        BackgroundThreadExecutor.execute { val trade = getTradeDao().loadTrade(id); Handler(Looper.getMainLooper()).post { callback.invoke(trade) } }
+    fun loadTrade(id: Long): Trade {
+        return getTradeDao().loadTrade(id)
     }
 
-    fun loadAllTrades(callback: (List<Trade>) -> Unit) {
-        BackgroundThreadExecutor.execute { val trades = getTradeDao().loadAllTrades(); Handler(Looper.getMainLooper()).post { callback.invoke(trades) } }
+    fun loadTradeAsync(id: Long, callbackInMainThread: Boolean, callback: (Trade) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val trade = getTradeDao().loadTrade(id)
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(trade) }
+            else {
+                callback.invoke(trade);
+            }
+        }
+    }
+
+    fun loadAllTrades(): List<Trade> {
+        return getTradeDao().loadAllTrades()
+    }
+
+    fun loadAllTradesAsync(callbackInMainThread: Boolean, callback: (List<Trade>) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val trades = loadAllTrades()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(trades) }
+            else
+                callback.invoke(trades)
+        }
     }
 
     fun saveTrade(trade: Trade) {
         if (trade.id > 0) updateTrade(trade) else insertTrade(trade)
     }
 
+    fun saveTradeAsync(trade: Trade) {
+        if (trade.id > 0) updateTradeAsync(trade) else insertTradeAsync(trade)
+    }
+
     fun insertTrade(trade: Trade) {
-        BackgroundThreadExecutor.execute { getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert()) }
+        getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert())
+    }
+
+    fun insertTradeAsync(trade: Trade) {
+        BackgroundThreadExecutor.execute { insertTrade(trade) }
     }
 
     fun updateTrade(trade: Trade) {
-        BackgroundThreadExecutor.execute { getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update()) }
+        getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update())
+    }
+
+    fun updateTradeAsync(trade: Trade) {
+        BackgroundThreadExecutor.execute { updateTrade(trade) }
     }
 
     fun deleteTrade(trade: Trade) {
-        BackgroundThreadExecutor.execute { getTradeDao().deleteTrade(trade); EventBus.getDefault().post(TradeEvents.Delete()) }
+        getTradeDao().deleteTrade(trade); EventBus.getDefault().post(TradeEvents.Delete())
+    }
+
+    fun deleteTradeAsync(trade: Trade) {
+        BackgroundThreadExecutor.execute { deleteTrade(trade) }
     }
 
     fun deleteAllTrades() {
-        BackgroundThreadExecutor.execute { getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll()) }
+        getTradeDao().deleteAllTrades(); EventBus.getDefault().post(TradeEvents.DeleteAll())
+    }
+
+    fun deleteAllTradesAsync() {
+        BackgroundThreadExecutor.execute { deleteAllTrades() }
     }
 
     private fun getTradeDao(): TradeDao {

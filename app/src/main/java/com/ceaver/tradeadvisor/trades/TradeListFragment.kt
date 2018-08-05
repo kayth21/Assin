@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ceaver.tradeadvisor.IntentKeys
-
 import com.ceaver.tradeadvisor.R
 import kotlinx.android.synthetic.main.fragment_trade_list.*
 import org.greenrobot.eventbus.EventBus
@@ -37,7 +36,7 @@ class TradeListFragment : Fragment() {
     }
 
     private fun loadAllTrades() {
-        TradeRepository.loadAllTrades { onAllTradesLoaded(it) }
+        TradeRepository.loadAllTradesAsync(true) { onAllTradesLoaded(it) }
     }
 
     private fun onAllTradesLoaded(trades: List<Trade>) {
@@ -81,7 +80,7 @@ class TradeListFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val selectedTrade = tradeListAdapter.currentLongClickTrade!!
-        TradeRepository.deleteTrade(selectedTrade)
+        TradeRepository.deleteTradeAsync(selectedTrade)
         return super.onContextItemSelected(item)
     }
 }
