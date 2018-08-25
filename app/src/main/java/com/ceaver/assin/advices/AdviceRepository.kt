@@ -8,11 +8,11 @@ import org.greenrobot.eventbus.EventBus
 
 object AdviceRepository {
 
-    fun loadAdvice(id: Long): com.ceaver.assin.advices.Advice {
+    fun loadAdvice(id: Long): Advice {
         return getAdviceDao().loadAdvice(id)
     }
 
-    fun loadAdviceAsync(id: Long, callbackInMainThread: Boolean, callback: (com.ceaver.assin.advices.Advice) -> Unit) {
+    fun loadAdviceAsync(id: Long, callbackInMainThread: Boolean, callback: (Advice) -> Unit) {
         BackgroundThreadExecutor.execute {
             val advice = getAdviceDao().loadAdvice(id)
             if (callbackInMainThread)
@@ -23,15 +23,15 @@ object AdviceRepository {
         }
     }
 
-    fun loadAdvicesOfTrade(tradeId: Long): List<com.ceaver.assin.advices.Advice> {
+    fun loadAdvicesOfTrade(tradeId: Long): List<Advice> {
         return getAdviceDao().loadAdvicesFromTrade(tradeId)
     }
 
-    fun loadAllAdvices(): List<com.ceaver.assin.advices.Advice> {
+    fun loadAllAdvices(): List<Advice> {
         return getAdviceDao().loadAllAdvices()
     }
 
-    fun loadAllAdvicesAsync(callbackInMainThread: Boolean, callback: (List<com.ceaver.assin.advices.Advice>) -> Unit) {
+    fun loadAllAdvicesAsync(callbackInMainThread: Boolean, callback: (List<Advice>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val advices = loadAllAdvices()
             if (callbackInMainThread)
@@ -41,40 +41,40 @@ object AdviceRepository {
         }
     }
 
-    fun saveAdvice(advice: com.ceaver.assin.advices.Advice) {
+    fun saveAdvice(advice: Advice) {
         if (advice.id > 0) updateAdvice(advice) else insertAdvice(advice)
     }
 
-    fun saveAdviceAsync(advice: com.ceaver.assin.advices.Advice) {
+    fun saveAdviceAsync(advice: Advice) {
         if (advice.id > 0) updateAdviceAsync(advice) else insertAdviceAsync(advice)
     }
 
-    fun insertAdvice(advice: com.ceaver.assin.advices.Advice) {
-        getAdviceDao().insertAdvice(advice); EventBus.getDefault().post(com.ceaver.assin.advices.AdviceEvents.Insert())
+    fun insertAdvice(advice: Advice) {
+        getAdviceDao().insertAdvice(advice); EventBus.getDefault().post(AdviceEvents.Insert())
     }
 
-    fun insertAdviceAsync(advice: com.ceaver.assin.advices.Advice) {
+    fun insertAdviceAsync(advice: Advice) {
         BackgroundThreadExecutor.execute { insertAdvice(advice) }
     }
 
-    fun updateAdvice(advice: com.ceaver.assin.advices.Advice) {
-        getAdviceDao().updateAdvice(advice); EventBus.getDefault().post(com.ceaver.assin.advices.AdviceEvents.Update())
+    fun updateAdvice(advice: Advice) {
+        getAdviceDao().updateAdvice(advice); EventBus.getDefault().post(AdviceEvents.Update())
     }
 
-    fun updateAdviceAsync(advice: com.ceaver.assin.advices.Advice) {
+    fun updateAdviceAsync(advice: Advice) {
         BackgroundThreadExecutor.execute { updateAdvice(advice) }
     }
 
-    fun deleteAdvice(advice: com.ceaver.assin.advices.Advice) {
-        getAdviceDao().deleteAdvice(advice); EventBus.getDefault().post(com.ceaver.assin.advices.AdviceEvents.Delete())
+    fun deleteAdvice(advice: Advice) {
+        getAdviceDao().deleteAdvice(advice); EventBus.getDefault().post(AdviceEvents.Delete())
     }
 
-    fun deleteAdviceAsync(advice: com.ceaver.assin.advices.Advice) {
+    fun deleteAdviceAsync(advice: Advice) {
         BackgroundThreadExecutor.execute { deleteAdvice(advice) }
     }
 
     fun deleteAllAdvices() {
-        getAdviceDao().deleteAllAdvices(); EventBus.getDefault().post(com.ceaver.assin.advices.AdviceEvents.DeleteAll())
+        getAdviceDao().deleteAllAdvices(); EventBus.getDefault().post(AdviceEvents.DeleteAll())
     }
 
     fun deleteAllAdvicesAsync() {

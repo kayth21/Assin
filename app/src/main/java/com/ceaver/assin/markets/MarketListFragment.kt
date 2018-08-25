@@ -1,5 +1,6 @@
 package com.ceaver.assin.markets
 
+import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -7,9 +8,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.fragment_market_list.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MarketListFragment : Fragment() {
 
@@ -21,29 +26,34 @@ class MarketListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         marketList.adapter = marketListAdapter
         marketList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        marketSwipeRefreshLayout.setOnRefreshListener { loadAllTitles() }
-        marketSwipeRefreshLayout.isRefreshing = true;
+        marketSwipeRefreshLayout.setOnRefreshListener { refreshAllTitles() }
         loadAllTitles()
     }
 
-    private fun loadAllTitles() {
-        MarketRepository.loadAllTitlesAsync(true) { onAllTitlesLoaded(it) }
+    private fun refreshAllTitles() {
+        EventBus.getDefault().post(MarketEngineEvents.Run())
     }
 
-    private fun onAllTitlesLoaded(titles: List<Title>) {
-        marketListAdapter.titles = titles;
+    private fun loadAllTitles() {
+        marketListAdapter.titles = MarketRepository.loadAllTitles();
         marketListAdapter.notifyDataSetChanged();
-        marketSwipeRefreshLayout.isRefreshing = false;
+        marketSwipeRefreshLayout.isRefreshing = false
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MarketEngineEvents.Loaded) {
+        loadAllTitles()
+        Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
     }
 
     override fun onStop() {
         super.onStop()
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         marketList.adapter = null
-//        swipeRefreshLayout.setOnRefreshListener(null)
+        marketSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
 }

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.ceaver.assin.R
+import com.ceaver.assin.engine.EngineEvents
 import com.ceaver.assin.trades.TradeEvents
 import kotlinx.android.synthetic.main.fragment_advice_list.*
 import org.greenrobot.eventbus.EventBus
@@ -29,14 +30,14 @@ class AdviceListFragment : Fragment() {
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
-        adviceSwipeRefreshLayout.setOnRefreshListener { adviceSwipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(com.ceaver.assin.engine.EngineEvents.Run()) }
+        adviceSwipeRefreshLayout.setOnRefreshListener { adviceSwipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(EngineEvents.Run()) }
     }
 
     private fun loadAllAdvices() {
         AdviceRepository.loadAllAdvicesAsync(true) { onAllAdvicesLoaded(it) }
     }
 
-    private fun onAllAdvicesLoaded(trades: List<com.ceaver.assin.advices.Advice>) {
+    private fun onAllAdvicesLoaded(trades: List<Advice>) {
         adviceListAdapter.adviceList = trades;
         adviceListAdapter.notifyDataSetChanged();
     }
@@ -49,7 +50,7 @@ class AdviceListFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: com.ceaver.assin.advices.AdviceEvents.Delete) {
+    fun onMessageEvent(event: AdviceEvents.Delete) {
         loadAllAdvices()
         Toast.makeText(getActivity(), "Advice deleted..", Toast.LENGTH_SHORT).show();
     }
@@ -60,23 +61,23 @@ class AdviceListFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: com.ceaver.assin.advices.AdviceEvents.Insert) {
+    fun onMessageEvent(event: AdviceEvents.Insert) {
         loadAllAdvices()
         Toast.makeText(getActivity(), "New Advice!", Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: com.ceaver.assin.advices.AdviceEvents.Update) {
+    fun onMessageEvent(event: AdviceEvents.Update) {
         loadAllAdvices()
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: com.ceaver.assin.advices.Advice)
+        fun onItemClick(item: Advice)
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(item: com.ceaver.assin.advices.Advice) {
-            val intent = Intent(activity.application, com.ceaver.assin.advices.AdviceInputActivity::class.java);
+        override fun onItemClick(item: Advice) {
+            val intent = Intent(activity.application, AdviceInputActivity::class.java);
             intent.putExtra(com.ceaver.assin.IntentKeys.ADVICE_ID, item.id)
             startActivity(intent)
         }

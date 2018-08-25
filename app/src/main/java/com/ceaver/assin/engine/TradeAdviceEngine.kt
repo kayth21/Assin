@@ -21,7 +21,7 @@ object TradeAdviceEngine {
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMessageEvent(event: com.ceaver.assin.engine.EngineEvents.Run) {
+    fun onMessageEvent(event: EngineEvents.Run) {
         runSynchronized()
     }
 

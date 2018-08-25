@@ -10,14 +10,20 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.assets.AssetListFragment
+import com.ceaver.assin.engine.TradeAdviceEngine
+import com.ceaver.assin.markets.MarketEngine
+import com.ceaver.assin.markets.MarketEngineEvents
 import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
 
     init {
-        com.ceaver.assin.engine.TradeAdviceEngine.wakeup()
-        com.ceaver.assin.TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
+        TradeAdviceEngine.wakeup()
+        MarketEngine.wakeup()
+        TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
+        EventBus.getDefault().post(MarketEngineEvents.Run())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
