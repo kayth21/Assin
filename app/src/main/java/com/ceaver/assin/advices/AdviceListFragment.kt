@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.assin.R
 import com.ceaver.assin.trades.TradeEvents
 import kotlinx.android.synthetic.main.fragment_advice_list.*
@@ -30,7 +29,7 @@ class AdviceListFragment : Fragment() {
         adviceList.adapter = adviceListAdapter
         adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
-        swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(com.ceaver.assin.engine.EngineEvents.Run()) }
+        adviceSwipeRefreshLayout.setOnRefreshListener { adviceSwipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(com.ceaver.assin.engine.EngineEvents.Run()) }
     }
 
     private fun loadAllAdvices() {
@@ -46,7 +45,7 @@ class AdviceListFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this);
         adviceList.adapter = null
-        swipeRefreshLayout.setOnRefreshListener(null)
+        adviceSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

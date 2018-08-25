@@ -2,7 +2,6 @@ package com.ceaver.assin.advices
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.ceaver.adviceadvisor.advices.AdviceRepository
 import com.ceaver.assin.R
 import com.ceaver.assin.util.CalendarHelper
 import kotlinx.android.synthetic.main.activity_advice_input.*

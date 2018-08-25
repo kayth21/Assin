@@ -2,8 +2,7 @@ package com.ceaver.assin.database.converter;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.ceaver.assin.assets.Title;
-import com.ceaver.assin.trades.Trade;
+import com.ceaver.assin.assets.Symbol;
 import com.ceaver.assin.trades.TradeStrategy;
 
 import java.time.LocalDate;
@@ -15,13 +14,13 @@ import java.util.stream.Collectors;
 public class Converters {
 
     @TypeConverter
-    public static Title fromStringToTitle(String title) {
-        return Title.valueOf(title);
+    public static Symbol fromStringToTitle(String title) {
+        return Symbol.valueOf(title);
     }
 
     @TypeConverter
-    public static String fromTitleToString(Title title) {
-        return title.name();
+    public static String fromTitleToString(Symbol symbol) {
+        return symbol.name();
     }
 
     @TypeConverter

@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/adviceSwipeRefreshLayout"
+        android:id="@+id/marketSwipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/adviceList"
+            android:id="@+id/marketList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />

@@ -1,7 +1,8 @@
-package com.ceaver.adviceadvisor.advices
+package com.ceaver.assin.advices
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.adviceadvisor.advices.AdviceDao
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 

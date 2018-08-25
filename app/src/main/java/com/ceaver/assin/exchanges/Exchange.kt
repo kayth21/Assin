@@ -1,16 +1,41 @@
 package com.ceaver.assin.exchanges
 
-enum class Exchange(val tradingPairs: Set<TradingPair>) {
+import com.ceaver.assin.assets.Symbol
+import com.ceaver.assin.markets.Title
+
+enum class Exchange(val symbols: Set<Symbol>) {
     BITSTAMP(setOf(
-            TradingPair.USD_BTC,
-            TradingPair.USD_BTC,
-            TradingPair.BTC_ETH)),
+            // USD
+            Symbol.BTC,
+            // BTC
+            Symbol.BCH, Symbol.ETH, Symbol.LTC, Symbol.XRP)) {
+
+        override fun update(symbol : Symbol)  {
+            Bitstamp.update(symbol)
+        }
+    },
 
     BINANCE(setOf(
-            TradingPair.BTC_LTC))
+            // BTC
+            Symbol.LTC)) {
+
+        override fun update(symbol : Symbol)  {
+            Binance.update(symbol)
+        }
+
+    },
     ;
 
-    fun getExchangesByTradingPair(tradingPair: TradingPair): List<Exchange> {
-        return Exchange.values().filter { it.tradingPairs.contains(tradingPair) }
+    abstract fun update(symbol : Symbol)
+
+    fun contains(symbol : Symbol): Boolean {
+        return symbols.contains(symbol)
+    }
+
+    companion object {
+        fun getExchanges(symbol : Symbol): List<Exchange> {
+            return Exchange.values().filter { it.contains(symbol) }
+        }
+
     }
 }

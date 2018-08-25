@@ -1,6 +1,6 @@
 package com.ceaver.assin.engine
 
-import com.ceaver.adviceadvisor.advices.AdviceRepository
+import com.ceaver.assin.advices.AdviceRepository
 import com.ceaver.assin.services.TokenRepository
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeEvents

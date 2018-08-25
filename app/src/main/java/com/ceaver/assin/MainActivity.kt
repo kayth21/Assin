@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.ceaver.assin.advices.AdviceListFragment
+import com.ceaver.assin.assets.AssetListFragment
+import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -30,21 +33,25 @@ class MainActivity : AppCompatActivity() {
     private class MainPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
 
         override fun getCount(): Int {
-            return 2
+            return 4
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
-                0 -> "Trades"
-                1 -> "Advices"
+                0 -> "Markets"
+                1 -> "Assets"
+                2 -> "Tasks"
+                3 -> "Trades"
                 else -> null
             }
         }
 
         override fun getItem(position: Int): Fragment? {
             return when (position) {
-                0 -> TradeListFragment()
-                1 -> com.ceaver.assin.advices.AdviceListFragment()
+                0 -> MarketListFragment()
+                1 -> AssetListFragment()
+                2 -> AdviceListFragment()
+                3 -> TradeListFragment()
                 else -> null
             }
         }
