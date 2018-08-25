@@ -13,24 +13,44 @@ enum class Symbol(val titleType: Category, val label: String) {
     LTC(CRYPTO, "Litecoin"),
     BCH(CRYPTO, "Bitcoin Cash");
 
-    fun updateUsdPrice(usdPrice : Double) {
+    fun updateLastUsd(usdPrice : Double) {
         val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(name + Symbol.USD, usdPrice.toString()).apply()
+        sharedPreferences.edit().putString("last" + name + Symbol.USD, usdPrice.toString()).apply()
     }
 
-    fun loadUsdPrice() : Double {
+    fun loadLastUsd() : Double {
         val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
-        return sharedPreferences.getString(name + Symbol.USD, "0.0").toDouble()
+        return sharedPreferences.getString("last" + name + Symbol.USD, "0.0").toDouble()
     }
 
-    fun updateBtcPrice(btcPrice : Double) {
+    fun updateLastBtc(btcPrice : Double) {
         val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(name + Symbol.BTC, btcPrice.toString()).apply()
+        sharedPreferences.edit().putString("last" + name + Symbol.BTC, btcPrice.toString()).apply()
     }
 
-    fun loadBtcPrice() : Double {
+    fun loadLastBtc() : Double {
         val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
-        return sharedPreferences.getString(name + Symbol.BTC, "0.0").toDouble()
+        return sharedPreferences.getString("last" + name + Symbol.BTC, "0.0").toDouble()
+    }
+
+    fun updateOpenUsd(usdPrice : Double) {
+        val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("open" + name + Symbol.USD, usdPrice.toString()).apply()
+    }
+
+    fun loadOpenUsd() : Double {
+        val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
+        return sharedPreferences.getString("open" + name + Symbol.USD, "0.0").toDouble()
+    }
+
+    fun updateOpenBtc(btcPrice : Double) {
+        val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("open" + name + Symbol.BTC, btcPrice.toString()).apply()
+    }
+
+    fun loadOpenBtc() : Double {
+        val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
+        return sharedPreferences.getString("open" + name + Symbol.BTC, "0.0").toDouble()
     }
 
     companion object {
