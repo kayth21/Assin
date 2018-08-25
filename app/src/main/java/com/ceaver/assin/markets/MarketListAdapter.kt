@@ -28,7 +28,7 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
 
         fun bindItem(title: Title) {
             (view.findViewById(R.id.assetNameTextView) as TextView).text = title.symbol.label
-            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "%2f".format((((title.symbol.loadOpenUsd()*100)/title.symbol.loadLastUsd())-100)) + " %"
+            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "%.2f".format((((100/title.symbol.loadOpenUsd())*title.symbol.loadLastUsd())-100)) + " %"
             (view.findViewById(R.id.cryptoValueTextView) as TextView).text = "%.8f".format(title.symbol.loadLastBtc()) + " BTC"
             (view.findViewById(R.id.fiatValueTextView) as TextView).text = "%.2f".format(title.symbol.loadLastUsd()) + " USD"
         }
