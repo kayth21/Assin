@@ -11,7 +11,17 @@ enum class Symbol(val titleType: Category, val label: String) {
     ETH(CRYPTO, "Ether"),
     XRP(CRYPTO, "XRP"),
     LTC(CRYPTO, "Litecoin"),
-    BCH(CRYPTO, "Bitcoin Cash");
+    BCH(CRYPTO, "Bitcoin Cash"),
+    ADA(CRYPTO, "Cardano"),
+    XMR(CRYPTO, "Monero"),
+    DASH(CRYPTO, "Dash"),
+    OMG(CRYPTO, "OmiseGO"),
+    ONT(CRYPTO, "Ontology"),
+    ZRX(CRYPTO, "0x"),
+    NANO(CRYPTO, "Nano"),
+    XLM(CRYPTO, "Stellar"),
+    LSK(CRYPTO, "Lisk")
+    ;
 
     fun updateLastUsd(usdPrice : Double) {
         val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)

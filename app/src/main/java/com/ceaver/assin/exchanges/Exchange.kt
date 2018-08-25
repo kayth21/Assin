@@ -17,7 +17,7 @@ enum class Exchange(val symbols: Set<Symbol>) {
 
     BINANCE(setOf(
             // BTC
-            Symbol.LTC)) {
+            Symbol.LSK, Symbol.ADA, Symbol.XMR, Symbol.DASH, Symbol.OMG, Symbol.ONT, Symbol.ZRX, Symbol.NANO, Symbol.XLM)) {
 
         override fun update(symbol : Symbol)  {
             Binance.update(symbol)
