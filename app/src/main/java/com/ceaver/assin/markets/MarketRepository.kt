@@ -10,6 +10,6 @@ import com.ceaver.assin.threading.BackgroundThreadExecutor
 object MarketRepository {
 
     fun loadAllTitles(): List<Title> {
-        return Symbol.values(Category.CRYPTO).map { Title(it) }.toList()
+        return Symbol.values(Category.CRYPTO).map { MarketValuation.load(it, if(it == Symbol.BTC) Symbol.USD else Symbol.BTC ) }.filter { it.isPresent }.map { it.get() }.toList()
     }
 }

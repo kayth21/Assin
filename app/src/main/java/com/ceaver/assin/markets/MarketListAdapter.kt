@@ -11,7 +11,7 @@ import com.ceaver.assin.assets.Symbol
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
 
-    var titles: List<Title> = Symbol.values(Category.CRYPTO).map { Title(it) }
+    var titles: List<Title> = ArrayList()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,9 +28,9 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
 
         fun bindItem(title: Title) {
             (view.findViewById(R.id.assetNameTextView) as TextView).text = title.symbol.label
-            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "%.2f".format((((100/title.symbol.loadOpenUsd())*title.symbol.loadLastUsd())-100)) + " %"
-            (view.findViewById(R.id.cryptoValueTextView) as TextView).text = "%.8f".format(title.symbol.loadLastBtc()) + " BTC"
-            (view.findViewById(R.id.fiatValueTextView) as TextView).text = "%.2f".format(title.symbol.loadLastUsd()) + " USD"
+            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "%.2f".format((((100/title.open(Symbol.USD).asDouble)*title.last(Symbol.USD).asDouble)-100)) + " % (USD)"
+            (view.findViewById(R.id.cryptoValueTextView) as TextView).text = "%.8f".format(title.last(Symbol.BTC).asDouble) + " BTC"
+            (view.findViewById(R.id.fiatValueTextView) as TextView).text = "%.2f".format(title.last(Symbol.USD).asDouble) + " USD"
         }
     }
 }

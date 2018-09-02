@@ -1,6 +1,8 @@
 package com.ceaver.assin.exchanges
 
 import com.ceaver.assin.assets.Symbol
+import com.ceaver.assin.markets.MarketValuation
+import com.ceaver.assin.markets.Title
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -15,10 +17,8 @@ object Bitstamp {
         val jsonObject = callExchange(connection)
         val last = jsonObject.getDouble("last")
         val open = jsonObject.getDouble("open")
-        symbol.updateLastBtc(if (symbol == Symbol.BTC) 1.0 else last)
-        symbol.updateLastUsd(if (symbol == Symbol.BTC) last else last * Symbol.BTC.loadLastUsd())
-        symbol.updateOpenBtc(if (symbol == Symbol.BTC) 1.0 else open)
-        symbol.updateOpenUsd(if (symbol == Symbol.BTC) open else open * Symbol.BTC.loadOpenUsd())
+        val unit = if (symbol == Symbol.BTC) Symbol.USD else Symbol.BTC
+        MarketValuation.update(Title( symbol, last, open, unit))
     }
 
 

@@ -36,7 +36,7 @@ object TokenRepository {
 //                val place = Place()
 //                val cryptoJsonObject = dataJsonObject.getJSONObject(key)
 //                place.countryName = cryptoJsonObject.getString("name")
-//                place.capitalName = cryptoJsonObject.getJSONObject("quotes").getJSONObject("USD").getString("price") + " USD"
+//                place.capitalName = cryptoJsonObject.getJSONObject("quotes").getJSONObject("USD").getString("last") + " USD"
 //                countryList?.add(place)
             }
 //            adapter!!.notifyDataSetChanged()
