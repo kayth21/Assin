@@ -18,8 +18,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".StartActivity"
-            android:label="@string/title_activity_start"
             android:configChanges="orientation"
+            android:label="@string/title_activity_start"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,6 +32,8 @@
             android:name=".advices.AdviceInputActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
+        <activity android:name=".alerts.AlertListActivity" />
+        <activity android:name=".alerts.AlertInputActivity"></activity>
     </application>
 
 </manifest>

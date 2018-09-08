@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.ceaver.assin.R
+import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.validateFields
 import com.ceaver.assin.util.CalendarHelper
 import com.ceaver.assin.util.DatePickerFragment
@@ -73,7 +74,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun exitActivity() {
-        val intent = Intent(this, com.ceaver.assin.StartActivity::class.java)
+        val intent = Intent(this, StartActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

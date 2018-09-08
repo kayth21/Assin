@@ -1,7 +1,7 @@
 package com.ceaver.assin
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.ceaver.assin.advices.AdviceListFragment
+import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.markets.MarketEngine
@@ -98,7 +99,8 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
             }
             R.id.nav_alerts -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, AlertListActivity::class.java);
+                startActivity(intent)
             }
             R.id.nav_settings -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()

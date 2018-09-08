@@ -2,6 +2,7 @@ package com.ceaver.assin.database.converter;
 
 import android.arch.persistence.room.TypeConverter;
 
+import com.ceaver.assin.alerts.AlertType;
 import com.ceaver.assin.assets.Symbol;
 import com.ceaver.assin.trades.TradeStrategy;
 
@@ -51,5 +52,15 @@ public class Converters {
     @TypeConverter
     public static String toOrdinal(TradeStrategy strategy) {
         return strategy.name();
+    }
+
+    @TypeConverter
+    public static AlertType toAlertType(String name) {
+        return AlertType.valueOf(name);
+    }
+
+    @TypeConverter
+    public static String fromAlertType(AlertType alertType) {
+        return alertType.name();
     }
 }
