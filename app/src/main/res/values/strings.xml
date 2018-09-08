@@ -3,4 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_advice_list">AdviceListActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_start">Asset Intension</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Asset Intensions</string>
+    <string name="nav_header_subtitle">info@ceaver.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>

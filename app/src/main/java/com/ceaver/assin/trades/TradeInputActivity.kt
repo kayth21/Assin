@@ -73,7 +73,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun exitActivity() {
-        val intent = Intent(this, com.ceaver.assin.MainActivity::class.java)
+        val intent = Intent(this, com.ceaver.assin.StartActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

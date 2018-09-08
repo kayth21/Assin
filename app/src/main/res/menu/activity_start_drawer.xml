@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <!--<group android:checkableBehavior="single">-->
+        <item
+            android:id="@+id/nav_markets"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Markets" />
+        <item
+            android:id="@+id/nav_assets"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Assets" />
+        <item
+            android:id="@+id/nav_tasks"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Tasks" />
+        <item
+            android:id="@+id/nav_trades"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Trades" />
+
+
+        <item android:title="More Features">
+            <menu>
+                <item
+                    android:id="@+id/nav_alerts"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="Alerts" />
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="Settings" />
+                <item
+                    android:id="@+id/nav_import_export"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="Import/Export" />
+                <item
+                    android:id="@+id/nav_chat"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="Chat" />
+                <item
+                    android:id="@+id/nav_forum"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Forum" />
+            </menu>
+        </item>
+        <item android:title="Development Team">
+            <menu>
+                <item
+                    android:id="@+id/nav_contact"
+                    android:icon="@drawable/ic_menu_gallery"
+                    android:title="Contact" />
+                <item
+                    android:id="@+id/nav_donate"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="Donate" />
+            </menu>
+        </item>
+    <!--</group>-->
+</menu>
