@@ -28,7 +28,7 @@ class AdviceListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this);
         adviceList.adapter = adviceListAdapter
-        adviceList.addItemDecoration(DividerItemDecoration(activity.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        adviceList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllAdvices()
         adviceSwipeRefreshLayout.setOnRefreshListener { adviceSwipeRefreshLayout.isRefreshing = false; EventBus.getDefault().post(EngineEvents.Run()) }
     }
@@ -77,7 +77,7 @@ class AdviceListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Advice) {
-            val intent = Intent(activity.application, AdviceInputActivity::class.java);
+            val intent = Intent(activity!!.application, AdviceInputActivity::class.java);
             intent.putExtra(com.ceaver.assin.IntentKeys.ADVICE_ID, item.id)
             startActivity(intent)
         }
