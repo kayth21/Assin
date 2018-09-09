@@ -1,6 +1,5 @@
 package com.ceaver.assin.markets
 
-import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -9,7 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
+import com.ceaver.assin.AssinWorkerEvents
+import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus
@@ -34,7 +34,7 @@ class MarketListFragment : Fragment() {
     }
 
     private fun refreshAllTitles() {
-        EventBus.getDefault().post(MarketEngineEvents.Run())
+        AssinWorkers.completeUpdate()
     }
 
     private fun loadAllTitles() {
@@ -44,7 +44,7 @@ class MarketListFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MarketEngineEvents.Loaded) {
+    fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         loadAllTitles()
         Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
     }

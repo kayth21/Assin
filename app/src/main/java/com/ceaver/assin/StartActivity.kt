@@ -19,21 +19,17 @@ import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.engine.TradeAdviceEngine
-import com.ceaver.assin.markets.MarketEngine
-import com.ceaver.assin.markets.MarketEngineEvents
 import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.app_bar_start.*
-import org.greenrobot.eventbus.EventBus
 
 class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     init {
         TradeAdviceEngine.wakeup()
-        MarketEngine.wakeup()
         TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
-        EventBus.getDefault().post(MarketEngineEvents.Run())
+        AssinWorkers.completeUpdate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
