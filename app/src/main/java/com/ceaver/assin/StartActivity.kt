@@ -15,6 +15,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
 import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
@@ -24,6 +28,7 @@ import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.app_bar_start.*
+import java.util.concurrent.TimeUnit
 
 class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,6 +52,19 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 1, TimeUnit.MINUTES).build()
+        WorkManager.getInstance().enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
+    }
+
+    class StartWorker : Worker() {
+        override fun doWork(): Result {
+            AssinWorkers.completeUpdate()
+            return Result.SUCCESS
+        }
     }
 
     override fun onBackPressed() {
