@@ -7,10 +7,10 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="10sp"
+    android:paddingBottom="5sp"
     android:paddingLeft="20sp"
     android:paddingRight="20sp"
-    android:paddingTop="10sp">
+    android:paddingTop="5sp">
 
     <TextView
         android:id="@+id/assetNameTextView"
