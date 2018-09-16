@@ -48,4 +48,9 @@ class LogListActivity : AppCompatActivity() {
         loadAllLogs()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: LogEvents.Update) {
+        loadAllLogs()
+    }
+
 }

@@ -7,22 +7,31 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="10sp"
-    android:paddingLeft="20sp"
-    android:paddingRight="20sp"
-    android:paddingTop="10sp">
+    android:paddingBottom="2sp"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
+    android:paddingTop="2sp">
 
     <TextView
         android:id="@+id/logTimestampTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/logIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="10sp"
         android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/logMessageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:textSize="13sp"
+        android:layout_below="@id/logTimestampTextView" />
 
 </RelativeLayout>

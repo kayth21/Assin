@@ -56,7 +56,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onStart() {
         super.onStart()
-        val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 1, TimeUnit.MINUTES).build()
+        val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).build()
         WorkManager.getInstance().enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
     }
 

@@ -25,6 +25,7 @@ class LogListAdapter : RecyclerView.Adapter<LogListAdapter.ViewHolder>() {
 
         fun bindItem(log: Log) {
             (view.findViewById(R.id.logTimestampTextView) as TextView).text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
+            (view.findViewById(R.id.logIdTextView) as TextView).text = "#" + log.id
             (view.findViewById(R.id.logMessageTextView) as TextView).text = log.message
         }
     }

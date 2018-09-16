@@ -6,15 +6,33 @@ import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
+import java.util.*
 
 object LogRepository {
 
-    fun insert(message: String) {
-        getLogDao().insertLog(Log(0, LocalDateTime.now(), message))
+    fun insertLog(message: String) {
+        insertLog(message, UUID.randomUUID())
+    }
+
+    fun insertLog(message: String, uuid: UUID) {
+        insertLog(Log(0, LocalDateTime.now(), message, uuid))
+    }
+
+    fun updateLog(log: Log) {
+        getLogDao().updateLog(log)
+        EventBus.getDefault().post(LogEvents.Update())
+    }
+
+    fun loadLog(identifier: UUID): Log {
+       return getLogDao().loadLog(identifier)
+    }
+
+    private fun insertLog(log: Log) {
+        getLogDao().insertLog(log)
         EventBus.getDefault().post(LogEvents.Insert())
     }
 
-    fun loadAllLogs(): List<Log> {
+    private fun loadAllLogs(): List<Log> {
         return getLogDao().loadAllLogs()
     }
 

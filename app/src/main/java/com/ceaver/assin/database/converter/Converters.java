@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -73,5 +74,16 @@ public class Converters {
     @TypeConverter
     public static String fromAlertType(AlertType alertType) {
         return alertType.name();
+    }
+
+
+    @TypeConverter
+    public static UUID toUuid(String uuid) {
+        return UUID.fromString(uuid);
+    }
+
+    @TypeConverter
+    public static String fromUuid(UUID uuid) {
+        return uuid.toString();
     }
 }

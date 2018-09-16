@@ -1,6 +1,7 @@
 package com.ceaver.assin.logging
 
 import android.arch.persistence.room.*
+import java.util.*
 
 @Dao
 interface LogDao {
@@ -21,4 +22,7 @@ interface LogDao {
 
     @Query("select * from log where id = :id")
     fun loadLog(id: Long): Log
+
+    @Query("select * from log where uuid = :uuid")
+    fun loadLog(uuid: UUID) : Log
 }

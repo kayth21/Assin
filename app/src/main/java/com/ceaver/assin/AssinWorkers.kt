@@ -8,26 +8,32 @@ import com.ceaver.assin.intensions.IntensionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketWorker
 import org.greenrobot.eventbus.EventBus
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.*
 import java.util.stream.Collectors
 
 object AssinWorkers {
 
     fun completeUpdate() {
+        val identifier = UUID.randomUUID();
         WorkManager.getInstance()
-                .beginWith(logMessage())
+                .beginWith(notifyStart(identifier))
                 .then(updateAllTitles())
                 .then(checkAlerts(), checkIntentions())
-                .then(notifyListeners())
+                .then(notifyEnd(identifier))
                 .enqueue()
     }
 
 
-    private fun logMessage(): OneTimeWorkRequest {
-        return OneTimeWorkRequestBuilder<LogWorker>().build()
+    private fun notifyStart(identifier: UUID): OneTimeWorkRequest {
+        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
+        return OneTimeWorkRequestBuilder<StartNotificationWorker>().setInputData(data).build()
     }
 
-    private fun notifyListeners(): OneTimeWorkRequest {
-        return OneTimeWorkRequestBuilder<NotificationWorker>().build()
+    private fun notifyEnd(identifier: UUID): OneTimeWorkRequest {
+        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
+        return OneTimeWorkRequestBuilder<EndNotificationWorker>().setInputData(data).build()
     }
 
     private fun checkIntentions(): OneTimeWorkRequest {
@@ -45,16 +51,21 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<MarketWorker>().setInputData(data).build()
     }
 
-    class NotificationWorker : Worker() {
+    class StartNotificationWorker : Worker() {
         override fun doWork(): Result {
-            EventBus.getDefault().post(AssinWorkerEvents.Complete())
+            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
+            LogRepository.insertLog("Assin workers: starting complete update...", uuid)
             return Result.SUCCESS
         }
     }
 
-    class LogWorker : Worker() {
+    class EndNotificationWorker : Worker() {
         override fun doWork(): Result {
-            LogRepository.insert("start complete update")
+            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
+            val log = LogRepository.loadLog(uuid)
+            val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
+            LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
+            EventBus.getDefault().post(AssinWorkerEvents.Complete())
             return Result.SUCCESS
         }
     }
