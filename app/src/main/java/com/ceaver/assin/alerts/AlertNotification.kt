@@ -37,7 +37,7 @@ object AlertNotification {
         val pendingIntent = PendingIntent.getActivity(MyApplication.appContext!!, 0, intent, 0)
 
         val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon_background)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("BTC Target " + "%.2f".format(targetPrice) + " USD reached!")
                 .setContentText("Current Price: " + "%.2f".format(currentPrice) + " USD")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
