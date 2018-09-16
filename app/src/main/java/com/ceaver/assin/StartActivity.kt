@@ -62,7 +62,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     class StartWorker : Worker() {
         override fun doWork(): Result {
-            AssinWorkers.completeUpdate()
+            AssinWorkers.observedUpdate()
             return Result.SUCCESS
         }
     }

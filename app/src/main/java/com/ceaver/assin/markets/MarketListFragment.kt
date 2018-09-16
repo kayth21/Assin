@@ -49,6 +49,12 @@ class MarketListFragment : Fragment() {
         Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        loadAllTitles()
+        Toast.makeText(getActivity(), "Observed refreshed", Toast.LENGTH_SHORT).show();
+    }
+
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);

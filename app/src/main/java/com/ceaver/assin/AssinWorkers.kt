@@ -1,6 +1,7 @@
 package com.ceaver.assin
 
 import androidx.work.*
+import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
 import com.ceaver.assin.assets.Category
 import com.ceaver.assin.assets.Symbol
@@ -18,22 +19,43 @@ object AssinWorkers {
     fun completeUpdate() {
         val identifier = UUID.randomUUID();
         WorkManager.getInstance()
-                .beginWith(notifyStart(identifier))
+                .beginWith(notifyCompleteStart(identifier))
                 .then(updateAllTitles())
                 .then(checkAlerts(), checkIntentions())
-                .then(notifyEnd(identifier))
+                .then(notifyCompleteEnd(identifier))
                 .enqueue()
     }
 
 
-    private fun notifyStart(identifier: UUID): OneTimeWorkRequest {
-        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
-        return OneTimeWorkRequestBuilder<StartNotificationWorker>().setInputData(data).build()
+    fun observedUpdate() {
+        val identifier = UUID.randomUUID();
+        WorkManager.getInstance()
+                .beginWith(notifyObservedStart(identifier))
+                .then(updateObservedTitles())
+                .then(checkAlerts(), checkIntentions())
+                .then(notifyObservedEnd(identifier))
+                .enqueue()
     }
 
-    private fun notifyEnd(identifier: UUID): OneTimeWorkRequest {
+
+    private fun notifyCompleteStart(identifier: UUID): OneTimeWorkRequest {
         val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
-        return OneTimeWorkRequestBuilder<EndNotificationWorker>().setInputData(data).build()
+        return OneTimeWorkRequestBuilder<StartCompleteNotificationWorker>().setInputData(data).build()
+    }
+
+    private fun notifyObservedStart(identifier: UUID): OneTimeWorkRequest {
+        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
+        return OneTimeWorkRequestBuilder<StartObservedNotificationWorker>().setInputData(data).build()
+    }
+
+    private fun notifyCompleteEnd(identifier: UUID): OneTimeWorkRequest {
+        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
+        return OneTimeWorkRequestBuilder<EndCompleteNotificationWorker>().setInputData(data).build()
+    }
+
+    private fun notifyObservedEnd(identifier: UUID): OneTimeWorkRequest {
+        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
+        return OneTimeWorkRequestBuilder<EndObservedNotificationWorker>().setInputData(data).build()
     }
 
     private fun checkIntentions(): OneTimeWorkRequest {
@@ -44,14 +66,20 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<AlertWorker>().build()
     }
 
-    private fun updateAllTitles() = Symbol.values(Category.CRYPTO).stream().map { requestBuilder(it) }.collect(Collectors.toList())
+    private fun updateAllTitles(): MutableList<OneTimeWorkRequest> {
+        return Symbol.values(Category.CRYPTO).stream().map { requestBuilder(it) }.collect(Collectors.toList())
+    }
+
+    private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
+        return AlertRepository.loadAllAlerts().stream().map { it.symbol }.map { requestBuilder(it) }.collect(Collectors.toList())
+    }
 
     private fun requestBuilder(symbol: Symbol): OneTimeWorkRequest {
         val data = Data.Builder().putString(Symbol.toString(), symbol.name).build()
         return OneTimeWorkRequestBuilder<MarketWorker>().setInputData(data).build()
     }
 
-    class StartNotificationWorker : Worker() {
+    class StartCompleteNotificationWorker : Worker() {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting complete update...", uuid)
@@ -59,7 +87,15 @@ object AssinWorkers {
         }
     }
 
-    class EndNotificationWorker : Worker() {
+    class StartObservedNotificationWorker : Worker() {
+        override fun doWork(): Result {
+            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
+            LogRepository.insertLog("Assin workers: starting observed update...", uuid)
+            return Result.SUCCESS
+        }
+    }
+
+    class EndCompleteNotificationWorker : Worker() {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
@@ -70,8 +106,14 @@ object AssinWorkers {
         }
     }
 
-    fun observedUpdate() {
-        TODO()
+    class EndObservedNotificationWorker : Worker() {
+        override fun doWork(): Result {
+            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
+            val log = LogRepository.loadLog(uuid)
+            val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
+            LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
+            EventBus.getDefault().post(AssinWorkerEvents.Observed())
+            return Result.SUCCESS
+        }
     }
-
 }
