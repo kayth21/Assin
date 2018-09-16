@@ -19,6 +19,7 @@ import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.engine.TradeAdviceEngine
+import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
 import kotlinx.android.synthetic.main.activity_start.*
@@ -29,7 +30,6 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     init {
         TradeAdviceEngine.wakeup()
         TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
-        AssinWorkers.completeUpdate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +95,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
             }
             R.id.nav_alerts -> {
-                val intent = Intent(this, AlertListActivity::class.java);
+                val intent = Intent(this, AlertListActivity::class.java)
                 startActivity(intent)
             }
             R.id.nav_settings -> {
@@ -115,6 +115,10 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.nav_donate -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_logging -> {
+                val intent = Intent(this, LogListActivity::class.java)
+                startActivity(intent)
             }
         }
 

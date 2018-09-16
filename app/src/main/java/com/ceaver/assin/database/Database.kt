@@ -9,16 +9,19 @@ import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertDao
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetDao
+import com.ceaver.assin.logging.Log
+import com.ceaver.assin.logging.LogDao
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeDao
 
-@android.arch.persistence.room.Database(entities = arrayOf(Trade::class, Advice::class, Asset::class, Alert::class), version = 1, exportSchema = false)
+@android.arch.persistence.room.Database(entities = arrayOf(Trade::class, Advice::class, Asset::class, Alert::class, Log::class), version = 1, exportSchema = false)
 @TypeConverters(com.ceaver.assin.database.converter.Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun tradeDao(): TradeDao
     abstract fun adviceDao(): AdviceDao
     abstract fun assetDao(): AssetDao
     abstract fun alertDao(): AlertDao
+    abstract fun logDao(): LogDao
 
     companion object {
         private var INSTANCE: Database? = null

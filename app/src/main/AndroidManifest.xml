@@ -33,7 +33,8 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".alerts.AlertListActivity" />
-        <activity android:name=".alerts.AlertInputActivity"></activity>
+        <activity android:name=".alerts.AlertInputActivity" />
+        <activity android:name=".logging.LogListActivity"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import com.ceaver.assin.assets.Symbol;
 import com.ceaver.assin.trades.TradeStrategy;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -32,6 +33,16 @@ public class Converters {
     @TypeConverter
     public static Long localDateToDaysFromEpoch(LocalDate date) {
         return date == null ? null : ChronoUnit.DAYS.between(LocalDate.MIN, date);
+    }
+
+    @TypeConverter
+    public static LocalDateTime toLocalDateTime(Long secondsFromEpoch) {
+        return secondsFromEpoch == null ? null : LocalDateTime.MIN.plusSeconds(secondsFromEpoch);
+    }
+
+    @TypeConverter
+    public static Long fromLocalDateTime(LocalDateTime dateTime) {
+        return dateTime == null ? null : ChronoUnit.SECONDS.between(LocalDateTime.MIN, dateTime);
     }
 
     @TypeConverter

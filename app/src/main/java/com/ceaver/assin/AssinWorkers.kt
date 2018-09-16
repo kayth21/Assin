@@ -5,6 +5,7 @@ import com.ceaver.assin.alerts.AlertWorker
 import com.ceaver.assin.assets.Category
 import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.intensions.IntensionWorker
+import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketWorker
 import org.greenrobot.eventbus.EventBus
 import java.util.stream.Collectors
@@ -13,10 +14,16 @@ object AssinWorkers {
 
     fun completeUpdate() {
         WorkManager.getInstance()
-                .beginWith(updateAllTitles())
+                .beginWith(logMessage())
+                .then(updateAllTitles())
                 .then(checkAlerts(), checkIntentions())
                 .then(notifyListeners())
-                .enqueue();
+                .enqueue()
+    }
+
+
+    private fun logMessage(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<LogWorker>().build()
     }
 
     private fun notifyListeners(): OneTimeWorkRequest {
@@ -41,6 +48,13 @@ object AssinWorkers {
     class NotificationWorker : Worker() {
         override fun doWork(): Result {
             EventBus.getDefault().post(AssinWorkerEvents.Complete())
+            return Result.SUCCESS
+        }
+    }
+
+    class LogWorker : Worker() {
+        override fun doWork(): Result {
+            LogRepository.insert("start complete update")
             return Result.SUCCESS
         }
     }
