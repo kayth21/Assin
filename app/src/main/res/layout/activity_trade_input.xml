@@ -1,80 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/coinmarketcapIdEditText"
+    <data>
+        <import type="com.ceaver.assin.util.CalendarHelper"/>
+        <import type="java.time.format.DateTimeFormatter"/>
+        <import type="java.time.LocalDate"/>
+        <import type="com.ceaver.assin.trades.TradeStrategy"/>
+        <variable name="trade" type="com.ceaver.assin.trades.Trade" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/purchaseDateEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Purchase Date"
-        android:inputType="none" />
-
-    <EditText
-        android:id="@+id/purchaseAmountEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Purchase Amount"
-        android:inputType="numberDecimal" />
-
-    <EditText
-        android:id="@+id/purchasePriceEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Purchase Price"
-        android:inputType="numberDecimal" />
-
-    <RadioGroup
-        android:id="@+id/strategyRadioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/hodlStrategyRadioButton"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/coinmarketcapIdEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="HODL" />
+            android:ems="10"
+            android:hint="Name"
+            android:text="@{String.valueOf(trade.coinmarketcapId)}"
+            android:inputType="textPersonName" />
 
-        <RadioButton
-            android:id="@+id/doubleOutStrategyRadioButton"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Double Out" />
+            android:ems="10"
+            android:hint="Name"
+            android:text="@={trade.comment}"
+            android:inputType="textPersonName" />
 
-        <RadioButton
-            android:id="@+id/asapNoLossesRadioButton"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/purchaseDateEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ASAP (without losses)" />
+            android:ems="10"
+            android:hint="Purchase Date"
+            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.tradeDate)}"
+            android:inputType="none" />
 
-    </RadioGroup>
+        <EditText
+            android:id="@+id/purchaseAmountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Purchase Amount"
+            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.purchaseAmount)}"
+            android:inputType="number" />
 
-    <CheckBox
-        android:id="@+id/badTradeNotificationCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bad Trade Notification? (-20%)" />
+        <EditText
+            android:id="@+id/purchasePriceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Purchase Price"
+            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.purchasePrice)}"
+            android:inputType="numberDecimal" />
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save" />
+        <RadioGroup
+            android:id="@+id/strategyRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/hodlStrategyRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="@{trade.strategies.contains(TradeStrategy.HODL)}"
+                android:text="HODL" />
+
+            <RadioButton
+                android:id="@+id/doubleOutStrategyRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="@{trade.strategies.contains(TradeStrategy.DOUBLE_OUT)}"
+                android:text="Double Out" />
+
+            <RadioButton
+                android:id="@+id/asapNoLossesRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="@{trade.strategies.contains(TradeStrategy.ASAP_NO_LOSSES)}"
+                android:text="ASAP (without losses)" />
+
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/badTradeNotificationCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@{trade.strategies.contains(TradeStrategy.BAD_TRADE)}"
+            android:text="Bad Trade Notification? (-20%)" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+    </LinearLayout>
+
+</layout>

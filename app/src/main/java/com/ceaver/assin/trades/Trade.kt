@@ -6,10 +6,11 @@ import android.arch.persistence.room.PrimaryKey
 import java.time.LocalDate
 
 @Entity(tableName = "trade")
-data class Trade(//
+data class Trade(
         @ColumnInfo(name = "id")@PrimaryKey(autoGenerate = true) var id: Long = 0,
-        @ColumnInfo(name = "coinmarketcapId") val coinmarketcapId: Int, //
-        @ColumnInfo(name = "tradeDate") val tradeDate: LocalDate, //
-        @ColumnInfo(name = "purchasePrice") val purchasePrice: Double, //
-        @ColumnInfo(name = "purchaseAmount") val purchaseAmount: Double, //
+        @ColumnInfo(name = "coinmarketcapId") var coinmarketcapId: Int = 0, //
+        @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
+        @ColumnInfo(name = "comment") var comment: String = "", //
+        @ColumnInfo(name = "purchasePrice") var purchasePrice: Double = 0.0, //
+        @ColumnInfo(name = "purchaseAmount") var purchaseAmount: Double = 0.0, //
         @ColumnInfo(name = "strategies") val strategies: Set<TradeStrategy>)
