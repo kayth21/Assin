@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.ContextCompat.getSystemService
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
+import com.ceaver.assin.StartActivity
 import java.util.*
 
 
@@ -32,7 +33,7 @@ object AlertNotification {
 
     fun notify(targetPrice: Double, currentPrice: Double) {
 
-        val intent = Intent(MyApplication.appContext!!, AlertListActivity::class.java)
+        val intent = Intent(MyApplication.appContext!!, StartActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
         val pendingIntent = PendingIntent.getActivity(MyApplication.appContext!!, 0, intent, 0)
 
