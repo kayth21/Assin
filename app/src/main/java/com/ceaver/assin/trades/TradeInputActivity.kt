@@ -6,6 +6,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.databinding.ActivityTradeInputBinding
@@ -20,33 +21,71 @@ import java.util.*
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
 
     private val purchaseDatePickerFragmentTag = UUID.randomUUID().toString()
-    lateinit var binding: ActivityTradeInputBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_trade_input)
-        val tradeId = intent.getLongExtra(com.ceaver.assin.IntentKeys.TRADE_ID, 0)
 
-        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
-        purchaseDateEditText.setKeyListener(null) // hack to disable user input
+        val binding = publishView()
+        val tradeId = lookupTradeId()
+        val viewModel = lookupViewModel(tradeId)
 
+        bindActions(viewModel, binding)
+        bindTrade(viewModel, binding)
+        observeStatus(viewModel)
+
+        modifyPurchaseDateField()
+        modifyCoinMarketCapField()
+    }
+
+    private fun publishView(): ActivityTradeInputBinding = DataBindingUtil.setContentView(this, R.layout.activity_trade_input)
+
+    private fun lookupTradeId() = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
+
+    private fun lookupViewModel(tradeId: Long): TradeViewModel = ViewModelProviders.of(this).get(TradeViewModel::class.java).init(tradeId)
+
+    private fun bindActions(viewModel: TradeViewModel, binding: ActivityTradeInputBinding) {
+        binding.saveClickHandler = viewModel
+    }
+
+    private fun bindTrade(viewModel: TradeViewModel, binding: ActivityTradeInputBinding) {
+        viewModel.trade.observe(this, Observer { onTradeUpdate(binding, it) })
+    }
+
+    private fun onTradeUpdate(binding: ActivityTradeInputBinding, trade: Trade?) {
+        binding.trade = trade
+        validateFields()
+        saveButton.isEnabled = true
+    }
+
+    private fun observeStatus(viewModel: TradeViewModel) {
+        viewModel.status.observe(this, Observer {
+            when (it) {
+                TradeViewModel.TradeInputStatus.START_SAVE -> onStartSave()
+                TradeViewModel.TradeInputStatus.END_SAVE -> onEndSave()
+            }
+        })
+    }
+
+    private fun onStartSave() {
+        saveButton.isEnabled = false // TODO Disable inputs fields as well
+    }
+
+    private fun onEndSave() {
+        exitActivity()
+    }
+
+    private fun exitActivity() {
+        val intent = Intent(this, StartActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+    }
+
+    private fun modifyCoinMarketCapField() {
         // TODO Start: Remove
         coinmarketcapIdEditText.setText("Bitcoin (BTC)")
         coinmarketcapIdEditText.setKeyListener(null) // hack to disable user input
         // TODO End
-
-        val viewModel = ViewModelProviders.of(this).get(TradeViewModel::class.java).init(tradeId)
-
-        viewModel.trade.observe(this, Observer { binding.trade = it; validateFields(); saveButton.isEnabled = true })
-
-        saveButton.setOnClickListener {
-            // TODO Replace with some generic code / better implementation
-            if (coinmarketcapIdEditText.error != null || purchaseDateEditText.error != null || purchasePriceEditText.error != null || purchaseAmountEditText.error != null) {
-                return@setOnClickListener
-            }
-            TradeRepository.saveTradeAsync(viewModel.trade.value!!)
-            exitActivity()
-        }
     }
 
     private fun validateFields() {
@@ -56,11 +95,9 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         purchaseAmountEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
     }
 
-    private fun exitActivity() {
-        val intent = Intent(this, StartActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+    private fun TradeInputActivity.modifyPurchaseDateField() {
+        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
+        purchaseDateEditText.setKeyListener(null) // hack to disable user input
     }
 
     override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {

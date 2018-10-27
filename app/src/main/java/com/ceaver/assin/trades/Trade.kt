@@ -13,4 +13,4 @@ data class Trade(
         @ColumnInfo(name = "comment") var comment: String = "", //
         @ColumnInfo(name = "purchasePrice") var purchasePrice: Double = 0.0, //
         @ColumnInfo(name = "purchaseAmount") var purchaseAmount: Double = 0.0, //
-        @ColumnInfo(name = "strategies") val strategies: Set<TradeStrategy>)
+        @ColumnInfo(name = "strategies") var strategies: MutableSet<TradeStrategy> = hashSetOf());

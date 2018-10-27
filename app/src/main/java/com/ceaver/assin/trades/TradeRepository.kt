@@ -41,24 +41,24 @@ object TradeRepository {
         if (trade.id > 0) updateTrade(trade) else insertTrade(trade)
     }
 
-    fun saveTradeAsync(trade: Trade) {
-        if (trade.id > 0) updateTradeAsync(trade) else insertTradeAsync(trade)
+    fun saveTradeAsync(trade: Trade, callbackInMainThread: Boolean, callback: () -> Unit) {
+        if (trade.id > 0) updateTradeAsync(trade, callbackInMainThread, callback) else insertTradeAsync(trade, callbackInMainThread, callback)
     }
 
     fun insertTrade(trade: Trade) {
         getTradeDao().insertTrade(trade); EventBus.getDefault().post(TradeEvents.Insert())
     }
 
-    fun insertTradeAsync(trade: Trade) {
-        BackgroundThreadExecutor.execute { insertTrade(trade) }
+    fun insertTradeAsync(trade: Trade, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { insertTrade(trade); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
     fun updateTrade(trade: Trade) {
         getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update())
     }
 
-    fun updateTradeAsync(trade: Trade) {
-        BackgroundThreadExecutor.execute { updateTrade(trade) }
+    fun updateTradeAsync(trade: Trade, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { updateTrade(trade); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
     fun deleteTrade(trade: Trade) {
