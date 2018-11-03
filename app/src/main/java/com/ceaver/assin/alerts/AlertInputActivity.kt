@@ -6,8 +6,10 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.ArrayAdapter
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
+import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.databinding.ActivityAlertInputBinding
 import com.ceaver.assin.extensions.validateFields
 import kotlinx.android.synthetic.main.activity_alert_input.*
@@ -19,9 +21,10 @@ class AlertInputActivity : AppCompatActivity() {
 
         val binding = publishView()
         val alertId = lookupAlertId()
-        val viewModel = lookupViewModel(alertId)
+        val viewModel = lookupViewModel().init(alertId)
 
         bindActions(viewModel, binding)
+        bindSymbol(viewModel)
         bindAlert(viewModel, binding)
         observeStatus(viewModel)
     }
@@ -30,10 +33,17 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun lookupAlertId() = intent.getLongExtra(IntentKeys.ALERT_ID, 0)
 
-    private fun lookupViewModel(alertId: Long): AlertViewModel = ViewModelProviders.of(this).get(AlertViewModel::class.java).init(alertId)
+    private fun lookupViewModel(): AlertViewModel = ViewModelProviders.of(this).get(AlertViewModel::class.java)
 
     private fun bindActions(viewModel: AlertViewModel, binding: ActivityAlertInputBinding) {
         binding.saveClickHandler = viewModel
+    }
+
+    private fun bindSymbol(viewModel: AlertViewModel) {
+        val adapter = ArrayAdapter<Symbol>(this, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        alertSymbolText.setAdapter(adapter)
+        viewModel.symbol.observe(this, Observer { adapter.addAll(it) })
     }
 
     private fun bindAlert(viewModel: AlertViewModel, binding: ActivityAlertInputBinding) {

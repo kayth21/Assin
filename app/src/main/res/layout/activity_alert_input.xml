@@ -12,14 +12,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
+        <Spinner
             android:id="@+id/alertSymbolText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Symbol"
-            android:text="Bitcoin... TODO"
-            android:inputType="numberDecimal" />
+            android:selection="@={UiConverter.toInt(alert.symbol)}"
+            android:hint="Symbol" />
 
         <EditText
             android:id="@+id/alertSourceEditText"
