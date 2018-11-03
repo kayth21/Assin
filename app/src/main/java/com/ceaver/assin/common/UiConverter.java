@@ -1,11 +1,11 @@
-package com.ceaver.assin.trades;
+package com.ceaver.assin.common;
 
 import android.databinding.InverseMethod;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Converters {
+public class UiConverter {
     @InverseMethod("toDouble")
     public static String toString(double value) {
         if (value == 0.0) {

@@ -6,6 +6,7 @@
         <import type="java.time.format.DateTimeFormatter"/>
         <import type="java.time.LocalDate"/>
         <import type="com.ceaver.assin.trades.TradeStrategy"/>
+        <import type="com.ceaver.assin.common.UiConverter"/>
         <variable name="trade" type="com.ceaver.assin.trades.Trade" />
         <variable name="saveClickHandler" type="com.ceaver.assin.common.SaveClickHandler" />
     </data>
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Purchase Date"
-            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.tradeDate)}"
+            android:text="@={UiConverter.toString(trade.tradeDate)}"
             android:inputType="none" />
 
         <EditText
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Purchase Amount"
-            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.purchaseAmount)}"
+            android:text="@={UiConverter.toString(trade.purchaseAmount)}"
             android:inputType="number" />
 
         <EditText
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Purchase Price"
-            android:text="@={com.ceaver.assin.trades.Converters.toString(trade.purchasePrice)}"
+            android:text="@={UiConverter.toString(trade.purchasePrice)}"
             android:inputType="numberDecimal" />
 
         <RadioGroup
