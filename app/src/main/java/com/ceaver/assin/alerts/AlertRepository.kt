@@ -41,24 +41,24 @@ object AlertRepository {
         if (alert.id > 0) updateAlert(alert) else insertAlert(alert)
     }
 
-    fun saveAlertAsync(alert: Alert) {
-        if (alert.id > 0) updateAlertAsync(alert) else insertAlertAsync(alert)
+    fun saveAlertAsync(alert: Alert, callbackInMainThread: Boolean, callback: () -> Unit) {
+        if (alert.id > 0) updateAlertAsync(alert, callbackInMainThread, callback) else insertAlertAsync(alert, callbackInMainThread, callback)
     }
 
     fun insertAlert(alert: Alert) {
         AlertRepository.getAlertDao().insertAlert(alert); EventBus.getDefault().post(AlertEvents.Insert())
     }
 
-    fun insertAlertAsync(alert: Alert) {
-        BackgroundThreadExecutor.execute { insertAlert(alert) }
+    fun insertAlertAsync(alert: Alert, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { insertAlert(alert); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
     fun updateAlert(alert: Alert) {
         AlertRepository.getAlertDao().updateAlert(alert); EventBus.getDefault().post(AlertEvents.Update())
     }
 
-    fun updateAlertAsync(alert: Alert) {
-        BackgroundThreadExecutor.execute { updateAlert(alert) }
+    fun updateAlertAsync(alert: Alert, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { updateAlert(alert); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
     fun deleteAlert(alert: Alert) {

@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/alertSymbolText"
+    <data>
+        <import type="com.ceaver.assin.common.UiConverter"/>
+        <variable name="alert" type="com.ceaver.assin.alerts.Alert" />
+        <variable name="saveClickHandler" type="com.ceaver.assin.common.SaveClickHandler" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Symbol"
-        android:inputType="numberDecimal" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/alertSourceEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Start price"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/alertSymbolText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Symbol"
+            android:text="Bitcoin... TODO"
+            android:inputType="numberDecimal" />
 
-    <EditText
-        android:id="@+id/alertTargetEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Range (+/-)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/alertSourceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Start price"
+            android:text="@={UiConverter.toString(alert.source)}"
+            android:inputType="numberDecimal" />
 
-    <Button
-        android:id="@+id/alertSaveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save" />
+        <EditText
+            android:id="@+id/alertTargetEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Range (+/-)"
+            android:text="@={UiConverter.toString(alert.target)}"
+            android:inputType="numberDecimal" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/alertSaveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> saveClickHandler.onSaveClick()}"
+            android:enabled="false"
+            android:text="Save" />
+
+    </LinearLayout>
+
+</layout>
