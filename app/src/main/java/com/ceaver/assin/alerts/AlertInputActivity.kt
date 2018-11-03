@@ -25,6 +25,7 @@ class AlertInputActivity : AppCompatActivity() {
 
         bindActions(viewModel, binding)
         bindSymbol(viewModel)
+        bindReference(viewModel)
         bindAlert(viewModel, binding)
         observeStatus(viewModel)
     }
@@ -44,6 +45,13 @@ class AlertInputActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
         viewModel.symbol.observe(this, Observer { adapter.addAll(it) })
+    }
+
+    private fun bindReference(viewModel: AlertViewModel) {
+        val adapter = ArrayAdapter<Symbol>(this, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        alertReferenceText.setAdapter(adapter)
+        viewModel.reference.observe(this, Observer { adapter.addAll(it) })
     }
 
     private fun bindAlert(viewModel: AlertViewModel, binding: ActivityAlertInputBinding) {

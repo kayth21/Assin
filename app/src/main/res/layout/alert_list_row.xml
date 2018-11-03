@@ -21,23 +21,23 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/alertLowerTargetTextView"
+        android:id="@+id/alertRangeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/alertSymbolTextView" />
 
     <TextView
-        android:id="@+id/alertRangeTextView"
+        android:id="@+id/alertUpperTargetTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
     <TextView
-        android:id="@+id/alertUpperTargetTextView"
+        android:id="@+id/alertLowerTargetTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alertRangeTextView"
+        android:layout_below="@id/alertUpperTargetTextView"
         android:layout_alignParentRight="true" />
 
 </RelativeLayout>

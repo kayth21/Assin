@@ -11,9 +11,11 @@ class AlertViewModel : ViewModel(), SaveClickHandler {
     val alert = MutableLiveData<Alert>()
     val status = SingleLiveEvent<AlertInputStatus>()
     val symbol = MutableLiveData<List<Symbol>>()
+    val reference = MutableLiveData<List<Symbol>>()
 
     fun init(alertId: Long = 0): AlertViewModel {
         symbol.postValue(Symbol.values().toList())
+        reference.postValue(Symbol.values().toList())
         if (alertId > 0) lookupAlert(alertId) else createAlert(); return this
     }
 
@@ -28,7 +30,6 @@ class AlertViewModel : ViewModel(), SaveClickHandler {
     override fun onSaveClick() {
         status.value = AlertInputStatus.START_SAVE
         AlertRepository.saveAlertAsync(alert.value!!, true) { status.value = AlertInputStatus.END_SAVE }    }
-
 
     enum class AlertInputStatus {
         START_SAVE,
