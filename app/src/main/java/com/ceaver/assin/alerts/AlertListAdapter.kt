@@ -31,10 +31,11 @@ internal class AlertListAdapter(private val onClickListener: AlertListActivity.O
         }
 
         fun bindItem(alert: Alert, onClickListener: AlertListActivity.OnItemClickListener) {
-            (view.findViewById(R.id.alertSymbolTextView) as TextView).text = "${alert.symbol.label} (${alert.symbol.name})"
-            (view.findViewById(R.id.alertLowerTargetTextView) as TextView).text = "T1: " + "%.2f".format((alert.source - alert.target)) + " ${alert.reference}"
-            (view.findViewById(R.id.alertUpperTargetTextView) as TextView).text = "T2: " + "%.2f".format((alert.source + alert.target)) + " ${alert.reference}"
-            (view.findViewById(R.id.alertRangeTextView) as TextView).text = "Range: "+ "%.2f".format(alert.target) + " ${alert.reference}"
+            val referenceFormat = if(alert.reference.isCrypto()) "%.8f" else "%.2f"
+            (view.findViewById(R.id.alertSymbolTextView) as TextView).text = "${alert.symbol.label} (${alert.symbol.name}/${alert.reference})"
+            (view.findViewById(R.id.alertLowerTargetTextView) as TextView).text = "Upper Target: " + referenceFormat.format((alert.source - alert.target)) + " ${alert.reference}"
+            (view.findViewById(R.id.alertUpperTargetTextView) as TextView).text = "Lower Target: " + referenceFormat.format((alert.source + alert.target)) + " ${alert.reference}"
+            (view.findViewById(R.id.alertRangeTextView) as TextView).text = "Range (+/-): "+ referenceFormat.format(alert.target) + " ${alert.reference}"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(alert) }
         }

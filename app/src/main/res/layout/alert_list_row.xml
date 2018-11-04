@@ -8,13 +8,13 @@
     android:focusable="true"
     android:orientation="vertical"
     android:paddingBottom="10sp"
-    android:paddingLeft="20sp"
-    android:paddingRight="20sp"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
     android:paddingTop="10sp">
 
     <TextView
         android:id="@+id/alertSymbolTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textSize="16dp"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/alertRangeTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/alertSymbolTextView" />
 
