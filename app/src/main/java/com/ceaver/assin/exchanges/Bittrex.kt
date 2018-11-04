@@ -1,7 +1,7 @@
 package com.ceaver.assin.exchanges
 
 import com.ceaver.assin.assets.Symbol
-import com.ceaver.assin.markets.MarketValuation
+import com.ceaver.assin.markets.MarketRepository
 import com.ceaver.assin.markets.Title
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -18,8 +18,9 @@ object Bittrex {
         val resultObject = jsonObject.getJSONArray("result").getJSONObject(0)
         val last = resultObject.getDouble("Last")
         val open = resultObject.getDouble("PrevDay")
-        val unit = if (symbol == Symbol.BTC) Symbol.USD else Symbol.BTC
-        MarketValuation.update(Title( symbol, last, open, unit))
+        val reference = if (symbol == Symbol.BTC) Symbol.USD else Symbol.BTC
+        MarketRepository.update(Title( symbol, last, open, reference))
+        MarketRepository.update(Title( reference, 1/last, 1/open, symbol))
     }
 
 

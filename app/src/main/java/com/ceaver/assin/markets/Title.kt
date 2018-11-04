@@ -3,16 +3,16 @@ package com.ceaver.assin.markets
 import com.ceaver.assin.assets.Symbol
 import java.util.*
 
-data class Title(val symbol: Symbol, val last: Double, val open: Double, val unit: Symbol) {
+data class Title(val symbol: Symbol, val last: Double, val open: Double, val reference: Symbol) {
 
     fun last(unit: Symbol) : OptionalDouble {
         if(unit == this.symbol) {
             return OptionalDouble.of(1.0)
         }
-        if(unit == this.unit) {
+        if(unit == this.reference) {
             return OptionalDouble.of(last);
         }
-        val optional = MarketValuation.load(this.unit, unit)
+        val optional = MarketRepository.load(this.reference, unit)
         if(optional.isPresent) {
             return OptionalDouble.of(last * optional.get().last)
         } else {
@@ -24,10 +24,10 @@ data class Title(val symbol: Symbol, val last: Double, val open: Double, val uni
         if(unit == this.symbol) {
             return OptionalDouble.of(1.0)
         }
-        if(unit == this.unit) {
+        if(unit == this.reference) {
             return OptionalDouble.of(open);
         }
-        val optional = MarketValuation.load(this.unit, unit)
+        val optional = MarketRepository.load(this.reference, unit)
         if(optional.isPresent) {
             return OptionalDouble.of(open * optional.get().open)
         } else {

@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat.getSystemService
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
+import com.ceaver.assin.assets.Symbol
 import java.util.*
 
 
@@ -31,7 +32,7 @@ object AlertNotification {
         }
     }
 
-    fun notify(targetPrice: Double, currentPrice: Double) {
+    fun notify(symbol: Symbol, reference: Symbol, targetPrice: Double, currentPrice: Double) {
 
         val intent = Intent(MyApplication.appContext!!, StartActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
@@ -39,8 +40,8 @@ object AlertNotification {
 
         val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("BTC Target " + "%.2f".format(targetPrice) + " USD reached!")
-                .setContentText("Current Price: " + "%.2f".format(currentPrice) + " USD")
+                .setContentTitle("$symbol " + (if(targetPrice <= currentPrice) "upper" else "lower") + " Target " + "%.2f".format(targetPrice) + " $reference reached.")
+                .setContentText("Current Price: " + "%.2f".format(currentPrice) + " $reference")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

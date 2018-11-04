@@ -73,6 +73,26 @@ enum class Symbol(val titleType: Category, val label: String) {
     TRAC(CRYPTO, "OriginTrail"),
     ;
 
+    fun isBtc() : Boolean{
+        return isSymbol(BTC)
+    }
+
+    fun isUsd() : Boolean{
+        return isSymbol(USD)
+    }
+
+    fun isSymbol(symbol: Symbol) : Boolean{
+        return symbol == this
+    }
+
+    fun isCrypto() : Boolean {
+        return Category.CRYPTO == this.titleType
+    }
+
+    fun isFiat() : Boolean {
+        return Category.FIAT == this.titleType
+    }
+
     companion object {
         fun values(titleType: Category): List<Symbol> {
             return Symbol.values().filter { it.titleType == titleType }

@@ -1,7 +1,7 @@
 package com.ceaver.assin.exchanges
 
 import com.ceaver.assin.assets.Symbol
-import com.ceaver.assin.markets.MarketValuation
+import com.ceaver.assin.markets.MarketRepository
 import com.ceaver.assin.markets.Title
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -18,8 +18,9 @@ object Kucoin {
         val resultObject = jsonObject.getJSONObject("data")
         val last = resultObject.getDouble("lastDealPrice")
         val open = ((resultObject.getDouble("changeRate")/100) +1) * last // TODO check that, what's change rate?
-        val unit = if (symbol == Symbol.BTC) Symbol.USD else Symbol.BTC
-        MarketValuation.update(Title( symbol, last, open, unit))
+        val reference = if (symbol == Symbol.BTC) Symbol.USD else Symbol.BTC
+        MarketRepository.update(Title( symbol, last, open, reference))
+        MarketRepository.update(Title( reference, 1/last, 1/open, symbol))
     }
 
 
