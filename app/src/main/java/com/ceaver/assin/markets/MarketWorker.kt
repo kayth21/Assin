@@ -10,8 +10,10 @@ class MarketWorker : Worker() {
 
     override fun doWork(): Result {
         val symbolName = inputData.getString(Symbol.toString())
-        if (Exchange.getExchanges(Symbol.valueOf(symbolName!!)).isEmpty())
-            throw IllegalStateException(symbolName)
+        if (Exchange.getExchanges(Symbol.valueOf(symbolName!!)).isEmpty()) {
+            LogRepository.insertLog("Failed to update $symbolName (no Exchange)")
+            return Result.SUCCESS
+        }
         try {
             Exchange.getExchanges(Symbol.valueOf(symbolName!!)).first().update(Symbol.valueOf(symbolName!!))
         } catch (e: Exception) {

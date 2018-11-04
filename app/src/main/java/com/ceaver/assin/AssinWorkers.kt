@@ -7,6 +7,7 @@ import com.ceaver.assin.assets.Category
 import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.intensions.IntensionWorker
 import com.ceaver.assin.logging.LogRepository
+import com.ceaver.assin.markets.MarketPathFinder
 import com.ceaver.assin.markets.MarketWorker
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
@@ -71,7 +72,7 @@ object AssinWorkers {
     }
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
-        return AlertRepository.loadAllAlerts().stream().map { it.symbol }.map { requestBuilder(it) }.collect(Collectors.toList())
+        return AlertRepository.loadAllAlerts().stream().map { MarketPathFinder.findPath(it.symbol, it.reference) }.flatMap { it.stream() }.map { it.toList() }.flatMap { it.stream() }.distinct().filter { !it.isUsd() }.map { requestBuilder(it) }.collect(Collectors.toList())
     }
 
     private fun requestBuilder(symbol: Symbol): OneTimeWorkRequest {
