@@ -12,6 +12,7 @@ import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.assets.Symbol
+import com.ceaver.assin.extensions.format
 import java.util.*
 
 
@@ -40,8 +41,8 @@ object AlertNotification {
 
         val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("$symbol " + (if(targetPrice <= currentPrice) "upper" else "lower") + " Target " + "%.2f".format(targetPrice) + " $reference reached.")
-                .setContentText("Current Price: " + "%.2f".format(currentPrice) + " $reference")
+                .setContentTitle("$symbol " + (if(targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.format(reference) + " $reference reached.")
+                .setContentText("Current Price: " + currentPrice.format(reference) + " $reference")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

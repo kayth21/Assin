@@ -1,10 +1,11 @@
 package com.ceaver.assin.extensions
 
 import com.ceaver.assin.assets.Symbol
+import java.math.MathContext
 
 fun Double.format(symbol: Symbol): String {
     return if (symbol.isCrypto()) {
-        val s = "%.8f".format(this)
+        val s = "%.8f".format(this.toBigDecimal().round(MathContext(3)))
         if (!s.contains(".")) s else s.replace(Regex("0*$"), "").replace(Regex("\\.$"), "")
     }
     else {
