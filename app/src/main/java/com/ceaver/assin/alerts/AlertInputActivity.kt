@@ -72,11 +72,9 @@ class AlertInputActivity : AppCompatActivity() {
         }
 
         fun updateUnit() {
-            if (viewModel.isNew()) {
-                val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
-                startUnitTextView.text = symbol.name
-                targetUnitTextView.text = symbol.name
-            }
+            val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+            startUnitTextView.text = symbol.name
+            targetUnitTextView.text = symbol.name
         }
         alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice() }
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice() }
