@@ -10,8 +10,9 @@ import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.common.SpinnerSelectionListener
+import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.format
-import com.ceaver.assin.extensions.validateFields
+import com.ceaver.assin.extensions.registerInputValidator
 import kotlinx.android.synthetic.main.activity_alert_input.*
 
 class AlertInputActivity : AppCompatActivity() {
@@ -76,8 +77,8 @@ class AlertInputActivity : AppCompatActivity() {
             startUnitTextView.text = symbol.name
             targetUnitTextView.text = symbol.name
         }
-        alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice() }
-        alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice() }
+        alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice(); checkSaveButton() }
+        alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
     private fun bindFields(alert: Alert?) {
@@ -118,8 +119,14 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindFieldValidators() {
-        alertSourceEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
-        alertTargetEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
+        alertSourceEditText.registerInputValidator({ s -> (s.replace(".", "").length >= 1) }, "Please enter amount")
+        alertTargetEditText.registerInputValidator({ s -> ((s.replace(".", "").length >= 1) && (s.toDouble() > 0.0)) }, "Please enter amount")
+        alertSourceEditText.afterTextChanged { checkSaveButton() }
+        alertTargetEditText.afterTextChanged { checkSaveButton() }
+    }
+
+    private fun checkSaveButton() {
+        alertSaveButton.isEnabled = alertSourceEditText.error == null && alertTargetEditText.error == null && alertSymbolText.selectedItem != alertReferenceText.selectedItem
     }
 
     private fun exitActivity() {

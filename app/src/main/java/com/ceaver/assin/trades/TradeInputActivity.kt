@@ -10,7 +10,7 @@ import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.databinding.ActivityTradeInputBinding
-import com.ceaver.assin.extensions.validateFields
+import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.util.CalendarHelper
 import com.ceaver.assin.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
@@ -89,10 +89,10 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun validateFields() {
-        coinmarketcapIdEditText.validateFields({ s -> (s.length >= 1) }, "Please select asset")
-        purchaseDateEditText.validateFields({ s -> (s.length >= 1) }, "Please enter purchase date")
-        purchasePriceEditText.validateFields({ s -> (s.length >= 1) }, "Please enter price")
-        purchaseAmountEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
+        coinmarketcapIdEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please select asset")
+        purchaseDateEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter purchase date")
+        purchasePriceEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter price")
+        purchaseAmountEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter amount")
     }
 
     private fun TradeInputActivity.modifyPurchaseDateField() {

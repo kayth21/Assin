@@ -24,7 +24,7 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     })
 }
 
-fun EditText.validateFields(validator: (String) -> Boolean, message: String) {
+fun EditText.registerInputValidator(validator: (String) -> Boolean, message: String) {
     this.afterTextChanged {
         this.error = if (validator(it)) null else message
     }

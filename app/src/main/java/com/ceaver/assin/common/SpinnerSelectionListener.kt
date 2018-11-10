@@ -5,7 +5,7 @@ import android.widget.AdapterView
 
 class SpinnerSelectionListener(private val listener: () -> Unit) : AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        kotlin.run(listener)
+        listener.invoke()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
