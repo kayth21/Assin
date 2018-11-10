@@ -31,7 +31,6 @@ class AlertInputActivity : AppCompatActivity() {
         bindFieldValidators()
     }
 
-
     private fun publishView() = setContentView(R.layout.activity_alert_input)
 
     private fun lookupAlertId() = intent.getLongExtra(IntentKeys.ALERT_ID, 0)
@@ -62,21 +61,24 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun bindViewLogic(viewModel: AlertViewModel) {
         fun updatePrice() {
-            val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
-            val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
-            val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference);
-            alertSourceEditText.setText(price.first.toString()); alertTargetEditText.setText((price.second.toString()))
+            if (viewModel.isNew()) {
+                val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
+                val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+                val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference);
+                alertSourceEditText.setText(price.first.toString()); alertTargetEditText.setText((price.second.toString()))
+            }
         }
 
         fun updateUnit() {
-            val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
-            startUnitTextView.text = symbol.name
-            targetUnitTextView.text = symbol.name
+            if (viewModel.isNew()) {
+                val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+                startUnitTextView.text = symbol.name
+                targetUnitTextView.text = symbol.name
+            }
         }
         alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice() }
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice() }
     }
-
 
     private fun bindFields(alert: Alert?) {
         if (alert != null) {
@@ -98,7 +100,6 @@ class AlertInputActivity : AppCompatActivity() {
             }
         })
     }
-
 
     private fun onSaveClick() {
         val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())

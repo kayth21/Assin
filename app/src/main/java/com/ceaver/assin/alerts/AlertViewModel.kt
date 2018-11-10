@@ -45,6 +45,8 @@ class AlertViewModel : ViewModel() {
         } else 0.0 to 0.0
     }
 
+    fun isNew(): Boolean = alert.value!!.isNew()
+
     enum class AlertInputStatus {
         START_SAVE,
         END_SAVE
