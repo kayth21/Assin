@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
@@ -26,8 +28,10 @@ class AlertInputActivity : AppCompatActivity() {
         bindReference(viewModel)
         bindAlert(viewModel)
         observeStatus(viewModel)
+        bindViewLogic(viewModel)
         bindFieldValidators()
     }
+
 
     private fun publishView() = setContentView(R.layout.activity_alert_input)
 
@@ -55,6 +59,17 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun bindAlert(viewModel: AlertViewModel) {
         viewModel.alert.observe(this, Observer { bindFields(it); alertSaveButton.isEnabled = true })
+    }
+
+    private fun bindViewLogic(viewModel: AlertViewModel) {
+        alertReferenceText.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                startUnitTextView.text = Symbol.valueOf(alertReferenceText.selectedItem.toString()).name
+                targetUnitTextView.text = Symbol.valueOf(alertReferenceText.selectedItem.toString()).name
+            }
+        }
     }
 
     private fun bindFields(alert: Alert?) {

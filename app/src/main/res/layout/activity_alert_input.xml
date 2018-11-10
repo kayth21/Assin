@@ -44,18 +44,17 @@
 
     <EditText
         android:id="@+id/alertSourceEditText"
-        android:layout_width="150dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="Start price"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/startUnitTextView"
         app:layout_constraintTop_toBottomOf="@+id/startPriceTextView" />
 
     <EditText
         android:id="@+id/alertTargetEditText"
-        android:layout_width="150dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
@@ -95,6 +94,14 @@
         app:layout_constraintTop_toBottomOf="@+id/alertSymbolText" />
 
     <TextView
+        android:id="@+id/startUnitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/alertSourceEditText"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2" />
+
+    <TextView
         android:id="@+id/targetTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,5 +109,11 @@
         app:layout_constraintStart_toStartOf="@+id/alertTargetEditText"
         app:layout_constraintTop_toTopOf="@+id/startPriceTextView" />
 
+    <TextView
+        android:id="@+id/targetUnitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/alertTargetEditText"
+        app:layout_constraintStart_toEndOf="@+id/alertTargetEditText" />
 
     </android.support.constraint.ConstraintLayout>
