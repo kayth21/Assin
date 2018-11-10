@@ -3,14 +3,12 @@ package com.ceaver.assin.alerts
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Symbol
-import com.ceaver.assin.databinding.ActivityAlertInputBinding
 import com.ceaver.assin.extensions.validateFields
 import kotlinx.android.synthetic.main.activity_alert_input.*
 
@@ -18,26 +16,27 @@ class AlertInputActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        publishView()
 
-        val binding = publishView()
         val alertId = lookupAlertId()
         val viewModel = lookupViewModel().init(alertId)
 
-        bindActions(viewModel, binding)
+        bindActions(viewModel)
         bindSymbol(viewModel)
         bindReference(viewModel)
-        bindAlert(viewModel, binding)
+        bindAlert(viewModel)
         observeStatus(viewModel)
+        bindFieldValidators()
     }
 
-    private fun publishView(): ActivityAlertInputBinding = DataBindingUtil.setContentView(this, R.layout.activity_alert_input)
+    private fun publishView() = setContentView(R.layout.activity_alert_input)
 
     private fun lookupAlertId() = intent.getLongExtra(IntentKeys.ALERT_ID, 0)
 
     private fun lookupViewModel(): AlertViewModel = ViewModelProviders.of(this).get(AlertViewModel::class.java)
 
-    private fun bindActions(viewModel: AlertViewModel, binding: ActivityAlertInputBinding) {
-        binding.saveClickHandler = viewModel
+    private fun bindActions(viewModel: AlertViewModel) {
+        alertSaveButton.setOnClickListener { onSaveClick() }
     }
 
     private fun bindSymbol(viewModel: AlertViewModel) {
@@ -54,14 +53,17 @@ class AlertInputActivity : AppCompatActivity() {
         viewModel.reference.observe(this, Observer { adapter.addAll(it) })
     }
 
-    private fun bindAlert(viewModel: AlertViewModel, binding: ActivityAlertInputBinding) {
-        viewModel.alert.observe(this, Observer { onAlertUpdate(binding, it) })
+    private fun bindAlert(viewModel: AlertViewModel) {
+        viewModel.alert.observe(this, Observer { bindFields(it); alertSaveButton.isEnabled = true })
     }
 
-    private fun onAlertUpdate(binding: ActivityAlertInputBinding, alert: Alert?) {
-        binding.alert = alert
-        validateFields()
-        alertSaveButton.isEnabled = true
+    private fun bindFields(alert: Alert?) {
+        if (alert != null) {
+            alertSymbolText.setSelection(alert.symbol.ordinal)
+            alertReferenceText.setSelection(alert.reference.ordinal)
+            alertSourceEditText.setText(alert.source.toString())
+            alertTargetEditText.setText(alert.target.toString())
+        }
     }
 
     private fun observeStatus(viewModel: AlertViewModel) {
@@ -73,6 +75,15 @@ class AlertInputActivity : AppCompatActivity() {
         })
     }
 
+
+    private fun onSaveClick() {
+        val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
+        val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+        val startPrice = alertSourceEditText.text.toString().toDouble()
+        val targetPrice = alertTargetEditText.text.toString().toDouble()
+        lookupViewModel().onSaveClick(symbol, reference, startPrice, targetPrice)
+    }
+
     private fun onStartSave() {
         alertSaveButton.isEnabled = false // TODO Disable inputs fields as well
     }
@@ -81,7 +92,7 @@ class AlertInputActivity : AppCompatActivity() {
         exitActivity()
     }
 
-    private fun validateFields() {
+    private fun bindFieldValidators() {
         alertSourceEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
         alertTargetEditText.validateFields({ s -> (s.length >= 1) }, "Please enter amount")
     }

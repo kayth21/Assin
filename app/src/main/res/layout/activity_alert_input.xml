@@ -1,120 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+    app:layout_constraintStart_toStartOf="@+id/guideline2">
 
-    <data>
-        <import type="com.ceaver.assin.common.UiConverter" />
-        <variable name="alert" type="com.ceaver.assin.alerts.Alert" />
-        <variable name="saveClickHandler" type="com.ceaver.assin.common.SaveClickHandler" />
-    </data>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Title"
+        app:layout_constraintStart_toStartOf="@+id/alertSymbolText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/alertSymbolText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Symbol"
+        app:layout_constraintStart_toStartOf="@+id/startPriceTextView"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <Spinner
+        android:id="@+id/alertReferenceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Reference"
+        app:layout_constraintStart_toStartOf="@+id/targetTextView"
+        app:layout_constraintTop_toTopOf="@+id/alertSymbolText" />
+
+    <EditText
+        android:id="@+id/alertSourceEditText"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Start price"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline2">
+        app:layout_constraintTop_toBottomOf="@+id/startPriceTextView" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+    <EditText
+        android:id="@+id/alertTargetEditText"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="Range (+/-)"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/alertSourceEditText" />
 
-        <TextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Title"
-            app:layout_constraintStart_toStartOf="@+id/alertSymbolText"
-            app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/alertSaveButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:enabled="false"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alertSourceEditText" />
 
-        <Spinner
-            android:id="@+id/alertSymbolText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Symbol"
-            android:selection="@={UiConverter.toInt(alert.symbol)}"
-            app:layout_constraintStart_toStartOf="@+id/startPriceTextView"
-            app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+    <TextView
+        android:id="@+id/basePriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Base Price"
+        app:layout_constraintStart_toStartOf="@+id/alertReferenceText"
+        app:layout_constraintTop_toTopOf="@+id/titleTextView" />
 
-        <Spinner
-            android:id="@+id/alertReferenceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Reference"
-            android:selection="@={UiConverter.toInt(alert.reference)}"
-            app:layout_constraintStart_toStartOf="@+id/targetTextView"
-            app:layout_constraintTop_toTopOf="@+id/alertSymbolText" />
+    <TextView
+        android:id="@+id/startPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Start Price"
+        app:layout_constraintStart_toStartOf="@+id/alertSourceEditText"
+        app:layout_constraintTop_toBottomOf="@+id/alertSymbolText" />
 
-        <EditText
-            android:id="@+id/alertSourceEditText"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:hint="Start price"
-            android:inputType="numberDecimal"
-            android:text="@={UiConverter.toString(alert.source)}"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/startPriceTextView" />
+    <TextView
+        android:id="@+id/targetTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Range (+/-)"
+        app:layout_constraintStart_toStartOf="@+id/alertTargetEditText"
+        app:layout_constraintTop_toTopOf="@+id/startPriceTextView" />
 
-        <EditText
-            android:id="@+id/alertTargetEditText"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:ems="10"
-            android:hint="Range (+/-)"
-            android:inputType="numberDecimal"
-            android:text="@={UiConverter.toString(alert.target)}"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/alertSourceEditText" />
-
-        <Button
-            android:id="@+id/alertSaveButton"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:enabled="false"
-            android:onClick="@{() -> saveClickHandler.onSaveClick()}"
-            android:text="Save"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/alertSourceEditText" />
-
-        <TextView
-            android:id="@+id/basePriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Base Price"
-            app:layout_constraintStart_toStartOf="@+id/alertReferenceText"
-            app:layout_constraintTop_toTopOf="@+id/titleTextView" />
-
-        <TextView
-            android:id="@+id/startPriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Start Price"
-            app:layout_constraintStart_toStartOf="@+id/alertSourceEditText"
-            app:layout_constraintTop_toBottomOf="@+id/alertSymbolText" />
-
-        <TextView
-            android:id="@+id/targetTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Range (+/-)"
-            app:layout_constraintStart_toStartOf="@+id/alertTargetEditText"
-            app:layout_constraintTop_toTopOf="@+id/startPriceTextView" />
 
     </android.support.constraint.ConstraintLayout>
-
-</layout>

@@ -3,10 +3,9 @@ package com.ceaver.assin.alerts
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.assets.Symbol
-import com.ceaver.assin.common.SaveClickHandler
 import com.ceaver.assin.common.SingleLiveEvent
 
-class AlertViewModel : ViewModel(), SaveClickHandler {
+class AlertViewModel : ViewModel() {
 
     val alert = MutableLiveData<Alert>()
     val status = SingleLiveEvent<AlertInputStatus>()
@@ -24,12 +23,14 @@ class AlertViewModel : ViewModel(), SaveClickHandler {
     }
 
     private fun createAlert() {
-        alert.postValue(Alert())
+        alert.postValue(Alert(symbol = Symbol.BTC, reference = Symbol.USD, alertType = AlertType.RECURRING_STABLE, source = 0.0, target = 0.0))
     }
 
-    override fun onSaveClick() {
+    fun onSaveClick(symbol: Symbol, reference: Symbol, source: Double, target: Double) {
         status.value = AlertInputStatus.START_SAVE
-        AlertRepository.saveAlertAsync(alert.value!!, true) { status.value = AlertInputStatus.END_SAVE }    }
+        val alert = alert.value!!.copy(symbol = symbol, reference = reference, source = source, target = target)
+        AlertRepository.saveAlertAsync(alert, true) { status.value = AlertInputStatus.END_SAVE }
+    }
 
     enum class AlertInputStatus {
         START_SAVE,
