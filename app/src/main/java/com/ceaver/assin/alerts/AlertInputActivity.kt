@@ -10,6 +10,7 @@ import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.common.SpinnerSelectionListener
+import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.validateFields
 import kotlinx.android.synthetic.main.activity_alert_input.*
 
@@ -64,8 +65,9 @@ class AlertInputActivity : AppCompatActivity() {
             if (viewModel.isNew()) {
                 val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
                 val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
-                val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference);
-                alertSourceEditText.setText(price.first.toString()); alertTargetEditText.setText((price.second.toString()))
+                val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference)
+                alertSourceEditText.setText(price.first.format(reference))
+                alertTargetEditText.setText(price.second.format(reference))
             }
         }
 
@@ -84,8 +86,8 @@ class AlertInputActivity : AppCompatActivity() {
         if (alert != null) {
             alertSymbolText.setSelection(alert.symbol.ordinal)
             alertReferenceText.setSelection(alert.reference.ordinal)
-            alertSourceEditText.setText(alert.source.toString())
-            alertTargetEditText.setText(alert.target.toString())
+            alertSourceEditText.setText(alert.source.format(alert.reference))
+            alertTargetEditText.setText(alert.target.format(alert.reference))
 
             alertSymbolText.isEnabled = alert.isNew()
             alertReferenceText.isEnabled = alert.isNew()
