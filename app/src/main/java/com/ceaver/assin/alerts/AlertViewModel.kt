@@ -4,6 +4,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.common.SingleLiveEvent
+import com.ceaver.assin.markets.MarketRepository
+import java.math.BigDecimal
+import java.math.MathContext
 
 class AlertViewModel : ViewModel() {
 
@@ -30,6 +33,16 @@ class AlertViewModel : ViewModel() {
         status.value = AlertInputStatus.START_SAVE
         val alert = alert.value!!.copy(symbol = symbol, reference = reference, source = source, target = target)
         AlertRepository.saveAlertAsync(alert, true) { status.value = AlertInputStatus.END_SAVE }
+    }
+
+    fun lookupPrice(symbol: Symbol, reference: Symbol): Pair<Double, Double> {
+        val title = MarketRepository.load(symbol, reference)
+        return if (title.isPresent) {
+            val last = title.get().last.toBigDecimal()
+            val price = last.round(MathContext(2))
+            val target = last.divide(BigDecimal(25), MathContext(1))
+            price.toDouble() to target.toDouble()
+        } else 0.0 to 0.0
     }
 
     enum class AlertInputStatus {

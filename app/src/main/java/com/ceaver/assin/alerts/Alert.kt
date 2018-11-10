@@ -12,4 +12,7 @@ data class Alert(//
         @ColumnInfo(name = "reference") val reference: Symbol,
         @ColumnInfo(name = "alertType") val alertType: AlertType,
         @ColumnInfo(name = "source") val source: Double,
-        @ColumnInfo(name = "target") val target: Double)
+        @ColumnInfo(name = "target") val target: Double) {
+
+    fun isNew(): Boolean = this.id == 0L;
+}

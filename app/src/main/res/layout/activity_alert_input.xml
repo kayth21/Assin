@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Symbol"
+        android:enabled="false"
         app:layout_constraintStart_toStartOf="@+id/startPriceTextView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Reference"
+        android:enabled="false"
         app:layout_constraintStart_toStartOf="@+id/targetTextView"
         app:layout_constraintTop_toTopOf="@+id/alertSymbolText" />
 

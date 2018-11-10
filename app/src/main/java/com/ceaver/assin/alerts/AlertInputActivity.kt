@@ -5,12 +5,11 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Symbol
+import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.validateFields
 import kotlinx.android.synthetic.main.activity_alert_input.*
 
@@ -62,15 +61,22 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindViewLogic(viewModel: AlertViewModel) {
-        alertReferenceText.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                startUnitTextView.text = Symbol.valueOf(alertReferenceText.selectedItem.toString()).name
-                targetUnitTextView.text = Symbol.valueOf(alertReferenceText.selectedItem.toString()).name
-            }
+        fun updatePrice() {
+            val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
+            val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+            val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference);
+            alertSourceEditText.setText(price.first.toString()); alertTargetEditText.setText((price.second.toString()))
         }
+
+        fun updateUnit() {
+            val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+            startUnitTextView.text = symbol.name
+            targetUnitTextView.text = symbol.name
+        }
+        alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice() }
+        alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice() }
     }
+
 
     private fun bindFields(alert: Alert?) {
         if (alert != null) {
@@ -78,6 +84,9 @@ class AlertInputActivity : AppCompatActivity() {
             alertReferenceText.setSelection(alert.reference.ordinal)
             alertSourceEditText.setText(alert.source.toString())
             alertTargetEditText.setText(alert.target.toString())
+
+            alertSymbolText.isEnabled = alert.isNew()
+            alertReferenceText.isEnabled = alert.isNew()
         }
     }
 
