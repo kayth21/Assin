@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ceaver.assin.R
-import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.extensions.format
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
@@ -27,10 +26,10 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(title: Title) {
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = title.symbol.label
-            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "%.2f".format((((100/title.open(Symbol.USD).asDouble)*title.last(Symbol.USD).asDouble)-100)) + " % (USD)"
-            (view.findViewById(R.id.cryptoValueTextView) as TextView).text = title.last(Symbol.BTC).asDouble.format(Symbol.BTC) + " BTC"
-            (view.findViewById(R.id.fiatValueTextView) as TextView).text = title.last(Symbol.USD).asDouble.format(Symbol.USD) + " USD"
+            (view.findViewById(R.id.assetNameTextView) as TextView).text = "${title.name} (${title.symbol})"
+            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "${title.getPercentChange24hString()} % (24h)"
+            (view.findViewById(R.id.cryptoValueTextView) as TextView).text = title.priceBtc.format("BTC") + " BTC"
+            (view.findViewById(R.id.fiatValueTextView) as TextView).text = title.priceUsd.format("USD") + " USD"
         }
     }
 }

@@ -3,12 +3,10 @@ package com.ceaver.assin
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
-import com.ceaver.assin.assets.Category
-import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.intensions.IntensionWorker
 import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.markets.MarketPathFinder
-import com.ceaver.assin.markets.MarketWorker
+import com.ceaver.assin.markets.MarketCompleteUpdateWorker
+import com.ceaver.assin.markets.MarketPartialUpdateWorker
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -67,17 +65,17 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<AlertWorker>().build()
     }
 
-    private fun updateAllTitles(): MutableList<OneTimeWorkRequest> {
-        return Symbol.values(Category.CRYPTO).stream().map { requestBuilder(it) }.collect(Collectors.toList())
+    private fun updateAllTitles(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<MarketCompleteUpdateWorker>().build()
     }
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
-        return AlertRepository.loadAllAlerts().stream().map { MarketPathFinder.findPath(it.symbol, it.reference) }.flatMap { it.stream() }.map { it.toList() }.flatMap { it.stream() }.distinct().filter { !it.isUsd() }.map { requestBuilder(it) }.collect(Collectors.toList())
+        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it != "USD" }.map { marketPartialUpdateRequestBuilder(it) }.collect(Collectors.toList())
     }
 
-    private fun requestBuilder(symbol: Symbol): OneTimeWorkRequest {
-        val data = Data.Builder().putString(Symbol.toString(), symbol.name).build()
-        return OneTimeWorkRequestBuilder<MarketWorker>().setInputData(data).build()
+    private fun marketPartialUpdateRequestBuilder(symbol: String): OneTimeWorkRequest {
+        val data = Data.Builder().putString("Symbol", symbol).build() // TODO use better identifier
+        return OneTimeWorkRequestBuilder<MarketPartialUpdateWorker>().setInputData(data).build()
     }
 
     class StartCompleteNotificationWorker : Worker() {

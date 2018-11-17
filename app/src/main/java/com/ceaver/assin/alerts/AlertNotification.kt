@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat.getSystemService
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
-import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.extensions.format
 import java.util.*
 
@@ -33,7 +32,7 @@ object AlertNotification {
         }
     }
 
-    fun notify(symbol: Symbol, reference: Symbol, targetPrice: Double, currentPrice: Double) {
+    fun notify(symbol: String, reference: String, targetPrice: Double, currentPrice: Double) {
 
         val intent = Intent(MyApplication.appContext!!, StartActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets

@@ -1,37 +1,11 @@
 package com.ceaver.assin.markets
 
-import com.ceaver.assin.assets.Symbol
+import com.ceaver.assin.assets.Category
+import java.time.LocalDateTime
 import java.util.*
 
-data class Title(val symbol: Symbol, val last: Double, val open: Double, val reference: Symbol) {
-
-    fun last(unit: Symbol) : OptionalDouble {
-        if(unit == this.symbol) {
-            return OptionalDouble.of(1.0)
-        }
-        if(unit == this.reference) {
-            return OptionalDouble.of(last);
-        }
-        val optional = MarketRepository.load(this.reference, unit)
-        if(optional.isPresent) {
-            return OptionalDouble.of(last * optional.get().last)
-        } else {
-            return OptionalDouble.of(0.0)
-        }
-    }
-
-    fun open(unit: Symbol) : OptionalDouble {
-        if(unit == this.symbol) {
-            return OptionalDouble.of(1.0)
-        }
-        if(unit == this.reference) {
-            return OptionalDouble.of(open);
-        }
-        val optional = MarketRepository.load(this.reference, unit)
-        if(optional.isPresent) {
-            return OptionalDouble.of(open * optional.get().open)
-        } else {
-            return OptionalDouble.of(0.0)
-        }
+data class Title(val id: String, val symbol: String, val category: Category, val name: String, val priceUsd: Double, val priceBtc: Double, val marketCapUsd: Long, val rank: Int, val percentChange1h: Optional<Double>, val percentChange24h: Optional<Double>, val percentChange7d: Optional<Double>, val lastUpdated: LocalDateTime) {
+    fun getPercentChange24hString(): String {
+        return if(percentChange24h.isPresent) "%.1f".format(percentChange24h.get()) else "N/A"
     }
 }

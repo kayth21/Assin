@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
-import com.ceaver.assin.assets.Symbol
 import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.format
@@ -44,14 +43,14 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindSymbol(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<Symbol>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
         viewModel.symbol.observe(this, Observer { adapter.addAll(it) })
     }
 
     private fun bindReference(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<Symbol>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
         viewModel.reference.observe(this, Observer { adapter.addAll(it) })
@@ -64,8 +63,8 @@ class AlertInputActivity : AppCompatActivity() {
     private fun bindViewLogic(viewModel: AlertViewModel) {
         fun updatePrice() {
             if (viewModel.isNew()) {
-                val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
-                val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+                val symbol = alertSymbolText.selectedItem as String
+                val reference = alertReferenceText.selectedItem as String
                 val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference)
                 alertSourceEditText.setText(price.first.format(reference))
                 alertTargetEditText.setText(price.second.format(reference))
@@ -73,9 +72,9 @@ class AlertInputActivity : AppCompatActivity() {
         }
 
         fun updateUnit() {
-            val symbol = Symbol.valueOf(alertReferenceText.selectedItem.toString())
-            startUnitTextView.text = symbol.name
-            targetUnitTextView.text = symbol.name
+            val symbol = alertReferenceText.selectedItem as String
+            startUnitTextView.text = symbol
+            targetUnitTextView.text = symbol
         }
         alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice(); checkSaveButton() }
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
@@ -83,8 +82,8 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun bindFields(alert: Alert?) {
         if (alert != null) {
-            alertSymbolText.setSelection(alert.symbol.ordinal)
-            alertReferenceText.setSelection(alert.reference.ordinal)
+            alertSymbolText.setSelection(lookupViewModel().symbol.value!!.indexOf(alert.symbol))
+            alertReferenceText.setSelection(lookupViewModel().reference.value!!.indexOf(alert.reference))
             alertSourceEditText.setText(alert.source.format(alert.reference))
             alertTargetEditText.setText(alert.target.format(alert.reference))
 
@@ -103,8 +102,8 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun onSaveClick() {
-        val symbol = Symbol.valueOf(alertSymbolText.selectedItem.toString())
-        val reference = Symbol.valueOf(alertReferenceText.selectedItem.toString())
+        val symbol = alertSymbolText.selectedItem as String
+        val reference = alertReferenceText.selectedItem as String
         val startPrice = alertSourceEditText.text.toString().toDouble()
         val targetPrice = alertTargetEditText.text.toString().toDouble()
         lookupViewModel().onSaveClick(symbol, reference, startPrice, targetPrice)

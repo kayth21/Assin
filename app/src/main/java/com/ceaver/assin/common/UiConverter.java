@@ -2,8 +2,6 @@ package com.ceaver.assin.common;
 
 import android.databinding.InverseMethod;
 
-import com.ceaver.assin.assets.Symbol;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -21,21 +19,6 @@ public class UiConverter {
             return 0.0;
         }
         return Double.parseDouble(value);
-    }
-
-    @InverseMethod("toSymbol")
-    public static Integer toInt(Symbol value) {
-        if(value == null) {
-            return null;
-        }
-        return value.ordinal();
-    }
-
-    public static Symbol toSymbol(Integer ordinal) {
-        if(ordinal == null) {
-            return null;
-        }
-        return Symbol.values()[ordinal];
     }
 
     @InverseMethod("toLocalDate")

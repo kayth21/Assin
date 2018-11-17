@@ -38,7 +38,7 @@ class MarketListFragment : Fragment() {
     }
 
     private fun loadAllTitles() {
-        marketListAdapter.titles = MarketRepository.loadAllTitles();
+        marketListAdapter.titles = MarketRepository.loadAllTitles().sortedBy{ it.rank };
         marketListAdapter.notifyDataSetChanged();
         marketSwipeRefreshLayout.isRefreshing = false
     }

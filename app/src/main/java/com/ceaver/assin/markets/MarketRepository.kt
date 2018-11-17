@@ -3,33 +3,67 @@ package com.ceaver.assin.markets
 import android.content.Context
 import android.content.SharedPreferences
 import com.ceaver.assin.MyApplication
-import com.ceaver.assin.assets.Category
-import com.ceaver.assin.assets.Symbol
 import com.google.gson.Gson
 import java.util.*
 
 object MarketRepository {
 
     fun loadAllTitles(): List<Title> {
-        return Symbol.values(Category.CRYPTO).map { load(it, if (it == Symbol.BTC) Symbol.USD else Symbol.BTC) }.filter { it.isPresent }.map { it.get() }.toList()
+        val titles = getSharedPreferences().getStringSet("TODO", emptySet())
+        return titles.map { lookup(it) }.filter { it.isPresent }.map { it.get() }.toList()
     }
 
-    fun load(symbol: Symbol, reference: Symbol): Optional<Title> {
-        val path = MarketPathFinder.findPath(symbol, reference)
-        if (path.any { !getSharedPreferences().contains(it.first.label + it.second.label) }) return Optional.empty()
-        return path.stream().map { lookup(it.first, it.second) }.map { it.get() }.reduce { left, right -> Title(symbol, left.last * right.last, left.open * right.open, reference) }
+    fun loadAllCryptoSymbols(): List<String> {
+        return loadAllTitles().sortedBy { it.rank }.map { it.symbol }
     }
 
-    private fun lookup(symbol: Symbol, reference: Symbol): Optional<Title> {
-        val jsonTitle = getSharedPreferences().getString(symbol.label + reference.label, null)
+    fun loadAllSymbols(): Set<String> {
+        val fiatList = listOf("USD", "EUR", "CHF")
+        return fiatList.union(loadAllCryptoSymbols())
+    }
+
+    fun lookupPrice(symbol: String, reference: String): Optional<Double> {
+        if (reference == "EUR" || reference == "CHF") {
+            TODO("not yet implemented")
+        }
+        if (symbol == "USD" || symbol == "EUR" || symbol == "CHF") {
+            TODO("not yet implemented")
+        }
+        if (reference == "USD" || reference == "BTC") {
+            val title = lookup(symbol)
+            if (!title.isPresent) return Optional.empty()
+            return if (reference == "USD") Optional.of(title.get().priceUsd) else Optional.of(title.get().priceBtc)
+        }
+        // symbol and reference can only be crypto here
+        val symbolTitle = lookup(symbol)
+        val referenceTitle = lookup(reference)
+        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
+        return Optional.of(symbolTitle.get().priceBtc / referenceTitle.get().priceBtc)
+    }
+
+
+    private fun lookup(symbol: String): Optional<Title> {
+        val jsonTitle = getSharedPreferences().getString(symbol, null)
         return if (jsonTitle == null) Optional.empty() else Optional.of(Gson().fromJson(jsonTitle, Title::class.java))
     }
 
+    fun updateAll(allTitles: Set<Title>) {
+        updateSymbols(allTitles)
+        allTitles.forEach { update(it) }
+    }
+
+    fun updateSymbols(titles: Set<Title>) {
+        val titles = titles.map { it.symbol }.toMutableSet()
+        titles.addAll(getSharedPreferences().getStringSet("TODO", setOf()))
+        getSharedPreferences().edit().putStringSet("TODO", titles).apply()
+    }
+
     fun update(title: Title) {
-        getSharedPreferences().edit().putString(title.symbol.label + title.reference.label, Gson().toJson(title)).apply()
+        getSharedPreferences().edit().putString(title.symbol, Gson().toJson(title)).apply()
     }
 
     private fun getSharedPreferences(): SharedPreferences {
         return MyApplication.appContext!!.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
     }
+
 }
