@@ -38,9 +38,11 @@ class MarketListFragment : Fragment() {
     }
 
     private fun loadAllTitles() {
-        marketListAdapter.titles = MarketRepository.loadAllTitles().sortedBy{ it.rank };
-        marketListAdapter.notifyDataSetChanged();
-        marketSwipeRefreshLayout.isRefreshing = false
+        TitleRepository.loadAllTitlesAsync(true) { onAllTitlesLoaded(it) };
+    }
+
+    private fun onAllTitlesLoaded(titles: List<Title>) {
+        marketListAdapter.titles = titles; marketListAdapter.notifyDataSetChanged(); marketSwipeRefreshLayout.isRefreshing = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

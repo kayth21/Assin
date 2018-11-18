@@ -3,7 +3,7 @@ package com.ceaver.assin.alerts
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
-import com.ceaver.assin.markets.MarketRepository
+import com.ceaver.assin.markets.TitleRepository
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -15,8 +15,8 @@ class AlertViewModel : ViewModel() {
     val reference = MutableLiveData<List<String>>()
 
     fun init(alertId: Long = 0): AlertViewModel {
-        symbol.postValue(MarketRepository.loadAllCryptoSymbols().toList())
-        reference.postValue(MarketRepository.loadAllSymbols().toList())
+        TitleRepository.loadAllCryptoSymbolsAsync(false) { symbol.postValue(it) }
+        TitleRepository.loadAllSymbolsAsync(false) { reference.postValue(it) }
         if (alertId > 0) lookupAlert(alertId) else createAlert(); return this
     }
 
@@ -34,14 +34,16 @@ class AlertViewModel : ViewModel() {
         AlertRepository.saveAlertAsync(alert, true) { status.value = AlertInputStatus.END_SAVE }
     }
 
-    fun lookupPrice(symbol: String, reference: String): Pair<Double, Double> {
-        val price = MarketRepository.lookupPrice(symbol, reference)
-        return if (price.isPresent) {
-            val last = price.get().toBigDecimal()
-            val price = last.round(MathContext(2))
-            val target = last.divide(BigDecimal(25), MathContext(1))
-            price.toDouble() to target.toDouble()
-        } else 0.0 to 0.0
+    fun lookupPrice(symbol: String, reference: String, callback: (Pair<Double, Double>) -> Unit) {
+        TitleRepository.lookupPriceAsync(symbol, reference, true) {
+            val result = if (it.isPresent) {
+                val last = it.get().toBigDecimal()
+                val price = last.round(MathContext(2))
+                val target = last.divide(BigDecimal(25), MathContext(1))
+                price.toDouble() to target.toDouble()
+            } else 0.0 to 0.0
+            callback.invoke(result)
+        }
     }
 
     fun isNew(): Boolean = alert.value!!.isNew()

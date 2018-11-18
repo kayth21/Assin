@@ -42,7 +42,7 @@ object Coinpaprika {
 
     private fun callExchange(connection: URLConnection): String {
         val content = StringBuilder()
-        BufferedReader(InputStreamReader(connection.getInputStream())).forEachLine {content.append(it) }
+        BufferedReader(InputStreamReader(connection.getInputStream())).forEachLine { content.append(it) }
         return content.toString()
     }
 

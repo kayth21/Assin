@@ -46,18 +46,18 @@ class AlertInputActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
-        viewModel.symbol.observe(this, Observer { adapter.addAll(it) })
+        viewModel.symbol.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
     }
 
     private fun bindReference(viewModel: AlertViewModel) {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
-        viewModel.reference.observe(this, Observer { adapter.addAll(it) })
+        viewModel.reference.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
     }
 
     private fun bindAlert(viewModel: AlertViewModel) {
-        viewModel.alert.observe(this, Observer { bindFields(it); alertSaveButton.isEnabled = true })
+        viewModel.alert.observe(this, Observer { bindFields(it!!, viewModel); alertSaveButton.isEnabled = true })
     }
 
     private fun bindViewLogic(viewModel: AlertViewModel) {
@@ -65,9 +65,10 @@ class AlertInputActivity : AppCompatActivity() {
             if (viewModel.isNew()) {
                 val symbol = alertSymbolText.selectedItem as String
                 val reference = alertReferenceText.selectedItem as String
-                val price: Pair<Double, Double> = lookupViewModel().lookupPrice(symbol, reference)
-                alertSourceEditText.setText(price.first.format(reference))
-                alertTargetEditText.setText(price.second.format(reference))
+                lookupViewModel().lookupPrice(symbol, reference) {
+                    alertSourceEditText.setText(it.first.format(reference))
+                    alertTargetEditText.setText(it.second.format(reference))
+                }
             }
         }
 
@@ -80,15 +81,20 @@ class AlertInputActivity : AppCompatActivity() {
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
-    private fun bindFields(alert: Alert?) {
-        if (alert != null) {
-            alertSymbolText.setSelection(lookupViewModel().symbol.value!!.indexOf(alert.symbol))
-            alertReferenceText.setSelection(lookupViewModel().reference.value!!.indexOf(alert.reference))
-            alertSourceEditText.setText(alert.source.format(alert.reference))
-            alertTargetEditText.setText(alert.target.format(alert.reference))
+    private fun bindFields(alert: Alert, viewModel: AlertViewModel) {
+        alertSourceEditText.setText(alert.source.format(alert.reference))
+        alertTargetEditText.setText(alert.target.format(alert.reference))
 
-            alertSymbolText.isEnabled = alert.isNew()
-            alertReferenceText.isEnabled = alert.isNew()
+        updateSpinnerFields(viewModel)
+
+        alertSymbolText.isEnabled = alert.isNew()
+        alertReferenceText.isEnabled = alert.isNew()
+    }
+
+    private fun updateSpinnerFields(viewModel: AlertViewModel) {
+        if (viewModel.alert.value != null && viewModel.symbol.value != null && viewModel.reference.value != null) {
+            alertSymbolText.setSelection(viewModel.symbol.value!!.indexOf(viewModel.alert.value!!.symbol))
+            alertReferenceText.setSelection(lookupViewModel().reference.value!!.indexOf(viewModel.alert.value!!.reference))
         }
     }
 

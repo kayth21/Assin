@@ -2,7 +2,7 @@ package com.ceaver.assin.alerts
 
 import androidx.work.Worker
 import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.markets.MarketRepository
+import com.ceaver.assin.markets.TitleRepository
 
 class AlertWorker : Worker() {
     override fun doWork(): Result {
@@ -11,7 +11,7 @@ class AlertWorker : Worker() {
     }
 
     private fun checkAlert(alert: Alert) {
-        val price = MarketRepository.lookupPrice(alert.symbol, alert.reference)
+        val price = TitleRepository.lookupPrice(alert.symbol, alert.reference)
         if(price.isPresent) {
             val currentPrice = price.get()
             val result = alert.alertType.check(alert, currentPrice)

@@ -3,11 +3,13 @@ package com.ceaver.assin.database.converter;
 import android.arch.persistence.room.TypeConverter;
 
 import com.ceaver.assin.alerts.AlertType;
+import com.ceaver.assin.assets.Category;
 import com.ceaver.assin.trades.TradeStrategy;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -74,5 +76,25 @@ public class Converters {
     @TypeConverter
     public static String fromUuid(UUID uuid) {
         return uuid.toString();
+    }
+
+    @TypeConverter
+    public static Optional<Double> toOptionalDouble(String optionalDouble) {
+        return optionalDouble.isEmpty() ? Optional.empty() : Optional.of(Double.parseDouble(optionalDouble));
+    }
+
+    @TypeConverter
+    public static String fromOptionalDouble(Optional<Double> optionalDouble) {
+        return optionalDouble.isPresent() ? optionalDouble.get().toString() : "";
+    }
+
+    @TypeConverter
+    public static Category toCategory(String name) {
+        return Category.valueOf(name);
+    }
+
+    @TypeConverter
+    public static String fromCategory(Category category) {
+        return category.name();
     }
 }
