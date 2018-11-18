@@ -21,7 +21,7 @@ object Coinpaprika {
     private val tickerUrl = "https://api.coinpaprika.com/v1/ticker"
 
     fun load(id: String): Optional<Title> {
-        val connection = URL("$tickerUrl/id").openConnection()
+        val connection = URL("$tickerUrl/$id").openConnection()
         val result = callExchange(connection)
         val jsonObject = JSONObject(result)
         return transform(jsonObject)
