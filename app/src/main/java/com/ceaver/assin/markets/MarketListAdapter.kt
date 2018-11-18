@@ -26,10 +26,14 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(title: Title) {
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = "${title.name} (${title.symbol})"
-            (view.findViewById(R.id.dailyChangeTextView) as TextView).text = "${title.getPercentChange24hString()} % (24h)"
-            (view.findViewById(R.id.cryptoValueTextView) as TextView).text = title.priceBtc.format("BTC") + " BTC"
-            (view.findViewById(R.id.fiatValueTextView) as TextView).text = title.priceUsd.format("USD") + " USD"
+            (view.findViewById(R.id.titleRankTextView) as TextView).text = title.rank.toString()
+            (view.findViewById(R.id.titleSymbolTextView) as TextView).text = title.symbol
+            (view.findViewById(R.id.titleNameTextView) as TextView).text = title.name
+            (view.findViewById(R.id.titleCryptoPriceTextView) as TextView).text = title.priceBtc.format("BTC") + " BTC"
+            (view.findViewById(R.id.titleFiatPriceTextView) as TextView).text = title.priceUsd.format("USD") + " USD"
+            (view.findViewById(R.id.title1hChangeTextView) as TextView).text = "1h: ${title.getPercentChange1hString()}%"
+            (view.findViewById(R.id.title24hChangeTextView) as TextView).text = "24h: ${title.getPercentChange24hString()}%"
+            (view.findViewById(R.id.title7dChangeTextView) as TextView).text = "7d: ${title.getPercentChange7dString()}%"
         }
     }
 }

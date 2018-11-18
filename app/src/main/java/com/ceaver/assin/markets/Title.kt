@@ -24,7 +24,13 @@ data class Title(//
         @ColumnInfo(name = "lastUpdated") val lastUpdated: LocalDateTime) {
 
 
+    fun getPercentChange1hString(): String {
+        return if (percentChange1h.isPresent) "%.1f".format(percentChange1h.get()) else "N/A"
+    }
     fun getPercentChange24hString(): String {
         return if (percentChange24h.isPresent) "%.1f".format(percentChange24h.get()) else "N/A"
+    }
+    fun getPercentChange7dString(): String {
+        return if (percentChange7d.isPresent) "%.1f".format(percentChange7d.get()) else "N/A"
     }
 }
