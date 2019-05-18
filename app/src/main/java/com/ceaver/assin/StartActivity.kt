@@ -1,5 +1,6 @@
 package com.ceaver.assin
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -15,10 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
+import androidx.work.*
 import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
@@ -60,10 +58,10 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         WorkManager.getInstance().enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
     }
 
-    class StartWorker : Worker() {
+    class StartWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             AssinWorkers.observedUpdate()
-            return Result.SUCCESS
+            return Result.success()
         }
     }
 

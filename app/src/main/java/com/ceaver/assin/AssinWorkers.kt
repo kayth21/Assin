@@ -1,5 +1,6 @@
 package com.ceaver.assin
 
+import android.content.Context
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
@@ -20,7 +21,7 @@ object AssinWorkers {
         WorkManager.getInstance()
                 .beginWith(notifyCompleteStart(identifier))
                 .then(updateAllTitles())
-                .then(checkAlerts(), checkIntentions())
+                .then(listOf(checkAlerts(), checkIntentions()))
                 .then(notifyCompleteEnd(identifier))
                 .enqueue()
     }
@@ -31,7 +32,7 @@ object AssinWorkers {
         WorkManager.getInstance()
                 .beginWith(notifyObservedStart(identifier))
                 .then(updateObservedTitles())
-                .then(checkAlerts(), checkIntentions())
+                .then(listOf(checkAlerts(), checkIntentions()))
                 .then(notifyObservedEnd(identifier))
                 .enqueue()
     }
@@ -78,41 +79,41 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<MarketPartialUpdateWorker>().setInputData(data).build()
     }
 
-    class StartCompleteNotificationWorker : Worker() {
+    class StartCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting complete update...", uuid)
-            return Result.SUCCESS
+            return Result.success()
         }
     }
 
-    class StartObservedNotificationWorker : Worker() {
+    class StartObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting observed update...", uuid)
-            return Result.SUCCESS
+            return Result.success()
         }
     }
 
-    class EndCompleteNotificationWorker : Worker() {
+    class EndCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
             LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Complete())
-            return Result.SUCCESS
+            return Result.success()
         }
     }
 
-    class EndObservedNotificationWorker : Worker() {
+    class EndObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
             LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Observed())
-            return Result.SUCCESS
+            return Result.success()
         }
     }
 }

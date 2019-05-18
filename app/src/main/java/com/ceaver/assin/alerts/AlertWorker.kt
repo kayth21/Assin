@@ -1,13 +1,15 @@
 package com.ceaver.assin.alerts
 
+import android.content.Context
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
 
-class AlertWorker : Worker() {
+class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
     override fun doWork(): Result {
         AlertRepository.loadAllAlerts().forEach { checkAlert(it) }
-        return Result.SUCCESS
+        return Result.success()
     }
 
     private fun checkAlert(alert: Alert) {

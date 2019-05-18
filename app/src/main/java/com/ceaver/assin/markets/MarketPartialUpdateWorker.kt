@@ -1,9 +1,11 @@
 package com.ceaver.assin.markets
 
+import android.content.Context
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
-class MarketPartialUpdateWorker : Worker() {
+class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
         val symbolName = inputData.getString("Symbol")!!
@@ -14,7 +16,7 @@ class MarketPartialUpdateWorker : Worker() {
         else {
             LogRepository.insertLog("Failure: Unable to update $symbolName")
         }
-        return Result.SUCCESS
+        return Result.success()
     }
 
 }
