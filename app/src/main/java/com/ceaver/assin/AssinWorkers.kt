@@ -71,11 +71,12 @@ object AssinWorkers {
     }
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
-        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it != "USD" }.map { marketPartialUpdateRequestBuilder(it) }.collect(Collectors.toList())
+        var index : Int = 0
+        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it != "USD" }.map { marketPartialUpdateRequestBuilder(it, index++) }.collect(Collectors.toList())
     }
 
-    private fun marketPartialUpdateRequestBuilder(symbol: String): OneTimeWorkRequest {
-        val data = Data.Builder().putString("Symbol", symbol).build() // TODO use better identifier
+    private fun marketPartialUpdateRequestBuilder(symbol: String, index: Int): OneTimeWorkRequest {
+        val data = Data.Builder().putString("Symbol", symbol).putInt("sleep", index).build() // TODO use better identifier
         return OneTimeWorkRequestBuilder<MarketPartialUpdateWorker>().setInputData(data).build()
     }
 

@@ -9,7 +9,9 @@ class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParamet
 
     override fun doWork(): Result {
         val symbolName = inputData.getString("Symbol")!!
+        val index = inputData.getInt("sleep", 0)
         val title = TitleRepository.loadTitleBySymbol(symbolName)
+        Thread.sleep((index * 110).toLong()) // avoid more than 10 calls per second on coinpaprika AIP
         val result = MarketRepository.loadTitle(title.id)
         if (result.isPresent)
             TitleRepository.update(result.get())
