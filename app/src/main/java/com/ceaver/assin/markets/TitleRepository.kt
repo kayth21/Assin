@@ -96,6 +96,10 @@ object TitleRepository {
         return Optional.of(symbolTitle.priceBtc / referenceTitle.priceBtc)
     }
 
+    fun deleteTitle(title: Title) {
+        getTitleDao().deleteTitle(title)
+    }
+
     private fun getTitleDao(): TitleDao {
         return getDatabase().titleDao()
     }
