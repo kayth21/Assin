@@ -47,20 +47,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     testImplementation 'org.json:json:20180130'
 
-    // ROOM - START
+    // ROOM
     def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"
 
-    // EVENTBUS - START
+    // EVENTBUS
     implementation 'org.greenrobot:eventbus:3.1.1'
 
-    // RX - START
+    // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
 
-    // WORKER - START
+    // WORKER
     implementation "android.arch.work:work-runtime-ktx:1.0.1"
+
+    // APACHE COMMONS CSV
+    implementation 'org.apache.commons:commons-csv:1.6'
 
 }

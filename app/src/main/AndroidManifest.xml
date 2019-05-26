@@ -3,6 +3,8 @@
     package="com.ceaver.assin">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -12,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".backup.BackupActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".trades.TradeInputActivity"
             android:configChanges="orientation"
@@ -34,7 +40,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".alerts.AlertListActivity" />
         <activity android:name=".alerts.AlertInputActivity" />
-        <activity android:name=".logging.LogListActivity"></activity>
+        <activity android:name=".logging.LogListActivity" />
     </application>
 
 </manifest>
