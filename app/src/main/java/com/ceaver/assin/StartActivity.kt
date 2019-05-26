@@ -20,6 +20,7 @@ import androidx.work.*
 import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
+import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.markets.MarketListFragment
@@ -117,8 +118,9 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.nav_settings -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             }
-            R.id.nav_import_export -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_backup -> {
+                val intent = Intent(this, BackupActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_chat -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()

@@ -10,6 +10,9 @@ interface AlertDao {
     @Insert(onConflict = OnConflictStrategy.FAIL)
     fun insertAlert(alert: Alert)
 
+    @Insert(onConflict = OnConflictStrategy.FAIL)
+    fun insertAlerts(alerts: List<Alert>)
+
     @Update
     fun updateAlert(alert: Alert)
 

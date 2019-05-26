@@ -53,6 +53,14 @@ object AlertRepository {
         BackgroundThreadExecutor.execute { insertAlert(alert); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
+    fun insertAlerts(alerts: List<Alert>) {
+        AlertRepository.getAlertDao().insertAlerts(alerts); EventBus.getDefault().post(AlertEvents.Insert())
+    }
+
+    fun insertAlertsAsync(alerts: List<Alert>, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { insertAlerts(alerts); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
+    }
+
     fun updateAlert(alert: Alert) {
         AlertRepository.getAlertDao().updateAlert(alert); EventBus.getDefault().post(AlertEvents.Update())
     }
@@ -73,8 +81,8 @@ object AlertRepository {
         AlertRepository.getAlertDao().deleteAllAlerts(); EventBus.getDefault().post(AlertEvents.DeleteAll())
     }
 
-    fun deleteAllAlertsAsync() {
-        BackgroundThreadExecutor.execute { deleteAllAlerts() }
+    fun deleteAllAlertsAsync(callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { deleteAllAlerts(); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
     private fun getAlertDao(): AlertDao {
