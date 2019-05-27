@@ -23,8 +23,11 @@ import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.logging.LogListActivity
+import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketListFragment
 import com.ceaver.assin.trades.TradeListFragment
+import com.ceaver.assin.util.isCharging
+import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.app_bar_start.*
 import java.util.concurrent.TimeUnit
@@ -61,7 +64,13 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     class StartWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
-            AssinWorkers.observedUpdate()
+            if (isConnected())
+                if (isCharging())
+                    AssinWorkers.completeUpdate()
+                else
+                    AssinWorkers.observedUpdate()
+            else
+                LogRepository.insertLog("update skipped because of missing connection")
             return Result.success()
         }
     }

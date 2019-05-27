@@ -1,8 +1,5 @@
 package com.ceaver.assin.markets
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
-import com.ceaver.assin.MyApplication
+import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -39,13 +36,11 @@ class MarketListFragment : Fragment() {
     }
 
     private fun refreshAllTitles() {
-        val connectivityManager = MyApplication.appContext!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-        if (networkCapabilities != null && (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)))
+        if (isConnected())
             AssinWorkers.completeUpdate()
-        else
+        else {
             Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun loadAllTitles() {
@@ -74,5 +69,4 @@ class MarketListFragment : Fragment() {
         marketList.adapter = null
         marketSwipeRefreshLayout.setOnRefreshListener(null)
     }
-
 }
