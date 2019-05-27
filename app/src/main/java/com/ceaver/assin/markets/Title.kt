@@ -21,15 +21,18 @@ data class Title(//
         @ColumnInfo(name = "percentChange1h") val percentChange1h: Optional<Double>,
         @ColumnInfo(name = "percentChange24h") val percentChange24h: Optional<Double>,
         @ColumnInfo(name = "percentChange7d") val percentChange7d: Optional<Double>,
-        @ColumnInfo(name = "lastUpdated") val lastUpdated: LocalDateTime) {
-
+        @ColumnInfo(name = "lastUpdated") val lastUpdated: LocalDateTime,
+        @ColumnInfo(name = "inactive") val inactive: Optional<LocalDateTime>
+) {
 
     fun getPercentChange1hString(): String {
         return if (percentChange1h.isPresent) "%.1f".format(percentChange1h.get()) else "N/A"
     }
+
     fun getPercentChange24hString(): String {
         return if (percentChange24h.isPresent) "%.1f".format(percentChange24h.get()) else "N/A"
     }
+
     fun getPercentChange7dString(): String {
         return if (percentChange7d.isPresent) "%.1f".format(percentChange7d.get()) else "N/A"
     }

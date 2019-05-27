@@ -89,6 +89,16 @@ public class Converters {
     }
 
     @TypeConverter
+    public static Optional<LocalDateTime> toOptionalLocalDateTime(Long secondsFromEpoch) {
+        return secondsFromEpoch == -1 ? Optional.empty() : Optional.of(LocalDateTime.MIN.plusSeconds(secondsFromEpoch));
+    }
+
+    @TypeConverter
+    public static Long fromOptionalLocalDateTime(Optional<LocalDateTime> optionalLocalDateTime) {
+        return optionalLocalDateTime.isPresent() ? ChronoUnit.SECONDS.between(LocalDateTime.MIN, optionalLocalDateTime.get()) : -1;
+    }
+
+    @TypeConverter
     public static Category toCategory(String name) {
         return Category.valueOf(name);
     }
