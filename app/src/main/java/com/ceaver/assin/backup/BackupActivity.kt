@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
@@ -111,8 +110,7 @@ class BackupActivity : AppCompatActivity() {
     }
 
     private fun getOrCreateDirectory(): File {
-        val mediaMounted = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-        val rootDir = if (mediaMounted) Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) else MyApplication.appContext!!.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        val rootDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val targetDirectory = File(rootDir.path + "/" + EXPORT_DIRECTORY_NAME)
         if (!targetDirectory.exists()) targetDirectory.mkdir()
         return targetDirectory
