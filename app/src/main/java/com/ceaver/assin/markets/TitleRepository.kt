@@ -100,6 +100,10 @@ object TitleRepository {
         getTitleDao().deleteTitle(title)
     }
 
+    fun deleteTitles(titles: Set<Title>) {
+        getTitleDao().deleteTitles(titles)
+    }
+
     private fun getTitleDao(): TitleDao {
         return getDatabase().titleDao()
     }

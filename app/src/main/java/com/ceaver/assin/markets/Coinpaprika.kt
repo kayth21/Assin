@@ -92,7 +92,7 @@ object Coinpaprika {
             return Optional.empty()
         }
 
-        return Optional.of(Title(id, symbol, Category.CRYPTO, name, priceUsd.toDouble(), priceBtc.toDouble(), marketCapUsd.toLong(), rank.toInt(), percentChange1h.toOptionalDouble(), percentChange24h.toOptionalDouble(), percentChange7d.toOptionalDouble(), transformTimestamp(lastUpdated.toLong()), Optional.empty()))
+        return Optional.of(Title(id, symbol, Category.CRYPTO, name, priceUsd.toDouble(), priceBtc.toDouble(), marketCapUsd.toLong(), rank.toInt(), percentChange1h.toOptionalDouble(), percentChange24h.toOptionalDouble(), percentChange7d.toOptionalDouble(), transformTimestamp(lastUpdated.toLong()), Integer(-50)))
     }
 
     private fun transformTimestamp(lastUpdated: Long) = LocalDateTime.ofInstant(Instant.ofEpochSecond(lastUpdated), TimeZone.getDefault().toZoneId())

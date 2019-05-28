@@ -4,44 +4,26 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.*
 
 class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
-        val remoteTitles = MarketRepository.loadAllTitles()
-        if (remoteTitles.isNotEmpty()) cleanupLocalTitles(remoteTitles)
-        TitleRepository.updateAll(remoteTitles)
+        val allRemoteTitles = MarketRepository.loadAllTitles()
+        val allLocalTitles = TitleRepository.loadAllTitles()
+
+        val newTitlesToInsert = allRemoteTitles - allLocalTitles
+        val existingTitlesToUpdate = (allRemoteTitles - newTitlesToInsert).map { if (it.active.toInt() > 99) it else it.copy(active = Integer(it.active.toInt() + 1)) }
+        val removedTitles = allLocalTitles - allRemoteTitles
+        val removedTitlesToDelete = removedTitles.filter { it.active < -99 }
+        val removedTitlesToUpdate = (removedTitles - removedTitlesToDelete).map { it.copy(active = Integer(it.active.toInt() - 1)) }
+
+        TitleRepository.updateAll(newTitlesToInsert + existingTitlesToUpdate + removedTitlesToUpdate)
+        TitleRepository.deleteTitles(removedTitlesToDelete.toSet())
+
+        newTitlesToInsert.forEach { LogRepository.insertLog("Added  ${it.name} (${it.symbol}) to local database.") }
+        removedTitlesToUpdate.forEach { LogRepository.insertLog("Decreased active rating of ${it.name} (${it.symbol}) (${it.active})") }
+        removedTitlesToDelete.forEach { LogRepository.insertLog("Removed  ${it.name} (${it.symbol}) from local database.") }
+
         return Result.success()
     }
-
-    private fun cleanupLocalTitles(remoteTitles: Set<Title>) {
-        val localTitles = TitleRepository.loadAllTitles()
-        localTitles.forEach { title ->
-            if (remoteTitles.none { title.symbol == it.symbol }) {
-                if (title.inactive.isPresent) {
-                    if (title.inactive.get().toLocalDate().equals(LocalDate.now())) {
-                        // do nothing
-                    } else if (title.inactive.get().hour < 5) {
-                        TitleRepository.update(title.copy(inactive = Optional.of(title.inactive.get().plusHours(1))))
-                        LogRepository.insertLog("Marked ${title.name} (${title.symbol}) as inactive (${title.inactive.get().hour + 1}/5") // TODO DELETE
-                    } else {
-                        LogRepository.insertLog("Removed ${title.name} (${title.symbol}) from local database because it was not sent for at least five days.")
-                        TitleRepository.deleteTitle(title) // TODO check safe delete, maybe the app asks if it's ok to remove this title. Or at least check if there can be issues later because the title is used in later entities.
-                    }
-                } else {
-                    TitleRepository.update(title.copy(inactive = Optional.of(LocalDateTime.of(LocalDate.now(), LocalTime.of(1, 0)))))
-                }
-            };
-        }
-        remoteTitles.forEach { title ->
-            if (localTitles.none { title.symbol.equals(it.symbol) }) {
-                LogRepository.insertLog("Added  ${title.name} (${title.symbol}) to local database.")
-            }
-        }
-    }
-
 }

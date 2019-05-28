@@ -22,7 +22,7 @@ data class Title(//
         @ColumnInfo(name = "percentChange24h") val percentChange24h: Optional<Double>,
         @ColumnInfo(name = "percentChange7d") val percentChange7d: Optional<Double>,
         @ColumnInfo(name = "lastUpdated") val lastUpdated: LocalDateTime,
-        @ColumnInfo(name = "inactive") val inactive: Optional<LocalDateTime>
+        @ColumnInfo(name = "active") val active: Integer
 ) {
 
     fun getPercentChange1hString(): String {
@@ -35,5 +35,17 @@ data class Title(//
 
     fun getPercentChange7dString(): String {
         return if (percentChange7d.isPresent) "%.1f".format(percentChange7d.get()) else "N/A"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Title
+        if (id != other.id) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
     }
 }

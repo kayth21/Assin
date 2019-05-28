@@ -19,6 +19,9 @@ interface TitleDao {
     @Delete
     fun deleteTitle(title: Title)
 
+    @Delete
+    fun deleteTitles(title: Set<Title>)
+
     @Query("delete from title")
     fun deleteAllTitles()
 
