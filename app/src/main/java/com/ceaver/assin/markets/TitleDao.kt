@@ -7,6 +7,9 @@ interface TitleDao {
     @Query("select * from title order by rank")
     fun loadAllTitles(): List<Title>
 
+    @Query("select * from title where active >= 0 order by rank")
+    fun loadActiveTitles(): List<Title>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTitle(title: Title)
 
@@ -26,7 +29,7 @@ interface TitleDao {
     fun deleteAllTitles()
 
     @Query("select * from title where id = :id")
-    fun loadTitle(id: Long): Title
+    fun loadTitle(id: String): Title
 
     @Query("select * from title where symbol = :symbol")
     fun loadTitleBySymbol(symbol: String): Title

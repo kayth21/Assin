@@ -16,13 +16,31 @@ object TitleRepository {
         getTitleDao().insertTitle(title)
     }
 
+    fun loadTitle(id: String): Title {
+        return getTitleDao().loadTitle(id)
+    }
+
     fun loadAllTitles(): List<Title> {
         return getTitleDao().loadAllTitles()
+    }
+
+    fun loadActiveTitles(): List<Title> {
+        return getTitleDao().loadActiveTitles()
     }
 
     fun loadAllTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val titles = loadAllTitles()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
+            else
+                callback.invoke(titles)
+        }
+    }
+
+    fun loadActiveTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val titles = loadActiveTitles()
             if (callbackInMainThread)
                 Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
             else

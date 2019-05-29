@@ -25,6 +25,26 @@ data class Title(//
         @ColumnInfo(name = "active") val active: Integer
 ) {
 
+    fun inactive(): Boolean {
+        return active.toInt() == -100
+    }
+
+    fun incrementActiveCounter(): Title {
+        return when {
+            active.toInt() == 100 -> this
+            active.toInt() == -50 -> this.copy(active = Integer(50))
+            else -> this.copy(active = Integer(active.toInt() + 1))
+        }
+    }
+
+    fun decreaseActiveCounter(): Title {
+        return when {
+            active.toInt() == -100 -> this
+            active.toInt() == 0 -> this.copy(active = Integer(-100))
+            else -> this.copy(active = Integer(active.toInt() - 1))
+        }
+    }
+
     fun getPercentChange1hString(): String {
         return if (percentChange1h.isPresent) "%.1f".format(percentChange1h.get()) else "N/A"
     }

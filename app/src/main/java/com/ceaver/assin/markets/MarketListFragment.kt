@@ -43,7 +43,7 @@ class MarketListFragment : Fragment() {
     }
 
     private fun loadAllTitles() {
-        TitleRepository.loadAllTitlesAsync(true) { onAllTitlesLoaded(it) };
+        TitleRepository.loadActiveTitlesAsync(true) { onAllTitlesLoaded(it) };
     }
 
     private fun onAllTitlesLoaded(titles: List<Title>) {
