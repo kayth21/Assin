@@ -48,8 +48,8 @@ object TitleRepository {
         }
     }
 
-    fun loadTitleBySymbol(symbol: String): Title {
-        return getTitleDao().loadTitleBySymbol(symbol);
+    fun loadTitleBySymbol(symbol: String): Optional<Title> {
+        return Optional.ofNullable(getTitleDao().loadTitleBySymbol(symbol));
     }
 
     fun loadAllSymbolsAsync(callbackInMainThread: Boolean, callback: (List<String>) -> Unit) {
@@ -103,13 +103,13 @@ object TitleRepository {
             TODO("not yet implemented")
         }
         if (reference == "USD" || reference == "BTC") {
-            val title = loadTitleBySymbol(symbol)
+            val title = loadTitleBySymbol(symbol).get() // TODO can be null
 //            if (!title.isPresent) return Optional.empty()
             return if (reference == "USD") Optional.of(title.priceUsd) else Optional.of(title.priceBtc)
         }
         // symbol and reference can only be crypto here
-        val symbolTitle = loadTitleBySymbol(symbol)
-        val referenceTitle = loadTitleBySymbol(reference)
+        val symbolTitle = loadTitleBySymbol(symbol).get() // TODO can be null
+        val referenceTitle = loadTitleBySymbol(reference).get() // TODO can be null
 //        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
         return Optional.of(symbolTitle.priceBtc / referenceTitle.priceBtc)
     }
