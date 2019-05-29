@@ -32,6 +32,7 @@ data class Title(//
     fun incrementActiveCounter(): Title {
         return when {
             active.toInt() == 100 -> this
+            active.toInt() == 49 -> this.copy(active = Integer(51))
             active.toInt() == -50 -> this.copy(active = Integer(50))
             else -> this.copy(active = Integer(active.toInt() + 1))
         }
@@ -40,6 +41,7 @@ data class Title(//
     fun decreaseActiveCounter(): Title {
         return when {
             active.toInt() == -100 -> this
+            active.toInt() == 51 -> this.copy(active = Integer(49))
             active.toInt() == 0 -> this.copy(active = Integer(-100))
             else -> this.copy(active = Integer(active.toInt() - 1))
         }
