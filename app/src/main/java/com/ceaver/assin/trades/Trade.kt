@@ -7,10 +7,10 @@ import java.time.LocalDate
 
 @Entity(tableName = "trade")
 data class Trade(
-        @ColumnInfo(name = "id")@PrimaryKey(autoGenerate = true) var id: Long = 0,
-        @ColumnInfo(name = "coinmarketcapId") var coinmarketcapId: Int = 0, //
+        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
         @ColumnInfo(name = "comment") var comment: String = "", //
-        @ColumnInfo(name = "purchasePrice") var purchasePrice: Double = 0.0, //
-        @ColumnInfo(name = "purchaseAmount") var purchaseAmount: Double = 0.0, //
-        @ColumnInfo(name = "strategies") var strategies: MutableSet<TradeStrategy> = hashSetOf());
+        @ColumnInfo(name = "buySymbol") var buySymbol: String = "", //
+        @ColumnInfo(name = "buyAmount") var buyAmount: Double = 0.0, //
+        @ColumnInfo(name = "sellSymbol") var sellSymbol: String = "", //
+        @ColumnInfo(name = "sellAmount") var sellAmount: Double = 0.0)

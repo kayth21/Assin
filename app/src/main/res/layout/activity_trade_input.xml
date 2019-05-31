@@ -16,88 +16,88 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/coinmarketcapIdEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Name"
-            android:text="@{String.valueOf(trade.coinmarketcapId)}"
-            android:inputType="textPersonName" />
+        <!--<EditText-->
+            <!--android:id="@+id/coinmarketcapIdEditText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Name"-->
+            <!--android:text="@{String.valueOf(trade.coinmarketcapId)}"-->
+            <!--android:inputType="textPersonName" />-->
 
-        <EditText
-            android:id="@+id/commentEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Name"
-            android:text="@={trade.comment}"
-            android:inputType="textPersonName" />
+        <!--<EditText-->
+            <!--android:id="@+id/commentEditText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Name"-->
+            <!--android:text="@={trade.comment}"-->
+            <!--android:inputType="textPersonName" />-->
 
-        <EditText
-            android:id="@+id/purchaseDateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Purchase Date"
-            android:text="@={UiConverter.toString(trade.tradeDate)}"
-            android:inputType="none" />
+        <!--<EditText-->
+            <!--android:id="@+id/purchaseDateEditText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Purchase Date"-->
+            <!--android:text="@={UiConverter.toString(trade.tradeDate)}"-->
+            <!--android:inputType="none" />-->
 
-        <EditText
-            android:id="@+id/purchaseAmountEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Purchase Amount"
-            android:text="@={UiConverter.toString(trade.purchaseAmount)}"
-            android:inputType="number" />
+        <!--<EditText-->
+            <!--android:id="@+id/purchaseAmountEditText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Purchase Amount"-->
+            <!--android:text="@={UiConverter.toString(trade.purchaseAmount)}"-->
+            <!--android:inputType="number" />-->
 
-        <EditText
-            android:id="@+id/purchasePriceEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Purchase Price"
-            android:text="@={UiConverter.toString(trade.purchasePrice)}"
-            android:inputType="numberDecimal" />
+        <!--<EditText-->
+            <!--android:id="@+id/purchasePriceEditText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Purchase Price"-->
+            <!--android:text="@={UiConverter.toString(trade.purchasePrice)}"-->
+            <!--android:inputType="numberDecimal" />-->
 
-        <RadioGroup
-            android:id="@+id/strategyRadioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <!--<RadioGroup-->
+            <!--android:id="@+id/strategyRadioGroup"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
 
-            <RadioButton
-                android:id="@+id/hodlStrategyRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="@{trade.strategies.contains(TradeStrategy.HODL)}"
-                android:text="HODL" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/hodlStrategyRadioButton"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:checked="@{trade.strategies.contains(TradeStrategy.HODL)}"-->
+                <!--android:text="HODL" />-->
 
-            <RadioButton
-                android:id="@+id/doubleOutStrategyRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="@{trade.strategies.contains(TradeStrategy.DOUBLE_OUT)}"
-                android:text="Double Out" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/doubleOutStrategyRadioButton"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:checked="@{trade.strategies.contains(TradeStrategy.DOUBLE_OUT)}"-->
+                <!--android:text="Double Out" />-->
 
-            <RadioButton
-                android:id="@+id/asapNoLossesRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="@{trade.strategies.contains(TradeStrategy.ASAP_NO_LOSSES)}"
-                android:text="ASAP (without losses)" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/asapNoLossesRadioButton"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:checked="@{trade.strategies.contains(TradeStrategy.ASAP_NO_LOSSES)}"-->
+                <!--android:text="ASAP (without losses)" />-->
 
-        </RadioGroup>
+        <!--</RadioGroup>-->
 
-        <CheckBox
-            android:id="@+id/badTradeNotificationCheckbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="@{trade.strategies.contains(TradeStrategy.BAD_TRADE)}"
-            android:text="Bad Trade Notification? (-20%)" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/badTradeNotificationCheckbox"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:checked="@{trade.strategies.contains(TradeStrategy.BAD_TRADE)}"-->
+            <!--android:text="Bad Trade Notification? (-20%)" />-->
 
         <Button
             android:id="@+id/saveButton"

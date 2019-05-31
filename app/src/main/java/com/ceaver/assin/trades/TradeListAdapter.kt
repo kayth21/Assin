@@ -3,11 +3,10 @@ package com.ceaver.assin.trades
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.view.View
 import com.ceaver.assin.R
-import com.ceaver.assin.util.CalendarHelper
 
 internal class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
 
@@ -32,10 +31,9 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
         }
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.nameTextView) as TextView).text = "Bitcoin (BTC)"
-            (view.findViewById(R.id.purchaseDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
-            (view.findViewById(R.id.purchaseAmountTextView) as TextView).text = trade.purchaseAmount.toString()
-            (view.findViewById(R.id.purchasePriceTextView) as TextView).text = trade.purchasePrice.toString()
+            (view.findViewById(R.id.tradeDateTextView) as TextView).text = trade.tradeDate.toString()
+            (view.findViewById(R.id.sellTextView) as TextView).text = "${trade.sellAmount} ${trade.sellSymbol}"
+            (view.findViewById(R.id.buyTextView) as TextView).text = "${trade.buyAmount} ${trade.buySymbol}"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(trade) }
         }

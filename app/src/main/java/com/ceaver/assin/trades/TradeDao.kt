@@ -1,14 +1,17 @@
 package com.ceaver.assin.trades
 
 import android.arch.persistence.room.*
-import android.arch.persistence.room.OnConflictStrategy.*
 
 @Dao
 interface TradeDao {
+
+    @Query("select * from trade where id = :id")
+    fun loadTrade(id: Long): Trade
+
     @Query("select * from trade")
     fun loadAllTrades(): List<Trade>
 
-    @Insert(onConflict = FAIL)
+    @Insert(onConflict = OnConflictStrategy.FAIL)
     fun insertTrade(trade: Trade)
 
     @Update
@@ -19,7 +22,4 @@ interface TradeDao {
 
     @Query("delete from trade")
     fun deleteAllTrades()
-
-    @Query("select * from trade where id = :id")
-    fun loadTrade(id: Long): Trade
 }

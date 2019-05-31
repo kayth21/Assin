@@ -10,10 +10,7 @@ import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.databinding.ActivityTradeInputBinding
-import com.ceaver.assin.extensions.registerInputValidator
-import com.ceaver.assin.util.CalendarHelper
 import com.ceaver.assin.util.DatePickerFragment
-import kotlinx.android.synthetic.main.activity_trade_input.*
 import java.time.LocalDate
 import java.util.*
 
@@ -54,7 +51,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     private fun onTradeUpdate(binding: ActivityTradeInputBinding, trade: Trade?) {
         binding.trade = trade
         validateFields()
-        saveButton.isEnabled = true
+//        saveButton.isEnabled = true
     }
 
     private fun observeStatus(viewModel: TradeViewModel) {
@@ -67,7 +64,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun onStartSave() {
-        saveButton.isEnabled = false // TODO Disable inputs fields as well
+//        saveButton.isEnabled = false // TODO Disable inputs fields as well
     }
 
     private fun onEndSave() {
@@ -83,26 +80,26 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun modifyCoinMarketCapField() {
         // TODO Start: Remove
-        coinmarketcapIdEditText.setText("Bitcoin (BTC)")
-        coinmarketcapIdEditText.setKeyListener(null) // hack to disable user input
+//        coinmarketcapIdEditText.setText("Bitcoin (BTC)")
+//        coinmarketcapIdEditText.setKeyListener(null) // hack to disable user input
         // TODO End
     }
 
     private fun validateFields() {
-        coinmarketcapIdEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please select asset")
-        purchaseDateEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter purchase date")
-        purchasePriceEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter price")
-        purchaseAmountEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter amount")
+//        coinmarketcapIdEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please select asset")
+//        purchaseDateEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter purchase date")
+//        purchasePriceEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter price")
+//        purchaseAmountEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter amount")
     }
 
     private fun TradeInputActivity.modifyPurchaseDateField() {
-        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
-        purchaseDateEditText.setKeyListener(null) // hack to disable user input
+//        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
+//        purchaseDateEditText.setKeyListener(null) // hack to disable user input
     }
 
     override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {
         if (purchaseDatePickerFragmentTag.equals(tag)) {
-            purchaseDateEditText.setText(CalendarHelper.convertDate(date))
+//            purchaseDateEditText.setText(CalendarHelper.convertDate(date))
         }
     }
 }
