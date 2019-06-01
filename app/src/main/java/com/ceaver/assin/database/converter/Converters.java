@@ -79,12 +79,12 @@ public class Converters {
     }
 
     @TypeConverter
-    public static Optional<Double> toOptionalDouble(String optionalDouble) {
+    public static Optional<Double> toOptionalOfDouble(String optionalDouble) {
         return optionalDouble.isEmpty() ? Optional.empty() : Optional.of(Double.parseDouble(optionalDouble));
     }
 
     @TypeConverter
-    public static String fromOptionalDouble(Optional<Double> optionalDouble) {
+    public static String fromOptionalOfDouble(Optional<Double> optionalDouble) {
         return optionalDouble.isPresent() ? optionalDouble.get().toString() : "";
     }
 
@@ -107,4 +107,15 @@ public class Converters {
     public static String fromCategory(Category category) {
         return category.name();
     }
+
+    @TypeConverter
+    public static Optional<String> toOptionalString(String string) {
+        return string.isEmpty() ? Optional.empty() : Optional.of(string);
+    }
+
+    @TypeConverter
+    public static String fromOptionalString(Optional<String> optional) {
+        return optional.map(String::toString).orElse("");
+    }
+
 }

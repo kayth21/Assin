@@ -1,111 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <import type="com.ceaver.assin.util.CalendarHelper"/>
-        <import type="java.time.format.DateTimeFormatter"/>
-        <import type="java.time.LocalDate"/>
-        <import type="com.ceaver.assin.trades.TradeStrategy"/>
-        <import type="com.ceaver.assin.common.UiConverter"/>
-        <variable name="trade" type="com.ceaver.assin.trades.Trade" />
-        <variable name="saveClickHandler" type="com.ceaver.assin.common.SaveClickHandler" />
-    </data>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+    app:layout_constraintStart_toStartOf="@+id/guideline2">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/coinmarketcapIdEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ems="10"-->
-            <!--android:hint="Name"-->
-            <!--android:text="@{String.valueOf(trade.coinmarketcapId)}"-->
-            <!--android:inputType="textPersonName" />-->
+    <TextView
+        android:id="@+id/tradeInputBuySymbolTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Buy asset"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputBuySymbolSpinner"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/commentEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ems="10"-->
-            <!--android:hint="Name"-->
-            <!--android:text="@={trade.comment}"-->
-            <!--android:inputType="textPersonName" />-->
+    <Spinner
+        android:id="@+id/tradeInputBuySymbolSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:enabled="false"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputBuyAmountTextView"
+        app:layout_constraintTop_toBottomOf="@+id/tradeInputBuySymbolTextView" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/purchaseDateEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ems="10"-->
-            <!--android:hint="Purchase Date"-->
-            <!--android:text="@={UiConverter.toString(trade.tradeDate)}"-->
-            <!--android:inputType="none" />-->
+    <Spinner
+        android:id="@+id/tradeInputSellSymbolSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:enabled="false"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputSellAmountTextView"
+        app:layout_constraintTop_toTopOf="@+id/tradeInputBuySymbolSpinner" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/purchaseAmountEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ems="10"-->
-            <!--android:hint="Purchase Amount"-->
-            <!--android:text="@={UiConverter.toString(trade.purchaseAmount)}"-->
-            <!--android:inputType="number" />-->
+    <EditText
+        android:id="@+id/tradeInputBuyAmountEditText"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:enabled="false"
+        app:layout_constraintEnd_toStartOf="@+id/tradeInputBuyUnitTextView"
+        app:layout_constraintTop_toBottomOf="@+id/tradeInputBuyAmountTextView" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/purchasePriceEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ems="10"-->
-            <!--android:hint="Purchase Price"-->
-            <!--android:text="@={UiConverter.toString(trade.purchasePrice)}"-->
-            <!--android:inputType="numberDecimal" />-->
+    <EditText
+        android:id="@+id/tradeInputSellAmountEditText"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:enabled="false"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/tradeInputBuyAmountEditText" />
 
-        <!--<RadioGroup-->
-            <!--android:id="@+id/strategyRadioGroup"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+    <Button
+        android:id="@+id/tradeInputSaveButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tradeInputCommentEditText" />
 
-            <!--<RadioButton-->
-                <!--android:id="@+id/hodlStrategyRadioButton"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:checked="@{trade.strategies.contains(TradeStrategy.HODL)}"-->
-                <!--android:text="HODL" />-->
+    <TextView
+        android:id="@+id/tradeInputSellSymbolTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sell asset"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputSellSymbolSpinner"
+        app:layout_constraintTop_toTopOf="@+id/tradeInputBuySymbolTextView" />
 
-            <!--<RadioButton-->
-                <!--android:id="@+id/doubleOutStrategyRadioButton"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:checked="@{trade.strategies.contains(TradeStrategy.DOUBLE_OUT)}"-->
-                <!--android:text="Double Out" />-->
+    <TextView
+        android:id="@+id/tradeInputBuyAmountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Buy amount"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputBuyAmountEditText"
+        app:layout_constraintTop_toBottomOf="@+id/tradeInputBuySymbolSpinner" />
 
-            <!--<RadioButton-->
-                <!--android:id="@+id/asapNoLossesRadioButton"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:checked="@{trade.strategies.contains(TradeStrategy.ASAP_NO_LOSSES)}"-->
-                <!--android:text="ASAP (without losses)" />-->
+    <TextView
+        android:id="@+id/tradeInputBuyUnitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tradeInputBuyAmountEditText"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2" />
 
-        <!--</RadioGroup>-->
+    <TextView
+        android:id="@+id/tradeInputSellAmountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sell amount"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputSellAmountEditText"
+        app:layout_constraintTop_toTopOf="@+id/tradeInputBuyAmountTextView" />
 
-        <!--<CheckBox-->
-            <!--android:id="@+id/badTradeNotificationCheckbox"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:checked="@{trade.strategies.contains(TradeStrategy.BAD_TRADE)}"-->
-            <!--android:text="Bad Trade Notification? (-20%)" />-->
+    <TextView
+        android:id="@+id/tradeInputSellUnitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tradeInputSellAmountEditText"
+        app:layout_constraintStart_toEndOf="@+id/tradeInputSellAmountEditText" />
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:onClick="@{() -> saveClickHandler.onSaveClick()}"
-            android:text="Save" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/tradeInputCommentEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:enabled="false"
+        android:hint="Comment"
+        app:layout_constraintEnd_toEndOf="@+id/tradeInputSellAmountEditText"
+        app:layout_constraintStart_toStartOf="@+id/tradeInputBuyAmountEditText"
+        app:layout_constraintTop_toBottomOf="@+id/tradeInputBuyAmountEditText" />
 
-</layout>
+</android.support.constraint.ConstraintLayout>

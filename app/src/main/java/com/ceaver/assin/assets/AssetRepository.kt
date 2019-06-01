@@ -8,7 +8,7 @@ import com.ceaver.assin.trades.TradeRepository
 object AssetRepository {
 
     fun loadAllAssets(): List<Asset> {
-        return TradeRepository.loadAllTrades().map { Asset(it.buySymbol, it.buyAmount) }
+        return TradeRepository.loadAllTrades().map { Asset(it.buySymbol.orElse(""), it.buyAmount.orElse(0.0)) }
     }
 
     fun loadAllAssetsAsync(callbackInMainThread: Boolean, callback: (List<Asset>) -> Unit) {

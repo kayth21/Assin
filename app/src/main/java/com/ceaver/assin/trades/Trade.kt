@@ -4,13 +4,22 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import java.time.LocalDate
+import java.util.*
 
 @Entity(tableName = "trade")
 data class Trade(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
         @ColumnInfo(name = "comment") var comment: String = "", //
-        @ColumnInfo(name = "buySymbol") var buySymbol: String = "", //
-        @ColumnInfo(name = "buyAmount") var buyAmount: Double = 0.0, //
-        @ColumnInfo(name = "sellSymbol") var sellSymbol: String = "", //
-        @ColumnInfo(name = "sellAmount") var sellAmount: Double = 0.0)
+        @ColumnInfo(name = "buySymbol") var buySymbol: Optional<String> = Optional.empty(), //
+        @ColumnInfo(name = "buyAmount") var buyAmount: Optional<Double> = Optional.empty(), //
+        @ColumnInfo(name = "sellSymbol") var sellSymbol: Optional<String> = Optional.empty(), //
+        @ColumnInfo(name = "sellAmount") var sellAmount: Optional<Double> = Optional.empty()) {
+
+    fun isTrade(): Boolean = buySymbol.isPresent && sellSymbol.isPresent
+    fun isDeposit(): Boolean = buySymbol.isPresent && !sellSymbol.isPresent
+    fun isWithdraw(): Boolean = !buySymbol.isPresent && sellSymbol.isPresent
+
+}
+
+

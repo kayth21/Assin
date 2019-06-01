@@ -29,7 +29,11 @@ class TradeListFragment : Fragment() {
         EventBus.getDefault().register(this);
         tradeList.adapter = tradeListAdapter
         tradeList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        createTradeButton.setOnClickListener { startActivity(Intent(activity!!.application, TradeInputActivity::class.java)) }
+        createTradeButton.setOnClickListener {
+            val intent = Intent(activity!!.application, TradeInputActivity::class.java);
+            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, TradeType.TRADE.toString())
+            startActivity(intent)
+        }
         loadAllTrades()
         swipeRefreshLayout.setOnRefreshListener { loadAllTrades() }
     }
@@ -72,6 +76,7 @@ class TradeListFragment : Fragment() {
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Trade) {
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
+            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, TradeType.TRADE.toString())
             intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_ID, item.id)
             startActivity(intent)
         }

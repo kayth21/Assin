@@ -6,6 +6,7 @@ import com.ceaver.assin.trades.TradeRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.time.LocalDate
+import java.util.*
 
 // TODO Temporary Helper - Remove!
 object TestdataProvider {
@@ -20,7 +21,7 @@ object TestdataProvider {
 
     @Subscribe
     fun onMessageEvent(event: TradeEvents.DeleteAll) {
-        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Initial Trade", "USD", 100000.0, "", 0.0), false) {}
-        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "abc", "LTC", 500.0, "BTC", 1.0), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Initial Trade", Optional.of("USD"), Optional.of(100000.0), Optional.empty(), Optional.empty()), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "abc", Optional.of("LTC"), Optional.of(500.0), Optional.of("BTC"), Optional.of(1.0)), false) {}
     }
 }
