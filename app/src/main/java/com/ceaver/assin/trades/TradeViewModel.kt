@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.TitleRepository
+import java.time.LocalDate
 import java.util.*
 
 class TradeViewModel : ViewModel() {
@@ -47,16 +48,16 @@ class TradeViewModel : ViewModel() {
         TradeRepository.saveTradeAsync(trade, true) { status.value = TradeInputStatus.END_SAVE }
     }
 
-    fun onSaveTradeClick(buySymbol: String, buyAmount: Double, sellSymbol: String, sellAmount: Double, comment: String) {
-        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), comment = comment))
+    fun onSaveTradeClick(buySymbol: String, buyAmount: Double, sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 
-    fun onDepositClick(buySymbol: String, buyAmount: Double, comment: String) {
-        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), comment = comment))
+    fun onDepositClick(buySymbol: String, buyAmount: Double, tradeDate: LocalDate, comment: String) {
+        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), tradeDate = tradeDate, comment = comment))
     }
 
-    fun onWithdrawClick(sellSymbol: String, sellAmount: Double, comment: String) {
-        saveTrade(trade.value!!.copy(sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), comment = comment))
+    fun onWithdrawClick(sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+        saveTrade(trade.value!!.copy(sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 
     enum class TradeInputStatus {

@@ -11,6 +11,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.util.CalendarHelper
 import com.ceaver.assin.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
 import java.time.LocalDate
@@ -50,6 +51,8 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
                 tradeInputSaveButton.setText("Withdraw")
             }
         }
+        tradeInputTradeDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
+        tradeInputTradeDateEditText.setKeyListener(null) // hack to disable user input
     }
 
     private fun publishView() = setContentView(R.layout.activity_trade_input)
@@ -75,23 +78,24 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun onSaveClick(viewModel: TradeViewModel) {
         val comment = tradeInputCommentEditText.text.toString()
+        val tradeDate = CalendarHelper.convertDate(tradeInputTradeDateEditText.text.toString())
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 val buySymbol = tradeInputBuySymbolSpinner.selectedItem as String
                 val buyAmount = tradeInputBuyAmountEditText.text.toString().toDouble()
                 val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as String
                 val sellAmount = tradeInputSellAmountEditText.text.toString().toDouble()
-                viewModel.onSaveTradeClick(buySymbol, buyAmount, sellSymbol, sellAmount, comment)
+                viewModel.onSaveTradeClick(buySymbol, buyAmount, sellSymbol, sellAmount, tradeDate, comment)
             }
             TradeType.DEPOSIT -> {
                 val buySymbol = tradeInputBuySymbolSpinner.selectedItem as String
                 val buyAmount = tradeInputBuyAmountEditText.text.toString().toDouble()
-                viewModel.onDepositClick(buySymbol, buyAmount, comment)
+                viewModel.onDepositClick(buySymbol, buyAmount, tradeDate, comment)
             }
             TradeType.WITHDRAW -> {
                 val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as String
                 val sellAmount = tradeInputSellAmountEditText.text.toString().toDouble()
-                viewModel.onWithdrawClick(sellSymbol, sellAmount, comment)
+                viewModel.onWithdrawClick(sellSymbol, sellAmount, tradeDate, comment)
             }
         }
     }
@@ -119,6 +123,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun publishFields(trade: Trade, viewModel: TradeViewModel) {
+        tradeInputTradeDateEditText.setText(CalendarHelper.convertDate(trade.tradeDate))
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 tradeInputBuyAmountEditText.setText(if (trade.buyAmount.isPresent) trade.buyAmount.get().toString() else "")
@@ -149,6 +154,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     private fun enableInput(enable: Boolean) {
         tradeInputSaveButton.isEnabled = enable && checkSaveButton()
         tradeInputCommentEditText.isEnabled = enable
+        tradeInputTradeDateEditText.isEnabled = enable
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 tradeInputBuyAmountEditText.isEnabled = enable
@@ -179,40 +185,34 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun registerInputValidation() {
+        tradeInputTradeDateEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter date")
+        tradeInputTradeDateEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
+
         when (lookupTradeType()) {
             TradeType.TRADE -> {
-                tradeInputBuyAmountEditText.registerInputValidator({ s -> s.length >= 1 }, "Please enter amount")
-                tradeInputSellAmountEditText.registerInputValidator({ s -> s.length >= 1 }, "Please enter amount")
-                tradeInputBuyAmountEditText.afterTextChanged  { tradeInputSaveButton.isEnabled = checkSaveButton() }
-                tradeInputSellAmountEditText.afterTextChanged  { tradeInputSaveButton.isEnabled = checkSaveButton() }
+                tradeInputBuyAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+                tradeInputSellAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+                tradeInputBuyAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
+                tradeInputSellAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
             }
             TradeType.DEPOSIT -> {
-                tradeInputBuyAmountEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter amount")
-                tradeInputBuyAmountEditText.afterTextChanged  { tradeInputSaveButton.isEnabled = checkSaveButton() }
+                tradeInputBuyAmountEditText.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
+                tradeInputBuyAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
             }
             TradeType.WITHDRAW -> {
-                tradeInputSellAmountEditText.registerInputValidator({ s -> (s.length >= 1) }, "Please enter amount")
+                tradeInputSellAmountEditText.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
                 tradeInputBuyAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
             }
         }
     }
 
-    private fun checkSaveButton() : Boolean{
+    private fun checkSaveButton(): Boolean {
         return tradeInputBuyAmountEditText.error == null && tradeInputSellAmountEditText.error == null
     }
-//
-//    private fun TradeInputActivity.modifyPurchaseDateField() {
-////        purchaseDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
-////        purchaseDateEditText.setKeyListener(null) // hack to disable user input
-//    }
-//
-//    override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {
-//        if (purchaseDatePickerFragmentTag.equals(tag)) {
-////            purchaseDateEditText.setText(CalendarHelper.convertDate(date))
-//        }
-//    }
 
     override fun onDatePickerFragmentDateSelected(tag: String, date: LocalDate) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (purchaseDatePickerFragmentTag.equals(tag)) {
+            tradeInputTradeDateEditText.setText(CalendarHelper.convertDate(date))
+        }
     }
 }
