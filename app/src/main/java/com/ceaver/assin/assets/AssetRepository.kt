@@ -8,7 +8,12 @@ import com.ceaver.assin.trades.TradeRepository
 object AssetRepository {
 
     fun loadAllAssets(): List<Asset> {
-        return TradeRepository.loadAllTrades().map { Asset(it.buySymbol.orElse(""), it.buyAmount.orElse(0.0)) }
+        val assets = TradeRepository.loadAllTrades()
+        val buyPairs = assets.filter { it.buySymbol.isPresent }.map { Pair(it.buySymbol.get(), it.buyAmount.get()) }
+        val sellPairs = assets.filter { it.sellSymbol.isPresent }.map { Pair(it.sellSymbol.get(), it.sellAmount.get().unaryMinus()) }
+        val allPairs = buyPairs + sellPairs
+
+        return allPairs.groupBy { it.first }.map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }.map { Asset(it.first, it.second) }
     }
 
     fun loadAllAssetsAsync(callbackInMainThread: Boolean, callback: (List<Asset>) -> Unit) {

@@ -27,7 +27,7 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(0, 0, 0, "Deposit")
-            menu!!.add(0, 1, 1, "Withdraw")
+            menu.add(0, 1, 1, "Withdraw")
         }
 
         fun bindItem(asset: Asset) {

@@ -21,7 +21,9 @@ object TestdataProvider {
 
     @Subscribe
     fun onMessageEvent(event: TradeEvents.DeleteAll) {
-        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Initial Trade", Optional.of("USD"), Optional.of(100000.0), Optional.empty(), Optional.empty()), false) {}
-        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "abc", Optional.of("LTC"), Optional.of(500.0), Optional.of("BTC"), Optional.of(1.0)), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Deposit USD", Optional.of("USD"), Optional.of(50000.0), Optional.empty(), Optional.empty()), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Deposit BTC", Optional.of("BTC"), Optional.of(10.0), Optional.empty(), Optional.empty()), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Buy Shitcoin", Optional.of("LTC"), Optional.of(500.0), Optional.of("BTC"), Optional.of(1.0)), false) {}
+        TradeRepository.insertTradeAsync(Trade(0, LocalDate.now(), "Withdraw", Optional.empty(), Optional.empty(), Optional.of("USD"), Optional.of(10000.0)), false) {}
     }
 }
