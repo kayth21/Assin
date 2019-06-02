@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ceaver.assin.IntentKeys
@@ -50,6 +51,15 @@ class AssetListFragment : Fragment() {
         super.onStop()
         assetList.adapter = null
         assetSwipeRefreshLayout.setOnRefreshListener(null)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        val selectedAsset = assetListAdapter.currentLongClickAsset!!
+        val intent = Intent(activity!!.application, TradeInputActivity::class.java);
+        intent.putExtra(IntentKeys.SYMBOL, selectedAsset.title)
+        intent.putExtra(IntentKeys.TRADE_TYPE, TradeType.WITHDRAW.toString())
+        startActivity(intent)
+        return super.onContextItemSelected(item)
     }
 
 }

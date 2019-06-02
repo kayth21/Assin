@@ -20,14 +20,19 @@ class TradeViewModel : ViewModel() {
         TradeRepository.loadTradeAsync(tradeId, false) { trade.postValue(it) }
     }
 
-    private fun createTrade() {
-        trade.postValue(Trade())
-    }
 
-
-    fun initTrade(tradeId: Optional<Long>, symbol: Optional<String>): TradeViewModel {
+    fun initTrade(tradeId: Optional<Long>, symbol: Optional<String>, lookupTradeType: TradeType): TradeViewModel {
         TitleRepository.loadAllSymbolsAsync(false) { symbols.postValue(it) }
-        if (tradeId.isPresent) lookupTrade(tradeId.get()) else createTrade(); return this
+        when {
+            tradeId.isPresent -> lookupTrade(tradeId.get())
+            symbol.isPresent -> when (lookupTradeType) {
+                TradeType.DEPOSIT -> trade.postValue(Trade(buySymbol = Optional.of(symbol.get())))
+                TradeType.WITHDRAW -> trade.postValue(Trade(sellSymbol = Optional.of(symbol.get())))
+                else -> throw IllegalStateException()
+            }
+            else -> trade.postValue(Trade())
+        }
+        return this
     }
 
     private fun saveTrade(trade: Trade) {

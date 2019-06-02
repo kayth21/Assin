@@ -59,12 +59,15 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun lookupTradeType() = TradeType.valueOf(intent.getStringExtra(IntentKeys.TRADE_TYPE))
 
-    private fun lookupSymbol() = intent.getStringExtra(IntentKeys.SYMBOL)
+    private fun lookupSymbol() = Optional.ofNullable(intent.getStringExtra(IntentKeys.SYMBOL))
 
-    private fun lookupTradeId() = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
+    private fun lookupTradeId(): Optional<Long> {
+        val tradeId = intent.extras.getLong(IntentKeys.TRADE_ID)
+        return if (tradeId == 0L) Optional.empty() else Optional.of(tradeId)
+    }
 
     private fun lookupViewModel(tradeType: TradeType): TradeViewModel {
-        return ViewModelProviders.of(this).get(TradeViewModel::class.java).initTrade(Optional.ofNullable(lookupTradeId()), Optional.ofNullable(lookupSymbol()))
+        return ViewModelProviders.of(this).get(TradeViewModel::class.java).initTrade(lookupTradeId(), lookupSymbol(), lookupTradeType())
     }
 
     private fun bindActions(viewModel: TradeViewModel) {
@@ -207,7 +210,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
             }
             TradeType.WITHDRAW -> {
                 tradeInputSellAmountEditText.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
-                tradeInputBuyAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
+                tradeInputSellAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
             }
         }
     }
