@@ -57,9 +57,12 @@ class AssetListFragment : Fragment() {
         val selectedAsset = assetListAdapter.currentLongClickAsset!!
         val intent = Intent(activity!!.application, TradeInputActivity::class.java);
         intent.putExtra(IntentKeys.SYMBOL, selectedAsset.title)
-        intent.putExtra(IntentKeys.TRADE_TYPE, TradeType.WITHDRAW.toString())
+        intent.putExtra(IntentKeys.TRADE_TYPE, when (item!!.itemId) {
+            0 -> TradeType.DEPOSIT.toString()
+            1 -> TradeType.WITHDRAW.toString()
+            else -> throw IllegalStateException()
+        })
         startActivity(intent)
         return super.onContextItemSelected(item)
     }
-
 }
