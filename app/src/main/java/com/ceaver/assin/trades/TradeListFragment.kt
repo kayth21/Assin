@@ -74,10 +74,10 @@ class TradeListFragment : Fragment() {
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(item: Trade) {
+        override fun onItemClick(trade: Trade) {
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, TradeType.TRADE.toString())
-            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_ID, item.id)
+            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, trade.getTradeType().toString())
+            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_ID, trade.id)
             startActivity(intent)
         }
     }

@@ -52,7 +52,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
             }
         }
         tradeInputTradeDateEditText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) DatePickerFragment().show(fragmentManager, purchaseDatePickerFragmentTag) }
-        tradeInputTradeDateEditText.setKeyListener(null) // hack to disable user input
+        tradeInputTradeDateEditText.keyListener = null // hack to disable user input
     }
 
     private fun publishView() = setContentView(R.layout.activity_trade_input)
@@ -64,12 +64,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     private fun lookupTradeId() = intent.getLongExtra(IntentKeys.TRADE_ID, 0)
 
     private fun lookupViewModel(tradeType: TradeType): TradeViewModel {
-        val viewModel = ViewModelProviders.of(this).get(TradeViewModel::class.java)
-        return when (tradeType) {
-            TradeType.TRADE -> viewModel.initTrade(lookupTradeId())
-            TradeType.DEPOSIT -> viewModel.initDeposit(Optional.ofNullable(lookupSymbol()))
-            TradeType.WITHDRAW -> viewModel.initWithdraw(lookupSymbol())
-        }
+        return ViewModelProviders.of(this).get(TradeViewModel::class.java).initTrade(Optional.ofNullable(lookupTradeId()), Optional.ofNullable(lookupSymbol()))
     }
 
     private fun bindActions(viewModel: TradeViewModel) {
@@ -116,24 +111,35 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun observeDataReady(viewModel: TradeViewModel) {
         viewModel.dataReady.observe(this, Observer {
+            updateSpinnerFields(viewModel, it!!.first)
             registerInputValidation()
             enableInput(true)
             viewModel.dataReady.removeObservers(this)
         })
     }
 
+    private fun updateSpinnerFields(viewModel: TradeViewModel, trade: Trade) {
+        if (trade.buySymbol.isPresent) {
+            tradeInputBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.buySymbol.get()))
+        }
+        if (trade.sellSymbol.isPresent) {
+            tradeInputSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.sellSymbol.get()))
+        }
+    }
+
     private fun publishFields(trade: Trade, viewModel: TradeViewModel) {
         tradeInputTradeDateEditText.setText(CalendarHelper.convertDate(trade.tradeDate))
+        tradeInputCommentEditText.setText(trade.comment)
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 tradeInputBuyAmountEditText.setText(if (trade.buyAmount.isPresent) trade.buyAmount.get().toString() else "")
-                tradeInputBuyAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
+                tradeInputSellAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
             }
             TradeType.DEPOSIT -> {
                 tradeInputBuyAmountEditText.setText(if (trade.buyAmount.isPresent) trade.buyAmount.get().toString() else "")
             }
             TradeType.WITHDRAW -> {
-                tradeInputBuyAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
+                tradeInputSellAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
             }
         }
     }

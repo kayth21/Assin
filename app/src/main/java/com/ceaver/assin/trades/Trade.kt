@@ -16,6 +16,16 @@ data class Trade(
         @ColumnInfo(name = "sellSymbol") var sellSymbol: Optional<String> = Optional.empty(), //
         @ColumnInfo(name = "sellAmount") var sellAmount: Optional<Double> = Optional.empty()) {
 
+
+    fun getTradeType(): TradeType {
+        return when {
+            isTrade() -> TradeType.TRADE
+            isDeposit() -> TradeType.DEPOSIT
+            isWithdraw() -> TradeType.WITHDRAW
+            else -> throw IllegalStateException()
+        }
+    }
+
     fun isTrade(): Boolean = buySymbol.isPresent && sellSymbol.isPresent
     fun isDeposit(): Boolean = buySymbol.isPresent && !sellSymbol.isPresent
     fun isWithdraw(): Boolean = !buySymbol.isPresent && sellSymbol.isPresent

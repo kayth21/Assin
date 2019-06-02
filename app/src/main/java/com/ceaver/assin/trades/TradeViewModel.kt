@@ -24,23 +24,10 @@ class TradeViewModel : ViewModel() {
         trade.postValue(Trade())
     }
 
-    private fun init() {
+
+    fun initTrade(tradeId: Optional<Long>, symbol: Optional<String>): TradeViewModel {
         TitleRepository.loadAllSymbolsAsync(false) { symbols.postValue(it) }
-    }
-
-    fun initTrade(tradeId: Long): TradeViewModel {
-        init()
-        if (tradeId > 0) lookupTrade(tradeId) else createTrade(); return this
-    }
-
-    fun initDeposit(symbol: Optional<String>): TradeViewModel {
-        init()
-        createTrade(); return this
-    }
-
-    fun initWithdraw(symbol: String): TradeViewModel {
-        init()
-        createTrade(); return this
+        if (tradeId.isPresent) lookupTrade(tradeId.get()) else createTrade(); return this
     }
 
     private fun saveTrade(trade: Trade) {

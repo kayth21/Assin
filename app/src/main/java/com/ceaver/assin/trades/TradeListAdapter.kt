@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ceaver.assin.R
+import com.ceaver.assin.util.CalendarHelper
 
 internal class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
 
@@ -19,7 +20,7 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(tradeList[position], onClickListener)
-        holder.itemView.setOnLongClickListener {currentLongClickTrade = tradeList[position]; false }
+        holder.itemView.setOnLongClickListener { currentLongClickTrade = tradeList[position]; false }
     }
 
     override fun getItemCount() = tradeList.size
@@ -31,9 +32,9 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
         }
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.tradeDateTextView) as TextView).text = trade.tradeDate.toString()
-            (view.findViewById(R.id.sellTextView) as TextView).text = "${trade.sellAmount} ${trade.sellSymbol}"
-            (view.findViewById(R.id.buyTextView) as TextView).text = "${trade.buyAmount} ${trade.buySymbol}"
+            (view.findViewById(R.id.tradeDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
+            (view.findViewById(R.id.sellTextView) as TextView).text = if (trade.sellAmount.isPresent) "${trade.sellAmount.get()} ${trade.sellSymbol.get()}" else ""
+            (view.findViewById(R.id.buyTextView) as TextView).text = if (trade.buyAmount.isPresent) "${trade.buyAmount.get()} ${trade.buySymbol.get()}" else ""
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(trade) }
         }
