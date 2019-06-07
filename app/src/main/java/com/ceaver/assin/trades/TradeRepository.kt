@@ -2,6 +2,7 @@ package com.ceaver.assin.trades
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 
@@ -53,6 +54,14 @@ object TradeRepository {
         BackgroundThreadExecutor.execute { insertTrade(trade); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
     }
 
+    fun insertTrades(alerts: List<Trade>) {
+        getTradeDao().insertTrades(alerts); EventBus.getDefault().post(TradeEvents.Insert())
+    }
+
+    fun insertTradesAsync(trades: List<Trade>, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { insertTrades(trades); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
+    }
+
     fun updateTrade(trade: Trade) {
         getTradeDao().updateTrade(trade); EventBus.getDefault().post(TradeEvents.Update())
     }
@@ -74,7 +83,11 @@ object TradeRepository {
     }
 
     fun deleteAllTradesAsync() {
-        BackgroundThreadExecutor.execute { deleteAllTrades() }
+        deleteAllTradesAsync() {}
+    }
+
+    fun deleteAllTradesAsync(callback: () -> Unit) {
+        BackgroundThreadExecutor.execute { deleteAllTrades(); callback.invoke() }
     }
 
     private fun getTradeDao(): TradeDao {
@@ -82,6 +95,6 @@ object TradeRepository {
     }
 
     private fun getDatabase(): com.ceaver.assin.database.Database {
-        return com.ceaver.assin.database.Database.getInstance()
+        return Database.getInstance()
     }
 }

@@ -14,6 +14,9 @@ interface TradeDao {
     @Insert(onConflict = OnConflictStrategy.FAIL)
     fun insertTrade(trade: Trade)
 
+    @Insert(onConflict = OnConflictStrategy.FAIL)
+    fun insertTrades(trade: List<Trade>)
+
     @Update
     fun updateTrade(trade: Trade)
 
