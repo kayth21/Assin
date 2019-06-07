@@ -136,11 +136,10 @@ class BackupActivity : AppCompatActivity() {
                 TradeRepository.deleteAllTrades();
                 TradeRepository.insertTrades(trades)
                 LogRepository.insertLogAsync("Import trades from '$filePath' successful")
-                return Result.success()
             } else {
                 LogRepository.insertLogAsync("Import trades failed. '$filePath' not found")
-                return Result.failure()
             }
+            return Result.success()
         }
     }
 
@@ -148,18 +147,17 @@ class BackupActivity : AppCompatActivity() {
         override fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + ALERT_FILE_NAME;
-            return if (File(filePath).exists()) {
+            if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
                 val alerts = csvParser.map { Alert(0, it.get(0), it.get(1), AlertType.valueOf(it.get(2)), it.get(3).toDouble(), it.get(4).toDouble()) }.toList()
                 AlertRepository.deleteAllAlerts()
                 AlertRepository.insertAlerts(alerts)
                 LogRepository.insertLogAsync("Import alerts from '$filePath' successful")
-                Result.success()
             } else {
                 LogRepository.insertLogAsync("Import alerts failed. '$filePath' not found")
-                Result.failure()
             }
+            return Result.success()
         }
     }
 
