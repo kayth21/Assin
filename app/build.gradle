@@ -66,4 +66,6 @@ dependencies {
     // APACHE COMMONS CSV
     implementation 'org.apache.commons:commons-csv:1.6'
 
+    implementation project(":coinpaprika-api-kotlin-client")
+
 }
