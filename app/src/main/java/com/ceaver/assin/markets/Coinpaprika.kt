@@ -40,7 +40,6 @@ object Coinpaprika {
                         },
                         { error -> error.printStackTrace() }) // TODO
 
-
         CoinpaprikaApi(MyApplication.appContext!!)
                 .tickers()
                 .subscribeOn(Schedulers.newThread())
@@ -61,7 +60,9 @@ object Coinpaprika {
                 name = fiatEntity.name,
                 symbol = fiatEntity.symbol,
                 category = Category.FIAT,
-                active = Integer(1818))
+                active = Integer(1818),
+                priceUsd = 1.0 // TODO this is only valid for USD
+        )
     }
 
     private fun transform(ticker: TickerEntity): Title {

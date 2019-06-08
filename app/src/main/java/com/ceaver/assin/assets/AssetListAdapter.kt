@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ceaver.assin.R
+import com.ceaver.assin.extensions.format
 
 class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
     var assets: List<Asset> = ArrayList()
@@ -31,9 +32,9 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
         }
 
         fun bindItem(asset: Asset) {
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.title
-            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toString()
-            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toString()
+            (view.findViewById(R.id.assetNameTextView) as TextView).text = "${asset.amount} ${asset.title}"
+            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.format(asset.title) + " " + "BTC"
+            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.format(asset.title) + " " + "USD"
             view.setOnCreateContextMenuListener(this)
         }
     }

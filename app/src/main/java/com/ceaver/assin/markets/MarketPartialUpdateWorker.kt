@@ -13,9 +13,10 @@ class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParamet
         val localTitle = TitleRepository.loadTitleBySymbol(symbolName)
         Thread.sleep((index * 110).toLong()) // avoid more than 10 calls per second on coinpaprika AIP
         val result = MarketRepository.loadTitle(localTitle.id)
-        if (result.isPresent)
+        if (result.isPresent) {
             TitleRepository.update(result.get().incrementActiveCounter())
-        else {
+            if (symbolName == "BTC") TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = 1 / result.get().priceUsd))
+        } else {
             TitleRepository.update(localTitle.decreaseActiveCounter())
             LogRepository.insertLog("Warning: Unable to update $symbolName")
         }
