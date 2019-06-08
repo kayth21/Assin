@@ -3,6 +3,7 @@ package com.ceaver.assin.markets
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.assets.Category
 import com.coinpaprika.apiclient.api.CoinpaprikaApi
+import com.coinpaprika.apiclient.entity.FiatEntity
 import com.coinpaprika.apiclient.entity.TickerEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,17 +26,21 @@ object Coinpaprika {
     }
 
     fun loadAllTitles(): Set<Title> {
+        val resultSet = mutableSetOf<Title>()
 
         CoinpaprikaApi(MyApplication.appContext!!)
                 .fiats()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .blockingSubscribe(
-                        { ticker -> println(ticker) },
+                        { next ->
+                            for (fiatEntity in next) {
+                                resultSet.add(transform(fiatEntity))
+                            }
+                        },
                         { error -> error.printStackTrace() }) // TODO
 
 
-        val resultSet = mutableSetOf<Title>()
         CoinpaprikaApi(MyApplication.appContext!!)
                 .tickers()
                 .subscribeOn(Schedulers.newThread())
@@ -48,6 +53,15 @@ object Coinpaprika {
                         },
                         { error -> error.printStackTrace() }) // TODO
         return resultSet
+    }
+
+    private fun transform(fiatEntity: FiatEntity): Title {
+        return Title(
+                id = fiatEntity.id,
+                name = fiatEntity.name,
+                symbol = fiatEntity.symbol,
+                category = Category.FIAT,
+                active = Integer(1818))
     }
 
     private fun transform(ticker: TickerEntity): Title {

@@ -31,7 +31,7 @@ class MarketListFragment : Fragment() {
         marketList.adapter = marketListAdapter
         marketList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         marketSwipeRefreshLayout.setOnRefreshListener { refreshAllTitles() }
-        loadAllTitles()
+        loadActiveCryptoTitles()
     }
 
     private fun refreshAllTitles() {
@@ -42,8 +42,8 @@ class MarketListFragment : Fragment() {
         }
     }
 
-    private fun loadAllTitles() {
-        TitleRepository.loadActiveTitlesAsync(true) { onAllTitlesLoaded(it) };
+    private fun loadActiveCryptoTitles() {
+        TitleRepository.loadActiveCryptoTitlesAsync(true) { onAllTitlesLoaded(it) };
     }
 
     private fun onAllTitlesLoaded(titles: List<Title>) {
@@ -52,13 +52,13 @@ class MarketListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        loadAllTitles()
+        loadActiveCryptoTitles()
         Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
-        loadAllTitles()
+        loadActiveCryptoTitles()
         Toast.makeText(getActivity(), "Observed refreshed", Toast.LENGTH_SHORT).show();
     }
 

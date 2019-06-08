@@ -7,8 +7,14 @@ interface TitleDao {
     @Query("select * from title order by rank")
     fun loadAllTitles(): List<Title>
 
+    @Query("select * from title where category = 'CRYPTO' order by rank")
+    fun loadAllCryptoTitles(): List<Title>
+
     @Query("select * from title where active >= 0 order by rank")
     fun loadActiveTitles(): List<Title>
+
+    @Query("select * from title where active >= 0 and category = 'CRYPTO' order by rank")
+    fun loadActiveCryptoTitles(): List<Title>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTitle(title: Title)
@@ -34,6 +40,9 @@ interface TitleDao {
     @Query("select * from title where symbol = :symbol")
     fun loadTitleBySymbol(symbol: String): Title
 
-    @Query("select symbol from title order by rank")
+    @Query("select symbol from title where category = 'CRYPTO' order by rank")
     fun loadCryptoSymbols(): List<String>
+
+    @Query("select symbol from title where category = 'FIAT' order by rank")
+    fun loadFiatSymbols(): List<String>
 }

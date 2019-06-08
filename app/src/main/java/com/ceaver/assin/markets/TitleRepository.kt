@@ -24,8 +24,16 @@ object TitleRepository {
         return getTitleDao().loadAllTitles()
     }
 
+    fun loadAllCryptoTitles(): List<Title> {
+        return getTitleDao().loadAllCryptoTitles()
+    }
+
     fun loadActiveTitles(): List<Title> {
         return getTitleDao().loadActiveTitles()
+    }
+
+    fun loadActiveCryptoTitles(): List<Title> {
+        return getTitleDao().loadActiveCryptoTitles()
     }
 
     fun loadAllTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
@@ -41,6 +49,17 @@ object TitleRepository {
     fun loadActiveTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val titles = loadActiveTitles()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
+            else
+                callback.invoke(titles)
+        }
+    }
+
+
+    fun loadActiveCryptoTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val titles = loadActiveCryptoTitles()
             if (callbackInMainThread)
                 Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
             else
@@ -72,12 +91,27 @@ object TitleRepository {
         }
     }
 
+
+    fun loadAllFiatSymbolsAsync(callbackInMainThread: Boolean, callback: (List<String>) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val symbols = loadAllFiatSymbols()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(symbols) }
+            else
+                callback.invoke(symbols)
+        }
+    }
+
     fun loadAllCryptoSymbols(): List<String> {
         return getTitleDao().loadCryptoSymbols()
     }
 
+    fun loadAllFiatSymbols(): List<String> {
+        return getTitleDao().loadFiatSymbols().filter { listOf("USD").contains(it) } // TODO allow more FIAT
+    }
+
     fun loadAllSymbols(): List<String> {
-        val fiatList = listOf("USD", "EUR", "CHF")
+        val fiatList = loadAllFiatSymbols()
         val allCryptoList = loadAllCryptoSymbols()
         val unionList = mutableListOf<String>()
         unionList.addAll(fiatList)

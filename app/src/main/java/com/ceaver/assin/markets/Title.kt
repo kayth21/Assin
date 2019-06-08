@@ -22,7 +22,7 @@ data class Title(//
         @ColumnInfo(name = "totalSupply") val totalSupply: Long = -1,
         @ColumnInfo(name = "maxSupply") val maxSupply: Long = -1,
         @ColumnInfo(name = "betaValue") val betaValue: Double = -1.0,
-        @ColumnInfo(name = "lastUpdated") val lastUpdated: Optional<LocalDateTime>,
+        @ColumnInfo(name = "lastUpdated") val lastUpdated: Optional<LocalDateTime> = Optional.empty(),
         // usd
         @ColumnInfo(name = "priceUsd") val priceUsd: Double = -1.0,
         @ColumnInfo(name = "volume24hUsd") val volume24hUsd: Double = -1.0,
@@ -34,7 +34,7 @@ data class Title(//
         @ColumnInfo(name = "percentChange30dUsd") val percentChange30dUsd: Double = -1.0,
         @ColumnInfo(name = "percentChange1yUsd") val percentChange1yUsd: Double = -1.0,
         @ColumnInfo(name = "athPriceUsd") val athPriceUsd: Double = -1.0,
-        @ColumnInfo(name = "athDateUsd") val athDateUsd: Optional<LocalDateTime>,
+        @ColumnInfo(name = "athDateUsd") val athDateUsd: Optional<LocalDateTime> = Optional.empty(),
         @ColumnInfo(name = "athPercentUsd") val athPercentUsd: Double = -1.0,
         // btc
         @ColumnInfo(name = "priceBtc") val priceBtc: Double = -1.0,
@@ -47,7 +47,7 @@ data class Title(//
         @ColumnInfo(name = "percentChange30dBtc") val percentChange30dBtc: Double = -1.0,
         @ColumnInfo(name = "percentChange1yBtc") val percentChange1yBtc: Double = -1.0,
         @ColumnInfo(name = "athPriceBtc") val athPriceBtc: Double = -1.0,
-        @ColumnInfo(name = "athDateBtc") val athDateBtc: Optional<LocalDateTime>,
+        @ColumnInfo(name = "athDateBtc") val athDateBtc: Optional<LocalDateTime> = Optional.empty(),
         @ColumnInfo(name = "athPercentBtc") val athPercentBtc: Double = -1.0,
         // eth
         @ColumnInfo(name = "priceEth") val priceEth: Double = -1.0,
@@ -60,7 +60,7 @@ data class Title(//
         @ColumnInfo(name = "percentChange30dEth") val percentChange30dEth: Double = -1.0,
         @ColumnInfo(name = "percentChange1yEth") val percentChange1yEth: Double = -1.0,
         @ColumnInfo(name = "athPriceEth") val athPriceEth: Double = -1.0,
-        @ColumnInfo(name = "athDateEth") val athDateEth: Optional<LocalDateTime>,
+        @ColumnInfo(name = "athDateEth") val athDateEth: Optional<LocalDateTime> = Optional.empty(),
         @ColumnInfo(name = "athPercentEth") val athPercentEth: Double = -1.0
 ) {
 
