@@ -10,10 +10,18 @@ import java.util.*
 object TitleRepository {
 
     fun updateAll(allTitles: Set<Title>) {
-        getTitleDao().insertTitles(allTitles)
+        getTitleDao().updateTitles(allTitles)
     }
 
     fun update(title: Title) {
+        getTitleDao().updateTitle(title)
+    }
+
+    fun insertAll(allTitles: Set<Title>) {
+        getTitleDao().insertTitles(allTitles)
+    }
+
+    fun insert(title: Title) {
         getTitleDao().insertTitle(title)
     }
 

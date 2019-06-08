@@ -25,6 +25,9 @@ interface TitleDao {
     @Update
     fun updateTitle(title: Title)
 
+    @Update
+    fun updateTitles(titles: Set<Title>)
+
     @Delete
     fun deleteTitle(title: Title)
 

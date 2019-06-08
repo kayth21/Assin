@@ -12,7 +12,7 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
         val allLocalTitles = TitleRepository.loadAllTitles()
 
         if (allLocalTitles.isEmpty()) { // initial load
-            TitleRepository.updateAll(allRemoteTitles.map { it.copy(active = Integer(50)) }.toSet())
+            TitleRepository.insertAll(allRemoteTitles.map { it.copy(active = Integer(50)) }.toSet())
         } else {
             val newTitlesToInsert = allRemoteTitles - allLocalTitles
             val existingTitlesToUpdate = (allRemoteTitles - newTitlesToInsert).map { it.incrementActiveCounter() }
@@ -20,7 +20,8 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
             val removedTitlesToDelete = removedTitles.filter { it.inactive() }
             val removedTitlesToUpdate = (removedTitles - removedTitlesToDelete).map { it.decreaseActiveCounter() }
 
-            TitleRepository.updateAll(newTitlesToInsert + existingTitlesToUpdate + removedTitlesToUpdate)
+            TitleRepository.insertAll(newTitlesToInsert)
+            TitleRepository.updateAll((existingTitlesToUpdate + removedTitlesToUpdate).toSet())
             TitleRepository.deleteTitles(removedTitlesToDelete.toSet())
 
             existingTitlesToUpdate.filter { it.active.toInt() == 50 }.forEach { LogRepository.insertLog("Activated  ${it.name} (${it.symbol}).") }
