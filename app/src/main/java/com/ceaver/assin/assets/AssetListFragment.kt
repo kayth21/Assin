@@ -9,10 +9,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.trades.TradeInputActivity
 import com.ceaver.assin.trades.TradeType
 import kotlinx.android.synthetic.main.fragment_asset_list.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class AssetListFragment : Fragment() {
 
@@ -24,6 +28,7 @@ class AssetListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        EventBus.getDefault().register(this);
         assetList.adapter = assetListAdapter
         assetList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
@@ -33,6 +38,16 @@ class AssetListFragment : Fragment() {
         }
         assetSwipeRefreshLayout.setOnRefreshListener { refreshAllAssets() }
         loadAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Complete) {
+        refreshAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        refreshAllAssets()
     }
 
     private fun refreshAllAssets() {
@@ -49,6 +64,7 @@ class AssetListFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        EventBus.getDefault().unregister(this);
         assetList.adapter = null
         assetSwipeRefreshLayout.setOnRefreshListener(null)
     }
