@@ -109,4 +109,8 @@ data class Title(//
     override fun hashCode(): Int {
         return id.hashCode()
     }
+
+    override fun toString(): String {
+        return "$symbol ($name)"
+    }
 }

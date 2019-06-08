@@ -11,17 +11,13 @@ class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParamet
         val symbolName = inputData.getString("Symbol")!!
         val index = inputData.getInt("sleep", 0)
         val localTitle = TitleRepository.loadTitleBySymbol(symbolName)
-        if (!localTitle.isPresent) {
-            LogRepository.insertLog("Warning: Cannot find $symbolName in local database.")
-        } else {
-            Thread.sleep((index * 110).toLong()) // avoid more than 10 calls per second on coinpaprika AIP
-            val result = MarketRepository.loadTitle(localTitle.get().id)
-            if (result.isPresent)
-                TitleRepository.update(result.get().incrementActiveCounter())
-            else {
-                TitleRepository.update(localTitle.get().decreaseActiveCounter())
-                LogRepository.insertLog("Warning: Unable to update $symbolName")
-            }
+        Thread.sleep((index * 110).toLong()) // avoid more than 10 calls per second on coinpaprika AIP
+        val result = MarketRepository.loadTitle(localTitle.id)
+        if (result.isPresent)
+            TitleRepository.update(result.get().incrementActiveCounter())
+        else {
+            TitleRepository.update(localTitle.decreaseActiveCounter())
+            LogRepository.insertLog("Warning: Unable to update $symbolName")
         }
         return Result.success()
     }

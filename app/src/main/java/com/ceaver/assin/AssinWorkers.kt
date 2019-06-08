@@ -8,6 +8,7 @@ import com.ceaver.assin.intensions.IntensionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
+import com.ceaver.assin.markets.Title
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -72,11 +73,11 @@ object AssinWorkers {
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
         var index : Int = 0
-        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it != "USD" }.map { marketPartialUpdateRequestBuilder(it, index++) }.collect(Collectors.toList())
+        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it.symbol != "USD" }.map { marketPartialUpdateRequestBuilder(it, index++) }.collect(Collectors.toList())
     }
 
-    private fun marketPartialUpdateRequestBuilder(symbol: String, index: Int): OneTimeWorkRequest {
-        val data = Data.Builder().putString("Symbol", symbol).putInt("sleep", index).build() // TODO use better identifier
+    private fun marketPartialUpdateRequestBuilder(title: Title, index: Int): OneTimeWorkRequest {
+        val data = Data.Builder().putString("Symbol", title.symbol).putInt("sleep", index).build() // TODO use better identifier
         return OneTimeWorkRequestBuilder<MarketPartialUpdateWorker>().setInputData(data).build()
     }
 

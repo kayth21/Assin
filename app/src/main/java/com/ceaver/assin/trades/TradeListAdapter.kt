@@ -33,8 +33,8 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
             (view.findViewById(R.id.tradeDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
-            (view.findViewById(R.id.sellTextView) as TextView).text = if (trade.sellAmount.isPresent) "${trade.sellAmount.get()} ${trade.sellSymbol.get()}" else ""
-            (view.findViewById(R.id.buyTextView) as TextView).text = if (trade.buyAmount.isPresent) "${trade.buyAmount.get()} ${trade.buySymbol.get()}" else ""
+            (view.findViewById(R.id.sellTextView) as TextView).text = if (trade.sellAmount.isPresent) "${trade.sellAmount.get()} ${trade.sellTitle.get()}" else ""
+            (view.findViewById(R.id.buyTextView) as TextView).text = if (trade.buyAmount.isPresent) "${trade.buyAmount.get()} ${trade.buyTitle.get()}" else ""
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(trade) }
         }

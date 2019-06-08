@@ -12,6 +12,7 @@ import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_alert_input.*
 
 class AlertInputActivity : AppCompatActivity() {
@@ -43,14 +44,14 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindSymbol(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
         viewModel.symbol.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
     }
 
     private fun bindReference(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
         viewModel.reference.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
@@ -62,28 +63,28 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun bindViewLogic(viewModel: AlertViewModel) {
         fun updatePrice() {
-            if (viewModel.isNew()) {
-                val symbol = alertSymbolText.selectedItem as String
-                val reference = alertReferenceText.selectedItem as String
+            if (viewModel.isNew() && alertSymbolText.selectedItem != null && alertReferenceText.selectedItem != null) {
+                val symbol = alertSymbolText.selectedItem as Title
+                val reference = alertReferenceText.selectedItem as Title
                 lookupViewModel().lookupPrice(symbol, reference) {
-                    alertSourceEditText.setText(it.first.format(reference))
-                    alertTargetEditText.setText(it.second.format(reference))
+                    alertSourceEditText.setText(it.first.format(reference.symbol))
+                    alertTargetEditText.setText(it.second.format(reference.symbol))
                 }
             }
         }
 
         fun updateUnit() {
-            val symbol = alertReferenceText.selectedItem as String
-            startUnitTextView.text = symbol
-            targetUnitTextView.text = symbol
+            val symbol = alertReferenceText.selectedItem as Title
+            startUnitTextView.text = symbol.symbol
+            targetUnitTextView.text = symbol.symbol
         }
         alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice(); checkSaveButton() }
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
     private fun bindFields(alert: Alert, viewModel: AlertViewModel) {
-        alertSourceEditText.setText(alert.source.format(alert.reference))
-        alertTargetEditText.setText(alert.target.format(alert.reference))
+        alertSourceEditText.setText(alert.source.format(alert.reference.symbol))
+        alertTargetEditText.setText(alert.target.format(alert.reference.symbol))
 
         updateSpinnerFields(viewModel)
 
@@ -108,8 +109,8 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun onSaveClick() {
-        val symbol = alertSymbolText.selectedItem as String
-        val reference = alertReferenceText.selectedItem as String
+        val symbol = alertSymbolText.selectedItem as Title
+        val reference = alertReferenceText.selectedItem as Title
         val startPrice = alertSourceEditText.text.toString().toDouble()
         val targetPrice = alertTargetEditText.text.toString().toDouble()
         lookupViewModel().onSaveClick(symbol, reference, startPrice, targetPrice)

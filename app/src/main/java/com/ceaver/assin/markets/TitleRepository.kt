@@ -2,6 +2,7 @@ package com.ceaver.assin.markets
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.assin.assets.Category
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.util.*
@@ -21,7 +22,7 @@ object TitleRepository {
     }
 
     fun loadAllTitles(): List<Title> {
-        return getTitleDao().loadAllTitles()
+        return getTitleDao().loadAllTitles().filter { it.category == Category.CRYPTO || it.symbol == "USD" }
     }
 
     fun loadAllCryptoTitles(): List<Title> {
@@ -39,6 +40,16 @@ object TitleRepository {
     fun loadAllTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val titles = loadAllTitles()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
+            else
+                callback.invoke(titles)
+        }
+    }
+
+    fun loadAllCryptoTitlesAsync(callbackInMainThread: Boolean, callback: (List<Title>) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val titles = loadAllCryptoTitles()
             if (callbackInMainThread)
                 Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
             else
@@ -67,8 +78,8 @@ object TitleRepository {
         }
     }
 
-    fun loadTitleBySymbol(symbol: String): Optional<Title> {
-        return Optional.ofNullable(getTitleDao().loadTitleBySymbol(symbol));
+    fun loadTitleBySymbol(symbol: String): Title {
+        return getTitleDao().loadTitleBySymbol(symbol);
     }
 
     fun loadAllSymbolsAsync(callbackInMainThread: Boolean, callback: (List<String>) -> Unit) {
@@ -119,7 +130,7 @@ object TitleRepository {
         return unionList
     }
 
-    fun lookupPriceAsync(symbol: String, reference: String, callbackInMainThread: Boolean, callback: (Optional<Double>) -> Unit) {
+    fun lookupPriceAsync(symbol: Title, reference: Title, callbackInMainThread: Boolean, callback: (Optional<Double>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val price = lookupPrice(symbol, reference)
             if (callbackInMainThread)
@@ -129,21 +140,21 @@ object TitleRepository {
         }
     }
 
-    fun lookupPrice(symbol: String, reference: String): Optional<Double> {
-        if (reference == "EUR" || reference == "CHF") {
+    fun lookupPrice(symbol: Title, reference: Title): Optional<Double> {
+        if (reference.symbol == "EUR" || reference.symbol == "CHF") {
             TODO("not yet implemented")
         }
-        if (symbol == "USD" || symbol == "EUR" || symbol == "CHF") {
+        if (symbol.symbol == "USD" || symbol.symbol == "EUR" || symbol.symbol == "CHF") {
             TODO("not yet implemented")
         }
-        if (reference == "USD" || reference == "BTC") {
-            val title = loadTitleBySymbol(symbol).get() // TODO can be null
+        if (reference.symbol == "USD" || reference.symbol == "BTC") {
+            val title = loadTitleBySymbol(symbol.symbol)
 //            if (!title.isPresent) return Optional.empty()
-            return if (reference == "USD") Optional.of(title.priceUsd) else Optional.of(title.priceBtc)
+            return if (reference.symbol == "USD") Optional.of(title.priceUsd) else Optional.of(title.priceBtc)
         }
         // symbol and reference can only be crypto here
-        val symbolTitle = loadTitleBySymbol(symbol).get() // TODO can be null
-        val referenceTitle = loadTitleBySymbol(reference).get() // TODO can be null
+        val symbolTitle = loadTitleBySymbol(symbol.symbol)
+        val referenceTitle = loadTitleBySymbol(reference.symbol)
 //        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
         return Optional.of(symbolTitle.priceBtc / referenceTitle.priceBtc)
     }
@@ -163,6 +174,4 @@ object TitleRepository {
     private fun getDatabase(): Database {
         return Database.getInstance()
     }
-
-
 }

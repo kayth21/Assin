@@ -10,9 +10,9 @@ import java.util.*
 data class Trade(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
-        @ColumnInfo(name = "buySymbol") var buySymbol: Optional<String> = Optional.empty(), //
+        @ColumnInfo(name = "buyTitle") var buyTitle: Optional<String> = Optional.empty(), //
         @ColumnInfo(name = "buyAmount") var buyAmount: Optional<Double> = Optional.empty(), //
-        @ColumnInfo(name = "sellSymbol") var sellSymbol: Optional<String> = Optional.empty(), //
+        @ColumnInfo(name = "sellTitle") var sellTitle: Optional<String> = Optional.empty(), //
         @ColumnInfo(name = "sellAmount") var sellAmount: Optional<Double> = Optional.empty(), //
         @ColumnInfo(name = "comment") var comment: String = "") {
 
@@ -25,9 +25,9 @@ data class Trade(
         }
     }
 
-    fun isTrade(): Boolean = buySymbol.isPresent && sellSymbol.isPresent
-    fun isDeposit(): Boolean = buySymbol.isPresent && !sellSymbol.isPresent
-    fun isWithdraw(): Boolean = !buySymbol.isPresent && sellSymbol.isPresent
+    fun isTrade(): Boolean = buyTitle.isPresent && sellTitle.isPresent
+    fun isDeposit(): Boolean = buyTitle.isPresent && !sellTitle.isPresent
+    fun isWithdraw(): Boolean = !buyTitle.isPresent && sellTitle.isPresent
 
 }
 

@@ -17,6 +17,7 @@ import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.logging.LogRepository
+import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeRepository
 import kotlinx.android.synthetic.main.activity_backup.*
@@ -105,7 +106,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + TRADE_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buySymbol.orElse(""), if (trade.buyAmount.isPresent) trade.buyAmount.get() else "", trade.sellSymbol.orElse(""), if (trade.sellAmount.isPresent) trade.sellAmount.get() else "", trade.comment)
+            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buyTitle.orElse(""), if (trade.buyAmount.isPresent) trade.buyAmount.get() else "", trade.sellTitle.orElse(""), if (trade.sellAmount.isPresent) trade.sellAmount.get() else "", trade.comment)
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export trades successful to '$filePath'")
             return Result.success()
@@ -118,7 +119,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (alert in alerts) csvPrinter.printRecord(alert.symbol, alert.reference, alert.alertType, alert.source, alert.target)
+            for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source, alert.target)
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export alerts successful to '$filePath'")
             return Result.success()
@@ -150,7 +151,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val alerts = csvParser.map { Alert(0, it.get(0), it.get(1), AlertType.valueOf(it.get(2)), it.get(3).toDouble(), it.get(4).toDouble()) }.toList()
+                val alerts = csvParser.map { Alert(0, TitleRepository.loadTitleBySymbol(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toDouble(), it.get(4).toDouble()) }.toList()
                 AlertRepository.deleteAllAlerts()
                 AlertRepository.insertAlerts(alerts)
                 LogRepository.insertLogAsync("Import alerts from '$filePath' successful")

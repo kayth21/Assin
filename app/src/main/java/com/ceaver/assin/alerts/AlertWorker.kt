@@ -19,7 +19,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             val result = alert.alertType.check(alert, currentPrice)
             result.ifPresent { AlertRepository.updateAlert(it); checkAlert(it); AlertNotification.notify(alert.symbol, alert.reference, targetPrice(alert, currentPrice), currentPrice) }
         } else {
-            LogRepository.insertLog("Failed to check alert ${alert.symbol}/${alert.reference} (no path found).")
+            LogRepository.insertLog("Failed to check alert ${alert.symbol.symbol}/${alert.reference.symbol} (no path found).")
         }
     }
 

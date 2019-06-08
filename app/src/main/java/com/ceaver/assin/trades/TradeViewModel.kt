@@ -26,8 +26,8 @@ class TradeViewModel : ViewModel() {
         when {
             tradeId.isPresent -> lookupTrade(tradeId.get())
             symbol.isPresent -> when (lookupTradeType) {
-                TradeType.DEPOSIT -> trade.postValue(Trade(buySymbol = Optional.of(symbol.get())))
-                TradeType.WITHDRAW -> trade.postValue(Trade(sellSymbol = Optional.of(symbol.get())))
+                TradeType.DEPOSIT -> trade.postValue(Trade(buyTitle = Optional.of(symbol.get())))
+                TradeType.WITHDRAW -> trade.postValue(Trade(sellTitle = Optional.of(symbol.get())))
                 else -> throw IllegalStateException()
             }
             else -> trade.postValue(Trade())
@@ -41,15 +41,15 @@ class TradeViewModel : ViewModel() {
     }
 
     fun onSaveTradeClick(buySymbol: String, buyAmount: Double, sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
-        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
+        saveTrade(trade.value!!.copy(buyTitle = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), sellTitle = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 
     fun onDepositClick(buySymbol: String, buyAmount: Double, tradeDate: LocalDate, comment: String) {
-        saveTrade(trade.value!!.copy(buySymbol = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), tradeDate = tradeDate, comment = comment))
+        saveTrade(trade.value!!.copy(buyTitle = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), tradeDate = tradeDate, comment = comment))
     }
 
     fun onWithdrawClick(sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
-        saveTrade(trade.value!!.copy(sellSymbol = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
+        saveTrade(trade.value!!.copy(sellTitle = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 
     enum class TradeInputStatus {

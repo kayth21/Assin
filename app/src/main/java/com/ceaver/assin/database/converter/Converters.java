@@ -4,6 +4,8 @@ import android.arch.persistence.room.TypeConverter;
 
 import com.ceaver.assin.alerts.AlertType;
 import com.ceaver.assin.assets.Category;
+import com.ceaver.assin.markets.Title;
+import com.ceaver.assin.markets.TitleRepository;
 import com.ceaver.assin.trades.TradeStrategy;
 
 import java.time.LocalDate;
@@ -118,4 +120,13 @@ public class Converters {
         return optional.map(String::toString).orElse("");
     }
 
+    @TypeConverter
+    public static Title toTitle(String id) {
+        return TitleRepository.INSTANCE.loadTitle(id);
+    }
+
+    @TypeConverter
+    public static String fromTitle(Title title) {
+        return title.getId();
+    }
 }
