@@ -9,11 +9,18 @@ object AssetRepository {
 
     fun loadAllAssets(): List<Asset> {
         val assets = TradeRepository.loadAllTrades()
-        val buyPairs = assets.filter { it.buySymbol.isPresent }.map { Pair(it.buySymbol.get(), it.buyAmount.get()) }
-        val sellPairs = assets.filter { it.sellSymbol.isPresent }.map { Pair(it.sellSymbol.get(), it.sellAmount.get().unaryMinus()) }
+        val buyPairs = assets.filter { it.buyTitle.isPresent }.map { Pair(it.buyTitle.get(), it.buyAmount.get()) }
+        val sellPairs = assets.filter { it.sellTitle.isPresent }.map { Pair(it.sellTitle.get(), it.sellAmount.get().unaryMinus()) }
         val allPairs = buyPairs + sellPairs
-
-        return allPairs.groupBy { it.first }.map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }.map { Asset(it.first, it.second) }
+        return allPairs.groupBy { it.first }
+                .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
+                .map {
+                    Asset(
+                            it.first.symbol,
+                            it.second,
+                            it.first.priceBtc.times(it.second),
+                            it.first.priceUsd.times(it.second))
+                }
     }
 
     fun loadAllAssetsAsync(callbackInMainThread: Boolean, callback: (List<Asset>) -> Unit) {
