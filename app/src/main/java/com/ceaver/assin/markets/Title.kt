@@ -11,12 +11,12 @@ import java.util.*
 @Entity(tableName = "title", indices = arrayOf(Index(value = ["symbol", "rank"])))
 data class Title(//
         @ColumnInfo(name = "id") @PrimaryKey val id: String,
+        @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "symbol") val symbol: String,
         @ColumnInfo(name = "category") val category: Category,
-        @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "priceUsd") val priceUsd: Double,
         @ColumnInfo(name = "priceBtc") val priceBtc: Double,
-        @ColumnInfo(name = "marketCapUsd") val marketCapUsd: Long,
+        @ColumnInfo(name = "marketCapUsd") val marketCapUsd: Double,
         @ColumnInfo(name = "rank") val rank: Int,
         @ColumnInfo(name = "percentChange1h") val percentChange1h: Optional<Double>,
         @ColumnInfo(name = "percentChange24h") val percentChange24h: Optional<Double>,
