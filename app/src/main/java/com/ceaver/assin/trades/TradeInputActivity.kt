@@ -11,6 +11,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.util.CalendarHelper
 import com.ceaver.assin.util.DatePickerFragment
 import kotlinx.android.synthetic.main.activity_trade_input.*
@@ -79,19 +80,19 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         val tradeDate = CalendarHelper.convertDate(tradeInputTradeDateEditText.text.toString())
         when (lookupTradeType()) {
             TradeType.TRADE -> {
-                val buySymbol = tradeInputBuySymbolSpinner.selectedItem as String
+                val buySymbol = tradeInputBuySymbolSpinner.selectedItem as Title
                 val buyAmount = tradeInputBuyAmountEditText.text.toString().toDouble()
-                val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as String
+                val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as Title
                 val sellAmount = tradeInputSellAmountEditText.text.toString().toDouble()
                 viewModel.onSaveTradeClick(buySymbol, buyAmount, sellSymbol, sellAmount, tradeDate, comment)
             }
             TradeType.DEPOSIT -> {
-                val buySymbol = tradeInputBuySymbolSpinner.selectedItem as String
+                val buySymbol = tradeInputBuySymbolSpinner.selectedItem as Title
                 val buyAmount = tradeInputBuyAmountEditText.text.toString().toDouble()
                 viewModel.onDepositClick(buySymbol, buyAmount, tradeDate, comment)
             }
             TradeType.WITHDRAW -> {
-                val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as String
+                val sellSymbol = tradeInputSellSymbolSpinner.selectedItem as Title
                 val sellAmount = tradeInputSellAmountEditText.text.toString().toDouble()
                 viewModel.onWithdrawClick(sellSymbol, sellAmount, tradeDate, comment)
             }
@@ -105,7 +106,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun observeSymbols(viewModel: TradeViewModel) {
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         tradeInputBuySymbolSpinner.adapter = adapter
         tradeInputSellSymbolSpinner.adapter = adapter

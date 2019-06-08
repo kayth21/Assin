@@ -5,14 +5,16 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
+import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.time.LocalDate
 import java.util.*
 
 class TradeViewModel : ViewModel() {
 
     val trade = MutableLiveData<Trade>()
-    val symbols = MutableLiveData<List<String>>()
+    val symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(trade, symbols)
     val status = SingleLiveEvent<TradeInputStatus>()
 
@@ -22,12 +24,12 @@ class TradeViewModel : ViewModel() {
 
 
     fun initTrade(tradeId: Optional<Long>, symbol: Optional<String>, lookupTradeType: TradeType): TradeViewModel {
-        TitleRepository.loadAllSymbolsAsync(false) { symbols.postValue(it) }
+        TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         when {
             tradeId.isPresent -> lookupTrade(tradeId.get())
             symbol.isPresent -> when (lookupTradeType) {
-                TradeType.DEPOSIT -> trade.postValue(Trade(buyTitle = Optional.of(symbol.get())))
-                TradeType.WITHDRAW -> trade.postValue(Trade(sellTitle = Optional.of(symbol.get())))
+                TradeType.DEPOSIT -> BackgroundThreadExecutor.execute { trade.postValue(Trade(buyTitle = Optional.of(TitleRepository.loadTitleBySymbol(symbol.get())))) }
+                TradeType.WITHDRAW -> BackgroundThreadExecutor.execute { trade.postValue(Trade(sellTitle = Optional.of(TitleRepository.loadTitleBySymbol(symbol.get())))) }
                 else -> throw IllegalStateException()
             }
             else -> trade.postValue(Trade())
@@ -40,15 +42,15 @@ class TradeViewModel : ViewModel() {
         TradeRepository.saveTradeAsync(trade, true) { status.value = TradeInputStatus.END_SAVE }
     }
 
-    fun onSaveTradeClick(buySymbol: String, buyAmount: Double, sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onSaveTradeClick(buySymbol: Title, buyAmount: Double, sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String) {
         saveTrade(trade.value!!.copy(buyTitle = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), sellTitle = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 
-    fun onDepositClick(buySymbol: String, buyAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onDepositClick(buySymbol: Title, buyAmount: Double, tradeDate: LocalDate, comment: String) {
         saveTrade(trade.value!!.copy(buyTitle = Optional.of(buySymbol), buyAmount = Optional.of(buyAmount), tradeDate = tradeDate, comment = comment))
     }
 
-    fun onWithdrawClick(sellSymbol: String, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onWithdrawClick(sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String) {
         saveTrade(trade.value!!.copy(sellTitle = Optional.of(sellSymbol), sellAmount = Optional.of(sellAmount), tradeDate = tradeDate, comment = comment))
     }
 

@@ -129,4 +129,14 @@ public class Converters {
     public static String fromTitle(Title title) {
         return title.getId();
     }
+
+    @TypeConverter
+    public static Optional<Title> toOptionalTitle(String id) {
+        return (id == null || id.isEmpty()) ? Optional.empty() : Optional.of(TitleRepository.INSTANCE.loadTitle(id));
+    }
+
+    @TypeConverter
+    public static String fromOptionalTitle(Optional<Title> title) {
+        return title.isPresent() ? title.get().getId() : "";
+    }
 }
