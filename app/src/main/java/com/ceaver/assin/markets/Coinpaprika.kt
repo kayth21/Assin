@@ -18,7 +18,7 @@ object Coinpaprika {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .blockingSubscribe(
-                        { ticker -> titleOptional = transform(ticker) },
+                        { ticker -> titleOptional = Optional.of(transform(ticker)) },
                         { error -> error.printStackTrace() }) // TODO
 
         return titleOptional
@@ -35,7 +35,7 @@ object Coinpaprika {
                         { error -> error.printStackTrace() }) // TODO
 
 
-        val resultSet = mutableSetOf<Title>();
+        val resultSet = mutableSetOf<Title>()
         CoinpaprikaApi(MyApplication.appContext!!)
                 .tickers()
                 .subscribeOn(Schedulers.newThread())
@@ -43,28 +43,71 @@ object Coinpaprika {
                 .blockingSubscribe(
                         { next ->
                             for (ticker in next) {
-                                val titleOptional = transform(ticker)
-                                titleOptional.ifPresent { resultSet.add(titleOptional.get()) } // TODO Else
+                                resultSet.add(transform(ticker))
                             }
                         },
                         { error -> error.printStackTrace() }) // TODO
         return resultSet
     }
 
-    private fun transform(ticker: TickerEntity): Optional<Title> {
-        val id = ticker.id
-        val name = ticker.name
-        val rank = ticker.rank
-        val symbol = ticker.symbol
-        val priceUsd = ticker.quotes!!.get("USD")!!.price
-        val priceBtc = if (ticker.quotes!!.get("BTC") == null) 1.0 else ticker.quotes!!.get("BTC")!!.price // TODO There should always be BTC Quotes
-        val marketCapUsd = ticker.quotes!!.get("USD")!!.marketCap
-        val percentChange1h = ticker.quotes!!.get("USD")!!.percentChange1h
-        val percentChange24h = ticker.quotes!!.get("USD")!!.percentChange24h
-        val percentChange7d = ticker.quotes!!.get("USD")!!.percentChange7d
-        val lastUpdated = ticker.lastUpdated
+    private fun transform(ticker: TickerEntity): Title {
+        val usdQuotes = ticker.quotes!!.get("USD")!!
+        val btcQuotes = ticker.quotes!!.get("BTC")!!
+        val ethQuotes = ticker.quotes!!.get("ETH")!!
 
-        return Optional.of(Title(id, name, symbol, Category.CRYPTO, priceUsd, priceBtc, marketCapUsd, rank, Optional.of(percentChange1h), Optional.of(percentChange24h), Optional.of(percentChange7d), transformTimestamp(lastUpdated!!), Integer(1818)))
+        return Title(
+                id = ticker.id,
+                name = ticker.name,
+                symbol = ticker.symbol,
+                category = Category.CRYPTO,
+                active = Integer(1818),
+
+                rank = ticker.rank,
+                circulatingSupply = ticker.circulatingSupply,
+                totalSupply = ticker.totalSupply,
+                maxSupply = ticker.maxSupply,
+                betaValue = ticker.betaValue,
+                lastUpdated = if (ticker.lastUpdated == null) Optional.empty() else Optional.of(transformTimestamp(ticker.lastUpdated!!)),
+
+                priceUsd = usdQuotes.price,
+                volume24hUsd = usdQuotes.dailyVolume,
+                marketCapUsd = usdQuotes.marketCap,
+                marketCapChange24hUsd = usdQuotes.marketCapDailyChange,
+                percentChange1hUsd = usdQuotes.percentChange1h,
+                percentChange24hUsd = usdQuotes.percentChange24h,
+                percentChange7dUsd = usdQuotes.percentChange7d,
+                percentChange30dUsd = usdQuotes.percentChange30d,
+                percentChange1yUsd = usdQuotes.percentChange1y,
+                athPriceUsd = usdQuotes.athPrice,
+                athDateUsd = if (usdQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(usdQuotes.athDate!!)),
+                athPercentUsd = usdQuotes.athPrice,
+
+                priceBtc = btcQuotes.price,
+                volume24hBtc = btcQuotes.dailyVolume,
+                marketCapBtc = btcQuotes.marketCap,
+                marketCapChange24hBtc = btcQuotes.marketCapDailyChange,
+                percentChange1hBtc = btcQuotes.percentChange1h,
+                percentChange24hBtc = btcQuotes.percentChange24h,
+                percentChange7dBtc = btcQuotes.percentChange7d,
+                percentChange30dBtc = btcQuotes.percentChange30d,
+                percentChange1yBtc = btcQuotes.percentChange1y,
+                athPriceBtc = btcQuotes.athPrice,
+                athDateBtc = if (btcQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(btcQuotes.athDate!!)),
+                athPercentBtc = btcQuotes.athPrice,
+
+                priceEth = ethQuotes.price,
+                volume24hEth = ethQuotes.dailyVolume,
+                marketCapEth = ethQuotes.marketCap,
+                marketCapChange24hEth = ethQuotes.marketCapDailyChange,
+                percentChange1hEth = ethQuotes.percentChange1h,
+                percentChange24hEth = ethQuotes.percentChange24h,
+                percentChange7dEth = ethQuotes.percentChange7d,
+                percentChange30dEth = ethQuotes.percentChange30d,
+                percentChange1yEth = ethQuotes.percentChange1y,
+                athPriceEth = ethQuotes.athPrice,
+                athDateEth = if (ethQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(ethQuotes.athDate!!)),
+                athPercentEth = ethQuotes.athPrice
+        )
     }
 
     private fun transformTimestamp(lastUpdated: String) = ZonedDateTime.parse(lastUpdated).toLocalDateTime()
