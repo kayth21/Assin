@@ -5,7 +5,7 @@ import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
 import com.ceaver.assin.assets.Category
-import com.ceaver.assin.intensions.IntensionWorker
+import com.ceaver.assin.intentions.IntentionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
@@ -61,7 +61,7 @@ object AssinWorkers {
     }
 
     private fun checkIntentions(): OneTimeWorkRequest {
-        return OneTimeWorkRequestBuilder<IntensionWorker>().build()
+        return OneTimeWorkRequestBuilder<IntentionWorker>().build()
     }
 
     private fun checkAlerts(): OneTimeWorkRequest {

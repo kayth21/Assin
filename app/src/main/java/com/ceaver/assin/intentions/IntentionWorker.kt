@@ -1,10 +1,10 @@
-package com.ceaver.assin.intensions
+package com.ceaver.assin.intentions
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 
-class IntensionWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class IntentionWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
     override fun doWork(): Result {
         return Result.success()
     }
