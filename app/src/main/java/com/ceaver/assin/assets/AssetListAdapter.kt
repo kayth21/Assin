@@ -35,10 +35,11 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
         }
 
         fun bindItem(asset: Asset) {
-            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.title))
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = "${asset.amount} ${asset.title}"
-            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.format(asset.title) + " " + "BTC"
-            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.format(asset.title) + " " + "USD"
+            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.symbol))
+            (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.name
+            (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.symbol}"
+            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.format(asset.symbol) + " " + "BTC"
+            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.format(asset.symbol) + " " + "USD"
             view.setOnCreateContextMenuListener(this)
         }
 

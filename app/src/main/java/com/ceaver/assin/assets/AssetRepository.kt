@@ -16,6 +16,7 @@ object AssetRepository {
                 .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
                 .map {
                     Asset(
+                            it.first.name,
                             it.first.symbol,
                             it.second,
                             it.first.priceBtc.times(it.second),
