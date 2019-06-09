@@ -13,9 +13,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Assets" />
         <item
-            android:id="@+id/nav_tasks"
+            android:id="@+id/nav_intensions"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Tasks" />
+            android:title="Intensions" />
         <item
             android:id="@+id/nav_trades"
             android:icon="@drawable/ic_menu_manage"

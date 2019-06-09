@@ -17,7 +17,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.work.*
-import com.ceaver.assin.advices.AdviceListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.backup.BackupActivity
@@ -110,14 +109,9 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 viewPager.setCurrentItem(1, true)
 
             }
-            R.id.nav_tasks -> {
-                val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(2, true)
-
-            }
             R.id.nav_trades -> {
                 val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(3, true)
+                viewPager.setCurrentItem(2, true)
 
             }
             R.id.nav_alerts -> {
@@ -157,15 +151,14 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getCount(): Int {
-            return 4
+            return 3
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
                 0 -> "Markets"
                 1 -> "Assets"
-                2 -> "Tasks"
-                3 -> "Trades"
+                2 -> "Trades"
                 else -> null
             }
         }
@@ -174,8 +167,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             return when (position) {
                 0 -> MarketListFragment()
                 1 -> AssetListFragment()
-                2 -> AdviceListFragment()
-                3 -> TradeListFragment()
+                2 -> TradeListFragment()
                 else -> null
             }
         }

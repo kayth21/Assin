@@ -37,7 +37,4 @@ data class Trade(
             TradeType.WITHDRAW -> setOf(sellTitle.get())
         }
     }
-
 }
-
-
