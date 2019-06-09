@@ -26,26 +26,24 @@
 
     <Spinner
         android:id="@+id/tradeInputBuySymbolSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:ems="10"
         android:enabled="false"
         app:layout_constraintStart_toStartOf="@+id/tradeInputBuyAmountTextView"
         app:layout_constraintTop_toBottomOf="@+id/tradeInputBuySymbolTextView" />
 
     <Spinner
         android:id="@+id/tradeInputSellSymbolSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:enabled="false"
         app:layout_constraintStart_toStartOf="@+id/tradeInputSellAmountTextView"
         app:layout_constraintTop_toTopOf="@+id/tradeInputBuySymbolSpinner" />
 
     <EditText
         android:id="@+id/tradeInputBuyAmountEditText"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:enabled="false"
@@ -55,7 +53,7 @@
 
     <EditText
         android:id="@+id/tradeInputSellAmountEditText"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
