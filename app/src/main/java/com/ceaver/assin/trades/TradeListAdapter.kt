@@ -5,8 +5,11 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
+import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.util.CalendarHelper
 
 internal class TradeListAdapter(private val onClickListener: TradeListFragment.OnItemClickListener) : RecyclerView.Adapter<TradeListAdapter.ViewHolder>() {
@@ -32,11 +35,50 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
         }
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.tradeDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
-            (view.findViewById(R.id.sellTextView) as TextView).text = if (trade.sellAmount.isPresent) "${trade.sellAmount.get()} ${trade.sellTitle.get()}" else ""
-            (view.findViewById(R.id.buyTextView) as TextView).text = if (trade.buyAmount.isPresent) "${trade.buyAmount.get()} ${trade.buyTitle.get()}" else ""
+            (view.findViewById(R.id.tradeListRowLeftImageView) as ImageView).setImageResource(getRightImageResource(trade))
+            (view.findViewById(R.id.tradeListRowTradeTypeTextView) as TextView).text = getTradeTypeText(trade)
+            (view.findViewById(R.id.tradeListRowTradeDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
+            (view.findViewById(R.id.tradeListRowTradeTextView) as TextView).text = getTradeText(trade)
+            (view.findViewById(R.id.tradeListRowRightImageView) as ImageView).setImageResource(getLeftImageResource(trade))
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(trade) }
+        }
+
+        private fun getTradeTypeText(trade: Trade): String {
+            return when (trade.getTradeType()) {
+                TradeType.DEPOSIT -> "Deposit ${trade.buyTitle.get().name}"
+                TradeType.WITHDRAW -> "Withdraw ${trade.sellTitle.get().name}"
+                TradeType.TRADE -> "${trade.sellTitle.get().name} -> ${trade.buyTitle.get().name}"
+            }
+        }
+
+        private fun getTradeText(trade: Trade): String {
+            return when (trade.getTradeType()) {
+                TradeType.DEPOSIT -> "${trade.buyAmount.get()} ${trade.buyTitle.get().symbol}"
+                TradeType.WITHDRAW -> "${trade.sellAmount.get()} ${trade.sellTitle.get().symbol}"
+                TradeType.TRADE -> "${trade.sellAmount.get()} ${trade.sellTitle.get().symbol} -> ${trade.buyAmount.get()} ${trade.buyTitle.get().symbol}"
+            }
+        }
+
+        private fun getLeftImageResource(trade: Trade): Int {
+            return when (trade.getTradeType()) {
+                TradeType.DEPOSIT -> getImageIdentifier(trade.buyTitle.get().symbol.toLowerCase())
+                TradeType.WITHDRAW -> R.drawable.withdraw
+                TradeType.TRADE -> getImageIdentifier(trade.buyTitle.get().symbol.toLowerCase())
+            }
+        }
+
+        private fun getRightImageResource(trade: Trade): Int {
+            return when (trade.getTradeType()) {
+                TradeType.DEPOSIT -> R.drawable.deposit
+                TradeType.WITHDRAW -> getImageIdentifier(trade.sellTitle.get().symbol.toLowerCase())
+                TradeType.TRADE -> getImageIdentifier(trade.sellTitle.get().symbol.toLowerCase())
+            }
+        }
+
+        private fun getImageIdentifier(symbol: String): Int {
+            val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(), "drawable")
+            return if (identifier == 0) R.drawable.unknown else identifier
         }
     }
 }
