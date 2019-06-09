@@ -2,6 +2,7 @@ package com.ceaver.assin.assets
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -10,10 +11,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ceaver.assin.AssinWorkerEvents
+import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.IntentKeys
+import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.TradeInputActivity
 import com.ceaver.assin.trades.TradeType
+import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.fragment_asset_list.*
+import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
+import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,7 +42,13 @@ class AssetListFragment : Fragment() {
             intent.putExtra(IntentKeys.TRADE_TYPE, TradeType.DEPOSIT.toString())
             startActivity(intent)
         }
-        assetSwipeRefreshLayout.setOnRefreshListener { refreshAllAssets() }
+        assetSwipeRefreshLayout.setOnRefreshListener {
+            if (isConnected())
+                BackgroundThreadExecutor.execute { AssinWorkers.observedUpdate() }
+            else {
+                Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
+            }
+        }
         loadAllAssets()
     }
 

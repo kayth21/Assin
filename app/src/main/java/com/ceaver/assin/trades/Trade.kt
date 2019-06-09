@@ -30,6 +30,14 @@ data class Trade(
     fun isDeposit(): Boolean = buyTitle.isPresent && !sellTitle.isPresent
     fun isWithdraw(): Boolean = !buyTitle.isPresent && sellTitle.isPresent
 
+    fun getTitles(): Set<Title> {
+        return when (getTradeType()) {
+            TradeType.TRADE -> setOf(buyTitle.get(), sellTitle.get())
+            TradeType.DEPOSIT -> setOf(buyTitle.get())
+            TradeType.WITHDRAW -> setOf(sellTitle.get())
+        }
+    }
+
 }
 
 

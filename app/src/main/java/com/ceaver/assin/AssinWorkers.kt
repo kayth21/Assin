@@ -4,16 +4,17 @@ import android.content.Context
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
+import com.ceaver.assin.assets.Category
 import com.ceaver.assin.intensions.IntensionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.trades.TradeRepository
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.*
-import java.util.stream.Collectors
 
 object AssinWorkers {
 
@@ -72,8 +73,10 @@ object AssinWorkers {
     }
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
-        var index : Int = 0
-        return AlertRepository.loadAllAlerts().stream().flatMap { setOf(it.symbol, it.reference).stream() }.filter { it.symbol != "USD" }.map { marketPartialUpdateRequestBuilder(it, index++) }.collect(Collectors.toList())
+        var index: Int = 0
+        val tradeTitles = TradeRepository.loadAllTrades().flatMap { it.getTitles() }.toSet() // TODO only trades with positive sum
+        val alertTitles = AlertRepository.loadAllAlerts().flatMap { setOf(it.symbol, it.reference) }.toSet()
+        return (tradeTitles + alertTitles).filter { it.category == Category.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
     }
 
     private fun marketPartialUpdateRequestBuilder(title: Title, index: Int): OneTimeWorkRequest {
