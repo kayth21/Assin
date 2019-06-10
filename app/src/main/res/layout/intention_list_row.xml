@@ -14,45 +14,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/intentionListRowTradeDeliminator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:src="@drawable/tradeseparation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/intentionListRowLeftImageView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/intentionListRowRightImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        app:layout_constraintStart_toEndOf="@id/intentionListRowTradeDeliminator"
-        app:layout_constraintTop_toTopOf="@id/intentionListRowLeftImageView" />
-
-
     <TextView
-        android:id="@+id/intentionListRowTradeAssetTextView"
+        android:id="@+id/intentionListRowAssetTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
+        android:layout_marginStart="8dp"
         android:textSize="13sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/intentionListRowLeftImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/intentionListRowTradeValueTextView"
+        android:id="@+id/intentionListRowReferenceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/intentionListRowTradeAssetTextView" />
-
+        app:layout_constraintStart_toStartOf="@+id/intentionListRowAssetTextView"
+        app:layout_constraintTop_toBottomOf="@+id/intentionListRowAssetTextView" />
 
 </android.support.constraint.ConstraintLayout>
