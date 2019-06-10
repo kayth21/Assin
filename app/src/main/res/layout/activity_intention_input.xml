@@ -6,47 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".intentions.IntentionInputActivity">
 
+    <RadioGroup
+        android:id="@+id/intentionInputTypeRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <RadioButton
+            android:id="@+id/intentionInputBuyRadio"
+            android:text="Buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:id="@+id/intentionInputSellRadio"
+            android:text="Sell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RadioGroup>
+
     <Spinner
-        android:id="@+id/intentionInputBuyTitleSpinner"
+        android:id="@+id/intentionInputTitleSpinner"
         android:layout_width="344dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputTypeRadioGroup"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputTypeRadioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputTypeRadioGroup" />
 
     <EditText
-        android:id="@+id/intentionInputBuyAmountEditText"
+        android:id="@+id/intentionInputAmountEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="@+id/intentionInputBuyTitleSpinner"
-        app:layout_constraintStart_toStartOf="@+id/intentionInputBuyTitleSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/intentionInputBuyTitleSpinner" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputTitleSpinner"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputTitleSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputTitleSpinner" />
 
     <Spinner
-        android:id="@+id/intentionInputSellTitleSpinner"
+        android:id="@+id/intentionInputReferenceTitleSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/intentionInputBuyAmountEditText"
-        app:layout_constraintStart_toStartOf="@+id/intentionInputBuyAmountEditText"
-        app:layout_constraintTop_toBottomOf="@+id/intentionInputBuyAmountEditText" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputAmountEditText"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputAmountEditText"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputAmountEditText" />
 
     <EditText
-        android:id="@+id/intentionInputSellAmountEditText"
+        android:id="@+id/intentionInputReferencePriceEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="@+id/intentionInputSellTitleSpinner"
-        app:layout_constraintStart_toStartOf="@+id/intentionInputSellTitleSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/intentionInputSellTitleSpinner" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputReferenceTitleSpinner"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputReferenceTitleSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputReferenceTitleSpinner" />
 
     <EditText
         android:id="@+id/intentionInputCommentEditText"
@@ -54,9 +77,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        app:layout_constraintEnd_toEndOf="@+id/intentionInputSellAmountEditText"
-        app:layout_constraintStart_toStartOf="@+id/intentionInputSellAmountEditText"
-        app:layout_constraintTop_toBottomOf="@+id/intentionInputSellAmountEditText" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputReferencePriceEditText"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputReferencePriceEditText"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputReferencePriceEditText" />
 
     <Button
         android:id="@+id/intentionInputSaveButton"

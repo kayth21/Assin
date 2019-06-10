@@ -41,8 +41,8 @@ class IntentionInputActivity : AppCompatActivity() {
     }
 
     private fun modifyView() {
-        intentionInputBuyTitleSpinner.isEnabled = false // not possible in XML
-        intentionInputSellTitleSpinner.isEnabled = false // not possible in XML
+        intentionInputTitleSpinner.isEnabled = false // not possible in XML
+        intentionInputReferenceTitleSpinner.isEnabled = false // not possible in XML
     }
 
     private fun bindActions(viewModel: IntentionInputViewModel) {
@@ -50,12 +50,13 @@ class IntentionInputActivity : AppCompatActivity() {
     }
 
     private fun onSaveClick(viewModel: IntentionInputViewModel) {
-        val buyTitle = intentionInputBuyTitleSpinner.selectedItem as Title
-        val buyAmount = intentionInputBuyAmountEditText.text.toString().toDouble()
-        val sellTitle = intentionInputSellTitleSpinner.selectedItem as Title
-        val sellAmount = intentionInputSellAmountEditText.text.toString().toDouble()
+        val type = if (intentionInputBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
+        val title = intentionInputTitleSpinner.selectedItem as Title
+        val amount = intentionInputAmountEditText.text.toString().toDouble()
+        val referenceTitle = intentionInputReferenceTitleSpinner.selectedItem as Title
+        val referencePrice = intentionInputReferencePriceEditText.text.toString().toDouble()
         val comment = intentionInputCommentEditText.text.toString()
-        viewModel.onSaveClick(buyTitle, buyAmount, sellTitle, sellAmount, comment)
+        viewModel.onSaveClick(type, title, amount, referenceTitle, referencePrice, comment)
     }
 
     private fun observeDataReady(viewModel: IntentionInputViewModel) {
@@ -65,14 +66,15 @@ class IntentionInputActivity : AppCompatActivity() {
 
             val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            intentionInputBuyTitleSpinner.adapter = adapter
-            intentionInputSellTitleSpinner.adapter = adapter
+            intentionInputTitleSpinner.adapter = adapter
+            intentionInputReferenceTitleSpinner.adapter = adapter
             adapter.addAll(titles)
 
-            intentionInputBuyTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.buyTitle))
-            intentionInputBuyAmountEditText.setText(intention.buyAmount.toString())
-            intentionInputSellTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.sellTitle))
-            intentionInputSellAmountEditText.setText(intention.sellAmount.toString())
+            if (IntentionType.BUY == intention.type) intentionInputBuyRadio.isChecked = true else intentionInputSellRadio.isChecked = true
+            intentionInputTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))
+            intentionInputAmountEditText.setText(intention.amount.toString())
+            intentionInputReferenceTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
+            intentionInputReferencePriceEditText.setText(intention.referencePrice.toString())
             intentionInputCommentEditText.setText(intention.comment)
 
             registerInputValidation()
@@ -107,21 +109,21 @@ class IntentionInputActivity : AppCompatActivity() {
 
     fun enableInput(enable: Boolean) {
         intentionInputSaveButton.isEnabled = enable && checkSaveButton()
-        intentionInputBuyTitleSpinner.isEnabled = enable
-        intentionInputBuyAmountEditText.isEnabled = enable
-        intentionInputSellTitleSpinner.isEnabled = enable
-        intentionInputSellAmountEditText.isEnabled = enable
+        intentionInputTitleSpinner.isEnabled = enable
+        intentionInputAmountEditText.isEnabled = enable
+        intentionInputReferenceTitleSpinner.isEnabled = enable
+        intentionInputReferencePriceEditText.isEnabled = enable
         intentionInputCommentEditText.isEnabled = enable
     }
 
     private fun registerInputValidation() {
-        intentionInputBuyAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-        intentionInputSellAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-        intentionInputBuyAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
-        intentionInputSellAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
+        intentionInputAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+        intentionInputReferencePriceEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+        intentionInputAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
+        intentionInputReferencePriceEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
     }
 
     private fun checkSaveButton(): Boolean {
-        return intentionInputBuyAmountEditText.error == null && intentionInputSellAmountEditText.error == null
+        return intentionInputAmountEditText.error == null && intentionInputReferencePriceEditText.error == null
     }
 }

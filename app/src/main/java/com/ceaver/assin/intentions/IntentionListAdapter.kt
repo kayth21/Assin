@@ -34,10 +34,10 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
         }
 
         fun bindItem(intention: Intention, onClickListener: IntentionListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(getImageIdentifier(intention.buyTitle))
-            (view.findViewById(R.id.intentionListRowRightImageView) as ImageView).setImageResource(getImageIdentifier(intention.sellTitle))
-            (view.findViewById(R.id.intentionListRowTradeAssetTextView) as TextView).text = "${intention.sellTitle.name} -> ${intention.buyTitle.name}"
-            (view.findViewById(R.id.intentionListRowTradeValueTextView) as TextView).text = "${intention.sellAmount} ${intention.sellTitle.symbol} -> ${intention.buyAmount} ${intention.buyTitle.symbol}"
+            (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(getImageIdentifier(intention.title))
+            (view.findViewById(R.id.intentionListRowRightImageView) as ImageView).setImageResource(getImageIdentifier(intention.referenceTitle))
+            (view.findViewById(R.id.intentionListRowTradeAssetTextView) as TextView).text = "${intention.referenceTitle.name} -> ${intention.title.name}"
+            (view.findViewById(R.id.intentionListRowTradeValueTextView) as TextView).text = "${intention.referencePrice} ${intention.referenceTitle.symbol} -> ${intention.amount} ${intention.title.symbol}"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }
