@@ -13,7 +13,6 @@ import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_intention_input.*
-import kotlinx.android.synthetic.main.activity_trade_input.*
 import java.util.*
 
 class IntentionInputActivity : AppCompatActivity() {
@@ -118,8 +117,8 @@ class IntentionInputActivity : AppCompatActivity() {
     private fun registerInputValidation() {
         intentionInputBuyAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
         intentionInputSellAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-        intentionInputBuyAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
-        intentionInputSellAmountEditText.afterTextChanged { tradeInputSaveButton.isEnabled = checkSaveButton() }
+        intentionInputBuyAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
+        intentionInputSellAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
     }
 
     private fun checkSaveButton(): Boolean {
