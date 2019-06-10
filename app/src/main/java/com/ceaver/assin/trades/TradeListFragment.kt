@@ -48,7 +48,7 @@ class TradeListFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this)
         tradeList.adapter = null
         createTradeButton.setOnClickListener(null)
         swipeRefreshLayout.setOnRefreshListener(null)
@@ -83,8 +83,10 @@ class TradeListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val selectedTrade = tradeListAdapter.currentLongClickTrade!!
-        TradeRepository.deleteTradeAsync(selectedTrade)
+        if (item!!.groupId == 3 && item.itemId == 0) {
+            val selectedTrade = tradeListAdapter.currentLongClickTrade!!
+            TradeRepository.deleteTradeAsync(selectedTrade)
+        }
         return super.onContextItemSelected(item)
     }
 }

@@ -31,15 +31,15 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(0, v!!.getId(), 0, "Delete")
+            menu!!.add(3, 0, 0, "Delete")
         }
 
         fun bindItem(trade: Trade, onClickListener: TradeListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.tradeListRowLeftImageView) as ImageView).setImageResource(getRightImageResource(trade))
+            (view.findViewById(R.id.tradeListRowLeftImageView) as ImageView).setImageResource(getLeftImageResource(trade))
             (view.findViewById(R.id.tradeListRowTradeTypeTextView) as TextView).text = getTradeTypeText(trade)
             (view.findViewById(R.id.tradeListRowTradeDateTextView) as TextView).text = CalendarHelper.convertDate(trade.tradeDate)
             (view.findViewById(R.id.tradeListRowTradeTextView) as TextView).text = getTradeText(trade)
-            (view.findViewById(R.id.tradeListRowRightImageView) as ImageView).setImageResource(getLeftImageResource(trade))
+            (view.findViewById(R.id.tradeListRowRightImageView) as ImageView).setImageResource(getRightImageResource(trade))
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(trade) }
         }
@@ -60,7 +60,7 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
             }
         }
 
-        private fun getLeftImageResource(trade: Trade): Int {
+        private fun getRightImageResource(trade: Trade): Int {
             return when (trade.getTradeType()) {
                 TradeType.DEPOSIT -> getImageIdentifier(trade.buyTitle.get().symbol.toLowerCase())
                 TradeType.WITHDRAW -> R.drawable.withdraw
@@ -68,7 +68,7 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
             }
         }
 
-        private fun getRightImageResource(trade: Trade): Int {
+        private fun getLeftImageResource(trade: Trade): Int {
             return when (trade.getTradeType()) {
                 TradeType.DEPOSIT -> R.drawable.deposit
                 TradeType.WITHDRAW -> getImageIdentifier(trade.sellTitle.get().symbol.toLowerCase())

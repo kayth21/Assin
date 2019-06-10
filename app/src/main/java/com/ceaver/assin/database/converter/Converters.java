@@ -4,6 +4,7 @@ import android.arch.persistence.room.TypeConverter;
 
 import com.ceaver.assin.alerts.AlertType;
 import com.ceaver.assin.assets.AssetCategory;
+import com.ceaver.assin.intentions.IntentionStatus;
 import com.ceaver.assin.markets.Title;
 import com.ceaver.assin.markets.TitleRepository;
 
@@ -44,7 +45,6 @@ public class Converters {
     public static String fromAlertType(AlertType alertType) {
         return alertType.name();
     }
-
 
     @TypeConverter
     public static UUID toUuid(String uuid) {
@@ -114,5 +114,15 @@ public class Converters {
     @TypeConverter
     public static String fromOptionalTitle(Optional<Title> title) {
         return title.isPresent() ? title.get().getId() : "";
+    }
+
+    @TypeConverter
+    public static IntentionStatus toIntentionStatus(String name) {
+        return IntentionStatus.valueOf(name);
+    }
+
+    @TypeConverter
+    public static String fromIntentionStatus(IntentionStatus intentionStatus) {
+        return intentionStatus.name();
     }
 }

@@ -21,6 +21,7 @@ import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.engine.TradeAdviceEngine
+import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketListFragment
@@ -107,12 +108,14 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.nav_assets -> {
                 val viewPager = findViewById<View>(R.id.pager) as ViewPager
                 viewPager.setCurrentItem(1, true)
-
+            }
+            R.id.nav_intensions -> {
+                val viewPager = findViewById<View>(R.id.pager) as ViewPager
+                viewPager.setCurrentItem(2, true)
             }
             R.id.nav_trades -> {
                 val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(2, true)
-
+                viewPager.setCurrentItem(3, true)
             }
             R.id.nav_alerts -> {
                 val intent = Intent(this, AlertListActivity::class.java)
@@ -142,7 +145,6 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(intent)
             }
         }
-
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -151,14 +153,15 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getCount(): Int {
-            return 3
+            return 4
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
                 0 -> "Markets"
                 1 -> "Assets"
-                2 -> "Trades"
+                2 -> "Intentions"
+                3 -> "Trades"
                 else -> null
             }
         }
@@ -167,7 +170,8 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             return when (position) {
                 0 -> MarketListFragment()
                 1 -> AssetListFragment()
-                2 -> TradeListFragment()
+                2 -> IntentionListFragment()
+                3 -> TradeListFragment()
                 else -> null
             }
         }
