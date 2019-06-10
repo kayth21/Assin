@@ -17,4 +17,11 @@ data class Intention(
         @ColumnInfo(name = "creationDate") var creationDate: LocalDate = LocalDate.now(),
         @ColumnInfo(name = "status") val status: IntentionStatus = IntentionStatus.WAIT,
         @ColumnInfo(name = "comment") var comment: String = "") {
+
+    fun percentToReferencePrice(): Double {
+        return when (type) {
+            IntentionType.SELL -> (100.div(referencePrice)).times(title.priceUsd)
+            IntentionType.BUY -> (100.div(title.priceUsd)).times(referencePrice)
+        }
+    }
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
+import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.markets.Title
 
@@ -37,6 +38,7 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
             (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(getImageIdentifier(intention.title))
             (view.findViewById(R.id.intentionListRowAssetTextView) as TextView).text = "${intention.type} ${intention.amount} ${intention.title}"
             (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice} ${intention.referenceTitle.symbol}"
+            (view.findViewById(R.id.intentionListRowPercentTextView) as TextView).text = "${intention.percentToReferencePrice().format("abc")}%"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }
