@@ -30,4 +30,12 @@ data class Intention(
             IntentionType.BUY -> (100.div(price)).times(referencePrice)
         }
     }
+
+    fun calculateState(): IntentionStatus {
+        return when (percentToReferencePrice()) {
+            in 0.0..80.0 -> IntentionStatus.WAIT
+            in 80.0..100.0 -> IntentionStatus.NEAR
+            else -> IntentionStatus.ACT
+        }
+    }
 }
