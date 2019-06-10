@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
-import com.ceaver.assin.assets.Category
+import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.intentions.IntentionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
@@ -76,7 +76,7 @@ object AssinWorkers {
         var index: Int = 0
         val tradeTitles = TradeRepository.loadAllTrades().flatMap { it.getTitles() }.toSet() // TODO only trades with positive sum
         val alertTitles = AlertRepository.loadAllAlerts().flatMap { setOf(it.symbol, it.reference) }.toSet()
-        return (tradeTitles + alertTitles).filter { it.category == Category.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
+        return (tradeTitles + alertTitles).filter { it.category == AssetCategory.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
     }
 
     private fun marketPartialUpdateRequestBuilder(title: Title, index: Int): OneTimeWorkRequest {

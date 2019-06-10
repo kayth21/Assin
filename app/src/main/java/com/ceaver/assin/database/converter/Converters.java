@@ -3,7 +3,7 @@ package com.ceaver.assin.database.converter;
 import android.arch.persistence.room.TypeConverter;
 
 import com.ceaver.assin.alerts.AlertType;
-import com.ceaver.assin.assets.Category;
+import com.ceaver.assin.assets.AssetCategory;
 import com.ceaver.assin.markets.Title;
 import com.ceaver.assin.markets.TitleRepository;
 
@@ -77,13 +77,13 @@ public class Converters {
     }
 
     @TypeConverter
-    public static Category toCategory(String name) {
-        return Category.valueOf(name);
+    public static AssetCategory toAssetCategory(String name) {
+        return AssetCategory.valueOf(name);
     }
 
     @TypeConverter
-    public static String fromCategory(Category category) {
-        return category.name();
+    public static String fromAssetCategory(AssetCategory assetCategory) {
+        return assetCategory.name();
     }
 
     @TypeConverter

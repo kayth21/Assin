@@ -1,7 +1,7 @@
 package com.ceaver.assin.markets
 
 import com.ceaver.assin.MyApplication
-import com.ceaver.assin.assets.Category
+import com.ceaver.assin.assets.AssetCategory
 import com.coinpaprika.apiclient.api.CoinpaprikaApi
 import com.coinpaprika.apiclient.entity.FiatEntity
 import com.coinpaprika.apiclient.entity.TickerEntity
@@ -59,7 +59,7 @@ object Coinpaprika {
                 id = fiatEntity.id,
                 name = fiatEntity.name,
                 symbol = fiatEntity.symbol,
-                category = Category.FIAT,
+                category = AssetCategory.FIAT,
                 active = Integer(1818),
                 priceUsd = 1.0 // TODO this is only valid for USD
         )
@@ -74,7 +74,7 @@ object Coinpaprika {
                 id = ticker.id,
                 name = ticker.name,
                 symbol = ticker.symbol,
-                category = Category.CRYPTO,
+                category = AssetCategory.CRYPTO,
                 active = Integer(1818),
 
                 rank = ticker.rank,

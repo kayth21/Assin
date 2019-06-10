@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import com.ceaver.assin.assets.Category
+import com.ceaver.assin.assets.AssetCategory
 import java.time.LocalDateTime
 import java.util.*
 
@@ -14,7 +14,7 @@ data class Title(//
         @ColumnInfo(name = "id") @PrimaryKey val id: String,
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "symbol") val symbol: String,
-        @ColumnInfo(name = "category") val category: Category,
+        @ColumnInfo(name = "category") val category: AssetCategory,
         @ColumnInfo(name = "active") val active: Integer,
         // common crypto
         @ColumnInfo(name = "rank") val rank: Int = -1,

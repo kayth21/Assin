@@ -1,5 +1,5 @@
 package com.ceaver.assin.assets
 
-enum class Category {
+enum class AssetCategory {
     FIAT, CRYPTO
 }

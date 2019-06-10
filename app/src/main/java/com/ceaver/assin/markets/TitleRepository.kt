@@ -2,7 +2,7 @@ package com.ceaver.assin.markets
 
 import android.os.Handler
 import android.os.Looper
-import com.ceaver.assin.assets.Category
+import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.util.*
@@ -30,7 +30,7 @@ object TitleRepository {
     }
 
     fun loadAllTitles(): List<Title> {
-        return getTitleDao().loadAllTitles().filter { it.category == Category.CRYPTO || it.symbol == "USD" }
+        return getTitleDao().loadAllTitles().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }
     }
 
     fun loadAllCryptoTitles(): List<Title> {
