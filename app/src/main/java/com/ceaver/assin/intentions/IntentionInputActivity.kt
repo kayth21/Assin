@@ -64,11 +64,15 @@ class IntentionInputActivity : AppCompatActivity() {
             val intention = it!!.first
             val titles = it.second
 
-            val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            intentionInputTitleSpinner.adapter = adapter
-            intentionInputReferenceTitleSpinner.adapter = adapter
-            adapter.addAll(titles)
+            val titleAdapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
+            titleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            intentionInputTitleSpinner.adapter = titleAdapter
+            titleAdapter.addAll(titles)
+
+            val referenceTitleAdapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
+            referenceTitleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            intentionInputReferenceTitleSpinner.adapter = referenceTitleAdapter
+            referenceTitleAdapter.addAll(titles.filter { setOf("USD", "BTC", "ETH").contains(it.symbol) })
 
             if (IntentionType.BUY == intention.type) intentionInputBuyRadio.isChecked = true else intentionInputSellRadio.isChecked = true
             intentionInputTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))

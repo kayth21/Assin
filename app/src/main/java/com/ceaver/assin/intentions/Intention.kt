@@ -19,9 +19,15 @@ data class Intention(
         @ColumnInfo(name = "comment") var comment: String = "") {
 
     fun percentToReferencePrice(): Double {
+        val price = when (referenceTitle.symbol) {
+            "USD" -> title.priceUsd
+            "BTC" -> title.priceBtc
+            "ETH" -> title.priceEth
+            else -> throw IllegalStateException()
+        }
         return when (type) {
-            IntentionType.SELL -> (100.div(referencePrice)).times(title.priceUsd)
-            IntentionType.BUY -> (100.div(title.priceUsd)).times(referencePrice)
+            IntentionType.SELL -> (100.div(referencePrice)).times(price)
+            IntentionType.BUY -> (100.div(price)).times(referencePrice)
         }
     }
 }
