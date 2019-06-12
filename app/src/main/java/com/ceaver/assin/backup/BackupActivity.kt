@@ -16,6 +16,10 @@ import androidx.work.WorkerParameters
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
+import com.ceaver.assin.intentions.Intention
+import com.ceaver.assin.intentions.IntentionRepository
+import com.ceaver.assin.intentions.IntentionStatus
+import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.trades.Trade
@@ -38,6 +42,7 @@ private const val WRITE_EXTERNAL_STORAGE = 1
 private const val EXPORT_DIRECTORY_NAME = "assin"
 private const val TRADE_FILE_NAME = "trades.csv"
 private const val ALERT_FILE_NAME = "alerts.csv"
+private const val INTENTION_FILE_NAME = "intentions.csv"
 
 private fun getOrCreateDirectory(): File {
     val rootDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -88,14 +93,20 @@ class BackupActivity : AppCompatActivity() {
 
     private fun startExport() {
         WorkManager.getInstance()
-                .beginWith(listOf(OneTimeWorkRequestBuilder<TradeExportWorker>().build(), OneTimeWorkRequestBuilder<AlertExportWorker>().build()))
+                .beginWith(listOf(
+                        OneTimeWorkRequestBuilder<TradeExportWorker>().build(),
+                        OneTimeWorkRequestBuilder<AlertExportWorker>().build(),
+                        OneTimeWorkRequestBuilder<IntentionExportWorker>().build()))
                 .then(OneTimeWorkRequestBuilder<EnableButtonWorker>().build())
                 .enqueue()
     }
 
     private fun startImport() {
         WorkManager.getInstance()
-                .beginWith(listOf(OneTimeWorkRequestBuilder<TradeImportWorker>().build(), OneTimeWorkRequestBuilder<AlertImportWorker>().build()))
+                .beginWith(listOf(
+                        OneTimeWorkRequestBuilder<TradeImportWorker>().build(),
+                        OneTimeWorkRequestBuilder<AlertImportWorker>().build(),
+                        OneTimeWorkRequestBuilder<IntentionImportWorker>().build()))
                 .then(OneTimeWorkRequestBuilder<EnableButtonWorker>().build())
                 .enqueue()
     }
@@ -122,6 +133,19 @@ class BackupActivity : AppCompatActivity() {
             for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source, alert.target)
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export alerts successful to '$filePath'")
+            return Result.success()
+        }
+    }
+
+    private class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+        override fun doWork(): Result {
+            val intentions = IntentionRepository.loadAllIntentions()
+            val targetDirectory = getOrCreateDirectory()
+            val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
+            val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
+            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amount, intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment)
+            csvPrinter.flush()
+            LogRepository.insertLogAsync("Export intentions successful to '$filePath'")
             return Result.success()
         }
     }
@@ -157,6 +181,24 @@ class BackupActivity : AppCompatActivity() {
                 LogRepository.insertLogAsync("Import alerts from '$filePath' successful")
             } else {
                 LogRepository.insertLogAsync("Import alerts failed. '$filePath' not found")
+            }
+            return Result.success()
+        }
+    }
+
+    private class IntentionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+        override fun doWork(): Result {
+            val sourceDirectory = getOrCreateDirectory()
+            val filePath = sourceDirectory.path + "/" + INTENTION_FILE_NAME;
+            if (File(filePath).exists()) {
+                val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + INTENTION_FILE_NAME))
+                val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
+                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDouble(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7)) }.toList()
+                IntentionRepository.deleteAllIntentions()
+                IntentionRepository.insertIntentions(intentions)
+                LogRepository.insertLogAsync("Import intentions from '$filePath' successful")
+            } else {
+                LogRepository.insertLogAsync("Import intentions failed. '$filePath' not found")
             }
             return Result.success()
         }
