@@ -2,6 +2,7 @@ package com.ceaver.assin.intentions
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -9,8 +10,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.ceaver.assin.AssinWorkerEvents
+import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
+import com.ceaver.assin.threading.BackgroundThreadExecutor
+import com.ceaver.assin.util.isConnected
+import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
 import kotlinx.android.synthetic.main.fragment_intention_list.*
+import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,7 +37,13 @@ class IntentionListFragment : Fragment() {
         intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         intentionListFragmentCreateIntentionButton.setOnClickListener { startActivity(Intent(activity!!.application, IntentionInputActivity::class.java)) }
         loadAllIntentions()
-        intentionListFragmentSwipeRefreshLayout.setOnRefreshListener { loadAllIntentions() }
+        intentionListFragmentSwipeRefreshLayout.setOnRefreshListener {
+            if (isConnected())
+                BackgroundThreadExecutor.execute { AssinWorkers.observedUpdate() }
+            else {
+                Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
+            }
+        }
     }
 
     override fun onStop() {
@@ -39,6 +52,16 @@ class IntentionListFragment : Fragment() {
         intentionListFragmentIntentionList.adapter = null
         intentionListFragmentCreateIntentionButton.setOnClickListener(null)
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener(null)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Complete) {
+        loadAllIntentions()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        loadAllIntentions()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
