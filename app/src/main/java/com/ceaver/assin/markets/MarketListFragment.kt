@@ -67,5 +67,6 @@ class MarketListFragment : Fragment() {
         EventBus.getDefault().unregister(this);
         marketList.adapter = null
         marketSwipeRefreshLayout.setOnRefreshListener(null)
+        marketList.removeItemDecorationAt(0) // TODO Seriously?
     }
 }

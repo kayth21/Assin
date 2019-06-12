@@ -50,6 +50,7 @@ class IntentionListFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
         intentionListFragmentIntentionList.adapter = null
+        intentionListFragmentIntentionList.removeItemDecorationAt(0) // TODO Seriously?
         intentionListFragmentCreateIntentionButton.setOnClickListener(null)
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener(null)
     }

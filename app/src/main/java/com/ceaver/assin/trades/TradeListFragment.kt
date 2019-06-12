@@ -50,6 +50,7 @@ class TradeListFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
         tradeList.adapter = null
+        tradeList.removeItemDecorationAt(0) // TODO Seriously?
         createTradeButton.setOnClickListener(null)
         swipeRefreshLayout.setOnRefreshListener(null)
     }
