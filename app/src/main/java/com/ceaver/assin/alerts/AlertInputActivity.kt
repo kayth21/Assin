@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
-import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
@@ -14,8 +13,13 @@ import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_alert_input.*
+import java.util.*
 
 class AlertInputActivity : AppCompatActivity() {
+
+    companion object {
+        val INTENT_EXTRA_ALERT_ID = UUID.randomUUID().toString()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +39,7 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun publishView() = setContentView(R.layout.activity_alert_input)
 
-    private fun lookupAlertId() = intent.getLongExtra(IntentKeys.ALERT_ID, 0)
+    private fun lookupAlertId() = intent.getLongExtra(INTENT_EXTRA_ALERT_ID, 0)
 
     private fun lookupViewModel(): AlertViewModel = ViewModelProviders.of(this).get(AlertViewModel::class.java)
 

@@ -31,7 +31,7 @@ class TradeListFragment : Fragment() {
         tradeList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, TradeType.TRADE.toString())
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, TradeType.TRADE.toString())
             startActivity(intent)
         }
         loadAllTrades()
@@ -77,8 +77,8 @@ class TradeListFragment : Fragment() {
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(trade: Trade) {
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_TYPE, trade.getTradeType().toString())
-            intent.putExtra(com.ceaver.assin.IntentKeys.TRADE_ID, trade.id)
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, trade.getTradeType().toString())
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_ID, trade.id)
             startActivity(intent)
         }
     }

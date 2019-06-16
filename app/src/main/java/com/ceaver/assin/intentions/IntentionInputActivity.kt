@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
-import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
@@ -17,6 +16,10 @@ import kotlinx.android.synthetic.main.activity_intention_input.*
 import java.util.*
 
 class IntentionInputActivity : AppCompatActivity() {
+
+    companion object {
+        val INTENT_EXTRA_INTENTION_ID = UUID.randomUUID().toString()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +40,7 @@ class IntentionInputActivity : AppCompatActivity() {
     }
 
     private fun lookupIntentionId(): Optional<Long> {
-        val intentionId = intent.getLongExtra(IntentKeys.INTENTION_ID, 0L)
+        val intentionId = intent.getLongExtra(INTENT_EXTRA_INTENTION_ID, 0L)
         return if (intentionId == 0L) Optional.empty() else Optional.of(intentionId)
     }
 

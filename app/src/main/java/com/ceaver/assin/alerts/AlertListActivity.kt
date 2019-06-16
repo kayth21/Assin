@@ -69,7 +69,7 @@ class AlertListActivity : AppCompatActivity() {
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Alert) {
             val intent = Intent(this@AlertListActivity, AlertInputActivity::class.java);
-            intent.putExtra(com.ceaver.assin.IntentKeys.ALERT_ID, item.id)
+            intent.putExtra(AlertInputActivity.INTENT_EXTRA_ALERT_ID, item.id)
             startActivity(intent)
         }
     }

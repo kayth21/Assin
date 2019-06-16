@@ -97,7 +97,7 @@ class IntentionListFragment : Fragment() {
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(intention: Intention) {
             val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
-            intent.putExtra(com.ceaver.assin.IntentKeys.INTENTION_ID, intention.id)
+            intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_ID, intention.id)
             startActivity(intent)
         }
     }

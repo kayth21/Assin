@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
-import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
@@ -19,6 +18,12 @@ import java.time.LocalDate
 import java.util.*
 
 class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFragementCallback {
+
+    companion object {
+        val INTENT_EXTRA_TRADE_ID = UUID.randomUUID().toString()
+        val INTENT_EXTRA_TRADE_TYPE = UUID.randomUUID().toString()
+        val INTENT_EXTRA_TRADE_SYMBOL = UUID.randomUUID().toString()
+    }
 
     private val purchaseDatePickerFragmentTag = UUID.randomUUID().toString()
 
@@ -58,12 +63,12 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun publishView() = setContentView(R.layout.activity_trade_input)
 
-    private fun lookupTradeType() = TradeType.valueOf(intent.getStringExtra(IntentKeys.TRADE_TYPE))
+    private fun lookupTradeType() = TradeType.valueOf(intent.getStringExtra(INTENT_EXTRA_TRADE_TYPE))
 
-    private fun lookupSymbol() = Optional.ofNullable(intent.getStringExtra(IntentKeys.SYMBOL))
+    private fun lookupSymbol() = Optional.ofNullable(intent.getStringExtra(INTENT_EXTRA_TRADE_SYMBOL))
 
     private fun lookupTradeId(): Optional<Long> {
-        val tradeId = intent.extras.getLong(IntentKeys.TRADE_ID)
+        val tradeId = intent.extras.getLong(INTENT_EXTRA_TRADE_ID)
         return if (tradeId == 0L) Optional.empty() else Optional.of(tradeId)
     }
 

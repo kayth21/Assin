@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
-import com.ceaver.assin.IntentKeys
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.TradeInputActivity
 import com.ceaver.assin.trades.TradeType
@@ -39,7 +38,7 @@ class AssetListFragment : Fragment() {
         assetList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(IntentKeys.TRADE_TYPE, TradeType.DEPOSIT.toString())
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, TradeType.DEPOSIT.toString())
             startActivity(intent)
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
@@ -85,8 +84,8 @@ class AssetListFragment : Fragment() {
         if (item!!.groupId == 1) {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
             val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(IntentKeys.SYMBOL, selectedAsset.symbol)
-            intent.putExtra(IntentKeys.TRADE_TYPE, when (item.itemId) {
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_SYMBOL, selectedAsset.symbol)
+            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, when (item.itemId) {
                 0 -> TradeType.DEPOSIT.toString()
                 1 -> TradeType.WITHDRAW.toString()
                 else -> throw IllegalStateException()
