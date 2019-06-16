@@ -25,12 +25,12 @@ class IntentionInputViewModel : ViewModel() {
             BackgroundThreadExecutor.execute {
                 val btc = TitleRepository.loadTitleBySymbol("BTC")
                 val usd = TitleRepository.loadTitleBySymbol("USD")
-                intention.postValue(Intention(0, IntentionType.SELL, btc, 1.0, usd, 5000.0))
+                intention.postValue(Intention(0, IntentionType.SELL, btc, Optional.empty(), usd, 5000.0))
             }
         return this
     }
 
-    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: Double, sellTitle: Title, sellAmount: Double, comment: String) {
+    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: Optional<Double>, sellTitle: Title, sellAmount: Double, comment: String) {
         status.postValue(IntentionInputStatus.START_SAVE)
         IntentionRepository.saveIntentionAsync(intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
             status.postValue(IntentionInputStatus.END_SAVE)

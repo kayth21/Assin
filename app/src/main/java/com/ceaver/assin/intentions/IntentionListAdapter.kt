@@ -36,7 +36,7 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
 
         fun bindItem(intention: Intention, onClickListener: IntentionListFragment.OnItemClickListener) {
             (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(getImageIdentifier(intention.title))
-            (view.findViewById(R.id.intentionListRowAssetTextView) as TextView).text = "${intention.type} ${intention.amount} ${intention.title}"
+            (view.findViewById(R.id.intentionListRowAssetTextView) as TextView).text = "${intention.type} ${intention.amountAsString()} ${intention.title}"
             (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice} ${intention.referenceTitle.symbol}"
             (view.findViewById(R.id.intentionListRowPercentTextView) as TextView).text = "${intention.percentToReferencePrice().format("abc")}%"
             view.setOnCreateContextMenuListener(this)

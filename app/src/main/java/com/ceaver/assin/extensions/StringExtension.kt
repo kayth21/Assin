@@ -15,5 +15,5 @@ fun String.isDouble(): Boolean {
 }
 
 fun String.toOptionalDouble(): Optional<Double> {
-    return if(this.isDouble()) Optional.of(this.toDouble()) else Optional.empty()
+    return Optional.ofNullable(this.toDoubleOrNull())
 }

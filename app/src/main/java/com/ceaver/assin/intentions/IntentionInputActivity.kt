@@ -11,6 +11,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.extensions.toOptionalDouble
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_intention_input.*
 import java.util.*
@@ -52,7 +53,7 @@ class IntentionInputActivity : AppCompatActivity() {
     private fun onSaveClick(viewModel: IntentionInputViewModel) {
         val type = if (intentionInputBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
         val title = intentionInputTitleSpinner.selectedItem as Title
-        val amount = intentionInputAmountEditText.text.toString().toDouble()
+        val amount = intentionInputAmountEditText.text.toString().toOptionalDouble()
         val referenceTitle = intentionInputReferenceTitleSpinner.selectedItem as Title
         val referencePrice = intentionInputReferencePriceEditText.text.toString().toDouble()
         val comment = intentionInputCommentEditText.text.toString()
@@ -76,7 +77,7 @@ class IntentionInputActivity : AppCompatActivity() {
 
             if (IntentionType.BUY == intention.type) intentionInputBuyRadio.isChecked = true else intentionInputSellRadio.isChecked = true
             intentionInputTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))
-            intentionInputAmountEditText.setText(intention.amount.toString())
+            intentionInputAmountEditText.setText(intention.amountAsString())
             intentionInputReferenceTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
             intentionInputReferencePriceEditText.setText(intention.referencePrice.toString())
             intentionInputCommentEditText.setText(intention.comment)
@@ -111,7 +112,7 @@ class IntentionInputActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun enableInput(enable: Boolean) {
+    private fun enableInput(enable: Boolean) {
         intentionInputSaveButton.isEnabled = enable && checkSaveButton()
         intentionInputTitleSpinner.isEnabled = enable
         intentionInputAmountEditText.isEnabled = enable
@@ -121,7 +122,6 @@ class IntentionInputActivity : AppCompatActivity() {
     }
 
     private fun registerInputValidation() {
-        intentionInputAmountEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
         intentionInputReferencePriceEditText.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
         intentionInputAmountEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }
         intentionInputReferencePriceEditText.afterTextChanged { intentionInputSaveButton.isEnabled = checkSaveButton() }

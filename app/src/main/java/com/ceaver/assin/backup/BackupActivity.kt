@@ -16,6 +16,7 @@ import androidx.work.WorkerParameters
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
+import com.ceaver.assin.extensions.toOptionalDouble
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionStatus
@@ -143,7 +144,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amount, intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment)
+            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment)
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export intentions successful to '$filePath'")
             return Result.success()
@@ -193,7 +194,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + INTENTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDouble(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7)) }.toList()
+                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toOptionalDouble(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7)) }.toList()
                 IntentionRepository.deleteAllIntentions()
                 IntentionRepository.insertIntentions(intentions)
                 LogRepository.insertLogAsync("Import intentions from '$filePath' successful")
