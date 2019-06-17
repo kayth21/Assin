@@ -13,6 +13,7 @@ import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.extensions.toOptionalDouble
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_intention_input.*
+import java.math.BigDecimal
 import java.util.*
 
 class IntentionInputActivity : AppCompatActivity() {
@@ -94,7 +95,7 @@ class IntentionInputActivity : AppCompatActivity() {
             intentionInputTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))
             intentionInputAmountEditText.setText(intention.amountAsString())
             intentionInputReferenceTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
-            intentionInputReferencePriceEditText.setText(intention.referencePrice.toString())
+            intentionInputReferencePriceEditText.setText(BigDecimal.valueOf(intention.referencePrice).toPlainString())
             intentionInputCommentEditText.setText(intention.comment)
 
             registerInputValidation()
