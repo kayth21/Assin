@@ -18,7 +18,7 @@ class IntentionInputViewModel : ViewModel() {
     val status = SingleLiveEvent<IntentionInputStatus>()
 
 
-    fun init(intentionId: Optional<Long>, symbol: Optional<String>): IntentionInputViewModel {
+    fun init(intentionId: Optional<Long>, symbol: Optional<String>, amount: Optional<Double>): IntentionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         if (intentionId.isPresent)
             IntentionRepository.loadIntentionAsync(intentionId.get(), false) { intention.postValue(it) }
@@ -26,7 +26,7 @@ class IntentionInputViewModel : ViewModel() {
             BackgroundThreadExecutor.execute {
                 val symbolTitle = TitleRepository.loadTitleBySymbol(symbol.orElse("BTC"))
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, Optional.empty(), referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd else symbolTitle.priceBtc))
+                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd else symbolTitle.priceBtc))
             }
         return this
     }

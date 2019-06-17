@@ -98,6 +98,7 @@ class AssetListFragment : Fragment() {
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
                     intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_SYMBOL, selectedAsset.symbol)
+                    intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_AMOUNT, selectedAsset.amount)
                     startActivity(intent)
                 }
                 else -> throw IllegalStateException()
