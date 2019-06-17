@@ -43,7 +43,7 @@ class TradeListFragment : Fragment() {
     }
 
     private fun onAllTradesLoaded(trades: List<Trade>) {
-        tradeListAdapter.tradeList = trades; tradeListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
+        tradeListAdapter.tradeList = trades.toMutableList().sortedBy { it.tradeDate }.reversed(); tradeListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {

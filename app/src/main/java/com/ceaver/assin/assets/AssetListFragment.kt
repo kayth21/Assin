@@ -71,7 +71,7 @@ class AssetListFragment : Fragment() {
     }
 
     private fun onAllAssetsLoaded(assets: List<Asset>) {
-        assetListAdapter.assets = assets; assetListAdapter.notifyDataSetChanged(); assetSwipeRefreshLayout.isRefreshing = false
+        assetListAdapter.assets = assets.toMutableList().sortedBy { it.btcValue }.reversed(); assetListAdapter.notifyDataSetChanged(); assetSwipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {

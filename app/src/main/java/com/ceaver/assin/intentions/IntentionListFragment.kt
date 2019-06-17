@@ -85,7 +85,7 @@ class IntentionListFragment : Fragment() {
     }
 
     private fun onAllIntentionsLoaded(intentions: List<Intention>) {
-        intentionListAdapter.intentionList = intentions
+        intentionListAdapter.intentionList = intentions.toMutableList().sortedBy { it.percentToReferencePrice() }.reversed()
         intentionListAdapter.notifyDataSetChanged()
         intentionListFragmentSwipeRefreshLayout.isRefreshing = false
     }
