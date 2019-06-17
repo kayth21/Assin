@@ -78,6 +78,7 @@ class AssetListFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this);
         assetList.adapter = null
+        assetList.removeItemDecorationAt(0) // TODO Seriously?
         assetSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
