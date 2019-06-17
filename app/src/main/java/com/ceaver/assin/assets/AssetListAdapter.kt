@@ -11,8 +11,18 @@ import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import kotlin.random.Random
 
 class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
+
+    companion object {
+        val CONTEXT_MENU_GROUP_ID = Random.nextInt()
+        val CONTEXT_MENU_DEPOSIT_ITEM_ID = Random.nextInt()
+        val CONTEXT_MENU_WITHDRAW_ITEM_ID = Random.nextInt()
+        val CONTEXT_MENU_INTENTION_ITEM_ID = Random.nextInt()
+
+    }
+
     var assets: List<Asset> = ArrayList()
     var currentLongClickAsset: Asset? = null
 
@@ -30,8 +40,9 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(1, 0, 0, "Deposit")
-            menu.add(1, 1, 1, "Withdraw")
+            menu!!.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_DEPOSIT_ITEM_ID, 0, "Deposit")
+            menu.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_WITHDRAW_ITEM_ID, 1, "Withdraw")
+            menu.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_INTENTION_ITEM_ID, 2, "Intention")
         }
 
         fun bindItem(asset: Asset) {

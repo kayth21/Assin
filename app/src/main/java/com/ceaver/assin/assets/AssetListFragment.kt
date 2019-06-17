@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
+import com.ceaver.assin.intentions.IntentionInputActivity
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.TradeInputActivity
 import com.ceaver.assin.trades.TradeType
@@ -81,16 +82,26 @@ class AssetListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        if (item!!.groupId == 1) {
+        if (item!!.groupId == AssetListAdapter.CONTEXT_MENU_GROUP_ID) {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
-            val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_SYMBOL, selectedAsset.symbol)
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, when (item.itemId) {
-                0 -> TradeType.DEPOSIT.toString()
-                1 -> TradeType.WITHDRAW.toString()
+            when {
+                item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
+                    val intent = Intent(activity!!.application, TradeInputActivity::class.java);
+                    intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_SYMBOL, selectedAsset.symbol)
+                    intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, when (item.itemId) {
+                        0 -> TradeType.DEPOSIT.toString()
+                        1 -> TradeType.WITHDRAW.toString()
+                        else -> throw IllegalStateException()
+                    })
+                    startActivity(intent)
+                }
+                item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
+                    val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
+                    intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_SYMBOL, selectedAsset.symbol)
+                    startActivity(intent)
+                }
                 else -> throw IllegalStateException()
-            })
-            startActivity(intent)
+            }
         }
         return super.onContextItemSelected(item)
     }

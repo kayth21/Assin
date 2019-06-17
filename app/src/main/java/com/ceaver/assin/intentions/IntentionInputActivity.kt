@@ -19,6 +19,7 @@ class IntentionInputActivity : AppCompatActivity() {
 
     companion object {
         val INTENT_EXTRA_INTENTION_ID = UUID.randomUUID().toString()
+        val INTENT_EXTRA_INTENTION_SYMBOL = UUID.randomUUID().toString()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +37,17 @@ class IntentionInputActivity : AppCompatActivity() {
     private fun publishView() = setContentView(R.layout.activity_intention_input)
 
     private fun lookupViewModel(): IntentionInputViewModel {
-        return ViewModelProviders.of(this).get(IntentionInputViewModel::class.java).init(lookupIntentionId())
+        return ViewModelProviders.of(this).get(IntentionInputViewModel::class.java).init(lookupIntentionId(), lookupSymbolFromIntent())
     }
 
     private fun lookupIntentionId(): Optional<Long> {
         val intentionId = intent.getLongExtra(INTENT_EXTRA_INTENTION_ID, 0L)
         return if (intentionId == 0L) Optional.empty() else Optional.of(intentionId)
+    }
+
+    private fun lookupSymbolFromIntent(): Optional<String> {
+        val intentionId = intent.getStringExtra(INTENT_EXTRA_INTENTION_SYMBOL)
+        return Optional.ofNullable(intentionId)
     }
 
     private fun modifyView() {
