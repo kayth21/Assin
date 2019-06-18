@@ -5,16 +5,15 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.ceaver.assin.markets.Title
 import java.time.LocalDate
-import java.util.*
 
 @Entity(tableName = "trade")
 data class Trade(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
-        @ColumnInfo(name = "buyTitle") var buyTitle: Title?, //
-        @ColumnInfo(name = "buyAmount") var buyAmount: Optional<Double> = Optional.empty(), //
-        @ColumnInfo(name = "sellTitle") var sellTitle: Title?, //
-        @ColumnInfo(name = "sellAmount") var sellAmount: Optional<Double> = Optional.empty(), //
+        @ColumnInfo(name = "buyTitle") var buyTitle: Title? = null, //
+        @ColumnInfo(name = "buyAmount") var buyAmount: Double? = null, //
+        @ColumnInfo(name = "sellTitle") var sellTitle: Title? = null, //
+        @ColumnInfo(name = "sellAmount") var sellAmount: Double? = null, //
         @ColumnInfo(name = "comment") var comment: String = "") {
 
     fun getTradeType(): TradeType {
@@ -32,9 +31,9 @@ data class Trade(
 
     fun getTitles(): Set<Title> {
         return when (getTradeType()) {
-            TradeType.TRADE -> setOf(buyTitle, sellTitle) as Set<Title>
-            TradeType.DEPOSIT -> setOf(buyTitle) as Set<Title>
-            TradeType.WITHDRAW -> setOf(sellTitle) as Set<Title>
+            TradeType.TRADE -> setOf(buyTitle!!, sellTitle!!)
+            TradeType.DEPOSIT -> setOf(buyTitle!!)
+            TradeType.WITHDRAW -> setOf(sellTitle!!)
         }
     }
 }

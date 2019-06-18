@@ -141,14 +141,14 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
         tradeInputCommentEditText.setText(trade.comment)
         when (lookupTradeType()) {
             TradeType.TRADE -> {
-                tradeInputBuyAmountEditText.setText(if (trade.buyAmount.isPresent) trade.buyAmount.get().toString() else "")
-                tradeInputSellAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
+                tradeInputBuyAmountEditText.setText(if (trade.buyAmount != null) trade.buyAmount.toString() else "")
+                tradeInputSellAmountEditText.setText(if (trade.sellAmount != null) trade.sellAmount.toString() else "")
             }
             TradeType.DEPOSIT -> {
-                tradeInputBuyAmountEditText.setText(if (trade.buyAmount.isPresent) trade.buyAmount.get().toString() else "")
+                tradeInputBuyAmountEditText.setText(if (trade.buyAmount != null) trade.buyAmount.toString() else "")
             }
             TradeType.WITHDRAW -> {
-                tradeInputSellAmountEditText.setText(if (trade.sellAmount.isPresent) trade.sellAmount.get().toString() else "")
+                tradeInputSellAmountEditText.setText(if (trade.sellAmount != null) trade.sellAmount.toString() else "")
             }
         }
     }

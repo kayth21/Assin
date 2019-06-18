@@ -54,9 +54,9 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
 
         private fun getTradeText(trade: Trade): String {
             return when (trade.getTradeType()) {
-                TradeType.DEPOSIT -> "${trade.buyAmount.get()} ${trade.buyTitle!!.symbol}"
-                TradeType.WITHDRAW -> "${trade.sellAmount.get()} ${trade.sellTitle!!.symbol}"
-                TradeType.TRADE -> "${trade.sellAmount.get()} ${trade.sellTitle!!.symbol} -> ${trade.buyAmount.get()} ${trade.buyTitle!!.symbol}"
+                TradeType.DEPOSIT -> "${trade.buyAmount!!} ${trade.buyTitle!!.symbol}"
+                TradeType.WITHDRAW -> "${trade.sellAmount!!} ${trade.sellTitle!!.symbol}"
+                TradeType.TRADE -> "${trade.sellAmount!!} ${trade.sellTitle!!.symbol} -> ${trade.buyAmount!!} ${trade.buyTitle!!.symbol}"
             }
         }
 

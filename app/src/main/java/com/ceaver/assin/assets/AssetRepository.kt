@@ -9,8 +9,8 @@ object AssetRepository {
 
     fun loadAllAssets(): List<Asset> {
         val assets = TradeRepository.loadAllTrades()
-        val buyPairs = assets.filter { it.buyTitle != null }.map { Pair(it.buyTitle!!, it.buyAmount.get()) }
-        val sellPairs = assets.filter { it.sellTitle != null }.map { Pair(it.sellTitle!!, it.sellAmount.get().unaryMinus()) }
+        val buyPairs = assets.filter { it.buyTitle != null }.map { Pair(it.buyTitle!!, it.buyAmount!!) }
+        val sellPairs = assets.filter { it.sellTitle != null }.map { Pair(it.sellTitle!!, it.sellAmount!!.unaryMinus()) }
         val allPairs = buyPairs + sellPairs
         return allPairs.groupBy { it.first }
                 .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
