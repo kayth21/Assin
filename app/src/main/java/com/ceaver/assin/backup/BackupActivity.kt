@@ -118,7 +118,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + TRADE_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, if (trade.buyTitle.isPresent) trade.buyTitle.get().symbol else "", if (trade.buyAmount.isPresent) trade.buyAmount.get() else "", if (trade.sellTitle.isPresent) trade.sellTitle.get().symbol else "", if (trade.sellAmount.isPresent) trade.sellAmount.get() else "", trade.comment)
+            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buyTitle?.symbol.orEmpty(), if (trade.buyAmount.isPresent) trade.buyAmount.get() else "", trade.sellTitle?.symbol.orEmpty(), if (trade.sellAmount.isPresent) trade.sellAmount.get() else "", trade.comment)
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export trades successful to '$filePath'")
             return Result.success()
@@ -158,7 +158,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + TRADE_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val trades = csvParser.map { Trade(0, LocalDate.parse(it.get(0)), if (it.get(1).isEmpty()) Optional.empty() else Optional.of(TitleRepository.loadTitleBySymbol(it.get(1))), Optional.ofNullable(it.get(2).toDoubleOrNull()), if (it.get(3).isEmpty()) Optional.empty() else Optional.of(TitleRepository.loadTitleBySymbol(it.get(3))), Optional.ofNullable(it.get(4).toDoubleOrNull())) }.toList()
+                val trades = csvParser.map { Trade(0, LocalDate.parse(it.get(0)), if (it.get(1).isEmpty()) null else TitleRepository.loadTitleBySymbol(it.get(1)), Optional.ofNullable(it.get(2).toDoubleOrNull()), if (it.get(3).isEmpty()) null else TitleRepository.loadTitleBySymbol(it.get(3)), Optional.ofNullable(it.get(4).toDoubleOrNull())) }.toList()
                 TradeRepository.deleteAllTrades();
                 TradeRepository.insertTrades(trades)
                 LogRepository.insertLogAsync("Import trades from '$filePath' successful")

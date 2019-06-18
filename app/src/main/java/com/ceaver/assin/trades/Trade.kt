@@ -11,9 +11,9 @@ import java.util.*
 data class Trade(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
-        @ColumnInfo(name = "buyTitle") var buyTitle: Optional<Title> = Optional.empty(), //
+        @ColumnInfo(name = "buyTitle") var buyTitle: Title?, //
         @ColumnInfo(name = "buyAmount") var buyAmount: Optional<Double> = Optional.empty(), //
-        @ColumnInfo(name = "sellTitle") var sellTitle: Optional<Title> = Optional.empty(), //
+        @ColumnInfo(name = "sellTitle") var sellTitle: Title?, //
         @ColumnInfo(name = "sellAmount") var sellAmount: Optional<Double> = Optional.empty(), //
         @ColumnInfo(name = "comment") var comment: String = "") {
 
@@ -26,15 +26,15 @@ data class Trade(
         }
     }
 
-    fun isTrade(): Boolean = buyTitle.isPresent && sellTitle.isPresent
-    fun isDeposit(): Boolean = buyTitle.isPresent && !sellTitle.isPresent
-    fun isWithdraw(): Boolean = !buyTitle.isPresent && sellTitle.isPresent
+    fun isTrade(): Boolean = buyTitle != null && sellTitle != null
+    fun isDeposit(): Boolean = buyTitle != null && sellTitle == null
+    fun isWithdraw(): Boolean = buyTitle == null && sellTitle != null
 
     fun getTitles(): Set<Title> {
         return when (getTradeType()) {
-            TradeType.TRADE -> setOf(buyTitle.get(), sellTitle.get())
-            TradeType.DEPOSIT -> setOf(buyTitle.get())
-            TradeType.WITHDRAW -> setOf(sellTitle.get())
+            TradeType.TRADE -> setOf(buyTitle, sellTitle) as Set<Title>
+            TradeType.DEPOSIT -> setOf(buyTitle) as Set<Title>
+            TradeType.WITHDRAW -> setOf(sellTitle) as Set<Title>
         }
     }
 }

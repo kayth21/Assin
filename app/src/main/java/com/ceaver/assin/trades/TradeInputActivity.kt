@@ -128,11 +128,11 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun updateSpinnerFields(viewModel: TradeViewModel, trade: Trade) {
-        if (trade.buyTitle.isPresent) {
-            tradeInputBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.buyTitle.get()))
+        if (trade.buyTitle != null) {
+            tradeInputBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.buyTitle!!))
         }
-        if (trade.sellTitle.isPresent) {
-            tradeInputSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.sellTitle.get()))
+        if (trade.sellTitle != null) {
+            tradeInputSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(trade.sellTitle!!))
         }
     }
 

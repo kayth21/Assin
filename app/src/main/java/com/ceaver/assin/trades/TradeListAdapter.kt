@@ -46,33 +46,33 @@ internal class TradeListAdapter(private val onClickListener: TradeListFragment.O
 
         private fun getTradeTypeText(trade: Trade): String {
             return when (trade.getTradeType()) {
-                TradeType.DEPOSIT -> "Deposit ${trade.buyTitle.get().name}"
-                TradeType.WITHDRAW -> "Withdraw ${trade.sellTitle.get().name}"
-                TradeType.TRADE -> "${trade.sellTitle.get().name} -> ${trade.buyTitle.get().name}"
+                TradeType.DEPOSIT -> "Deposit ${trade.buyTitle!!.name}"
+                TradeType.WITHDRAW -> "Withdraw ${trade.sellTitle!!.name}"
+                TradeType.TRADE -> "${trade.sellTitle!!.name} -> ${trade.buyTitle!!.name}"
             }
         }
 
         private fun getTradeText(trade: Trade): String {
             return when (trade.getTradeType()) {
-                TradeType.DEPOSIT -> "${trade.buyAmount.get()} ${trade.buyTitle.get().symbol}"
-                TradeType.WITHDRAW -> "${trade.sellAmount.get()} ${trade.sellTitle.get().symbol}"
-                TradeType.TRADE -> "${trade.sellAmount.get()} ${trade.sellTitle.get().symbol} -> ${trade.buyAmount.get()} ${trade.buyTitle.get().symbol}"
+                TradeType.DEPOSIT -> "${trade.buyAmount.get()} ${trade.buyTitle!!.symbol}"
+                TradeType.WITHDRAW -> "${trade.sellAmount.get()} ${trade.sellTitle!!.symbol}"
+                TradeType.TRADE -> "${trade.sellAmount.get()} ${trade.sellTitle!!.symbol} -> ${trade.buyAmount.get()} ${trade.buyTitle!!.symbol}"
             }
         }
 
         private fun getRightImageResource(trade: Trade): Int {
             return when (trade.getTradeType()) {
-                TradeType.DEPOSIT -> getImageIdentifier(trade.buyTitle.get().symbol.toLowerCase())
+                TradeType.DEPOSIT -> getImageIdentifier(trade.buyTitle!!.symbol.toLowerCase())
                 TradeType.WITHDRAW -> R.drawable.withdraw
-                TradeType.TRADE -> getImageIdentifier(trade.buyTitle.get().symbol.toLowerCase())
+                TradeType.TRADE -> getImageIdentifier(trade.buyTitle!!.symbol.toLowerCase())
             }
         }
 
         private fun getLeftImageResource(trade: Trade): Int {
             return when (trade.getTradeType()) {
                 TradeType.DEPOSIT -> R.drawable.deposit
-                TradeType.WITHDRAW -> getImageIdentifier(trade.sellTitle.get().symbol.toLowerCase())
-                TradeType.TRADE -> getImageIdentifier(trade.sellTitle.get().symbol.toLowerCase())
+                TradeType.WITHDRAW -> getImageIdentifier(trade.sellTitle!!.symbol.toLowerCase())
+                TradeType.TRADE -> getImageIdentifier(trade.sellTitle!!.symbol.toLowerCase())
             }
         }
 

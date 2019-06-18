@@ -51,16 +51,10 @@ class Converters {
     fun toOptionalLocalDateTime(long: Long): Optional<LocalDateTime> = if (long == -1L) Optional.empty() else Optional.of(LocalDateTime.MIN.plusSeconds(long))
 
     @TypeConverter
-    fun fromTitle(title: Title): String = title.id
+    fun fromTitle(title: Title?): String = title?.id.orEmpty()
 
     @TypeConverter
-    fun toTitle(string: String): Title = TitleRepository.loadTitle(string)
-
-    @TypeConverter
-    fun fromOptionalTitle(title: Optional<Title>): String = if (title.isPresent) title.get().id else ""
-
-    @TypeConverter
-    fun toOptionalTitle(string: String): Optional<Title> = if (string.isEmpty()) Optional.empty() else Optional.of(TitleRepository.loadTitle(string))
+    fun toTitle(string: String): Title? = if (string.isBlank()) null else TitleRepository.loadTitle(string)
 
     @TypeConverter
     fun fromAlertType(alertType: AlertType): String = alertType.name
