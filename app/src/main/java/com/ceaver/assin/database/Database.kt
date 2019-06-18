@@ -15,7 +15,7 @@ import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeDao
 
 @android.arch.persistence.room.Database(entities = arrayOf(Trade::class, Title::class, Intention::class, Alert::class, Log::class), version = 1, exportSchema = false)
-@TypeConverters(com.ceaver.assin.database.converter.Converters::class)
+@TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun tradeDao(): TradeDao
     abstract fun alertDao(): AlertDao
