@@ -42,15 +42,15 @@ class TradeViewModel : ViewModel() {
         TradeRepository.saveTradeAsync(trade, true) { status.value = TradeInputStatus.END_SAVE }
     }
 
-    fun onSaveTradeClick(buySymbol: Title, buyAmount: Double, sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onSaveTradeClick(buySymbol: Title, buyAmount: Double, sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String?) {
         saveTrade(trade.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, tradeDate = tradeDate, comment = comment))
     }
 
-    fun onDepositClick(buySymbol: Title, buyAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onDepositClick(buySymbol: Title, buyAmount: Double, tradeDate: LocalDate, comment: String?) {
         saveTrade(trade.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, tradeDate = tradeDate, comment = comment))
     }
 
-    fun onWithdrawClick(sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String) {
+    fun onWithdrawClick(sellSymbol: Title, sellAmount: Double, tradeDate: LocalDate, comment: String?) {
         saveTrade(trade.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, tradeDate = tradeDate, comment = comment))
     }
 

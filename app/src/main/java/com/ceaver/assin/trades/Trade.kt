@@ -14,7 +14,7 @@ data class Trade(
         @ColumnInfo(name = "buyAmount") var buyAmount: Double? = null, //
         @ColumnInfo(name = "sellTitle") var sellTitle: Title? = null, //
         @ColumnInfo(name = "sellAmount") var sellAmount: Double? = null, //
-        @ColumnInfo(name = "comment") var comment: String = "") {
+        @ColumnInfo(name = "comment") var comment: String? = null) {
 
     fun getTradeType(): TradeType {
         return when {

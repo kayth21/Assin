@@ -81,7 +81,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
     }
 
     private fun onSaveClick(viewModel: TradeViewModel) {
-        val comment = tradeInputCommentEditText.text.toString()
+        val comment = tradeInputCommentEditText.text.toString().ifEmpty { null }
         val tradeDate = CalendarHelper.convertDate(tradeInputTradeDateEditText.text.toString())
         when (lookupTradeType()) {
             TradeType.TRADE -> {
@@ -138,7 +138,7 @@ class TradeInputActivity : AppCompatActivity(), DatePickerFragment.DatePickerFra
 
     private fun publishFields(trade: Trade, viewModel: TradeViewModel) {
         tradeInputTradeDateEditText.setText(CalendarHelper.convertDate(trade.tradeDate))
-        tradeInputCommentEditText.setText(trade.comment)
+        tradeInputCommentEditText.setText(trade.comment.orEmpty())
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 tradeInputBuyAmountEditText.setText(if (trade.buyAmount != null) trade.buyAmount.toString() else "")

@@ -33,12 +33,6 @@ class Converters {
     fun toUuid(string: String): UUID = UUID.fromString(string)
 
     @TypeConverter
-    fun fromOptionalString(optional: Optional<String>): String = optional.map { it.toString() }.orElse("")
-
-    @TypeConverter
-    fun toOptionalString(string: String): Optional<String> = if (string.isEmpty()) Optional.empty() else Optional.of(string)
-
-    @TypeConverter
     fun fromOptionalDouble(optional: Optional<Double>): String = if (optional.isPresent) optional.get().toString() else ""
 
     @TypeConverter
