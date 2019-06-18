@@ -10,7 +10,6 @@ import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
-import com.ceaver.assin.extensions.toOptionalDouble
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_intention_input.*
 import java.math.BigDecimal
@@ -52,9 +51,9 @@ class IntentionInputActivity : AppCompatActivity() {
         return Optional.ofNullable(intentionId)
     }
 
-    private fun lookupAmountFromIntent(): Optional<Double> {
+    private fun lookupAmountFromIntent(): Double? {
         val amount = intent.getDoubleExtra(INTENT_EXTRA_INTENTION_AMOUNT, 0.0)
-        return if (amount == 0.0) Optional.empty() else Optional.of(amount)
+        return if (amount == 0.0) null else amount
     }
 
     private fun modifyView() {
@@ -69,7 +68,7 @@ class IntentionInputActivity : AppCompatActivity() {
     private fun onSaveClick(viewModel: IntentionInputViewModel) {
         val type = if (intentionInputBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
         val title = intentionInputTitleSpinner.selectedItem as Title
-        val amount = intentionInputAmountEditText.text.toString().toOptionalDouble()
+        val amount = intentionInputAmountEditText.text.toString().toDoubleOrNull()
         val referenceTitle = intentionInputReferenceTitleSpinner.selectedItem as Title
         val referencePrice = intentionInputReferencePriceEditText.text.toString().toDouble()
         val comment = intentionInputCommentEditText.text.toString()
@@ -112,11 +111,11 @@ class IntentionInputActivity : AppCompatActivity() {
     }
 
     private fun calculateValue(): String {
-        val amount = intentionInputAmountEditText.text.toString().toOptionalDouble()
-        val referencePrice = intentionInputReferencePriceEditText.text.toString().toOptionalDouble()
-        if (!amount.isPresent || !referencePrice.isPresent)
+        val amount = intentionInputAmountEditText.text.toString().toDoubleOrNull()
+        val referencePrice = intentionInputReferencePriceEditText.text.toString().toDoubleOrNull()
+        if (amount == null || referencePrice == null)
             return ""
-        return amount.get().times(referencePrice.get()).toString()
+        return amount.times(referencePrice).toString()
     }
 
     private fun observeStatus(viewModel: IntentionInputViewModel) {

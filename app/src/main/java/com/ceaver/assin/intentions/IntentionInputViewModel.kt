@@ -18,7 +18,7 @@ class IntentionInputViewModel : ViewModel() {
     val status = SingleLiveEvent<IntentionInputStatus>()
 
 
-    fun init(intentionId: Optional<Long>, symbol: Optional<String>, amount: Optional<Double>): IntentionInputViewModel {
+    fun init(intentionId: Optional<Long>, symbol: Optional<String>, amount: Double?): IntentionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         if (intentionId.isPresent)
             IntentionRepository.loadIntentionAsync(intentionId.get(), false) { intention.postValue(it) }
@@ -31,7 +31,7 @@ class IntentionInputViewModel : ViewModel() {
         return this
     }
 
-    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: Optional<Double>, sellTitle: Title, sellAmount: Double, comment: String) {
+    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: Double?, sellTitle: Title, sellAmount: Double, comment: String) {
         status.postValue(IntentionInputStatus.START_SAVE)
         IntentionRepository.saveIntentionAsync(intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
             status.postValue(IntentionInputStatus.END_SAVE)
