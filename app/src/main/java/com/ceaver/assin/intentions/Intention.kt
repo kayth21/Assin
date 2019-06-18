@@ -16,7 +16,7 @@ data class Intention(
         @ColumnInfo(name = "referencePrice") var referencePrice: Double,
         @ColumnInfo(name = "creationDate") var creationDate: LocalDate = LocalDate.now(),
         @ColumnInfo(name = "status") val status: IntentionStatus = IntentionStatus.WAIT,
-        @ColumnInfo(name = "comment") var comment: String = "") {
+        @ColumnInfo(name = "comment") var comment: String? = null) {
 
     fun percentToReferencePrice(): Double {
         val price = when (referenceTitle.symbol) {

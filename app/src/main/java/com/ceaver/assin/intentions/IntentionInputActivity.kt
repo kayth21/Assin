@@ -72,7 +72,7 @@ class IntentionInputActivity : AppCompatActivity() {
         val referenceTitle = intentionInputReferenceTitleSpinner.selectedItem as Title
         val referencePrice = intentionInputReferencePriceEditText.text.toString().toDouble()
         val comment = intentionInputCommentEditText.text.toString()
-        viewModel.onSaveClick(type, title, amount, referenceTitle, referencePrice, comment)
+        viewModel.onSaveClick(type, title, amount, referenceTitle, referencePrice, comment.ifEmpty { null })
     }
 
     private fun observeDataReady(viewModel: IntentionInputViewModel) {
@@ -96,7 +96,7 @@ class IntentionInputActivity : AppCompatActivity() {
             intentionInputReferenceTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
             intentionInputReferencePriceEditText.setText(BigDecimal.valueOf(intention.referencePrice).toPlainString())
             intentionInputCalculatedValueTextView.text = calculateValue()
-            intentionInputCommentEditText.setText(intention.comment)
+            intentionInputCommentEditText.setText(intention.comment.orEmpty())
 
             registerInputValidation()
             registerCalculatedValueTextView()

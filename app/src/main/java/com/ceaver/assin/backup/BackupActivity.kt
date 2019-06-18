@@ -142,7 +142,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment)
+            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment.orEmpty())
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export intentions successful to '$filePath'")
             return Result.success()
@@ -192,7 +192,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + INTENTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDoubleOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7)) }.toList()
+                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDoubleOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
                 IntentionRepository.deleteAllIntentions()
                 IntentionRepository.insertIntentions(intentions)
                 LogRepository.insertLogAsync("Import intentions from '$filePath' successful")
