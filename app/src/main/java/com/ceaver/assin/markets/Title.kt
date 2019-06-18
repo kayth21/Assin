@@ -14,7 +14,7 @@ data class Title(//
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "symbol") val symbol: String,
         @ColumnInfo(name = "category") val category: AssetCategory,
-        @ColumnInfo(name = "active") val active: Integer,
+        @ColumnInfo(name = "active") val active: Int,
         // common crypto
         @ColumnInfo(name = "rank") val rank: Int = -1,
         @ColumnInfo(name = "circulatingSupply") val circulatingSupply: Long? = null,
@@ -64,24 +64,24 @@ data class Title(//
 ) {
 
     fun inactive(): Boolean {
-        return active.toInt() == -100
+        return active == -100
     }
 
     fun incrementActiveCounter(): Title {
         return when {
-            active.toInt() == 100 -> this
-            active.toInt() == 49 -> this.copy(active = Integer(51))
-            active.toInt() == -50 -> this.copy(active = Integer(50))
-            else -> this.copy(active = Integer(active.toInt() + 1))
+            active == 100 -> this
+            active == 49 -> this.copy(active = 51)
+            active == -50 -> this.copy(active = 50)
+            else -> this.copy(active = active + 1)
         }
     }
 
     fun decreaseActiveCounter(): Title {
         return when {
-            active.toInt() == -100 -> this
-            active.toInt() == 51 -> this.copy(active = Integer(49))
-            active.toInt() == 0 -> this.copy(active = Integer(-100))
-            else -> this.copy(active = Integer(active.toInt() - 1))
+            active == -100 -> this
+            active == 51 -> this.copy(active = 49)
+            active == 0 -> this.copy(active = -100)
+            else -> this.copy(active = active - 1)
         }
     }
 

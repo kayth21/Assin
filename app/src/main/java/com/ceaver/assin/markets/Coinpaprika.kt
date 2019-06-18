@@ -60,7 +60,7 @@ object Coinpaprika {
                 name = fiatEntity.name,
                 symbol = fiatEntity.symbol,
                 category = AssetCategory.FIAT,
-                active = Integer(1818),
+                active = 1818,
                 priceUsd = 1.0 // TODO this is only valid for USD
         )
     }
@@ -75,7 +75,7 @@ object Coinpaprika {
                 name = ticker.name,
                 symbol = ticker.symbol,
                 category = AssetCategory.CRYPTO,
-                active = Integer(1818),
+                active = 1818,
 
                 rank = ticker.rank,
                 circulatingSupply = ticker.circulatingSupply,

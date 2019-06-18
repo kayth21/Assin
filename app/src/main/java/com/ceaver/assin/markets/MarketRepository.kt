@@ -7,8 +7,8 @@ object MarketRepository {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
         val allLocalTitles = TitleRepository.loadAllTitles()
         return allRemoteTitles.map { remoteTitle ->
-            val localTitle = allLocalTitles.find { localTitle -> remoteTitle.id.equals(localTitle.id) }
-            remoteTitle.copy(active = localTitle?.active ?: Integer(-75))
+            val localTitle = allLocalTitles.find { localTitle -> remoteTitle.id == localTitle.id }
+            remoteTitle.copy(active = localTitle?.active ?: -75)
         }.toSet()
     }
 
@@ -17,6 +17,6 @@ object MarketRepository {
         val localTitle = TitleRepository.loadTitle(id)
         if (!remoteTitle.isPresent)
             return remoteTitle
-        return Optional.of(remoteTitle.get().copy(active = localTitle.active ?: Integer(-75)))
+        return Optional.of(remoteTitle.get().copy(active = localTitle.active ?: -75)) // TODO! :)
     }
 }
