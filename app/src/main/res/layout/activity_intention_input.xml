@@ -71,15 +71,23 @@
         app:layout_constraintStart_toStartOf="@+id/intentionInputReferenceTitleSpinner"
         app:layout_constraintTop_toBottomOf="@+id/intentionInputReferenceTitleSpinner" />
 
+    <TextView
+        android:id="@+id/intentionInputCalculatedValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputReferencePriceEditText"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputReferencePriceEditText"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputReferencePriceEditText" />
+
     <EditText
         android:id="@+id/intentionInputCommentEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        app:layout_constraintEnd_toEndOf="@+id/intentionInputReferencePriceEditText"
-        app:layout_constraintStart_toStartOf="@+id/intentionInputReferencePriceEditText"
-        app:layout_constraintTop_toBottomOf="@+id/intentionInputReferencePriceEditText" />
+        app:layout_constraintEnd_toEndOf="@+id/intentionInputCalculatedValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/intentionInputCalculatedValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputCalculatedValueTextView" />
 
     <Button
         android:id="@+id/intentionInputSaveButton"
@@ -93,5 +101,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/intentionInputCommentEditText" />
+
+
 
 </android.support.constraint.ConstraintLayout>

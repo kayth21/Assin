@@ -96,12 +96,27 @@ class IntentionInputActivity : AppCompatActivity() {
             intentionInputAmountEditText.setText(intention.amountAsString())
             intentionInputReferenceTitleSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
             intentionInputReferencePriceEditText.setText(BigDecimal.valueOf(intention.referencePrice).toPlainString())
+            intentionInputCalculatedValueTextView.text = calculateValue()
             intentionInputCommentEditText.setText(intention.comment)
 
             registerInputValidation()
+            registerCalculatedValueTextView()
             enableInput(true)
             viewModel.dataReady.removeObservers(this)
         })
+    }
+
+    private fun registerCalculatedValueTextView() {
+        intentionInputAmountEditText.afterTextChanged { intentionInputCalculatedValueTextView.text = calculateValue() }
+        intentionInputReferencePriceEditText.afterTextChanged { intentionInputCalculatedValueTextView.text = calculateValue() }
+    }
+
+    private fun calculateValue(): String {
+        val amount = intentionInputAmountEditText.text.toString().toOptionalDouble()
+        val referencePrice = intentionInputReferencePriceEditText.text.toString().toOptionalDouble()
+        if (!amount.isPresent || !referencePrice.isPresent)
+            return ""
+        return amount.get().times(referencePrice.get()).toString()
     }
 
     private fun observeStatus(viewModel: IntentionInputViewModel) {
@@ -113,11 +128,11 @@ class IntentionInputActivity : AppCompatActivity() {
         })
     }
 
-    fun onStartSave() {
+    private fun onStartSave() {
         enableInput(false)
     }
 
-    fun onEndSave() {
+    private fun onEndSave() {
         exitActivity()
     }
 
