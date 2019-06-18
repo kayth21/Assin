@@ -26,8 +26,8 @@ data class Intention(
             else -> throw IllegalStateException()
         }
         return when (type) {
-            IntentionType.SELL -> (100.div(referencePrice)).times(price)
-            IntentionType.BUY -> (100.div(price)).times(referencePrice)
+            IntentionType.SELL -> (100.div(referencePrice)).times(price!!)
+            IntentionType.BUY -> (100.div(price!!)).times(referencePrice)
         }
     }
 

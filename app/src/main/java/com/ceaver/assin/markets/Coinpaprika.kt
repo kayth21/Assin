@@ -82,7 +82,7 @@ object Coinpaprika {
                 totalSupply = ticker.totalSupply,
                 maxSupply = ticker.maxSupply,
                 betaValue = ticker.betaValue,
-                lastUpdated = if (ticker.lastUpdated == null) Optional.empty() else Optional.of(transformTimestamp(ticker.lastUpdated!!)),
+                lastUpdated = if (ticker.lastUpdated == null) null else transformTimestamp(ticker.lastUpdated!!),
 
                 priceUsd = usdQuotes.price,
                 volume24hUsd = usdQuotes.dailyVolume,
@@ -94,7 +94,7 @@ object Coinpaprika {
                 percentChange30dUsd = usdQuotes.percentChange30d,
                 percentChange1yUsd = usdQuotes.percentChange1y,
                 athPriceUsd = usdQuotes.athPrice,
-                athDateUsd = if (usdQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(usdQuotes.athDate!!)),
+                athDateUsd = if (usdQuotes.athDate == null) null else transformTimestamp(usdQuotes.athDate!!),
                 athPercentUsd = usdQuotes.athPrice,
 
                 priceBtc = btcQuotes.price,
@@ -107,7 +107,7 @@ object Coinpaprika {
                 percentChange30dBtc = btcQuotes.percentChange30d,
                 percentChange1yBtc = btcQuotes.percentChange1y,
                 athPriceBtc = btcQuotes.athPrice,
-                athDateBtc = if (btcQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(btcQuotes.athDate!!)),
+                athDateBtc = if (btcQuotes.athDate == null) null else transformTimestamp(btcQuotes.athDate!!),
                 athPercentBtc = btcQuotes.athPrice,
 
                 priceEth = ethQuotes.price,
@@ -120,7 +120,7 @@ object Coinpaprika {
                 percentChange30dEth = ethQuotes.percentChange30d,
                 percentChange1yEth = ethQuotes.percentChange1y,
                 athPriceEth = ethQuotes.athPrice,
-                athDateEth = if (ethQuotes.athDate == null) Optional.empty() else Optional.of(transformTimestamp(ethQuotes.athDate!!)),
+                athDateEth = if (ethQuotes.athDate == null) null else transformTimestamp(ethQuotes.athDate!!),
                 athPercentEth = ethQuotes.athPrice
         )
     }
