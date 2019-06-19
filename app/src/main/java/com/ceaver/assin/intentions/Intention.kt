@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(tableName = "intention")
@@ -32,7 +33,7 @@ data class Intention(
     }
 
     fun amountAsString(): String {
-        return if (amount == null) "" else amount.toString()
+        return if (amount == null) "" else BigDecimal.valueOf(amount!!).toPlainString()
     }
 
     fun calculateState(): IntentionStatus {
