@@ -4,6 +4,10 @@ import android.arch.persistence.room.*
 
 @Dao
 interface TitleDao {
+
+    @Query("select count(*) from title")
+    fun countTitles(): Int
+
     @Query("select * from title order by rank")
     fun loadAllTitles(): List<Title>
 
