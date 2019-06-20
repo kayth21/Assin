@@ -24,13 +24,13 @@ class SplashScreenActivity : AppCompatActivity() {
 
         createViewModel(Observer { onHasTitle(it!!) })
         modifyView()
-        publishView()
-        bindActions()
+
+
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this)
     }
 
     override fun onStop() {
@@ -57,8 +57,11 @@ class SplashScreenActivity : AppCompatActivity() {
     private fun onHasTitle(hasTitle: Boolean) {
         if (hasTitle)
             startActivity(Intent(this, StartActivity::class.java))
-        else
+        else {
+            publishView()
+            bindActions()
             loadMarketData()
+        }
     }
 
     private fun loadMarketData() {
