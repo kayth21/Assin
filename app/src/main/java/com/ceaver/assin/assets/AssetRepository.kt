@@ -2,10 +2,29 @@ package com.ceaver.assin.assets
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.assin.assets.overview.AssetOverview
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.TradeRepository
 
 object AssetRepository {
+
+    fun loadAssetOverview(): AssetOverview {
+        val allAssets = loadAllAssets()
+        return if (allAssets.isEmpty())
+            AssetOverview()
+        else
+            allAssets.map { AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue); }
+    }
+
+    fun loadAssetOverviewAsync(callbackInMainThread: Boolean, callback: (AssetOverview) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val assetOverview = loadAssetOverview()
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(assetOverview) }
+            else
+                callback.invoke(assetOverview)
+        }
+    }
 
     fun loadAllAssets(): List<Asset> {
         val assets = TradeRepository.loadAllTrades()
@@ -33,5 +52,4 @@ object AssetRepository {
                 callback.invoke(assets)
         }
     }
-
 }

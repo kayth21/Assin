@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertListActivity
+import com.ceaver.assin.assets.AssetFragment
 import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.engine.TradeAdviceEngine
@@ -169,7 +170,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         override fun getItem(position: Int): Fragment? {
             return when (position) {
                 0 -> MarketFragment()
-                1 -> AssetListFragment()
+                1 -> AssetFragment()
                 2 -> IntentionListFragment()
                 3 -> TradeListFragment()
                 else -> null

@@ -14,10 +14,10 @@
         android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/marketOverviewFragmentMarketCapUsdLabel"
+            android:id="@+id/assetOverviewFragmentTotalBtcLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crypto Market Cap:"
+            android:text="Total Assets (BTC):"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -25,35 +25,35 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/marketOverviewFragmentMarketCapUsdValue"
+            android:id="@+id/assetOverviewFragmentTotalBtcValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@id/marketOverviewFragmentMarketCapUsdLabel"
-            app:layout_constraintTop_toTopOf="@id/marketOverviewFragmentMarketCapUsdLabel" />
+            app:layout_constraintStart_toEndOf="@id/assetOverviewFragmentTotalBtcLabel"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/marketOverviewFragmentBtcDominanceLabel"
+            android:id="@+id/assetOverviewFragmentTotalUsdLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="3dp"
-            android:text="Bitcoin Dominance:"
+            android:text="Total Assets (USD):"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/marketOverviewFragmentBtcDominanceValue"
-            app:layout_constraintTop_toTopOf="@id/marketOverviewFragmentMarketCapUsdLabel" />
+            app:layout_constraintEnd_toStartOf="@+id/assetOverviewFragmentTotalUsdValue"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/marketOverviewFragmentBtcDominanceValue"
+            android:id="@+id/assetOverviewFragmentTotalUsdValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/marketOverviewFragmentBtcDominanceLabel" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

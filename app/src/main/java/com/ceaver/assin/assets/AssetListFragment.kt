@@ -90,8 +90,8 @@ class AssetListFragment : Fragment() {
                     val intent = Intent(activity!!.application, TradeInputActivity::class.java);
                     intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_SYMBOL, selectedAsset.symbol)
                     intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, when (item.itemId) {
-                        0 -> TradeType.DEPOSIT.toString()
-                        1 -> TradeType.WITHDRAW.toString()
+                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> TradeType.DEPOSIT.toString()
+                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> TradeType.WITHDRAW.toString()
                         else -> throw IllegalStateException()
                     })
                     startActivity(intent)
