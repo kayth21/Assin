@@ -20,7 +20,6 @@ import androidx.work.*
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetFragment
 import com.ceaver.assin.backup.BackupActivity
-import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
@@ -33,11 +32,6 @@ import kotlinx.android.synthetic.main.app_bar_start.*
 import java.util.concurrent.TimeUnit
 
 class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    init {
-        TradeAdviceEngine.wakeup()
-        TestdataProvider.cleanDatabaseAndInsertSomeDataAfterwards() // TODO Replace with EventBus.getDefault().post(EngineEvents.Run())
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

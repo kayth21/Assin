@@ -21,7 +21,6 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
         val CONTEXT_MENU_DEPOSIT_ITEM_ID = Random.nextInt()
         val CONTEXT_MENU_WITHDRAW_ITEM_ID = Random.nextInt()
         val CONTEXT_MENU_INTENTION_ITEM_ID = Random.nextInt()
-
     }
 
     var assets: List<Asset> = ArrayList()
