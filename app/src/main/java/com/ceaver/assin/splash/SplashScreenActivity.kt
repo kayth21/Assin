@@ -20,14 +20,20 @@ class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         modifyView()
     }
 
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
-        isInitialized(SystemRepository.isInitialized())
+
+        if (SystemRepository.isInitialized())
+            startActivity(Intent(this, StartActivity::class.java))
+        else {
+            publishView()
+            bindActions()
+            loadMarketData()
+        }
     }
 
     override fun onStop() {
@@ -45,16 +51,6 @@ class SplashScreenActivity : AppCompatActivity() {
 
     private fun bindActions() {
         splashScreenActivityRetryButton.setOnClickListener { splashScreenActivityRetryButton.visibility = INVISIBLE; loadMarketData() }
-    }
-
-    private fun isInitialized(isInitialized: Boolean) {
-        if (isInitialized)
-            startActivity(Intent(this, StartActivity::class.java))
-        else {
-            publishView()
-            bindActions()
-            loadMarketData()
-        }
     }
 
     private fun loadMarketData() {
