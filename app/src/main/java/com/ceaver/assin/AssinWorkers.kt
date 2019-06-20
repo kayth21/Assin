@@ -9,6 +9,7 @@ import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
+import com.ceaver.assin.markets.MarketOverviewUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.trades.TradeRepository
@@ -23,7 +24,7 @@ object AssinWorkers {
         val identifier = UUID.randomUUID();
         WorkManager.getInstance()
                 .beginWith(notifyCompleteStart(identifier))
-                .then(updateAllTitles())
+                .then(listOf(updateAllTitles(), updateMarketOverview()))
                 .then(listOf(checkAlerts(), checkIntentions()))
                 .then(notifyCompleteEnd(identifier))
                 .enqueue()
@@ -71,6 +72,10 @@ object AssinWorkers {
 
     private fun updateAllTitles(): OneTimeWorkRequest {
         return OneTimeWorkRequestBuilder<MarketCompleteUpdateWorker>().build()
+    }
+
+    private fun updateMarketOverview(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<MarketOverviewUpdateWorker>().build()
     }
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {

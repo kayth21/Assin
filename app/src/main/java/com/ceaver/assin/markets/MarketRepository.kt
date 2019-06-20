@@ -3,6 +3,10 @@ package com.ceaver.assin.markets
 import java.util.*
 
 object MarketRepository {
+    fun loadMarketOverview(): MarketOverview {
+        return Coinpaprika.loadGlobalStats()
+    }
+
     fun loadAllTitles(): Set<Title> {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
         val allLocalTitles = TitleRepository.loadAllTitles()

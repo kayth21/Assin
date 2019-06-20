@@ -4,6 +4,7 @@ import com.ceaver.assin.MyApplication
 import com.ceaver.assin.assets.AssetCategory
 import com.coinpaprika.apiclient.api.CoinpaprikaApi
 import com.coinpaprika.apiclient.entity.FiatEntity
+import com.coinpaprika.apiclient.entity.GlobalStatsEntity
 import com.coinpaprika.apiclient.entity.TickerEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -11,6 +12,34 @@ import java.time.ZonedDateTime
 import java.util.*
 
 object Coinpaprika {
+
+    fun loadGlobalStats(): MarketOverview {
+        lateinit var marketOverview: MarketOverview
+        CoinpaprikaApi(MyApplication.appContext!!)
+                .global()
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .blockingSubscribe(
+                        { marketOverview = transformGlobalStats(it!!) },
+                        { error -> error.printStackTrace() }) // TODO
+        return marketOverview
+    }
+
+    private fun transformGlobalStats(globalStatsEntity: GlobalStatsEntity): MarketOverview {
+        return MarketOverview(
+                marketCapUsd = globalStatsEntity.marketCapUsd,
+                dailyMarketCapChange = globalStatsEntity.dailyMarketCapChange,
+                marketCapAthValue = globalStatsEntity.marketCapAthValue,
+                marketCapAthDate = globalStatsEntity.marketCapAthDate,
+                dailyVolumeUsd = globalStatsEntity.dailyVolumeUsd,
+                dailyVolumeChange = globalStatsEntity.dailyVolumeChange,
+                volumeAthValue = globalStatsEntity.volumeAthValue,
+                volumeAthDate = globalStatsEntity.volumeAthDate,
+                btcDominancePercentage = globalStatsEntity.btcDominancePercentage,
+                cryptocurrenciesAmount = globalStatsEntity.cryptocurrenciesAmount,
+                lastUpdated = globalStatsEntity.lastUpdated
+        )
+    }
 
     fun load(id: String): Optional<Title> {
         var titleOptional: Optional<Title> = Optional.empty()

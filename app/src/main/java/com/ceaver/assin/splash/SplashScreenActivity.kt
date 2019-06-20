@@ -24,8 +24,6 @@ class SplashScreenActivity : AppCompatActivity() {
 
         createViewModel(Observer { onHasTitle(it!!) })
         modifyView()
-
-
     }
 
     override fun onStart() {

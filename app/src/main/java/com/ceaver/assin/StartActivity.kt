@@ -24,7 +24,7 @@ import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.markets.MarketListFragment
+import com.ceaver.assin.markets.MarketFragment
 import com.ceaver.assin.trades.TradeListFragment
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
@@ -168,7 +168,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         override fun getItem(position: Int): Fragment? {
             return when (position) {
-                0 -> MarketListFragment()
+                0 -> MarketFragment()
                 1 -> AssetListFragment()
                 2 -> IntentionListFragment()
                 3 -> TradeListFragment()
