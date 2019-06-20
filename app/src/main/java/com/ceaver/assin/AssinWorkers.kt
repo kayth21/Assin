@@ -12,6 +12,7 @@ import com.ceaver.assin.markets.MarketCompleteUpdateWorker
 import com.ceaver.assin.markets.MarketOverviewUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.system.SystemRepository
 import com.ceaver.assin.trades.TradeRepository
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
@@ -109,6 +110,7 @@ object AssinWorkers {
 
     class EndCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
+            SystemRepository.setInitialized(true)
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)

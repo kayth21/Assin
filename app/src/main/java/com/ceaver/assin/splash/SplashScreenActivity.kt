@@ -1,7 +1,5 @@
 package com.ceaver.assin.splash
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +9,7 @@ import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
+import com.ceaver.assin.system.SystemRepository
 import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.splash_screen_activity.*
 import org.greenrobot.eventbus.EventBus
@@ -22,22 +21,18 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createViewModel(Observer { onHasTitle(it!!) })
         modifyView()
     }
 
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        isInitialized(SystemRepository.isInitialized())
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
-    }
-
-    private fun createViewModel(hasTitleObserver: Observer<Boolean>): SplashScreenViewModel {
-        return ViewModelProviders.of(this).get(SplashScreenViewModel::class.java).init(this, hasTitleObserver)
     }
 
     private fun modifyView() {
@@ -52,8 +47,8 @@ class SplashScreenActivity : AppCompatActivity() {
         splashScreenActivityRetryButton.setOnClickListener { splashScreenActivityRetryButton.visibility = INVISIBLE; loadMarketData() }
     }
 
-    private fun onHasTitle(hasTitle: Boolean) {
-        if (hasTitle)
+    private fun isInitialized(isInitialized: Boolean) {
+        if (isInitialized)
             startActivity(Intent(this, StartActivity::class.java))
         else {
             publishView()

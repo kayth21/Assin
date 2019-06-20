@@ -9,20 +9,6 @@ import java.util.*
 
 object TitleRepository {
 
-    fun hasTitles() : Boolean{
-        return getTitleDao().countTitles() > 0
-    }
-
-    fun hasTitlesAsync(callbackInMainThread: Boolean, callback: (Boolean) -> Unit) {
-        BackgroundThreadExecutor.execute {
-            val hasTitles = hasTitles()
-            if (callbackInMainThread)
-                Handler(Looper.getMainLooper()).post { callback.invoke(hasTitles) }
-            else
-                callback.invoke(hasTitles)
-        }
-    }
-
     fun updateAll(allTitles: Set<Title>) {
         getTitleDao().updateTitles(allTitles)
     }
