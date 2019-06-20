@@ -1,4 +1,4 @@
-package com.ceaver.assin.markets
+package com.ceaver.assin.markets.overview
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders

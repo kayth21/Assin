@@ -1,4 +1,4 @@
-package com.ceaver.assin.markets
+package com.ceaver.assin.markets.list
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
+import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus

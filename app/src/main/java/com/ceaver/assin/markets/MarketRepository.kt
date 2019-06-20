@@ -1,5 +1,6 @@
 package com.ceaver.assin.markets
 
+import com.ceaver.assin.markets.overview.MarketOverview
 import java.util.*
 
 object MarketRepository {

@@ -1,4 +1,4 @@
-package com.ceaver.assin.markets
+package com.ceaver.assin.markets.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.markets.Title
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
 

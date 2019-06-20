@@ -2,6 +2,7 @@ package com.ceaver.assin.markets
 
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.assets.AssetCategory
+import com.ceaver.assin.markets.overview.MarketOverview
 import com.coinpaprika.apiclient.api.CoinpaprikaApi
 import com.coinpaprika.apiclient.entity.FiatEntity
 import com.coinpaprika.apiclient.entity.GlobalStatsEntity
