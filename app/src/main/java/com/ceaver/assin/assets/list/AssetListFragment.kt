@@ -1,4 +1,4 @@
-package com.ceaver.assin.assets
+package com.ceaver.assin.assets.list
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
+import com.ceaver.assin.assets.Asset
+import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.intentions.IntentionInputActivity
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.TradeInputActivity

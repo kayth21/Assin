@@ -1,4 +1,4 @@
-package com.ceaver.assin.assets
+package com.ceaver.assin.assets.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
+import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
 import kotlin.random.Random

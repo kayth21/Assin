@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.ceaver.assin.R
+import com.ceaver.assin.assets.list.AssetListFragment
 import com.ceaver.assin.assets.overview.AssetOverviewFragment
 
 class AssetFragment : Fragment() {

@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetFragment
-import com.ceaver.assin.assets.AssetListFragment
 import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.engine.TradeAdviceEngine
 import com.ceaver.assin.intentions.IntentionListFragment
