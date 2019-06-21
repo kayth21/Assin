@@ -2,9 +2,9 @@ package com.ceaver.assin.util
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.widget.DatePicker
 import java.time.LocalDate
 import java.util.*
@@ -23,17 +23,17 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
-        return DatePickerDialog(activity, this, year, month, day)
+        return DatePickerDialog(this.context!!, this, year, month, day)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val date = LocalDate.of(year, month+1, dayOfMonth)
-        callback!!.onDatePickerFragmentDateSelected(tag, date)
+        callback!!.onDatePickerFragmentDateSelected(tag!!, date)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        callback = context as DatePickerFragementCallback
+//        callback = context as DatePickerFragementCallback
     }
 
     override fun onDetach() {

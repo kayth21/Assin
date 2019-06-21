@@ -36,4 +36,10 @@ data class Trade(
             TradeType.WITHDRAW -> setOf(sellTitle!!)
         }
     }
+
+    companion object {
+        val TRADE_ID = "com.ceaver.assin.trades.Trades.tradeId"
+        val TRADE_TYPE = "com.ceaver.assin.trades.Trades.tradeType"
+        val SYMBOL = "com.ceaver.assin.trades.Trades.symbol"
+    }
 }

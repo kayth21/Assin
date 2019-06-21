@@ -1,4 +1,4 @@
-package com.ceaver.assin.trades
+package com.ceaver.assin.trades.input
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
@@ -8,10 +8,12 @@ import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.threading.BackgroundThreadExecutor
+import com.ceaver.assin.trades.Trade
+import com.ceaver.assin.trades.TradeRepository
+import com.ceaver.assin.trades.TradeType
 import java.time.LocalDate
-import java.util.*
 
-class TradeViewModel : ViewModel() {
+class TradeInputViewModel : ViewModel() {
 
     val trade = MutableLiveData<Trade>()
     val symbols = MutableLiveData<List<Title>>()
@@ -22,14 +24,13 @@ class TradeViewModel : ViewModel() {
         TradeRepository.loadTradeAsync(tradeId, false) { trade.postValue(it) }
     }
 
-
-    fun initTrade(tradeId: Optional<Long>, symbol: Optional<String>, lookupTradeType: TradeType): TradeViewModel {
+    fun initTrade(tradeId: Long?, symbol: String?, lookupTradeType: TradeType): TradeInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         when {
-            tradeId.isPresent -> lookupTrade(tradeId.get())
-            symbol.isPresent -> when (lookupTradeType) {
-                TradeType.DEPOSIT -> BackgroundThreadExecutor.execute { trade.postValue(Trade(buyTitle = TitleRepository.loadTitleBySymbol(symbol.get()))) }
-                TradeType.WITHDRAW -> BackgroundThreadExecutor.execute { trade.postValue(Trade(sellTitle = TitleRepository.loadTitleBySymbol(symbol.get()))) }
+            tradeId != null -> lookupTrade(tradeId)
+            symbol != null -> when (lookupTradeType) {
+                TradeType.DEPOSIT -> BackgroundThreadExecutor.execute { trade.postValue(Trade(buyTitle = TitleRepository.loadTitleBySymbol(symbol))) }
+                TradeType.WITHDRAW -> BackgroundThreadExecutor.execute { trade.postValue(Trade(sellTitle = TitleRepository.loadTitleBySymbol(symbol))) }
                 else -> throw IllegalStateException()
             }
             else -> trade.postValue(Trade())

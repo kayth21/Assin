@@ -1,6 +1,5 @@
 package com.ceaver.assin.trades
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -9,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.ceaver.assin.R
+import com.ceaver.assin.trades.input.TradeInputFragment
 import kotlinx.android.synthetic.main.fragment_trade_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -21,7 +20,7 @@ class TradeListFragment : Fragment() {
     private val tradeListAdapter = TradeListAdapter(OnListItemClickListener())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_trade_list, container, false)
+        return inflater.inflate(com.ceaver.assin.R.layout.fragment_trade_list, container, false)
     }
 
     override fun onStart() {
@@ -30,9 +29,11 @@ class TradeListFragment : Fragment() {
         tradeList.adapter = tradeListAdapter
         tradeList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
-            val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, TradeType.TRADE.toString())
-            startActivity(intent)
+            var arguments = Bundle();
+            arguments.putString(Trade.TRADE_TYPE, TradeType.TRADE.name)
+            val tradeInputFragment = TradeInputFragment()
+            tradeInputFragment.arguments = arguments
+            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
         loadAllTrades()
         swipeRefreshLayout.setOnRefreshListener { loadAllTrades() }
@@ -56,6 +57,11 @@ class TradeListFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.DeleteAll) {
+        loadAllTrades()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Delete) {
         loadAllTrades()
     }
@@ -76,10 +82,12 @@ class TradeListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(trade: Trade) {
-            val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, trade.getTradeType().toString())
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_ID, trade.id)
-            startActivity(intent)
+            var arguments = Bundle();
+            arguments.putLong(Trade.TRADE_ID, trade.id)
+            arguments.putString(Trade.TRADE_TYPE, trade.getTradeType().name)
+            val tradeInputFragment = TradeInputFragment()
+            tradeInputFragment.arguments = arguments
+            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
     }
 

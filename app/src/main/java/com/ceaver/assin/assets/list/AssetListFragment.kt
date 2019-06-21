@@ -16,8 +16,10 @@ import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.intentions.IntentionInputActivity
 import com.ceaver.assin.threading.BackgroundThreadExecutor
-import com.ceaver.assin.trades.TradeInputActivity
+import com.ceaver.assin.trades.Trade
+import com.ceaver.assin.trades.TradeEvents
 import com.ceaver.assin.trades.TradeType
+import com.ceaver.assin.trades.input.TradeInputFragment
 import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.fragment_asset_list.*
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
@@ -40,9 +42,11 @@ class AssetListFragment : Fragment() {
         assetList.adapter = assetListAdapter
         assetList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
-            val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-            intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, TradeType.DEPOSIT.toString())
-            startActivity(intent)
+            var arguments = Bundle();
+            arguments.putString(Trade.TRADE_TYPE, TradeType.DEPOSIT.name)
+            val tradeInputFragment = TradeInputFragment()
+            tradeInputFragment.arguments = arguments
+            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -61,6 +65,26 @@ class AssetListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        refreshAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.DeleteAll) {
+        refreshAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.Delete) {
+        refreshAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.Insert) {
+        refreshAllAssets()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: TradeEvents.Update) {
         refreshAllAssets()
     }
 
@@ -89,14 +113,16 @@ class AssetListFragment : Fragment() {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
-                    val intent = Intent(activity!!.application, TradeInputActivity::class.java);
-                    intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_SYMBOL, selectedAsset.symbol)
-                    intent.putExtra(TradeInputActivity.INTENT_EXTRA_TRADE_TYPE, when (item.itemId) {
-                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> TradeType.DEPOSIT.toString()
-                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> TradeType.WITHDRAW.toString()
+                    var arguments = Bundle();
+                    arguments.putString(Trade.SYMBOL, selectedAsset.symbol)
+                    arguments.putString(Trade.TRADE_TYPE, when (item.itemId) {
+                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> TradeType.DEPOSIT.name
+                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> TradeType.WITHDRAW.name
                         else -> throw IllegalStateException()
                     })
-                    startActivity(intent)
+                    val tradeInputFragment = TradeInputFragment()
+                    tradeInputFragment.arguments = arguments
+                    tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
