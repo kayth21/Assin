@@ -1,6 +1,5 @@
 package com.ceaver.assin.assets.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,7 +13,7 @@ import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
-import com.ceaver.assin.intentions.IntentionInputActivity
+import com.ceaver.assin.intentions.input.IntentionInputFragment
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeEvents
@@ -125,10 +124,12 @@ class AssetListFragment : Fragment() {
                     tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
-                    val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
-                    intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_SYMBOL, selectedAsset.symbol)
-                    intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_AMOUNT, selectedAsset.amount)
-                    startActivity(intent)
+                    val arguments = Bundle();
+                    arguments.putString(IntentionInputFragment.INTENTION_SYMBOL, selectedAsset.symbol)
+                    arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
+                    val intentionInputFragment = IntentionInputFragment()
+                    intentionInputFragment.arguments = arguments
+                    intentionInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 else -> throw IllegalStateException()
             }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+    app:layout_constraintStart_toStartOf="@+id/guideline2">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- TITLE -->
+
+    <ImageView
+        android:id="@+id/intentionInputFragmentIntentionImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/intention"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/intentionInputFragmentIntentionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:text="Intention"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/intentionInputFragmentIntentionImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/intentionInputFragmentTypeRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentIntentionImageView">
+
+        <RadioButton
+            android:id="@+id/intentionInputFragmentBuyRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buy" />
+
+        <RadioButton
+            android:id="@+id/intentionInputFragmentSellRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sell" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/intentionInputFragmentTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="Amount (optional)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentTypeRadioGroup" />
+
+    <EditText
+        android:id="@+id/intentionInputFragmentTitleAmountTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="numberDecimal"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentTitleLabel" />
+
+    <Spinner
+        android:id="@+id/intentionInputFragmentTitleSymbolSpinner"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentTitleLabel" />
+
+    <!-- REFERENCE ASSET -->
+
+    <TextView
+        android:id="@+id/intentionInputFragmentReferenceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="Price apiece"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentTitleAmountTextView" />
+
+    <EditText
+        android:id="@+id/intentionInputFragmentReferencePriceTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:enabled="false"
+        android:textSize="12sp"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentReferenceLabel" />
+
+    <Spinner
+        android:id="@+id/intentionInputFragmentReferenceSymbolSpinner"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentReferenceLabel" />
+
+    <!-- COMMENT -->
+
+    <TextView
+        android:id="@+id/intentionInputFragmentCommentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Comment"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentReferencePriceTextView" />
+
+    <EditText
+        android:id="@+id/intentionInputFragmentCommentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:enabled="false"
+        android:textSize="12sp"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentCommentLabel" />
+
+    <!-- SAVE BUTTON -->
+
+    <Button
+        android:id="@+id/intentionInputFragmentSaveButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:textStyle="bold"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intentionInputFragmentCommentTextView" />
+    
+</android.support.constraint.ConstraintLayout>

@@ -81,10 +81,10 @@ class TradeListFragment : Fragment() {
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(trade: Trade) {
-            var arguments = Bundle();
-            arguments.putLong(Trade.TRADE_ID, trade.id)
-            arguments.putString(Trade.TRADE_TYPE, trade.getTradeType().name)
+        override fun onItemClick(item: Trade) {
+            val arguments = Bundle();
+            arguments.putLong(Trade.TRADE_ID, item.id)
+            arguments.putString(Trade.TRADE_TYPE, item.getTradeType().name)
             val tradeInputFragment = TradeInputFragment()
             tradeInputFragment.arguments = arguments
             tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)

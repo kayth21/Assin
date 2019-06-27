@@ -1,6 +1,5 @@
 package com.ceaver.assin.intentions
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
+import com.ceaver.assin.intentions.input.IntentionInputFragment
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
@@ -35,7 +35,11 @@ class IntentionListFragment : Fragment() {
         EventBus.getDefault().register(this);
         intentionListFragmentIntentionList.adapter = intentionListAdapter
         intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        intentionListFragmentCreateIntentionButton.setOnClickListener { startActivity(Intent(activity!!.application, IntentionInputActivity::class.java)) }
+        intentionListFragmentCreateIntentionButton.setOnClickListener {
+            val intentionInputFragment = IntentionInputFragment()
+            intentionInputFragment.arguments = Bundle()
+            intentionInputFragment.show(fragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
+        }
         loadAllIntentions()
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -62,6 +66,11 @@ class IntentionListFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        loadAllIntentions()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: IntentionEvents.DeleteAll) {
         loadAllIntentions()
     }
 
@@ -95,10 +104,12 @@ class IntentionListFragment : Fragment() {
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(intention: Intention) {
-            val intent = Intent(activity!!.application, IntentionInputActivity::class.java);
-            intent.putExtra(IntentionInputActivity.INTENT_EXTRA_INTENTION_ID, intention.id)
-            startActivity(intent)
+        override fun onItemClick(item: Intention) {
+            val arguments = Bundle();
+            arguments.putLong(IntentionInputFragment.INTENTION_ID, item.id)
+            val intentionInputFragment = IntentionInputFragment()
+            intentionInputFragment.arguments = arguments
+            intentionInputFragment.show(fragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
         }
     }
 

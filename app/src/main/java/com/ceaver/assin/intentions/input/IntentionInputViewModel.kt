@@ -1,30 +1,31 @@
-package com.ceaver.assin.intentions
+package com.ceaver.assin.intentions.input
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
+import com.ceaver.assin.intentions.Intention
+import com.ceaver.assin.intentions.IntentionRepository
+import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.threading.BackgroundThreadExecutor
-import java.util.*
 
 class IntentionInputViewModel : ViewModel() {
-
     val intention = MutableLiveData<Intention>()
     val symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(intention, symbols)
     val status = SingleLiveEvent<IntentionInputStatus>()
 
 
-    fun init(intentionId: Optional<Long>, symbol: Optional<String>, amount: Double?): IntentionInputViewModel {
+    fun init(intentionId: Long?, symbol: String?, amount: Double?): IntentionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
-        if (intentionId.isPresent)
-            IntentionRepository.loadIntentionAsync(intentionId.get(), false) { intention.postValue(it) }
+        if (intentionId != null)
+            IntentionRepository.loadIntentionAsync(intentionId, false) { intention.postValue(it) }
         else
             BackgroundThreadExecutor.execute {
-                val symbolTitle = TitleRepository.loadTitleBySymbol(symbol.orElse("BTC"))
+                val symbolTitle = TitleRepository.loadTitleBySymbol(symbol ?: "BTC")
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
                 intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!! else symbolTitle.priceBtc!!))
             }
