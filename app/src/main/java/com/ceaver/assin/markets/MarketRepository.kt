@@ -20,8 +20,9 @@ object MarketRepository {
     fun loadTitle(id: String): Optional<Title> {
         val remoteTitle = Coinpaprika.load(id)
         val localTitle = TitleRepository.loadTitle(id)
-        if (!remoteTitle.isPresent)
-            return remoteTitle
-        return Optional.of(remoteTitle.get().copy(active = localTitle.active ?: -75)) // TODO! :)
+        return if (remoteTitle.isPresent)
+            Optional.of(remoteTitle.get().copy(active = localTitle?.active ?: -75))
+        else
+            remoteTitle
     }
 }

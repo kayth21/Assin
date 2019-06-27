@@ -63,6 +63,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         startActivity(Intent(this, StartActivity::class.java))

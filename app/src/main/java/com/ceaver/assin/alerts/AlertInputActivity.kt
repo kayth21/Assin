@@ -51,14 +51,14 @@ class AlertInputActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
-        viewModel.symbol.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
+        viewModel.symbol.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
     }
 
     private fun bindReference(viewModel: AlertViewModel) {
         val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
-        viewModel.reference.observe(this, Observer { adapter.addAll(it); updateSpinnerFields(viewModel) })
+        viewModel.reference.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
     }
 
     private fun bindAlert(viewModel: AlertViewModel) {

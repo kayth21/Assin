@@ -44,6 +44,7 @@ class MarketOverviewFragment : Fragment() {
         marketOverviewFragmentBtcDominanceValue.text = marketOverview.btcDominancePercentage.toString() + "%"
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         ViewModelProviders.of(this).get(MarketOverviewViewModel::class.java).loadMarketOverview()

@@ -43,11 +43,13 @@ class LogListActivity : AppCompatActivity() {
         logSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: LogEvents.Insert) {
         loadAllLogs()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: LogEvents.Update) {
         loadAllLogs()

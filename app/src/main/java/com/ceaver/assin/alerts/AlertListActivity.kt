@@ -47,16 +47,19 @@ class AlertListActivity : AppCompatActivity() {
         alertSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AlertEvents.Delete) {
         loadAllAlerts()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AlertEvents.Insert) {
         loadAllAlerts()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AlertEvents.Update) {
         loadAllAlerts()

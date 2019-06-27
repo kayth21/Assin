@@ -56,21 +56,25 @@ class TradeListFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener(null)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.DeleteAll) {
         loadAllTrades()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Delete) {
         loadAllTrades()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Insert) {
         loadAllTrades()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Update) {
         loadAllTrades()

@@ -223,6 +223,7 @@ class BackupActivity : AppCompatActivity() {
         importButton.isEnabled = enable
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: BackupEvents.BackupOperationDone) {
         enableButtons()

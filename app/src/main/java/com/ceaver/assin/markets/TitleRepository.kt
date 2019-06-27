@@ -25,7 +25,7 @@ object TitleRepository {
         getTitleDao().insertTitle(title)
     }
 
-    fun loadTitle(id: String): Title {
+    fun loadTitle(id: String): Title? {
         return getTitleDao().loadTitle(id)
     }
 

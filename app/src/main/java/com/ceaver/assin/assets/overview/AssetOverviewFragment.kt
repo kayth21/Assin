@@ -51,31 +51,37 @@ class AssetOverviewFragment : Fragment() {
         assetOverviewFragmentTotalUsdValue.text = "${assetOverview.usdValue.format("USD")} USD"
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         loadAssetOverview()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
         loadAssetOverview()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Insert) {
         loadAssetOverview()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Update) {
         loadAssetOverview()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.Delete) {
         loadAssetOverview()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TradeEvents.DeleteAll) {
         loadAssetOverview()

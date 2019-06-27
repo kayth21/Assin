@@ -39,7 +39,7 @@ interface TitleDao {
     fun deleteAllTitles()
 
     @Query("select * from title where id = :id")
-    fun loadTitle(id: String): Title
+    fun loadTitle(id: String): Title?
 
     @Query("select * from title where symbol = :symbol")
     fun loadTitleBySymbol(symbol: String): Title

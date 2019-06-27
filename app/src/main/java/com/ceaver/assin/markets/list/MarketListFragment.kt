@@ -52,12 +52,14 @@ class MarketListFragment : Fragment() {
         marketListAdapter.titles = titles; marketListAdapter.notifyDataSetChanged(); marketSwipeRefreshLayout.isRefreshing = false
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         loadActiveCryptoTitles()
         Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
         loadActiveCryptoTitles()

@@ -132,12 +132,12 @@ class TradeInputFragment() : DialogFragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         tradeInputFragmentBuySymbolSpinner.adapter = adapter
         tradeInputFragmentSellSymbolSpinner.adapter = adapter
-        viewModel.symbols.observe(this, Observer { adapter.addAll(it) })
+        viewModel.symbols.observe(this, Observer { adapter.addAll(it!!) })
     }
 
     private fun observeTrade(viewModel: TradeInputViewModel) {
         viewModel.trade.observe(this, Observer {
-            publishFields(it!!, viewModel);
+            publishFields(it!!);
         })
     }
 
@@ -159,7 +159,7 @@ class TradeInputFragment() : DialogFragment() {
         }
     }
 
-    private fun publishFields(trade: Trade, viewModel: TradeInputViewModel) {
+    private fun publishFields(trade: Trade) {
         tradeInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(trade.tradeDate))
         tradeInputFragmentCommentTextView.setText(trade.comment.orEmpty())
         when (lookupTradeType()) {
