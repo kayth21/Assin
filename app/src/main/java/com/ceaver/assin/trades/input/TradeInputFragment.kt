@@ -91,8 +91,8 @@ class TradeInputFragment() : DialogFragment() {
         tradeInputFragmentTradeDateTextView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 val tradeDate = CalendarHelper.convertDate(tradeInputFragmentTradeDateTextView.text.toString())
-                val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> tradeInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(LocalDate.of(year, monthOfYear, dayOfMonth))); tradeInputFragmentTradeDateTextView.clearFocus() }
-                val datePickerDialog = DatePickerDialog(this@TradeInputFragment.context!!, dateSetListener, tradeDate.year, tradeDate.monthValue, tradeDate.dayOfMonth)
+                val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> tradeInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(LocalDate.of(year, monthOfYear + 1, dayOfMonth))); tradeInputFragmentTradeDateTextView.clearFocus() }
+                val datePickerDialog = DatePickerDialog(this@TradeInputFragment.context!!, dateSetListener, tradeDate.year, tradeDate.monthValue - 1, tradeDate.dayOfMonth)
                 datePickerDialog.show()
             }
         }
