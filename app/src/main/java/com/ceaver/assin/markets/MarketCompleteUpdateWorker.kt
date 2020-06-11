@@ -1,13 +1,14 @@
 package com.ceaver.assin.markets
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
-class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val allRemoteTitles = MarketRepository.loadAllTitles()
         val allLocalTitles = TitleRepository.loadAllTitles()
 

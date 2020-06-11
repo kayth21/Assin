@@ -8,7 +8,7 @@ object MarketRepository {
         return Coinpaprika.loadGlobalStats()
     }
 
-    fun loadAllTitles(): Set<Title> {
+    suspend fun loadAllTitles(): Set<Title> {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
         val allLocalTitles = TitleRepository.loadAllTitles()
         return allRemoteTitles.map { remoteTitle ->
@@ -17,7 +17,7 @@ object MarketRepository {
         }.toSet()
     }
 
-    fun loadTitle(id: String): Optional<Title> {
+    suspend fun loadTitle(id: String): Optional<Title> {
         val remoteTitle = Coinpaprika.load(id)
         val localTitle = TitleRepository.loadTitle(id)
         return if (remoteTitle.isPresent)

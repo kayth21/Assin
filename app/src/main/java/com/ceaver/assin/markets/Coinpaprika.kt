@@ -1,12 +1,12 @@
 package com.ceaver.assin.markets
 
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.markets.overview.MarketOverview
 import com.coinpaprika.apiclient.api.CoinpaprikaApi
 import com.coinpaprika.apiclient.entity.FiatEntity
 import com.coinpaprika.apiclient.entity.GlobalStatsEntity
 import com.coinpaprika.apiclient.entity.TickerEntity
+import com.coinpaprika.apiclient.exception.NotFoundError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.time.ZonedDateTime
@@ -16,7 +16,7 @@ object Coinpaprika {
 
     fun loadGlobalStats(): MarketOverview {
         lateinit var marketOverview: MarketOverview
-        CoinpaprikaApi(MyApplication.appContext!!)
+        CoinpaprikaApi()
                 .global()
                 .unsubscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -42,45 +42,15 @@ object Coinpaprika {
         )
     }
 
-    fun load(id: String): Optional<Title> {
-        var titleOptional: Optional<Title> = Optional.empty()
-        CoinpaprikaApi(MyApplication.appContext!!)
-                .ticker(id)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .blockingSubscribe(
-                        { ticker -> titleOptional = Optional.of(transform(ticker)) },
-                        { error -> error.printStackTrace() }) // TODO
-
-        return titleOptional
+    suspend fun load(id: String): Optional<Title> {
+        // TODO handle other Errors
+        return try { Optional.of(transform(CoinpaprikaApi().ticker(id))) } catch (e: NotFoundError) { Optional.empty<Title>() }
     }
 
-    fun loadAllTitles(): Set<Title> {
+    suspend fun loadAllTitles(): Set<Title> {
         val resultSet = mutableSetOf<Title>()
-
-        CoinpaprikaApi(MyApplication.appContext!!)
-                .fiats()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .blockingSubscribe(
-                        { next ->
-                            for (fiatEntity in next) {
-                                resultSet.add(transform(fiatEntity))
-                            }
-                        },
-                        { error -> error.printStackTrace() }) // TODO
-
-        CoinpaprikaApi(MyApplication.appContext!!)
-                .tickers()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .blockingSubscribe(
-                        { next ->
-                            for (ticker in next) {
-                                resultSet.add(transform(ticker))
-                            }
-                        },
-                        { error -> error.printStackTrace() }) // TODO
+        CoinpaprikaApi().fiats().forEach { resultSet.add(transform(it)) }
+        CoinpaprikaApi().tickers().forEach { resultSet.add(transform(it)) }
         return resultSet
     }
 

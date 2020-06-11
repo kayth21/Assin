@@ -1,13 +1,14 @@
 package com.ceaver.assin.markets
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
-class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val symbolName = inputData.getString("Symbol")!!
         val index = inputData.getInt("sleep", 0)
         val localTitle = TitleRepository.loadTitleBySymbol(symbolName)
