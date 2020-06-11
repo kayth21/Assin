@@ -114,6 +114,7 @@ class IntentionInputFragment : DialogFragment() {
             when (it) {
                 IntentionInputViewModel.IntentionInputStatus.START_SAVE -> onStartSave()
                 IntentionInputViewModel.IntentionInputStatus.END_SAVE -> onEndSave()
+                null -> throw IllegalStateException()
             }
         })
     }

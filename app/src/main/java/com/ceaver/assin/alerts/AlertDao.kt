@@ -7,10 +7,10 @@ interface AlertDao {
     @Query("select * from alert")
     fun loadAllAlerts(): List<Alert>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAlert(alert: Alert)
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAlerts(alerts: List<Alert>)
 
     @Update

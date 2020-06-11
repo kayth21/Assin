@@ -8,7 +8,7 @@ interface LogDao {
     @Query("select * from log")
     fun loadAllLogs(): List<Log>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertLog(log: Log)
 
     @Update

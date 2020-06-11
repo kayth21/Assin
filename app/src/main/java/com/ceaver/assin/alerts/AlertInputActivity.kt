@@ -47,7 +47,7 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindActions(viewModel: AlertViewModel) {
-        alertSaveButton.setOnClickListener { onSaveClick() }
+        alertSaveButton.setOnClickListener { onSaveClick(viewModel) }
     }
 
     private fun bindSymbol(viewModel: AlertViewModel) {
@@ -111,16 +111,17 @@ class AlertInputActivity : AppCompatActivity() {
             when (it) {
                 AlertViewModel.AlertInputStatus.START_SAVE -> onStartSave()
                 AlertViewModel.AlertInputStatus.END_SAVE -> onEndSave()
+                null -> throw IllegalStateException()
             }
         })
     }
 
-    private fun onSaveClick() {
+    private fun onSaveClick(viewModel: AlertViewModel) {
         val symbol = alertSymbolText.selectedItem as Title
         val reference = alertReferenceText.selectedItem as Title
         val startPrice = alertSourceEditText.text.toString().toDouble()
         val targetPrice = alertTargetEditText.text.toString().toDouble()
-        lookupViewModel().onSaveClick(symbol, reference, startPrice, targetPrice)
+        viewModel.onSaveClick(symbol, reference, startPrice, targetPrice)
     }
 
     private fun onStartSave() {

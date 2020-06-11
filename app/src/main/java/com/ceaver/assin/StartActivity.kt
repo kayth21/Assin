@@ -16,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetFragment
@@ -53,7 +54,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onStart() {
         super.onStart()
         val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).build()
-        WorkManager.getInstance().enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
     }
 
     class StartWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
@@ -144,7 +145,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
 
-    private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getCount(): Int {
             return 4

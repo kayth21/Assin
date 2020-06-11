@@ -11,10 +11,10 @@ interface TradeDao {
     @Query("select * from trade")
     fun loadAllTrades(): List<Trade>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertTrade(trade: Trade)
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertTrades(trade: List<Trade>)
 
     @Update

@@ -187,6 +187,7 @@ class TradeInputFragment() : DialogFragment() {
             when (it) {
                 TradeInputViewModel.TradeInputStatus.START_SAVE -> onStartSave()
                 TradeInputViewModel.TradeInputStatus.END_SAVE -> onEndSave()
+                null -> throw IllegalStateException()
             }
         })
     }

@@ -39,13 +39,13 @@ class AssetListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this);
         assetList.adapter = assetListAdapter
-        assetList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
             var arguments = Bundle();
             arguments.putString(Trade.TRADE_TYPE, TradeType.DEPOSIT.name)
             val tradeInputFragment = TradeInputFragment()
             tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+            tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -127,7 +127,7 @@ class AssetListFragment : Fragment() {
                     })
                     val tradeInputFragment = TradeInputFragment()
                     tradeInputFragment.arguments = arguments
-                    tradeInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val arguments = Bundle();
@@ -135,7 +135,7 @@ class AssetListFragment : Fragment() {
                     arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
                     val intentionInputFragment = IntentionInputFragment()
                     intentionInputFragment.arguments = arguments
-                    intentionInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    intentionInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 else -> throw IllegalStateException()
             }

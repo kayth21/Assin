@@ -9,10 +9,10 @@ interface IntentionDao {
     @Query("select * from intention where id = :id")
     fun loadIntentionById(id: Long): Intention
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertIntention(intention: Intention)
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertIntentions(intentions: List<Intention>)
 
     @Update

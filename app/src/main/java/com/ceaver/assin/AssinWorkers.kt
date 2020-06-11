@@ -23,7 +23,7 @@ object AssinWorkers {
 
     fun completeUpdate() {
         val identifier = UUID.randomUUID();
-        WorkManager.getInstance()
+        WorkManager.getInstance(MyApplication.appContext!!)
                 .beginWith(notifyCompleteStart(identifier))
                 .then(listOf(updateAllTitles(), updateMarketOverview()))
                 .then(listOf(checkAlerts(), checkIntentions()))
@@ -34,7 +34,7 @@ object AssinWorkers {
 
     fun observedUpdate() {
         val identifier = UUID.randomUUID();
-        WorkManager.getInstance()
+        WorkManager.getInstance(MyApplication.appContext!!)
                 .beginWith(notifyObservedStart(identifier))
                 .then(updateObservedTitles())
                 .then(listOf(checkAlerts(), checkIntentions()))
