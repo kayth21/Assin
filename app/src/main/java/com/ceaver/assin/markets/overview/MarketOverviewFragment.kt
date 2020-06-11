@@ -1,12 +1,12 @@
 package com.ceaver.assin.markets.overview
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.market_overview_fragment.*
@@ -36,7 +36,9 @@ class MarketOverviewFragment : Fragment() {
     }
 
     private fun createViewModel(marketOverviewObserver: Observer<MarketOverview>): MarketOverviewViewModel {
-        return ViewModelProviders.of(this).get(MarketOverviewViewModel::class.java).init(this, marketOverviewObserver)
+        val viewModel by viewModels<MarketOverviewViewModel>()
+        viewModel.init(this, marketOverviewObserver)
+        return viewModel
     }
 
     private fun onMarketOverviewLoaded(marketOverview: MarketOverview) {
@@ -47,6 +49,7 @@ class MarketOverviewFragment : Fragment() {
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        ViewModelProviders.of(this).get(MarketOverviewViewModel::class.java).loadMarketOverview()
+        val viewModel by viewModels<MarketOverviewViewModel>()
+        viewModel.loadMarketOverview()
     }
 }

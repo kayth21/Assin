@@ -1,6 +1,6 @@
 package com.ceaver.assin.database
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.intentions.IntentionStatus

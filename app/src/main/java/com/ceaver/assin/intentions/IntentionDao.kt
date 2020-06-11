@@ -1,6 +1,6 @@
 package com.ceaver.assin.intentions
 
-import android.arch.persistence.room.*
+import androidx.room.*
 @Dao
 interface IntentionDao {
     @Query("select * from intention")

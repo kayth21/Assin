@@ -1,9 +1,9 @@
 package com.ceaver.assin.trades.input
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository

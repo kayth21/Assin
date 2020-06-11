@@ -1,10 +1,10 @@
 package com.ceaver.assin.intentions
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -34,11 +34,11 @@ class IntentionListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this);
         intentionListFragmentIntentionList.adapter = intentionListAdapter
-        intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         intentionListFragmentCreateIntentionButton.setOnClickListener {
             val intentionInputFragment = IntentionInputFragment()
             intentionInputFragment.arguments = Bundle()
-            intentionInputFragment.show(fragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
+            intentionInputFragment.show(parentFragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
         }
         loadAllIntentions()
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener {
@@ -115,12 +115,12 @@ class IntentionListFragment : Fragment() {
             arguments.putLong(IntentionInputFragment.INTENTION_ID, item.id)
             val intentionInputFragment = IntentionInputFragment()
             intentionInputFragment.arguments = arguments
-            intentionInputFragment.show(fragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
+            intentionInputFragment.show(parentFragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        if (item!!.groupId == 2 && item.itemId == 0) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (item.groupId == 2 && item.itemId == 0) {
             val selectedIntention = intentionListAdapter.currentLongClickIntention!!
             IntentionRepository.deleteIntentionAsync(selectedIntention)
         }

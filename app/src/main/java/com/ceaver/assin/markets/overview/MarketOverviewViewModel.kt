@@ -1,7 +1,7 @@
 package com.ceaver.assin.markets.overview
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
 
 class MarketOverviewViewModel : ViewModel() {

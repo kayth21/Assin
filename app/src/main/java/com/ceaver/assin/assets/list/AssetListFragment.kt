@@ -1,10 +1,10 @@
 package com.ceaver.assin.assets.list
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -45,7 +45,7 @@ class AssetListFragment : Fragment() {
             arguments.putString(Trade.TRADE_TYPE, TradeType.DEPOSIT.name)
             val tradeInputFragment = TradeInputFragment()
             tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+            tradeInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -113,12 +113,12 @@ class AssetListFragment : Fragment() {
         assetSwipeRefreshLayout.setOnRefreshListener(null)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        if (item!!.groupId == AssetListAdapter.CONTEXT_MENU_GROUP_ID) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (item.groupId == AssetListAdapter.CONTEXT_MENU_GROUP_ID) {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
-                    var arguments = Bundle();
+                    val arguments = Bundle();
                     arguments.putString(Trade.SYMBOL, selectedAsset.symbol)
                     arguments.putString(Trade.TRADE_TYPE, when (item.itemId) {
                         AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> TradeType.DEPOSIT.name
@@ -127,7 +127,7 @@ class AssetListFragment : Fragment() {
                     })
                     val tradeInputFragment = TradeInputFragment()
                     tradeInputFragment.arguments = arguments
-                    tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    tradeInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val arguments = Bundle();
@@ -135,7 +135,7 @@ class AssetListFragment : Fragment() {
                     arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
                     val intentionInputFragment = IntentionInputFragment()
                     intentionInputFragment.arguments = arguments
-                    intentionInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    intentionInputFragment.show(fragmentManager!!, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
                 }
                 else -> throw IllegalStateException()
             }

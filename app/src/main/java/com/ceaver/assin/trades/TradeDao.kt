@@ -1,6 +1,6 @@
 package com.ceaver.assin.trades
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 interface TradeDao {

@@ -1,12 +1,13 @@
 package com.ceaver.assin.assets.overview
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.format
@@ -39,11 +40,14 @@ class AssetOverviewFragment : Fragment() {
     }
 
     private fun createViewModel(assetOverviewObserver: Observer<AssetOverview>): AssetOverviewViewModel {
-        return ViewModelProviders.of(this).get(AssetOverviewViewModel::class.java).init(this, assetOverviewObserver)
+        val viewModel by viewModels<AssetOverviewViewModel>()
+        viewModel.init(this, assetOverviewObserver)
+        return viewModel
     }
 
     private fun loadAssetOverview() {
-        ViewModelProviders.of(this).get(AssetOverviewViewModel::class.java).loadAssetOverview()
+        val viewModel by viewModels<AssetOverviewViewModel>()
+        viewModel.loadAssetOverview()
     }
 
     private fun onAssetOverviewLoaded(assetOverview: AssetOverview) {

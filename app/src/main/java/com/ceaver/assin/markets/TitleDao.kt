@@ -1,6 +1,6 @@
 package com.ceaver.assin.markets
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 interface TitleDao {

@@ -1,6 +1,6 @@
 package com.ceaver.assin.intentions
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +14,7 @@ import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 
-internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
+internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
 
     var intentionList: List<Intention> = ArrayList()
     var currentLongClickIntention: Intention? = null

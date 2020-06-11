@@ -1,6 +1,6 @@
 package com.ceaver.assin.logging
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import java.util.*
 
 @Dao

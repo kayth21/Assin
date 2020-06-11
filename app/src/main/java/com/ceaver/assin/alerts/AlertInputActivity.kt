@@ -1,11 +1,11 @@
 package com.ceaver.assin.alerts
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.ArrayAdapter
+import androidx.activity.viewModels
 import com.ceaver.assin.R
 import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
@@ -41,7 +41,10 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun lookupAlertId() = intent.getLongExtra(INTENT_EXTRA_ALERT_ID, 0)
 
-    private fun lookupViewModel(): AlertViewModel = ViewModelProviders.of(this).get(AlertViewModel::class.java)
+    private fun lookupViewModel(): AlertViewModel {
+        val viewModel by viewModels<AlertViewModel>()
+        return viewModel
+    }
 
     private fun bindActions(viewModel: AlertViewModel) {
         alertSaveButton.setOnClickListener { onSaveClick() }

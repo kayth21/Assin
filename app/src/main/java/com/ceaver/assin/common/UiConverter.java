@@ -1,6 +1,6 @@
 package com.ceaver.assin.common;
 
-import android.databinding.InverseMethod;
+import androidx.databinding.InverseMethod;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

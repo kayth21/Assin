@@ -1,13 +1,15 @@
 package com.ceaver.assin.intentions.input
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
+import com.ceaver.assin.assets.overview.AssetOverview
+import com.ceaver.assin.assets.overview.AssetOverviewViewModel
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.intentions.IntentionType
@@ -42,10 +44,15 @@ class IntentionInputFragment : DialogFragment() {
         observeDataReady(viewModel)
     }
 
-    private fun lookupIntentionId(): Long? = arguments!!.getLong(INTENTION_ID).takeUnless { it == 0L }
-    private fun lookupSymbol(): String? = arguments!!.getString(INTENTION_SYMBOL)
-    private fun lookupAmount(): Double? = arguments!!.getString(INTENTION_AMOUNT)?.toDouble()
-    private fun lookupViewModel(intentionId: Long?, symbol: String?, amount: Double?): IntentionInputViewModel = ViewModelProviders.of(this).get(IntentionInputViewModel::class.java).init(intentionId, symbol, amount)
+    private fun lookupIntentionId(): Long? = requireArguments().getLong(INTENTION_ID).takeUnless { it == 0L }
+    private fun lookupSymbol(): String? = requireArguments().getString(INTENTION_SYMBOL)
+    private fun lookupAmount(): Double? = requireArguments().getString(INTENTION_AMOUNT)?.toDouble()
+
+    private fun lookupViewModel(intentionId: Long?, symbol: String?, amount: Double?): IntentionInputViewModel {
+        val viewModel by viewModels<IntentionInputViewModel>()
+        viewModel.init(intentionId, symbol, amount)
+        return viewModel
+    }
 
     private fun prepareView() {
         intentionInputFragmentTitleSymbolSpinner.isEnabled = false // not possible in XML

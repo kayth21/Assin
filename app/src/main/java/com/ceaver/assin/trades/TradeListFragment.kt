@@ -1,9 +1,9 @@
 package com.ceaver.assin.trades
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,13 +27,13 @@ class TradeListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this);
         tradeList.adapter = tradeListAdapter
-        tradeList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        tradeList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
-            var arguments = Bundle();
+            val arguments = Bundle();
             arguments.putString(Trade.TRADE_TYPE, TradeType.TRADE.name)
             val tradeInputFragment = TradeInputFragment()
             tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+            tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
         loadAllTrades()
         swipeRefreshLayout.setOnRefreshListener { loadAllTrades() }
@@ -91,12 +91,12 @@ class TradeListFragment : Fragment() {
             arguments.putString(Trade.TRADE_TYPE, item.getTradeType().name)
             val tradeInputFragment = TradeInputFragment()
             tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(fragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+            tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        if (item!!.groupId == 3 && item.itemId == 0) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (item.groupId == 3 && item.itemId == 0) {
             val selectedTrade = tradeListAdapter.currentLongClickTrade!!
             TradeRepository.deleteTradeAsync(selectedTrade)
         }

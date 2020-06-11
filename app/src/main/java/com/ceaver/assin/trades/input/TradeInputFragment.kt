@@ -1,17 +1,18 @@
 package com.ceaver.assin.trades.input
 
 import android.app.DatePickerDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.constraint.ConstraintSet
-import android.support.v4.app.DialogFragment
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.intentions.input.IntentionInputViewModel
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeType
@@ -45,10 +46,15 @@ class TradeInputFragment() : DialogFragment() {
         observeDataReady(viewModel)
     }
 
-    private fun lookupTradeId(): Long? = arguments!!.getLong(Trade.TRADE_ID).takeUnless { it == 0L }
-    private fun lookupSymbol(): String? = arguments!!.getString(Trade.SYMBOL)
-    private fun lookupTradeType(): TradeType = TradeType.valueOf(arguments!!.getString(Trade.TRADE_TYPE)!!)
-    private fun lookupViewModel(tradeId: Long?, symbol: String?, tradeType: TradeType): TradeInputViewModel = ViewModelProviders.of(this).get(TradeInputViewModel::class.java).initTrade(tradeId, symbol, tradeType)
+    private fun lookupTradeId(): Long? = requireArguments().getLong(Trade.TRADE_ID).takeUnless { it == 0L }
+    private fun lookupSymbol(): String? = requireArguments().getString(Trade.SYMBOL)
+    private fun lookupTradeType(): TradeType = TradeType.valueOf(requireArguments().getString(Trade.TRADE_TYPE)!!)
+
+    private fun lookupViewModel(tradeId: Long?, symbol: String?, tradeType: TradeType): TradeInputViewModel {
+        val viewModel by viewModels<TradeInputViewModel>()
+        viewModel.initTrade(tradeId, symbol, tradeType)
+        return viewModel
+    }
 
     private fun prepareView(tradeType: TradeType) {
         tradeInputFragmentBuySymbolSpinner.isEnabled = false // not possible in XML
@@ -92,7 +98,7 @@ class TradeInputFragment() : DialogFragment() {
             if (hasFocus) {
                 val tradeDate = CalendarHelper.convertDate(tradeInputFragmentTradeDateTextView.text.toString())
                 val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> tradeInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(LocalDate.of(year, monthOfYear + 1, dayOfMonth))); tradeInputFragmentTradeDateTextView.clearFocus() }
-                val datePickerDialog = DatePickerDialog(this@TradeInputFragment.context!!, dateSetListener, tradeDate.year, tradeDate.monthValue - 1, tradeDate.dayOfMonth)
+                val datePickerDialog = DatePickerDialog(this@TradeInputFragment.requireContext(), dateSetListener, tradeDate.year, tradeDate.monthValue - 1, tradeDate.dayOfMonth)
                 datePickerDialog.show()
             }
         }
@@ -128,7 +134,7 @@ class TradeInputFragment() : DialogFragment() {
     }
 
     private fun observeSymbols(viewModel: TradeInputViewModel) {
-        val adapter = ArrayAdapter<Title>(this.context!!, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(this.requireContext(), android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         tradeInputFragmentBuySymbolSpinner.adapter = adapter
         tradeInputFragmentSellSymbolSpinner.adapter = adapter
