@@ -156,7 +156,17 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + TRADE_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val trades = csvParser.map { Trade(0, LocalDate.parse(it.get(0)), if (it.get(1).isEmpty()) null else TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDoubleOrNull(), if (it.get(3).isEmpty()) null else TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDoubleOrNull(), it.get(5).ifEmpty { null }) }.toList()
+                val trades = csvParser.map {
+                    val tradeDate = LocalDate.parse(it.get(0))
+                    val buyTitleString = it.get(1)
+                    val buyTitle = if (buyTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(buyTitleString)
+                    val buyAmount = it.get(2).toDoubleOrNull()
+                    val sellTitleString = it.get(3)
+                    val sellTitle = if (sellTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(sellTitleString)
+                    val sellAmount = it.get(4).toDoubleOrNull()
+                    val comment = it.get(5).ifEmpty { null }
+                    // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
+                    Trade(0, tradeDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()
                 TradeRepository.deleteAllTrades();
                 TradeRepository.insertTrades(trades)
                 LogRepository.insertLogAsync("Import trades from '$filePath' successful")
