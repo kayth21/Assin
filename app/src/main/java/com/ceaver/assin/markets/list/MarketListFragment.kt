@@ -31,7 +31,7 @@ class MarketListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this);
         marketList.adapter = marketListAdapter
-        marketList.addItemDecoration(DividerItemDecoration(activity!!.application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        marketList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         marketSwipeRefreshLayout.setOnRefreshListener { refreshAllTitles() }
         loadActiveCryptoTitles()
     }

@@ -110,7 +110,7 @@ class BackupActivity : AppCompatActivity() {
                 .enqueue()
     }
 
-    private class TradeExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class TradeExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val trades = TradeRepository.loadAllTrades()
             val targetDirectory = getOrCreateDirectory()
@@ -123,7 +123,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class AlertExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class AlertExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val alerts = AlertRepository.loadAllAlerts()
             val targetDirectory = getOrCreateDirectory()
@@ -136,7 +136,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val intentions = IntentionRepository.loadAllIntentions()
             val targetDirectory = getOrCreateDirectory()
@@ -149,7 +149,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class TradeImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class TradeImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + TRADE_FILE_NAME;
@@ -167,7 +167,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class AlertImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class AlertImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + ALERT_FILE_NAME;
@@ -185,7 +185,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class IntentionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class IntentionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + INTENTION_FILE_NAME;
@@ -203,7 +203,7 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    private class EnableButtonWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class EnableButtonWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             EventBus.getDefault().post(BackupEvents.BackupOperationDone())
             return Result.success()
