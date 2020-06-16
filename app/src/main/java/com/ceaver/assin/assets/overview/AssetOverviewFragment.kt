@@ -1,7 +1,6 @@
 package com.ceaver.assin.assets.overview
 
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.format
+import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.trades.TradeEvents
 import kotlinx.android.synthetic.main.asset_overview_fragment.*
 import org.greenrobot.eventbus.EventBus
@@ -51,8 +50,8 @@ class AssetOverviewFragment : Fragment() {
     }
 
     private fun onAssetOverviewLoaded(assetOverview: AssetOverview) {
-        assetOverviewFragmentTotalBtcValue.text = "${assetOverview.btcValue.format("BTC")} BTC"
-        assetOverviewFragmentTotalUsdValue.text = "${assetOverview.usdValue.format("USD")} USD"
+        assetOverviewFragmentTotalBtcValue.text = "${assetOverview.btcValue.toCurrencyString("BTC")} BTC"
+        assetOverviewFragmentTotalUsdValue.text = "${assetOverview.usdValue.toCurrencyString("USD")} USD"
     }
 
     @Suppress("UNUSED_PARAMETER")

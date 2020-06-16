@@ -10,8 +10,8 @@ import android.widget.TextView
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
-import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.extensions.toCurrencyString
 import kotlin.random.Random
 
 class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
@@ -49,8 +49,8 @@ class AssetListAdapter : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
             (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.symbol))
             (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.name
             (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.symbol}"
-            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.format(asset.symbol) + " " + "BTC"
-            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.format(asset.symbol) + " " + "USD"
+            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.symbol) + " " + "BTC"
+            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toCurrencyString(asset.symbol) + " " + "USD"
             view.setOnCreateContextMenuListener(this)
         }
 

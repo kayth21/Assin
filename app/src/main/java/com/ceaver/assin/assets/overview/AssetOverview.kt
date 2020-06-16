@@ -1,6 +1,8 @@
 package com.ceaver.assin.assets.overview
 
+import java.math.BigDecimal
+
 data class AssetOverview (
-        val btcValue: Double = 0.0,
-        val usdValue: Double = 0.0
+        val btcValue: BigDecimal = BigDecimal.ZERO,
+        val usdValue: BigDecimal = BigDecimal.ZERO
 )
