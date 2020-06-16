@@ -33,9 +33,9 @@ internal class AlertListAdapter(private val onClickListener: AlertListActivity.O
 
         fun bindItem(alert: Alert, onClickListener: AlertListActivity.OnItemClickListener) {
             (view.findViewById(R.id.alertSymbolTextView) as TextView).text = alert.symbol.toString()
-            (view.findViewById(R.id.alertLowerTargetTextView) as TextView).text = "Lower Target: " + (alert.source - alert.target).format(alert.reference.symbol) + " ${alert.reference.symbol}"
-            (view.findViewById(R.id.alertUpperTargetTextView) as TextView).text = "Upper Target: " + (alert.source + alert.target).format(alert.reference.symbol) + " ${alert.reference.symbol}"
-            (view.findViewById(R.id.alertRangeTextView) as TextView).text = "Range (+/-): "+ alert.target.format(alert.reference.symbol) + " ${alert.reference.symbol}"
+            (view.findViewById(R.id.alertLowerTargetTextView) as TextView).text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.reference.symbol}"
+            (view.findViewById(R.id.alertUpperTargetTextView) as TextView).text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.reference.symbol}"
+            (view.findViewById(R.id.alertRangeTextView) as TextView).text = "Range (+/-): "+ alert.target.toPlainString() + " ${alert.reference.symbol}"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(alert) }
         }

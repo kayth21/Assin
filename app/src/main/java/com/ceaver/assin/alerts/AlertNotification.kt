@@ -12,9 +12,10 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
-import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
+import java.math.BigDecimal
 import java.util.*
 
 
@@ -35,7 +36,7 @@ object AlertNotification {
         }
     }
 
-    fun notify(symbol: Title, reference: Title, targetPrice: Double, currentPrice: Double) {
+    fun notify(symbol: Title, reference: Title, targetPrice: BigDecimal, currentPrice: BigDecimal) {
 
         val intent = Intent(MyApplication.appContext!!, StartActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
@@ -44,8 +45,8 @@ object AlertNotification {
         val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, getImageIdentifier(symbol.symbol)))
-                .setContentTitle("$symbol " + (if (targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.format(reference.symbol) + " ${reference.symbol} reached.")
-                .setContentText("Current Price: " + currentPrice.format(reference.symbol) + " ${reference.symbol}")
+                .setContentTitle("$symbol " + (if (targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.toPlainString() + " ${reference.symbol} reached.")
+                .setContentText("Current Price: " + currentPrice.toCurrencyString(reference.symbol) + " ${reference.symbol}")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

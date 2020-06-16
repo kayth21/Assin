@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import java.math.BigDecimal
 
 @Entity(tableName = "alert",
         foreignKeys = arrayOf(
@@ -23,8 +24,8 @@ data class Alert(//
         @ColumnInfo(name = "symbol") val symbol: Title,
         @ColumnInfo(name = "reference") val reference: Title,
         @ColumnInfo(name = "alertType") val alertType: AlertType,
-        @ColumnInfo(name = "source") val source: Double,
-        @ColumnInfo(name = "target") val target: Double) {
+        @ColumnInfo(name = "source") val source: BigDecimal,
+        @ColumnInfo(name = "target") val target: BigDecimal) {
 
     fun isNew(): Boolean = this.id == 0L;
 }

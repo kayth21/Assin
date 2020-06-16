@@ -7,6 +7,7 @@ import com.ceaver.assin.intentions.IntentionStatus
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -19,6 +20,12 @@ class Converters {
 
     @TypeConverter
     fun toLocalDate(long: Long?): LocalDate? = long?.let { LocalDate.MIN.plusDays(it) }
+
+    @TypeConverter
+    fun fromBigDecimal(bigDecimal: BigDecimal?): String? =  bigDecimal?.toPlainString()
+
+    @TypeConverter
+    fun toBigDecimal(string: String?): BigDecimal? = string?.toBigDecimalOrNull()
 
     @TypeConverter
     fun fromLocalDateTime(localDateTime: LocalDateTime?): Long? = localDateTime?.let { ChronoUnit.SECONDS.between(LocalDateTime.MIN, localDateTime) }

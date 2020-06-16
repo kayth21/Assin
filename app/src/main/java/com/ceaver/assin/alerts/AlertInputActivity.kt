@@ -90,8 +90,8 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindFields(alert: Alert, viewModel: AlertViewModel) {
-        alertSourceEditText.setText(alert.source.format(alert.reference.symbol))
-        alertTargetEditText.setText(alert.target.format(alert.reference.symbol))
+        alertSourceEditText.setText(alert.source.toPlainString())
+        alertTargetEditText.setText(alert.target.toPlainString())
 
         updateSpinnerFields(viewModel)
 
@@ -119,8 +119,8 @@ class AlertInputActivity : AppCompatActivity() {
     private fun onSaveClick(viewModel: AlertViewModel) {
         val symbol = alertSymbolText.selectedItem as Title
         val reference = alertReferenceText.selectedItem as Title
-        val startPrice = alertSourceEditText.text.toString().toDouble()
-        val targetPrice = alertTargetEditText.text.toString().toDouble()
+        val startPrice = alertSourceEditText.text.toString().toBigDecimal()
+        val targetPrice = alertTargetEditText.text.toString().toBigDecimal()
         viewModel.onSaveClick(symbol, reference, startPrice, targetPrice)
     }
 

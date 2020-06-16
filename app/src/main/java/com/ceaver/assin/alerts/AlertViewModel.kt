@@ -28,11 +28,11 @@ class AlertViewModel : ViewModel() {
 
     private fun createAlert() {
         BackgroundThreadExecutor.execute {
-            alert.postValue(Alert(symbol = TitleRepository.loadTitleBySymbol("BTC"), reference = TitleRepository.loadTitleBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = 0.0, target = 0.0))
+            alert.postValue(Alert(symbol = TitleRepository.loadTitleBySymbol("BTC"), reference = TitleRepository.loadTitleBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = BigDecimal.ZERO, target = BigDecimal.ZERO))
         }
     }
 
-    fun onSaveClick(symbol: Title, reference: Title, source: Double, target: Double) {
+    fun onSaveClick(symbol: Title, reference: Title, source: BigDecimal, target: BigDecimal) {
         status.value = AlertInputStatus.START_SAVE
         val alert = alert.value!!.copy(symbol = symbol, reference = reference, source = source, target = target)
         AlertRepository.saveAlertAsync(alert, true) { status.value = AlertInputStatus.END_SAVE }
@@ -43,7 +43,7 @@ class AlertViewModel : ViewModel() {
             val result = if (it.isPresent) {
                 val last = it.get().toBigDecimal()
                 val price = last.round(MathContext(2))
-                val target = last.divide(BigDecimal(25), MathContext(1))
+                val target = last.divide(BigDecimal(25), MathContext(1)).toPlainString()
                 price.toDouble() to target.toDouble()
             } else 0.0 to 0.0
             callback.invoke(result)

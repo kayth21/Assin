@@ -129,7 +129,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source, alert.target)
+            for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export alerts successful to '$filePath'")
             return Result.success()
@@ -184,7 +184,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val alerts = csvParser.map { Alert(0, TitleRepository.loadTitleBySymbol(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toDouble(), it.get(4).toDouble()) }.toList()
+                val alerts = csvParser.map { Alert(0, TitleRepository.loadTitleBySymbol(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toBigDecimal(), it.get(4).toBigDecimal()) }.toList()
                 AlertRepository.deleteAllAlerts()
                 AlertRepository.insertAlerts(alerts)
                 LogRepository.insertLogAsync("Import alerts from '$filePath' successful")
