@@ -1,18 +1,17 @@
 package com.ceaver.assin.trades.input
 
 import android.app.DatePickerDialog
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
-import com.ceaver.assin.intentions.input.IntentionInputViewModel
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeType
@@ -115,19 +114,19 @@ class TradeInputFragment() : DialogFragment() {
         when (lookupTradeType()) {
             TradeType.TRADE -> {
                 val buySymbol = tradeInputFragmentBuySymbolSpinner.selectedItem as Title
-                val buyAmount = tradeInputFragmentBuyAmountTextView.text.toString().toDouble()
+                val buyAmount = tradeInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
                 val sellSymbol = tradeInputFragmentSellSymbolSpinner.selectedItem as Title
-                val sellAmount = tradeInputFragmentSellAmountTextView.text.toString().toDouble()
+                val sellAmount = tradeInputFragmentSellAmountTextView.text.toString().toBigDecimal()
                 viewModel.onSaveTradeClick(buySymbol, buyAmount, sellSymbol, sellAmount, tradeDate, comment)
             }
             TradeType.DEPOSIT -> {
                 val buySymbol = tradeInputFragmentBuySymbolSpinner.selectedItem as Title
-                val buyAmount = tradeInputFragmentBuyAmountTextView.text.toString().toDouble()
+                val buyAmount = tradeInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
                 viewModel.onDepositClick(buySymbol, buyAmount, tradeDate, comment)
             }
             TradeType.WITHDRAW -> {
                 val sellSymbol = tradeInputFragmentSellSymbolSpinner.selectedItem as Title
-                val sellAmount = tradeInputFragmentSellAmountTextView.text.toString().toDouble()
+                val sellAmount = tradeInputFragmentSellAmountTextView.text.toString().toBigDecimal()
                 viewModel.onWithdrawClick(sellSymbol, sellAmount, tradeDate, comment)
             }
         }

@@ -37,9 +37,9 @@ object AssetRepository {
                     Asset(
                             it.first.name,
                             it.first.symbol,
-                            it.second.toBigDecimal(),
-                            it.first.priceBtc!!.toBigDecimal().times(it.second.toBigDecimal()),
-                            it.first.priceUsd!!.toBigDecimal().times(it.second.toBigDecimal()))
+                            it.second,
+                            it.first.priceBtc!!.toBigDecimal().times(it.second),
+                            it.first.priceUsd!!.toBigDecimal().times(it.second))
                 }
     }
 

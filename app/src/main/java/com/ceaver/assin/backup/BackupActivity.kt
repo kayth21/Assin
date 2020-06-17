@@ -160,10 +160,10 @@ class BackupActivity : AppCompatActivity() {
                     val tradeDate = LocalDate.parse(it.get(0))
                     val buyTitleString = it.get(1)
                     val buyTitle = if (buyTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(buyTitleString)
-                    val buyAmount = it.get(2).toDoubleOrNull()
+                    val buyAmount = it.get(2).toBigDecimalOrNull()
                     val sellTitleString = it.get(3)
                     val sellTitle = if (sellTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(sellTitleString)
-                    val sellAmount = it.get(4).toDoubleOrNull()
+                    val sellAmount = it.get(4).toBigDecimalOrNull()
                     val comment = it.get(5).ifEmpty { null }
                     // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
                     Trade(0, tradeDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(tableName = "trade")
@@ -11,9 +12,9 @@ data class Trade(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
         @ColumnInfo(name = "buyTitle") var buyTitle: Title? = null, //
-        @ColumnInfo(name = "buyAmount") var buyAmount: Double? = null, //
+        @ColumnInfo(name = "buyAmount") var buyAmount: BigDecimal? = null, //
         @ColumnInfo(name = "sellTitle") var sellTitle: Title? = null, //
-        @ColumnInfo(name = "sellAmount") var sellAmount: Double? = null, //
+        @ColumnInfo(name = "sellAmount") var sellAmount: BigDecimal? = null, //
         @ColumnInfo(name = "comment") var comment: String? = null) {
 
     fun getTradeType(): TradeType {
