@@ -9,6 +9,7 @@ import com.coinpaprika.apiclient.entity.TickerEntity
 import com.coinpaprika.apiclient.exception.NotFoundError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.math.BigDecimal
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -61,7 +62,7 @@ object Coinpaprika {
                 symbol = fiatEntity.symbol,
                 category = AssetCategory.FIAT,
                 active = 1818,
-                priceUsd = 1.0 // TODO this is only valid for USD
+                priceUsd = BigDecimal.ONE // TODO this is only valid for USD
         )
     }
 
@@ -84,44 +85,44 @@ object Coinpaprika {
                 betaValue = ticker.betaValue,
                 lastUpdated = if (ticker.lastUpdated == null) null else transformTimestamp(ticker.lastUpdated!!),
 
-                priceUsd = usdQuotes.price,
-                volume24hUsd = usdQuotes.dailyVolume,
-                marketCapUsd = usdQuotes.marketCap,
-                marketCapChange24hUsd = usdQuotes.marketCapDailyChange,
-                percentChange1hUsd = usdQuotes.percentChange1h,
-                percentChange24hUsd = usdQuotes.percentChange24h,
-                percentChange7dUsd = usdQuotes.percentChange7d,
-                percentChange30dUsd = usdQuotes.percentChange30d,
-                percentChange1yUsd = usdQuotes.percentChange1y,
-                athPriceUsd = usdQuotes.athPrice,
+                priceUsd = usdQuotes.price.toBigDecimal(),
+                volume24hUsd = usdQuotes.dailyVolume.toBigDecimal(),
+                marketCapUsd = usdQuotes.marketCap.toBigDecimal(),
+                marketCapChange24hUsd = usdQuotes.marketCapDailyChange.toBigDecimal(),
+                percentChange1hUsd = usdQuotes.percentChange1h.toBigDecimal(),
+                percentChange24hUsd = usdQuotes.percentChange24h.toBigDecimal(),
+                percentChange7dUsd = usdQuotes.percentChange7d.toBigDecimal(),
+                percentChange30dUsd = usdQuotes.percentChange30d.toBigDecimal(),
+                percentChange1yUsd = usdQuotes.percentChange1y.toBigDecimal(),
+                athPriceUsd = usdQuotes.athPrice.toBigDecimal(),
                 athDateUsd = if (usdQuotes.athDate == null) null else transformTimestamp(usdQuotes.athDate!!),
-                athPercentUsd = usdQuotes.athPrice,
+                athPercentUsd = usdQuotes.athPrice.toBigDecimal(),
 
-                priceBtc = btcQuotes.price,
-                volume24hBtc = btcQuotes.dailyVolume,
-                marketCapBtc = btcQuotes.marketCap,
-                marketCapChange24hBtc = btcQuotes.marketCapDailyChange,
-                percentChange1hBtc = btcQuotes.percentChange1h,
-                percentChange24hBtc = btcQuotes.percentChange24h,
-                percentChange7dBtc = btcQuotes.percentChange7d,
-                percentChange30dBtc = btcQuotes.percentChange30d,
-                percentChange1yBtc = btcQuotes.percentChange1y,
-                athPriceBtc = btcQuotes.athPrice,
+                priceBtc = btcQuotes.price.toBigDecimal(),
+                volume24hBtc = btcQuotes.dailyVolume.toBigDecimal(),
+                marketCapBtc = btcQuotes.marketCap.toBigDecimal(),
+                marketCapChange24hBtc = btcQuotes.marketCapDailyChange.toBigDecimal(),
+                percentChange1hBtc = btcQuotes.percentChange1h.toBigDecimal(),
+                percentChange24hBtc = btcQuotes.percentChange24h.toBigDecimal(),
+                percentChange7dBtc = btcQuotes.percentChange7d.toBigDecimal(),
+                percentChange30dBtc = btcQuotes.percentChange30d.toBigDecimal(),
+                percentChange1yBtc = btcQuotes.percentChange1y.toBigDecimal(),
+                athPriceBtc = btcQuotes.athPrice.toBigDecimal(),
                 athDateBtc = if (btcQuotes.athDate == null) null else transformTimestamp(btcQuotes.athDate!!),
-                athPercentBtc = btcQuotes.athPrice,
+                athPercentBtc = btcQuotes.athPrice.toBigDecimal(),
 
-                priceEth = ethQuotes.price,
-                volume24hEth = ethQuotes.dailyVolume,
-                marketCapEth = ethQuotes.marketCap,
-                marketCapChange24hEth = ethQuotes.marketCapDailyChange,
-                percentChange1hEth = ethQuotes.percentChange1h,
-                percentChange24hEth = ethQuotes.percentChange24h,
-                percentChange7dEth = ethQuotes.percentChange7d,
-                percentChange30dEth = ethQuotes.percentChange30d,
-                percentChange1yEth = ethQuotes.percentChange1y,
-                athPriceEth = ethQuotes.athPrice,
+                priceEth = ethQuotes.price.toBigDecimal(),
+                volume24hEth = ethQuotes.dailyVolume.toBigDecimal(),
+                marketCapEth = ethQuotes.marketCap.toBigDecimal(),
+                marketCapChange24hEth = ethQuotes.marketCapDailyChange.toBigDecimal(),
+                percentChange1hEth = ethQuotes.percentChange1h.toBigDecimal(),
+                percentChange24hEth = ethQuotes.percentChange24h.toBigDecimal(),
+                percentChange7dEth = ethQuotes.percentChange7d.toBigDecimal(),
+                percentChange30dEth = ethQuotes.percentChange30d.toBigDecimal(),
+                percentChange1yEth = ethQuotes.percentChange1y.toBigDecimal(),
+                athPriceEth = ethQuotes.athPrice.toBigDecimal(),
                 athDateEth = if (ethQuotes.athDate == null) null else transformTimestamp(ethQuotes.athDate!!),
-                athPercentEth = ethQuotes.athPrice
+                athPercentEth = ethQuotes.athPrice.toBigDecimal()
         )
     }
 

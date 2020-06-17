@@ -38,8 +38,8 @@ object AssetRepository {
                             it.first.name,
                             it.first.symbol,
                             it.second,
-                            it.first.priceBtc!!.toBigDecimal().times(it.second),
-                            it.first.priceUsd!!.toBigDecimal().times(it.second))
+                            it.first.priceBtc!!.times(it.second),
+                            it.first.priceUsd!!.times(it.second))
                 }
     }
 

@@ -1,15 +1,15 @@
 package com.ceaver.assin.markets.list
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
@@ -34,8 +34,8 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
             (view.findViewById(R.id.titleRankTextView) as TextView).text = title.rank.toString()
             (view.findViewById(R.id.titleSymbolTextView) as TextView).text = title.symbol
             (view.findViewById(R.id.titleNameTextView) as TextView).text = title.name
-            (view.findViewById(R.id.titleCryptoPriceTextView) as TextView).text = title.priceBtc!!.format("BTC") + " BTC"
-            (view.findViewById(R.id.titleFiatPriceTextView) as TextView).text = title.priceUsd!!.format("USD") + " USD"
+            (view.findViewById(R.id.titleCryptoPriceTextView) as TextView).text = title.priceBtc!!.toCurrencyString("BTC") + " BTC"
+            (view.findViewById(R.id.titleFiatPriceTextView) as TextView).text = title.priceUsd!!.toCurrencyString("USD") + " USD"
             (view.findViewById(R.id.title1hChangeTextView) as TextView).text = "1h: ${title.getPercentChange1hUsdString()}%"
             (view.findViewById(R.id.title24hChangeTextView) as TextView).text = "24h: ${title.getPercentChange24hUsdString()}%"
             (view.findViewById(R.id.title7dChangeTextView) as TextView).text = "7d: ${title.getPercentChange7dUsdString()}%"

@@ -41,7 +41,7 @@ class AlertViewModel : ViewModel() {
     fun lookupPrice(symbol: Title, reference: Title, callback: (Pair<Double, Double>) -> Unit) {
         TitleRepository.lookupPriceAsync(symbol, reference, true) {
             val result = if (it.isPresent) {
-                val last = it.get().toBigDecimal()
+                val last = it.get()
                 val price = last.round(MathContext(2))
                 val target = last.divide(BigDecimal(25), MathContext(1)).toPlainString()
                 price.toDouble() to target.toDouble()

@@ -16,7 +16,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
     private fun checkAlert(alert: Alert) {
         val price = TitleRepository.lookupPrice(alert.symbol, alert.reference)
         if(price.isPresent) {
-            val currentPrice = BigDecimal.valueOf(price.get())
+            val currentPrice = price.get()
             val result = alert.alertType.check(alert, currentPrice)
             result.ifPresent { AlertRepository.updateAlert(it); checkAlert(it); AlertNotification.notify(alert.symbol, alert.reference, targetPrice(alert, currentPrice), currentPrice) }
         } else {

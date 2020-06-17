@@ -5,6 +5,7 @@ import android.os.Looper
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
+import java.math.BigDecimal
 import java.util.*
 
 object TitleRepository {
@@ -138,7 +139,7 @@ object TitleRepository {
         return unionList
     }
 
-    fun lookupPriceAsync(symbol: Title, reference: Title, callbackInMainThread: Boolean, callback: (Optional<Double>) -> Unit) {
+    fun lookupPriceAsync(symbol: Title, reference: Title, callbackInMainThread: Boolean, callback: (Optional<BigDecimal>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val price = lookupPrice(symbol, reference)
             if (callbackInMainThread)
@@ -148,7 +149,7 @@ object TitleRepository {
         }
     }
 
-    fun lookupPrice(symbol: Title, reference: Title): Optional<Double> {
+    fun lookupPrice(symbol: Title, reference: Title): Optional<BigDecimal> {
         if (reference.symbol == "EUR" || reference.symbol == "CHF") {
             TODO("not yet implemented")
         }

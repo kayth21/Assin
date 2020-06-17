@@ -2,7 +2,6 @@ package com.ceaver.assin.markets
 
 import android.content.Context
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
@@ -16,7 +15,7 @@ class MarketPartialUpdateWorker(appContext: Context, workerParams: WorkerParamet
         val result = MarketRepository.loadTitle(localTitle.id)
         if (result.isPresent) {
             TitleRepository.update(result.get().incrementActiveCounter())
-            if (symbolName == "BTC") TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = 1 / result.get().priceUsd!!))
+            if (symbolName == "BTC") TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = (1 / result.get().priceUsd!!.toDouble()).toBigDecimal()))
         } else {
             TitleRepository.update(localTitle.decreaseActiveCounter())
             LogRepository.insertLog("Warning: Unable to update $symbolName")

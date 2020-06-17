@@ -2,7 +2,6 @@ package com.ceaver.assin.markets
 
 import android.content.Context
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
@@ -29,7 +28,7 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
             removedTitlesToDelete.forEach { LogRepository.insertLog("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }
 
-        TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = 1 / TitleRepository.loadTitleBySymbol("BTC").priceUsd!!))
+        TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = (1 / TitleRepository.loadTitleBySymbol("BTC").priceUsd!!.toDouble()).toBigDecimal()))
 
         return Result.success()
     }
