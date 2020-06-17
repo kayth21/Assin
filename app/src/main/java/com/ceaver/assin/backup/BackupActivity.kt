@@ -116,7 +116,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + TRADE_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buyTitle?.symbol.orEmpty(), if (trade.buyAmount != null) trade.buyAmount else "", trade.sellTitle?.symbol.orEmpty(), if (trade.sellAmount != null) trade.sellAmount else "", trade.comment.orEmpty())
+            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buyTitle?.symbol.orEmpty(), if (trade.buyAmount != null) trade.buyAmount!!.toPlainString() else "", trade.sellTitle?.symbol.orEmpty(), if (trade.sellAmount != null) trade.sellAmount!!.toPlainString() else "", trade.comment.orEmpty())
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export trades successful to '$filePath'")
             return Result.success()
@@ -142,7 +142,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice, intention.creationDate, intention.status, intention.comment.orEmpty())
+            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export intentions successful to '$filePath'")
             return Result.success()
