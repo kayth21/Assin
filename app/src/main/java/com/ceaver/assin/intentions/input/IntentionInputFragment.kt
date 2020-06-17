@@ -1,15 +1,13 @@
 package com.ceaver.assin.intentions.input
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.ceaver.assin.assets.overview.AssetOverview
-import com.ceaver.assin.assets.overview.AssetOverviewViewModel
+import androidx.lifecycle.Observer
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.intentions.IntentionType
@@ -46,9 +44,9 @@ class IntentionInputFragment : DialogFragment() {
 
     private fun lookupIntentionId(): Long? = requireArguments().getLong(INTENTION_ID).takeUnless { it == 0L }
     private fun lookupSymbol(): String? = requireArguments().getString(INTENTION_SYMBOL)
-    private fun lookupAmount(): Double? = requireArguments().getString(INTENTION_AMOUNT)?.toDouble()
+    private fun lookupAmount(): BigDecimal? = requireArguments().getString(INTENTION_AMOUNT)?.toBigDecimal()
 
-    private fun lookupViewModel(intentionId: Long?, symbol: String?, amount: Double?): IntentionInputViewModel {
+    private fun lookupViewModel(intentionId: Long?, symbol: String?, amount: BigDecimal?): IntentionInputViewModel {
         val viewModel by viewModels<IntentionInputViewModel>()
         viewModel.init(intentionId, symbol, amount)
         return viewModel
@@ -66,9 +64,9 @@ class IntentionInputFragment : DialogFragment() {
     private fun onSaveClick(viewModel: IntentionInputViewModel) {
         val type = if (intentionInputFragmentBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
         val title = intentionInputFragmentTitleSymbolSpinner.selectedItem as Title
-        val amount = intentionInputFragmentTitleAmountTextView.text.toString().toDoubleOrNull()
+        val amount = intentionInputFragmentTitleAmountTextView.text.toString().toBigDecimalOrNull()
         val referenceTitle = intentionInputFragmentReferenceSymbolSpinner.selectedItem as Title
-        val referencePrice = intentionInputFragmentReferencePriceTextView.text.toString().toDouble()
+        val referencePrice = intentionInputFragmentReferencePriceTextView.text.toString().toBigDecimal()
         val comment = intentionInputFragmentCommentTextView.text.toString()
         viewModel.onSaveClick(type, title, amount, referenceTitle, referencePrice, comment.ifEmpty { null })
     }
@@ -78,12 +76,12 @@ class IntentionInputFragment : DialogFragment() {
             val intention = it!!.first
             val titles = it.second
 
-            val titleAdapter = ArrayAdapter<Title>(this.context!!, android.R.layout.simple_spinner_item)
+            val titleAdapter = ArrayAdapter<Title>(this.requireContext(), android.R.layout.simple_spinner_item)
             titleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             intentionInputFragmentTitleSymbolSpinner.adapter = titleAdapter
             titleAdapter.addAll(titles)
 
-            val referenceTitleAdapter = ArrayAdapter<Title>(this.context!!, android.R.layout.simple_spinner_item)
+            val referenceTitleAdapter = ArrayAdapter<Title>(this.requireContext(), android.R.layout.simple_spinner_item)
             referenceTitleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             intentionInputFragmentReferenceSymbolSpinner.adapter = referenceTitleAdapter
             referenceTitleAdapter.addAll(titles.filter { setOf("USD", "BTC", "ETH").contains(it.symbol) })
@@ -92,7 +90,7 @@ class IntentionInputFragment : DialogFragment() {
             intentionInputFragmentTitleSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))
             intentionInputFragmentTitleAmountTextView.setText(intention.amountAsString())
             intentionInputFragmentReferenceSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
-            intentionInputFragmentReferencePriceTextView.setText(BigDecimal.valueOf(intention.referencePrice).toPlainString())
+            intentionInputFragmentReferencePriceTextView.setText(intention.referencePrice.toPlainString())
             intentionInputFragmentCommentTextView.setText(intention.comment.orEmpty())
 
             registerInputValidation()

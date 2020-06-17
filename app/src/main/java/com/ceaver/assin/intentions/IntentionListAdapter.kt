@@ -1,18 +1,17 @@
 package com.ceaver.assin.intentions
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
-import java.math.BigDecimal
 
 internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
 
@@ -38,8 +37,9 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
         fun bindItem(intention: Intention, onClickListener: IntentionListFragment.OnItemClickListener) {
             (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(getImageIdentifier(intention.title))
             (view.findViewById(R.id.intentionListRowAssetTextView) as TextView).text = "${intention.type} ${intention.amountAsString()} ${intention.title}"
-            (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${BigDecimal.valueOf(intention.referencePrice).toPlainString()} ${intention.referenceTitle.symbol}"
-            (view.findViewById(R.id.intentionListRowPercentTextView) as TextView).text = "${intention.percentToReferencePrice().format("abc")}%"
+            (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
+            (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
+            (view.findViewById(R.id.intentionListRowPercentTextView) as TextView).text = "${intention.percentToReferencePrice().toCurrencyString("abc")}%"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }

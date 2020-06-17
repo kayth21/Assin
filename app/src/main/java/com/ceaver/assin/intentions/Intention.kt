@@ -12,14 +12,14 @@ data class Intention(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "type") val type: IntentionType,
         @ColumnInfo(name = "title") var title: Title,
-        @ColumnInfo(name = "amount") var amount: Double? = null,
+        @ColumnInfo(name = "amount") var amount: BigDecimal? = null,
         @ColumnInfo(name = "referenceTitle") var referenceTitle: Title,
-        @ColumnInfo(name = "referencePrice") var referencePrice: Double,
+        @ColumnInfo(name = "referencePrice") var referencePrice: BigDecimal,
         @ColumnInfo(name = "creationDate") var creationDate: LocalDate = LocalDate.now(),
         @ColumnInfo(name = "status") val status: IntentionStatus = IntentionStatus.WAIT,
         @ColumnInfo(name = "comment") var comment: String? = null) {
 
-    fun percentToReferencePrice(): Double {
+    fun percentToReferencePrice(): BigDecimal {
         val price = when (referenceTitle.symbol) {
             "USD" -> title.priceUsd
             "BTC" -> title.priceBtc
@@ -27,17 +27,17 @@ data class Intention(
             else -> throw IllegalStateException()
         }
         return when (type) {
-            IntentionType.SELL -> (100.div(referencePrice)).times(price!!)
-            IntentionType.BUY -> (100.div(price!!)).times(referencePrice)
+            IntentionType.SELL -> (100.div(referencePrice.toDouble())).times(price!!.toDouble()).toBigDecimal()
+            IntentionType.BUY -> (100.div(price!!.toDouble())).times(referencePrice.toDouble()).toBigDecimal()
         }
     }
 
     fun amountAsString(): String {
-        return if (amount == null) "" else BigDecimal.valueOf(amount!!).toPlainString()
+        return if (amount == null) "" else amount!!.toPlainString()
     }
 
     fun calculateState(): IntentionStatus {
-        return when (percentToReferencePrice()) {
+        return when (percentToReferencePrice().toDouble()) {
             in 0.0..80.0 -> IntentionStatus.WAIT
             in 80.0..100.0 -> IntentionStatus.NEAR
             else -> IntentionStatus.ACT

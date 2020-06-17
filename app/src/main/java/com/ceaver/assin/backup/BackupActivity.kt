@@ -5,10 +5,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -24,6 +23,7 @@ import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.trades.Trade
 import com.ceaver.assin.trades.TradeRepository
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_backup.*
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -202,7 +202,7 @@ class BackupActivity : AppCompatActivity() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + INTENTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toDoubleOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toDouble(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
+                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toBigDecimalOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toBigDecimal(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
                 IntentionRepository.deleteAllIntentions()
                 IntentionRepository.insertIntentions(intentions)
                 LogRepository.insertLogAsync("Import intentions from '$filePath' successful")

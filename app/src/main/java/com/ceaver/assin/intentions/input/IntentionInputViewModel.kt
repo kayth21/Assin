@@ -11,6 +11,7 @@ import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.threading.BackgroundThreadExecutor
+import java.math.BigDecimal
 
 class IntentionInputViewModel : ViewModel() {
     val intention = MutableLiveData<Intention>()
@@ -19,7 +20,7 @@ class IntentionInputViewModel : ViewModel() {
     val status = SingleLiveEvent<IntentionInputStatus>()
 
 
-    fun init(intentionId: Long?, symbol: String?, amount: Double?): IntentionInputViewModel {
+    fun init(intentionId: Long?, symbol: String?, amount: BigDecimal?): IntentionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         if (intentionId != null)
             IntentionRepository.loadIntentionAsync(intentionId, false) { intention.postValue(it) }
@@ -27,12 +28,12 @@ class IntentionInputViewModel : ViewModel() {
             BackgroundThreadExecutor.execute {
                 val symbolTitle = TitleRepository.loadTitleBySymbol(symbol ?: "BTC")
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!! else symbolTitle.priceBtc!!))
+                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
         return this
     }
 
-    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: Double?, sellTitle: Title, sellAmount: Double, comment: String?) {
+    fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: BigDecimal?, sellTitle: Title, sellAmount: BigDecimal, comment: String?) {
         status.postValue(IntentionInputStatus.START_SAVE)
         IntentionRepository.saveIntentionAsync(intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
             status.postValue(IntentionInputStatus.END_SAVE)

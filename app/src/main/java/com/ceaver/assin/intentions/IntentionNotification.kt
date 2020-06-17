@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
-import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.resIdByName
+import com.ceaver.assin.extensions.toCurrencyString
 import java.util.*
 
 object IntentionNotification {
@@ -43,7 +43,7 @@ object IntentionNotification {
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, getImageIdentifier(intention.title.symbol)))
                 .setContentTitle("${intention.title.symbol} Intention Change")
-                .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice().format("abc")}%)")
+                .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice().toCurrencyString("abc")}%)")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
