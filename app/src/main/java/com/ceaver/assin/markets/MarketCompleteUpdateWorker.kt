@@ -28,7 +28,7 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
             removedTitlesToDelete.forEach { LogRepository.insertLog("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }
 
-        TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = (1 / TitleRepository.loadTitleBySymbol("BTC").priceUsd!!.toDouble()).toBigDecimal()))
+        TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = 1 / TitleRepository.loadTitleBySymbol("BTC").priceUsd!!))
 
         return Result.success()
     }

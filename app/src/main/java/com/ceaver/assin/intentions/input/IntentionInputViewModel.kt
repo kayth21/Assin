@@ -28,7 +28,7 @@ class IntentionInputViewModel : ViewModel() {
             BackgroundThreadExecutor.execute {
                 val symbolTitle = TitleRepository.loadTitleBySymbol(symbol ?: "BTC")
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!! else symbolTitle.priceBtc!!))
+                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
         return this
     }
