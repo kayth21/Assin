@@ -3,21 +3,19 @@ package com.ceaver.assin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.core.view.GravityCompat
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import androidx.work.*
+import com.ceaver.assin.action.ActionListFragment
 import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.assets.AssetFragment
 import com.ceaver.assin.backup.BackupActivity
@@ -25,9 +23,10 @@ import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketFragment
-import com.ceaver.assin.trades.TradeListFragment
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.app_bar_start.*
 import java.util.concurrent.TimeUnit
@@ -166,7 +165,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 0 -> MarketFragment()
                 1 -> AssetFragment()
                 2 -> IntentionListFragment()
-                3 -> TradeListFragment()
+                3 -> ActionListFragment()
                 else -> null
             }!!
         }

@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
+import com.ceaver.assin.action.Action
+import com.ceaver.assin.action.ActionEvents
+import com.ceaver.assin.action.ActionType
+import com.ceaver.assin.action.input.ActionInputFragment
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.intentions.input.IntentionInputFragment
 import com.ceaver.assin.threading.BackgroundThreadExecutor
-import com.ceaver.assin.trades.Trade
-import com.ceaver.assin.trades.TradeEvents
-import com.ceaver.assin.trades.TradeType
-import com.ceaver.assin.trades.input.TradeInputFragment
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_asset_list.*
@@ -42,10 +42,10 @@ class AssetListFragment : Fragment() {
         assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
             var arguments = Bundle();
-            arguments.putString(Trade.TRADE_TYPE, TradeType.DEPOSIT.name)
-            val tradeInputFragment = TradeInputFragment()
+            arguments.putString(Action.ACTION_TYPE, ActionType.DEPOSIT.name)
+            val tradeInputFragment = ActionInputFragment()
             tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+            tradeInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -71,25 +71,25 @@ class AssetListFragment : Fragment() {
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.DeleteAll) {
+    fun onMessageEvent(event: ActionEvents.DeleteAll) {
         refreshAllAssets()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Delete) {
+    fun onMessageEvent(event: ActionEvents.Delete) {
         refreshAllAssets()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Insert) {
+    fun onMessageEvent(event: ActionEvents.Insert) {
         refreshAllAssets()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Update) {
+    fun onMessageEvent(event: ActionEvents.Update) {
         refreshAllAssets()
     }
 
@@ -119,15 +119,15 @@ class AssetListFragment : Fragment() {
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
                     val arguments = Bundle();
-                    arguments.putString(Trade.SYMBOL, selectedAsset.symbol)
-                    arguments.putString(Trade.TRADE_TYPE, when (item.itemId) {
-                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> TradeType.DEPOSIT.name
-                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> TradeType.WITHDRAW.name
+                    arguments.putString(Action.SYMBOL, selectedAsset.symbol)
+                    arguments.putString(Action.ACTION_TYPE, when (item.itemId) {
+                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT.name
+                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW.name
                         else -> throw IllegalStateException()
                     })
-                    val tradeInputFragment = TradeInputFragment()
+                    val tradeInputFragment = ActionInputFragment()
                     tradeInputFragment.arguments = arguments
-                    tradeInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    tradeInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val arguments = Bundle();
@@ -135,7 +135,7 @@ class AssetListFragment : Fragment() {
                     arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
                     val intentionInputFragment = IntentionInputFragment()
                     intentionInputFragment.arguments = arguments
-                    intentionInputFragment.show(parentFragmentManager, TradeInputFragment.TRADE_INPUT_FRAGMENT_TAG)
+                    intentionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
                 }
                 else -> throw IllegalStateException()
             }

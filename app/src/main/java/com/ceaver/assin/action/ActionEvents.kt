@@ -1,6 +1,6 @@
-package com.ceaver.assin.trades
+package com.ceaver.assin.action
 
-class TradeEvents {
+class ActionEvents {
     class Update()
     class Insert()
     class Delete()

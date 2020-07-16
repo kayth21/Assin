@@ -1,4 +1,4 @@
-package com.ceaver.assin.trades
+package com.ceaver.assin.action
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,21 +7,21 @@ import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.time.LocalDate
 
-@Entity(tableName = "trade")
-data class Trade(
+@Entity(tableName = "action")
+data class Action(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
-        @ColumnInfo(name = "tradeDate") var tradeDate: LocalDate = LocalDate.now(), //
+        @ColumnInfo(name = "actionDate") var actionDate: LocalDate = LocalDate.now(), //
         @ColumnInfo(name = "buyTitle") var buyTitle: Title? = null, //
         @ColumnInfo(name = "buyAmount") var buyAmount: BigDecimal? = null, //
         @ColumnInfo(name = "sellTitle") var sellTitle: Title? = null, //
         @ColumnInfo(name = "sellAmount") var sellAmount: BigDecimal? = null, //
         @ColumnInfo(name = "comment") var comment: String? = null) {
 
-    fun getTradeType(): TradeType {
+    fun getActionType(): ActionType {
         return when {
-            isTrade() -> TradeType.TRADE
-            isDeposit() -> TradeType.DEPOSIT
-            isWithdraw() -> TradeType.WITHDRAW
+            isTrade() -> ActionType.TRADE
+            isDeposit() -> ActionType.DEPOSIT
+            isWithdraw() -> ActionType.WITHDRAW
             else -> throw IllegalStateException()
         }
     }
@@ -31,16 +31,16 @@ data class Trade(
     fun isWithdraw(): Boolean = buyTitle == null && sellTitle != null
 
     fun getTitles(): Set<Title> {
-        return when (getTradeType()) {
-            TradeType.TRADE -> setOf(buyTitle!!, sellTitle!!)
-            TradeType.DEPOSIT -> setOf(buyTitle!!)
-            TradeType.WITHDRAW -> setOf(sellTitle!!)
+        return when (getActionType()) {
+            ActionType.TRADE -> setOf(buyTitle!!, sellTitle!!)
+            ActionType.DEPOSIT -> setOf(buyTitle!!)
+            ActionType.WITHDRAW -> setOf(sellTitle!!)
         }
     }
 
     companion object {
-        val TRADE_ID = "com.ceaver.assin.trades.Trades.tradeId"
-        val TRADE_TYPE = "com.ceaver.assin.trades.Trades.tradeType"
-        val SYMBOL = "com.ceaver.assin.trades.Trades.symbol"
+        val ACTION_ID = "com.ceaver.assin.actions.Action.actionId"
+        val ACTION_TYPE = "com.ceaver.assin.actions.Action.actionType"
+        val SYMBOL = "com.ceaver.assin.actions.Action.symbol"
     }
 }

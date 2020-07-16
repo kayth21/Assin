@@ -1,16 +1,16 @@
 package com.ceaver.assin.assets.overview
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
+import com.ceaver.assin.action.ActionEvents
 import com.ceaver.assin.extensions.toCurrencyString
-import com.ceaver.assin.trades.TradeEvents
 import kotlinx.android.synthetic.main.asset_overview_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -68,25 +68,25 @@ class AssetOverviewFragment : Fragment() {
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Insert) {
+    fun onMessageEvent(event: ActionEvents.Insert) {
         loadAssetOverview()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Update) {
+    fun onMessageEvent(event: ActionEvents.Update) {
         loadAssetOverview()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.Delete) {
+    fun onMessageEvent(event: ActionEvents.Delete) {
         loadAssetOverview()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: TradeEvents.DeleteAll) {
+    fun onMessageEvent(event: ActionEvents.DeleteAll) {
         loadAssetOverview()
     }
 }

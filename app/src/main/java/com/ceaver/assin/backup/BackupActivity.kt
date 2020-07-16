@@ -12,6 +12,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.ceaver.assin.action.Action
+import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
@@ -21,8 +23,6 @@ import com.ceaver.assin.intentions.IntentionStatus
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.trades.Trade
-import com.ceaver.assin.trades.TradeRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_backup.*
 import org.apache.commons.csv.CSVFormat
@@ -39,7 +39,7 @@ import java.time.LocalDate
 private const val READ_EXTERNAL_STORAGE = 0
 private const val WRITE_EXTERNAL_STORAGE = 1
 private const val EXPORT_DIRECTORY_NAME = "assin"
-private const val TRADE_FILE_NAME = "trades.csv"
+private const val ACTION_FILE_NAME = "actions.csv"
 private const val ALERT_FILE_NAME = "alerts.csv"
 private const val INTENTION_FILE_NAME = "intentions.csv"
 
@@ -103,7 +103,7 @@ class BackupActivity : AppCompatActivity() {
     private fun startImport() {
         WorkManager.getInstance(this)
                 .beginWith(listOf(
-                        OneTimeWorkRequestBuilder<TradeImportWorker>().build(),
+                        OneTimeWorkRequestBuilder<ActionImportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertImportWorker>().build(),
                         OneTimeWorkRequestBuilder<IntentionImportWorker>().build()))
                 .then(OneTimeWorkRequestBuilder<EnableButtonWorker>().build())
@@ -112,13 +112,13 @@ class BackupActivity : AppCompatActivity() {
 
     class TradeExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
-            val trades = TradeRepository.loadAllTrades()
+            val actions = ActionRepository.loadAllActions()
             val targetDirectory = getOrCreateDirectory()
-            val filePath = targetDirectory.path + "/" + TRADE_FILE_NAME
+            val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (trade in trades) csvPrinter.printRecord(trade.tradeDate, trade.buyTitle?.symbol.orEmpty(), if (trade.buyAmount != null) trade.buyAmount!!.toPlainString() else "", trade.sellTitle?.symbol.orEmpty(), if (trade.sellAmount != null) trade.sellAmount!!.toPlainString() else "", trade.comment.orEmpty())
+            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty())
             csvPrinter.flush()
-            LogRepository.insertLogAsync("Export trades successful to '$filePath'")
+            LogRepository.insertLogAsync("Export actions successful to '$filePath'")
             return Result.success()
         }
     }
@@ -149,15 +149,15 @@ class BackupActivity : AppCompatActivity() {
         }
     }
 
-    class TradeImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class ActionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
-            val filePath = sourceDirectory.path + "/" + TRADE_FILE_NAME;
+            val filePath = sourceDirectory.path + "/" + ACTION_FILE_NAME;
             if (File(filePath).exists()) {
-                val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + TRADE_FILE_NAME))
+                val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ACTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val trades = csvParser.map {
-                    val tradeDate = LocalDate.parse(it.get(0))
+                val actions = csvParser.map {
+                    val actionDate = LocalDate.parse(it.get(0))
                     val buyTitleString = it.get(1)
                     val buyTitle = if (buyTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(buyTitleString)
                     val buyAmount = it.get(2).toBigDecimalOrNull()
@@ -166,12 +166,12 @@ class BackupActivity : AppCompatActivity() {
                     val sellAmount = it.get(4).toBigDecimalOrNull()
                     val comment = it.get(5).ifEmpty { null }
                     // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
-                    Trade(0, tradeDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()
-                TradeRepository.deleteAllTrades();
-                TradeRepository.insertTrades(trades)
-                LogRepository.insertLogAsync("Import trades from '$filePath' successful")
+                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()
+                ActionRepository.deleteAllActions();
+                ActionRepository.insertActions(actions)
+                LogRepository.insertLogAsync("Import actions from '$filePath' successful")
             } else {
-                LogRepository.insertLogAsync("Import trades failed. '$filePath' not found")
+                LogRepository.insertLogAsync("Import actions failed. '$filePath' not found")
             }
             return Result.success()
         }

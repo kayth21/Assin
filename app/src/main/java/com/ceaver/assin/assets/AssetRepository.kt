@@ -2,9 +2,9 @@ package com.ceaver.assin.assets
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.assets.overview.AssetOverview
 import com.ceaver.assin.threading.BackgroundThreadExecutor
-import com.ceaver.assin.trades.TradeRepository
 
 object AssetRepository {
 
@@ -27,7 +27,7 @@ object AssetRepository {
     }
 
     fun loadAllAssets(): List<Asset> {
-        val assets = TradeRepository.loadAllTrades()
+        val assets = ActionRepository.loadAllActions()
         val buyPairs = assets.filter { it.buyTitle != null }.map { Pair(it.buyTitle!!, it.buyAmount!!) }
         val sellPairs = assets.filter { it.sellTitle != null }.map { Pair(it.sellTitle!!, it.sellAmount!!.unaryMinus()) }
         val allPairs = buyPairs + sellPairs

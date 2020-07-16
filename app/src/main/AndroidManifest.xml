@@ -29,7 +29,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".trades.input.TradeInputFragment"
+            android:name=".action.input.ActionInputFragment"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity

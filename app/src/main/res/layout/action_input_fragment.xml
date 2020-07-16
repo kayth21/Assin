@@ -2,7 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tradeInputFragment"
+    android:id="@+id/actionInputFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
@@ -19,14 +19,14 @@
     <!-- TITLE -->
 
     <ImageView
-        android:id="@+id/tradeInputFragmentTradeTypeImageView"
+        android:id="@+id/actionInputFragmentTradeTypeImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tradeInputFragmentTradeTypeTextView"
+        android:id="@+id/actionInputFragmentTradeTypeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -34,10 +34,10 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tradeInputFragmentTradeTypeImageView" />
+        app:layout_constraintStart_toEndOf="@+id/actionInputFragmentTradeTypeImageView" />
 
     <EditText
-        android:id="@+id/tradeInputFragmentTradeDateTextView"
+        android:id="@+id/actionInputFragmentTradeDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -52,7 +52,7 @@
     <!-- BUY ASSET -->
 
     <TextView
-        android:id="@+id/tradeInputFragmentBuyTradeLabel"
+        android:id="@+id/actionInputFragmentBuyTradeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -60,10 +60,10 @@
         android:textStyle="bold"
         android:text="Buy asset"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tradeInputFragmentTradeTypeImageView" />
+        app:layout_constraintTop_toBottomOf="@id/actionInputFragmentTradeTypeImageView" />
 
     <EditText
-        android:id="@+id/tradeInputFragmentBuyAmountTextView"
+        android:id="@+id/actionInputFragmentBuyAmountTextView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -71,21 +71,21 @@
         android:inputType="numberDecimal"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tradeInputFragmentBuyTradeLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/actionInputFragmentBuyTradeLabel" />
 
     <Spinner
-        android:id="@+id/tradeInputFragmentBuySymbolSpinner"
+        android:id="@+id/actionInputFragmentBuySymbolSpinner"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/tradeInputFragmentBuyAmountTextView" />
+        app:layout_constraintTop_toTopOf="@+id/actionInputFragmentBuyAmountTextView" />
 
     <!-- SELL ASSET -->
 
     <TextView
-        android:id="@+id/tradeInputFragmentSellTradeLabel"
+        android:id="@+id/actionInputFragmentSellTradeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -93,10 +93,10 @@
         android:textStyle="bold"
         android:text="Sell asset"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tradeInputFragmentBuyAmountTextView" />
+        app:layout_constraintTop_toBottomOf="@id/actionInputFragmentBuyAmountTextView" />
 
     <EditText
-        android:id="@+id/tradeInputFragmentSellAmountTextView"
+        android:id="@+id/actionInputFragmentSellAmountTextView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -104,21 +104,21 @@
         android:textSize="12sp"
         android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tradeInputFragmentSellTradeLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/actionInputFragmentSellTradeLabel" />
 
     <Spinner
-        android:id="@+id/tradeInputFragmentSellSymbolSpinner"
+        android:id="@+id/actionInputFragmentSellSymbolSpinner"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/tradeInputFragmentSellAmountTextView" />
+        app:layout_constraintTop_toTopOf="@+id/actionInputFragmentSellAmountTextView" />
 
     <!-- COMMENT -->
 
     <TextView
-        android:id="@+id/tradeInputFragmentCommentLabel"
+        android:id="@+id/actionInputFragmentCommentLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -126,10 +126,10 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tradeInputFragmentSellAmountTextView" />
+        app:layout_constraintTop_toBottomOf="@id/actionInputFragmentSellAmountTextView" />
 
     <EditText
-        android:id="@+id/tradeInputFragmentCommentTextView"
+        android:id="@+id/actionInputFragmentCommentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -138,12 +138,12 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tradeInputFragmentCommentLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/actionInputFragmentCommentLabel" />
 
     <!-- SAVE BUTTON -->
 
     <Button
-        android:id="@+id/tradeInputFragmentSaveButton"
+        android:id="@+id/actionInputFragmentSaveButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -153,6 +153,6 @@
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tradeInputFragmentCommentTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/actionInputFragmentCommentTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.ceaver.assin
 
 import android.content.Context
 import androidx.work.*
+import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
 import com.ceaver.assin.assets.AssetCategory
@@ -9,11 +10,10 @@ import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionWorker
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketCompleteUpdateWorker
-import com.ceaver.assin.markets.overview.MarketOverviewUpdateWorker
 import com.ceaver.assin.markets.MarketPartialUpdateWorker
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.overview.MarketOverviewUpdateWorker
 import com.ceaver.assin.system.SystemRepository
-import com.ceaver.assin.trades.TradeRepository
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -81,10 +81,10 @@ object AssinWorkers {
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
         var index: Int = 0
-        val tradeTitles = TradeRepository.loadAllTrades().flatMap { it.getTitles() }.toSet() // TODO only trades with positive sum
+        val ActionTitles = ActionRepository.loadAllActions().flatMap { it.getTitles() }.toSet() // TODO only trades with positive sum
         val intentionTitles = IntentionRepository.loadAllIntentions().map { it.title }.toSet()
         val alertTitles = AlertRepository.loadAllAlerts().flatMap { setOf(it.symbol, it.reference) }.toSet()
-        return (tradeTitles + intentionTitles + alertTitles).filter { it.category == AssetCategory.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
+        return (ActionTitles + intentionTitles + alertTitles).filter { it.category == AssetCategory.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
     }
 
     private fun marketPartialUpdateRequestBuilder(title: Title, index: Int): OneTimeWorkRequest {
