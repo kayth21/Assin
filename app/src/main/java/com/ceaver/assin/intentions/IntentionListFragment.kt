@@ -1,20 +1,20 @@
 package com.ceaver.assin.intentions
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
 import com.ceaver.assin.intentions.input.IntentionInputFragment
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
 import kotlinx.android.synthetic.main.fragment_intention_list.*
 import kotlinx.android.synthetic.main.fragment_market_list.*
@@ -102,7 +102,7 @@ class IntentionListFragment : Fragment() {
     private fun onAllIntentionsLoaded(intentions: List<Intention>) {
         intentionListAdapter.intentionList = intentions.toMutableList().sortedBy { it.percentToReferencePrice() }.reversed()
         intentionListAdapter.notifyDataSetChanged()
-        intentionListFragmentSwipeRefreshLayout.isRefreshing = false
+        intentionListFragmentSwipeRefreshLayout?.isRefreshing = false
     }
 
     interface OnItemClickListener {

@@ -1,14 +1,13 @@
 package com.ceaver.assin.assets.list
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.assets.Asset
@@ -20,6 +19,7 @@ import com.ceaver.assin.trades.TradeEvents
 import com.ceaver.assin.trades.TradeType
 import com.ceaver.assin.trades.input.TradeInputFragment
 import com.ceaver.assin.util.isConnected
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_asset_list.*
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
 import kotlinx.android.synthetic.main.fragment_market_list.*
@@ -102,7 +102,7 @@ class AssetListFragment : Fragment() {
     }
 
     private fun onAllAssetsLoaded(assets: List<Asset>) {
-        assetListAdapter.assets = assets.toMutableList().sortedBy { it.btcValue }.reversed(); assetListAdapter.notifyDataSetChanged(); assetSwipeRefreshLayout.isRefreshing = false
+        assetListAdapter.assets = assets.toMutableList().sortedBy { it.btcValue }.reversed(); assetListAdapter.notifyDataSetChanged(); assetSwipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onStop() {

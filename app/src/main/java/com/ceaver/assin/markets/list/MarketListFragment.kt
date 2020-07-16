@@ -1,19 +1,19 @@
 package com.ceaver.assin.markets.list
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.util.isConnected
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_market_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -49,7 +49,7 @@ class MarketListFragment : Fragment() {
     }
 
     private fun onAllTitlesLoaded(titles: List<Title>) {
-        marketListAdapter.titles = titles; marketListAdapter.notifyDataSetChanged(); marketSwipeRefreshLayout.isRefreshing = false
+        marketListAdapter.titles = titles; marketListAdapter.notifyDataSetChanged(); marketSwipeRefreshLayout?.isRefreshing = false
     }
 
     @Suppress("UNUSED_PARAMETER")

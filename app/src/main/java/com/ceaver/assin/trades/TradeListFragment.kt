@@ -1,13 +1,13 @@
 package com.ceaver.assin.trades
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.trades.input.TradeInputFragment
 import kotlinx.android.synthetic.main.fragment_trade_list.*
 import org.greenrobot.eventbus.EventBus
@@ -44,7 +44,7 @@ class TradeListFragment : Fragment() {
     }
 
     private fun onAllTradesLoaded(trades: List<Trade>) {
-        tradeListAdapter.tradeList = trades.toMutableList().sortedBy { it.tradeDate }.reversed(); tradeListAdapter.notifyDataSetChanged(); swipeRefreshLayout.isRefreshing = false
+        tradeListAdapter.tradeList = trades.toMutableList().sortedBy { it.tradeDate }.reversed(); tradeListAdapter.notifyDataSetChanged(); swipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onStop() {
