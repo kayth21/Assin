@@ -125,9 +125,9 @@ class AssetListFragment : Fragment() {
                         AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW.name
                         else -> throw IllegalStateException()
                     })
-                    val tradeInputFragment = ActionInputFragment()
-                    tradeInputFragment.arguments = arguments
-                    tradeInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+                    val actionInputFragment = ActionInputFragment()
+                    actionInputFragment.arguments = arguments
+                    actionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val arguments = Bundle();

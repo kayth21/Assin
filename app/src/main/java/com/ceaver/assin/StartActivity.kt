@@ -23,6 +23,7 @@ import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.MarketFragment
+import com.ceaver.assin.positions.list.PositionListFragment
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.navigation.NavigationView
@@ -107,9 +108,13 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 val viewPager = findViewById<View>(R.id.pager) as ViewPager
                 viewPager.setCurrentItem(2, true)
             }
-            R.id.nav_trades -> {
+            R.id.nav_positions -> {
                 val viewPager = findViewById<View>(R.id.pager) as ViewPager
                 viewPager.setCurrentItem(3, true)
+            }
+            R.id.nav_actions -> {
+                val viewPager = findViewById<View>(R.id.pager) as ViewPager
+                viewPager.setCurrentItem(4, true)
             }
             R.id.nav_alerts -> {
                 val intent = Intent(this, AlertListActivity::class.java)
@@ -147,7 +152,7 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getCount(): Int {
-            return 4
+            return 5
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
@@ -155,7 +160,8 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 0 -> "Markets"
                 1 -> "Assets"
                 2 -> "Intentions"
-                3 -> "Trades"
+                3 -> "Positions"
+                4 -> "Action Log"
                 else -> null
             }
         }
@@ -165,7 +171,8 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 0 -> MarketFragment()
                 1 -> AssetFragment()
                 2 -> IntentionListFragment()
-                3 -> ActionListFragment()
+                3 -> PositionListFragment()
+                4 -> ActionListFragment()
                 else -> null
             }!!
         }
