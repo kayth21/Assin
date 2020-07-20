@@ -2,6 +2,7 @@ package com.ceaver.assin.positions
 
 import android.os.Handler
 import android.os.Looper
+import com.ceaver.assin.action.Action
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
@@ -30,28 +31,14 @@ object PositionRepository {
         }
     }
 
-    fun savePosition(position: Position) {
-        if (position.id > 0)
-            updatePosition(position)
-        else
-            insertPosition(position)
-    }
-
-    fun savePositionAsync(position: Position, callbackInMainThread: Boolean, callback: () -> Unit) {
-        if (position.id > 0)
-            updatePositionAsync(position, callbackInMainThread, callback)
-        else
-            insertPositionAsync(position, callbackInMainThread, callback)
-    }
-
-    fun insertPosition(position: Position) {
-        getPositionDao().insertPosition(position)
+    fun insertPosition(action: Action) {
+        getPositionDao().insertPosition(Position(action))
         getEventbus().post(PositionEvents.Insert())
     }
 
-    fun insertPositionAsync(position: Position, callbackInMainThread: Boolean, callback: () -> Unit) {
+    fun insertPositionAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
         BackgroundThreadExecutor.execute {
-            insertPosition(position)
+            insertPosition(action)
             handleCallback(callbackInMainThread, callback)
         }
     }

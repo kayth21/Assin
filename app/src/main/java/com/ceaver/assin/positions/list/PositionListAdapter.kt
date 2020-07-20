@@ -13,6 +13,7 @@ import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
+import java.math.RoundingMode
 import kotlin.random.Random
 
 internal class PositionListAdapter(private val onClickListener: PositionListFragment.OnItemClickListener) : RecyclerView.Adapter<PositionListAdapter.PositionViewHolder>() {
@@ -51,17 +52,12 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
             (view.findViewById(R.id.positionListRowSymbol) as ImageView).setImageResource(getImageIdentifier(position.title))
             (view.findViewById(R.id.positionListRowPositionTitle) as TextView).text = position.title.name
             (view.findViewById(R.id.positionListRowPositionSize) as TextView).text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
-            (view.findViewById(R.id.positionListRowPositionValueBtc) as TextView).text = "${position.currentValueInBtc().toCurrencyString("BTC")} BTC"
-            (view.findViewById(R.id.positionListRowPositionValueUsd) as TextView).text = "${position.currentValueInUsd().toCurrencyString("USD")} USD"
-
+            (view.findViewById(R.id.positionListRowPositionValueBtc) as TextView).text = "${position.currentValueInBtc().toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc().setScale(0, RoundingMode.HALF_UP)}%)"
+            (view.findViewById(R.id.positionListRowPositionValueUsd) as TextView).text = "${position.currentValueInUsd().toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd().setScale(0, RoundingMode.HALF_UP)}%)"
 
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(position) }
         }
-
-      //  private fun shortenPosition(position: String): String {
-      //      return if (position.length > 25) position.take(25) + "..." else position
-      //  }
 
         private fun getImageIdentifier(title: Title): Int {
             val identifier = MyApplication.appContext!!.resIdByName(title.symbol.toLowerCase(), "drawable")

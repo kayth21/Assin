@@ -41,7 +41,15 @@ class ActionInputViewModel : ViewModel() {
 
     private fun saveAction(action: Action) {
         status.value = ActionInputStatus.START_SAVE
-        ActionRepository.saveActionAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+        if (action.id > 0) {
+            // TODO update... could be tricky when actions are "linked" to positions
+            ActionRepository.updateActionAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+        } else
+            when (action.getActionType()) {
+                ActionType.DEPOSIT -> ActionRepository.insertDepositAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+                ActionType.WITHDRAW -> ActionRepository.insertWithdrawAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+                ActionType.TRADE -> ActionRepository.insertTradeAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+            }
     }
 
     fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?) {

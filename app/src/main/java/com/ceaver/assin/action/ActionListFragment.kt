@@ -98,6 +98,7 @@ class ActionListFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (item.groupId == 3 && item.itemId == 0) {
             val selectedTrade = actionListAdapter.currentLongClickAction!!
+            // TODO Delete... could be tricky meanwhile actions are "linked" to positions. Maybe allow only last element to be deleted.
             ActionRepository.deleteActionAsync(selectedTrade)
         }
         return super.onContextItemSelected(item)

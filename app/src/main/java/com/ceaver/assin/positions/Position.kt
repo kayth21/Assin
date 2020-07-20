@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
+import java.math.MathContext
 
 @Entity(tableName = "position")
 class Position(
@@ -28,19 +29,25 @@ class Position(
         return closePriceBtc == null && closePriceUsd == null
     }
 
-    fun currentValueInBtc() : BigDecimal {
+    fun currentValueInBtc(): BigDecimal {
         return amount * title.priceBtc!!.toBigDecimal()
     }
 
-    fun currentValueInUsd() : BigDecimal {
+    fun currentValueInUsd(): BigDecimal {
         return amount * title.priceUsd!!.toBigDecimal()
     }
 
-    fun profitLossInPercentToBtc() {
-        throw NotImplementedError()
+    fun profitLossInPercentToBtc(): BigDecimal {
+        return ((BigDecimal.valueOf(100)
+                .divide((openPriceBtc.times(amount)), MathContext.DECIMAL32))
+                .times(currentValueInBtc()))
+                .subtract(BigDecimal.valueOf(100))
     }
 
-    fun profitLossInPercentToUsd() {
-        throw NotImplementedError()
+    fun profitLossInPercentToUsd(): BigDecimal {
+        return ((BigDecimal.valueOf(100)
+                .divide((openPriceUsd.times(amount)), MathContext.DECIMAL32))
+                .times(currentValueInUsd()))
+                .subtract(BigDecimal.valueOf(100))
     }
 }

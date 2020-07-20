@@ -3,6 +3,7 @@ package com.ceaver.assin.action
 import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.database.Database
+import com.ceaver.assin.positions.PositionRepository.insertPosition
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 
@@ -37,28 +38,75 @@ object ActionRepository {
         }
     }
 
-    fun saveAction(action: Action) {
-        if (action.id > 0) updateAction(action) else insertAction(action)
+    fun insertDeposit(action: Action) {
+        insertAction(action)
+        insertPosition(action)
     }
 
-    fun saveActionAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
-        if (action.id > 0) updateActionAsync(action, callbackInMainThread, callback) else insertActionAsync(action, callbackInMainThread, callback)
+    fun insertDepositAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute {
+            insertDeposit(action)
+            if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke()
+        }
     }
 
-    fun insertAction(action: Action) {
-        getActionDao().insertAction(action); EventBus.getDefault().post(ActionEvents.Insert())
+    fun insertTrade(action: Action) {
+        insertAction(action)
+        // TODO
     }
 
-    fun insertActionAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
-        BackgroundThreadExecutor.execute { insertAction(action); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
+    fun insertTradeAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute {
+            insertTrade(action)
+            if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke()
+        }
+    }
+
+    fun insertWithdraw(action: Action) {
+        insertAction(action)
+        // TODO
+    }
+
+    fun insertWithdrawAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute {
+            insertWithdraw(action)
+            if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke()
+        }
+    }
+
+    fun insertSplit(action: Action) {
+        TODO()
+    }
+
+    fun insertMerge(action: Action) {
+        TODO()
     }
 
     fun insertActions(alerts: List<Action>) {
-        getActionDao().insertActions(alerts); EventBus.getDefault().post(ActionEvents.Insert())
+        alerts.forEach {
+            when (it.getActionType()) {
+                ActionType.DEPOSIT -> insertDeposit(it)
+                ActionType.TRADE -> insertTrade(it)
+                ActionType.WITHDRAW -> insertWithdraw(it)
+            }
+        }
+        EventBus.getDefault().post(ActionEvents.Insert())
     }
 
     fun insertActionsAsync(actions: List<Action>, callbackInMainThread: Boolean, callback: () -> Unit) {
         BackgroundThreadExecutor.execute { insertActions(actions); if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke() }
+    }
+
+    private fun insertActionAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
+        BackgroundThreadExecutor.execute {
+            insertAction(action)
+            if (callbackInMainThread) Handler(Looper.getMainLooper()).post(callback) else callback.invoke()
+        }
+    }
+
+    private fun insertAction(action: Action) {
+        getActionDao().insertAction(action)
+        EventBus.getDefault().post(ActionEvents.Insert())
     }
 
     fun updateAction(action: Action) {

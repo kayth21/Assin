@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionEvents
@@ -45,6 +46,18 @@ class PositionListFragment : Fragment(){
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Complete) {
+        loadAllPositions()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: AssinWorkerEvents.Observed) {
+        loadAllPositions()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: PositionEvents.Delete) {
         loadAllPositions()
     }
@@ -58,6 +71,12 @@ class PositionListFragment : Fragment(){
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: PositionEvents.Update) {
+        loadAllPositions()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: PositionEvents.DeleteAll) {
         loadAllPositions()
     }
 
