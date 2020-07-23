@@ -3,7 +3,6 @@ package com.ceaver.assin.action
 import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.database.Database
-import com.ceaver.assin.positions.PositionRepository.insertPosition
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
 
@@ -45,7 +44,6 @@ object ActionRepository {
 
     fun insertDeposit(action: Action) {
         insertAction(action)
-        insertPosition(action)
     }
 
     fun insertDepositAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {

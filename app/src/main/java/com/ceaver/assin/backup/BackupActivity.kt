@@ -23,7 +23,6 @@ import com.ceaver.assin.intentions.IntentionStatus
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.positions.PositionRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_backup.*
 import org.apache.commons.csv.CSVFormat
@@ -168,7 +167,6 @@ class BackupActivity : AppCompatActivity() {
                     val comment = it.get(5).ifEmpty { null }
                     // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
                     Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()
-                PositionRepository.deleteAllPositions()
                 ActionRepository.deleteAllActions()
                 ActionRepository.insertActions(actions)
                 LogRepository.insertLogAsync("Import actions from '$filePath' successful")

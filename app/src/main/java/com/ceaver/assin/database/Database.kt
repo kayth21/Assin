@@ -14,10 +14,8 @@ import com.ceaver.assin.logging.Log
 import com.ceaver.assin.logging.LogDao
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleDao
-import com.ceaver.assin.positions.Position
-import com.ceaver.assin.positions.PositionDao
 
-@androidx.room.Database(entities = arrayOf(Action::class, Title::class, Intention::class, Alert::class, Log::class, Position::class), version = 1, exportSchema = false)
+@androidx.room.Database(entities = arrayOf(Action::class, Title::class, Intention::class, Alert::class, Log::class), version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun actionDao(): ActionDao
@@ -25,7 +23,6 @@ abstract class Database : RoomDatabase() {
     abstract fun intentionDao(): IntentionDao
     abstract fun logDao(): LogDao
     abstract fun titleDao(): TitleDao
-    abstract fun positionDao(): PositionDao
 
     companion object {
         private var INSTANCE: Database? = null
