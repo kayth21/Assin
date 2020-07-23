@@ -90,6 +90,16 @@ object TitleRepository {
         return getTitleDao().loadTitleBySymbol(symbol);
     }
 
+    fun loadTitleBySymbolAsync(symbol: String, callbackInMainThread: Boolean, callback: (Title) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val titles = loadTitleBySymbol(symbol)
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(titles) }
+            else
+                callback.invoke(titles)
+        }
+    }
+
     fun loadAllSymbolsAsync(callbackInMainThread: Boolean, callback: (List<String>) -> Unit) {
         BackgroundThreadExecutor.execute {
             val symbols = loadAllSymbols()

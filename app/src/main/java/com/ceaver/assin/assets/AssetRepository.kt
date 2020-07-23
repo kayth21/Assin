@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.assets.overview.AssetOverview
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 
 object AssetRepository {
@@ -50,6 +51,30 @@ object AssetRepository {
                 Handler(Looper.getMainLooper()).post { callback.invoke(assets) }
             else
                 callback.invoke(assets)
+        }
+    }
+
+    fun loadAsset(title: Title): Asset {
+        val actions = ActionRepository.loadActions(title.symbol)
+        val buyActions = actions.filter { it.buyTitle?.symbol == title.symbol }.map { it.buyAmount!! }
+        val sellActions = actions.filter { it.sellTitle?.symbol == title.symbol }.map { it.sellAmount!!.unaryMinus() }
+        val allActions = buyActions + sellActions
+        val amount = allActions.reduce { x, y -> x.add(y) }
+        return Asset(
+                name = title.name,
+                symbol = title.symbol,
+                amount = amount,
+                btcValue =  title.priceBtc!!.toBigDecimal().times(amount),
+                usdValue = title.priceUsd!!.toBigDecimal().times(amount))
+    }
+
+    fun loadAssetAsync(title: Title, callbackInMainThread: Boolean, callback: (Asset) -> Unit) {
+        BackgroundThreadExecutor.execute {
+            val asset = loadAsset(title)
+            if (callbackInMainThread)
+                Handler(Looper.getMainLooper()).post { callback.invoke(asset) }
+            else
+                callback.invoke(asset)
         }
     }
 }

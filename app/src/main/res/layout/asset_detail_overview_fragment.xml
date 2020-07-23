@@ -1,0 +1,85 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- TITLE -->
+
+    <ImageView
+        android:id="@+id/assetDetailOverviewFragmentAssetImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/assetDetailOverviewFragmentAssetImageDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentAssetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="18sp"
+        android:text="@string/assetDetailFragmentAssetTextView"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/assetDetailOverviewFragmentAssetImage"
+        app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentAssetImage"
+        app:layout_constraintBottom_toBottomOf="@+id/assetDetailOverviewFragmentAssetImage"/>
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentTotalPositionSizeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Total position size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentAssetTitle" />
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentTotalPositionSizeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText" />
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentValueInBtcText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Value in Bitcoin"
+        app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText"
+        app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText" />
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentValueInBtcValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentTotalPositionSizeValue"
+        app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentValueInUsdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Value in US Dollar"
+        app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentValueInBtcText"
+        app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
+
+    <TextView
+        android:id="@+id/assetDetailOverviewFragmentValueInUsdValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentValueInBtcValue"
+        app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcValue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,11 @@ object ActionRepository {
         }
     }
 
+
+    fun loadActions(symbol: String): List<Action> {
+        return getActionDao().loadAllActions().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }
+    }
+
     fun insertDeposit(action: Action) {
         insertAction(action)
         insertPosition(action)

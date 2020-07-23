@@ -10,4 +10,7 @@
     <string name="nav_header_subtitle">info@ceaver.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="position_symbol_image_content_description">Symbol</string>
+    <string name="assetDetailFragmentAssetImageViewDescription">Asset Icon</string>
+    <string name="assetDetailFragmentAssetTextView">Title (TODO)</string>
+    <string name="assetDetailOverviewFragmentAssetImageDescription">Image Description</string>
 </resources>

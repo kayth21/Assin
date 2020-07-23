@@ -16,6 +16,7 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.action.input.ActionInputFragment
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
+import com.ceaver.assin.assets.detail.AssetDetailFragment
 import com.ceaver.assin.intentions.input.IntentionInputFragment
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
@@ -29,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class AssetListFragment : Fragment() {
 
-    private val assetListAdapter = AssetListAdapter()
+    private val assetListAdapter = AssetListAdapter(OnListItemClickListener())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.fragment_asset_list, container, false)
@@ -41,7 +42,7 @@ class AssetListFragment : Fragment() {
         assetList.adapter = assetListAdapter
         assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
-            var arguments = Bundle();
+            val arguments = Bundle();
             arguments.putString(Action.ACTION_TYPE, ActionType.DEPOSIT.name)
             val tradeInputFragment = ActionInputFragment()
             tradeInputFragment.arguments = arguments
@@ -103,6 +104,20 @@ class AssetListFragment : Fragment() {
 
     private fun onAllAssetsLoaded(assets: List<Asset>) {
         assetListAdapter.assets = assets.toMutableList().sortedBy { it.btcValue }.reversed(); assetListAdapter.notifyDataSetChanged(); assetSwipeRefreshLayout?.isRefreshing = false
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: Asset)
+    }
+
+    private inner class OnListItemClickListener : OnItemClickListener {
+        override fun onItemClick(item: Asset) {
+            val dialogFragment = AssetDetailFragment()
+            val arguments = Bundle()
+            arguments.putString(AssetDetailFragment.SYMBOL, item.symbol)
+            dialogFragment.arguments = arguments
+            dialogFragment.show(parentFragmentManager, AssetDetailFragment.FRAGMENT_TAG)
+        }
     }
 
     override fun onStop() {
