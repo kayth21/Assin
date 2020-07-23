@@ -45,7 +45,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         private fun getActionTypeText(action: Action): String {
-            return when (action.getActionType()) {
+            return when (action.actionType) {
                 ActionType.DEPOSIT -> "Deposit ${action.buyTitle!!.name}"
                 ActionType.WITHDRAW -> "Withdraw ${action.sellTitle!!.name}"
                 ActionType.TRADE -> "${action.sellTitle!!.name} -> ${action.buyTitle!!.name}"
@@ -53,7 +53,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         private fun getActionText(action: Action): String {
-            return when (action.getActionType()) {
+            return when (action.actionType) {
                 ActionType.DEPOSIT -> "${action.buyAmount!!} ${action.buyTitle!!.symbol}"
                 ActionType.WITHDRAW -> "${action.sellAmount!!} ${action.sellTitle!!.symbol}"
                 ActionType.TRADE -> "${action.sellAmount!!} ${action.sellTitle!!.symbol} -> ${action.buyAmount!!} ${action.buyTitle!!.symbol}"
@@ -61,7 +61,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         private fun getRightImageResource(action: Action): Int {
-            return when (action.getActionType()) {
+            return when (action.actionType) {
                 ActionType.DEPOSIT -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
                 ActionType.WITHDRAW -> R.drawable.withdraw
                 ActionType.TRADE -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
@@ -69,7 +69,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         private fun getLeftImageResource(action: Action): Int {
-            return when (action.getActionType()) {
+            return when (action.actionType) {
                 ActionType.DEPOSIT -> R.drawable.deposit
                 ActionType.WITHDRAW -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())
                 ActionType.TRADE -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())

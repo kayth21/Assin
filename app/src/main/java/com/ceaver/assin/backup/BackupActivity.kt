@@ -14,6 +14,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
+import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
@@ -93,7 +94,7 @@ class BackupActivity : AppCompatActivity() {
     private fun startExport() {
         WorkManager.getInstance(this)
                 .beginWith(listOf(
-                        OneTimeWorkRequestBuilder<TradeExportWorker>().build(),
+                        OneTimeWorkRequestBuilder<ActionExportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertExportWorker>().build(),
                         OneTimeWorkRequestBuilder<IntentionExportWorker>().build()))
                 .then(OneTimeWorkRequestBuilder<EnableButtonWorker>().build())
@@ -110,13 +111,13 @@ class BackupActivity : AppCompatActivity() {
                 .enqueue()
     }
 
-    class TradeExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+    class ActionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
         override fun doWork(): Result {
             val actions = ActionRepository.loadAllActions()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty())
+            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty(), action.actionType.name, action.positionId ?: "", if (action.splitAmount != null) action.splitAmount.toPlainString() else "", if (action.valueInBtc != null) action.valueInBtc.toPlainString() else "", if (action.valueInUsd != null) action.valueInUsd.toPlainString() else "")
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export actions successful to '$filePath'")
             return Result.success()
@@ -165,8 +166,14 @@ class BackupActivity : AppCompatActivity() {
                     val sellTitle = if (sellTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(sellTitleString)
                     val sellAmount = it.get(4).toBigDecimalOrNull()
                     val comment = it.get(5).ifEmpty { null }
+                    println(it.get(6))
+                    val actionType = ActionType.valueOf(it.get(6))
+                    val positionId: Long? = it.get(7).toLongOrNull()
+                    val splitAmount = it.get(8).toBigDecimalOrNull()
+                    val valueInBtc = it.get(9).toBigDecimalOrNull()
+                    val valueInUsd = it.get(10).toBigDecimalOrNull()
                     // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
-                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment) }.toList()
+                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment, actionType, positionId, splitAmount, valueInBtc, valueInUsd) }.toList()
                 ActionRepository.deleteAllActions()
                 ActionRepository.insertActions(actions)
                 LogRepository.insertLogAsync("Import actions from '$filePath' successful")

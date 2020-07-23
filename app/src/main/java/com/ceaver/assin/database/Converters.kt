@@ -1,6 +1,7 @@
 package com.ceaver.assin.database
 
 import androidx.room.TypeConverter
+import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.intentions.IntentionStatus
@@ -68,4 +69,10 @@ class Converters {
 
     @TypeConverter
     fun toAssetCategory(string: String?): AssetCategory? = string?.let { AssetCategory.valueOf(it) }
+
+    @TypeConverter
+    fun fromActionType(assetType: ActionType?): String? = assetType?.name
+
+    @TypeConverter
+    fun toActionType(string: String?): ActionType? = string?.let { ActionType.valueOf(it) }
 }

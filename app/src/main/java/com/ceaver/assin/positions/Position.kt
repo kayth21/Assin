@@ -1,11 +1,12 @@
 package com.ceaver.assin.positions
 
-import com.ceaver.assin.action.Action
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
+import kotlin.random.Random
 
 data class Position(
+        val id: Long = Random.nextLong(),
         val title: Title,
         val amount: BigDecimal,
         val openPriceBtc: BigDecimal,
@@ -13,17 +14,6 @@ data class Position(
         val closePriceBtc: BigDecimal? = null,
         val closePriceUsd: BigDecimal? = null
 ) {
-
-    companion object {
-        fun create(action: Action): Position {
-            return Position(
-                    title = action.buyTitle!!,
-                    amount = action.buyAmount!!,
-                    openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
-                    openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()
-            )
-        }
-    }
 
     fun isActive(): Boolean {
         return closePriceBtc == null && closePriceUsd == null

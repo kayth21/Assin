@@ -88,7 +88,7 @@ class ActionListFragment : Fragment() {
         override fun onItemClick(item: Action) {
             val arguments = Bundle();
             arguments.putLong(Action.ACTION_ID, item.id)
-            arguments.putString(Action.ACTION_TYPE, item.getActionType().name)
+            arguments.putString(Action.ACTION_TYPE, item.actionType.name)
             val actionInputFragment = ActionInputFragment()
             actionInputFragment.arguments = arguments
             actionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)

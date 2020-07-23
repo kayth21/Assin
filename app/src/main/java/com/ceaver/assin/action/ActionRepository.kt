@@ -87,7 +87,7 @@ object ActionRepository {
 
     fun insertActions(alerts: List<Action>) {
         alerts.forEach {
-            when (it.getActionType()) {
+            when (it.actionType) {
                 ActionType.DEPOSIT -> insertDeposit(it)
                 ActionType.TRADE -> insertTrade(it)
                 ActionType.WITHDRAW -> insertWithdraw(it)

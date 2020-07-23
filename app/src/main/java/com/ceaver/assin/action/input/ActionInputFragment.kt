@@ -17,6 +17,7 @@ import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.util.CalendarHelper
 import kotlinx.android.synthetic.main.action_input_fragment.*
+import java.math.MathContext
 import java.time.LocalDate
 
 class ActionInputFragment() : DialogFragment() {
@@ -113,21 +114,27 @@ class ActionInputFragment() : DialogFragment() {
         val actionDate = CalendarHelper.convertDate(actionInputFragmentTradeDateTextView.text.toString())
         when (lookupActionType()) {
             ActionType.TRADE -> {
-                val buySymbol = actionInputFragmentBuySymbolSpinner.selectedItem as Title
+                val buyTitle = actionInputFragmentBuySymbolSpinner.selectedItem as Title
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
-                val sellSymbol = actionInputFragmentSellSymbolSpinner.selectedItem as Title
+                val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                viewModel.onSaveTradeClick(buySymbol, buyAmount, sellSymbol, sellAmount, actionDate, comment)
+                val valueInBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                val valueInUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                viewModel.onSaveTradeClick(buyTitle, buyAmount, sellTitle, sellAmount, actionDate, comment, valueInBtc, valueInUsd)
             }
             ActionType.DEPOSIT -> {
-                val buySymbol = actionInputFragmentBuySymbolSpinner.selectedItem as Title
+                val buyTitle = actionInputFragmentBuySymbolSpinner.selectedItem as Title
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
-                viewModel.onDepositClick(buySymbol, buyAmount, actionDate, comment)
+                val valueInBtc = buyTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
+                val valueInUsd = buyTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
+                viewModel.onDepositClick(buyTitle, buyAmount, actionDate, comment, valueInBtc, valueInUsd)
             }
             ActionType.WITHDRAW -> {
-                val sellSymbol = actionInputFragmentSellSymbolSpinner.selectedItem as Title
+                val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                viewModel.onWithdrawClick(sellSymbol, sellAmount, actionDate, comment)
+                val valueInBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                val valueInUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                viewModel.onWithdrawClick(sellTitle, sellAmount, actionDate, comment, valueInBtc, valueInUsd)
             }
         }
     }

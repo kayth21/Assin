@@ -3,13 +3,38 @@ package com.ceaver.assin.positions
 import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.action.ActionRepository
+import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 
 object PositionRepository {
 
     fun loadAllPositions(): List<Position> {
-        val actions = ActionRepository.loadAllActions()
-        return actions.filter { it.isDeposit() }.map { Position.create(it) } // TODO
+        val positions = mutableListOf<Position>()
+        ActionRepository.loadAllActions().forEach { action ->
+            when (action.actionType) {
+                ActionType.DEPOSIT -> {
+                    positions.add(Position(
+                            title = action.buyTitle!!,
+                            amount = action.buyAmount!!,
+                            openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
+                            openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
+                }
+                ActionType.WITHDRAW -> {
+                    val position = positions.find { it.id == action.positionId }!!
+                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.valueInBtc, closePriceUsd = action.valueInUsd))
+                }
+                ActionType.TRADE -> { // TODO avoid copy/paste code
+                    val position = positions.find { it.id == action.positionId }!!
+                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.valueInBtc, closePriceUsd = action.valueInUsd))
+                    positions.add(Position(
+                            title = action.buyTitle!!,
+                            amount = action.buyAmount!!,
+                            openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
+                            openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
+                }
+            }
+        }
+        return positions
     }
 
     fun loadAllPositionsAsync(callbackInMainThread: Boolean, callback: (List<Position>) -> Unit) {
