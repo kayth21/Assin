@@ -168,7 +168,7 @@ class BackupActivity : AppCompatActivity() {
                     val comment = it.get(5).ifEmpty { null }
                     println(it.get(6))
                     val actionType = ActionType.valueOf(it.get(6))
-                    val positionId: Long? = it.get(7).toLongOrNull()
+                    val positionId: Int? = it.get(7).toIntOrNull()
                     val splitAmount = it.get(8).toBigDecimalOrNull()
                     val valueInBtc = it.get(9).toBigDecimalOrNull()
                     val valueInUsd = it.get(10).toBigDecimalOrNull()

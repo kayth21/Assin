@@ -17,17 +17,13 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Intensions" />
         <item
-            android:id="@+id/nav_positions"
+            android:id="@+id/nav_actions"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Positions" />
+            android:title="Action Log" />
 
 
         <item android:title="More Features">
             <menu>
-                <item
-                    android:id="@+id/nav_actions"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="Action Log" />
                 <item
                     android:id="@+id/nav_alerts"
                     android:icon="@drawable/ic_menu_camera"

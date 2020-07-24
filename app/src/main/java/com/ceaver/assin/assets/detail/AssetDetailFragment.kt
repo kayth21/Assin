@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.ceaver.assin.R
-import com.ceaver.assin.assets.detail.assets.AssetDetailAssetsFragment
 import com.ceaver.assin.assets.detail.overview.AssetDetailOverviewFragment
+import com.ceaver.assin.positions.list.PositionListFragment
 
 
 class AssetDetailFragment : DialogFragment() {
 
     companion object {
         const val FRAGMENT_TAG = "com.ceaver.assin.assets.detail.AssetDetailFragment.Tag"
-        const val SYMBOL =       "com.ceaver.assin.assets.detail.AssetDetailFragment.Symbol"
+        const val SYMBOL = "com.ceaver.assin.assets.detail.AssetDetailFragment.Symbol"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -27,7 +27,7 @@ class AssetDetailFragment : DialogFragment() {
 
         val symbol = lookupSymbol()
         insertFragment(R.id.assetDetailOverviewFragment, AssetDetailOverviewFragment(symbol))
-        insertFragment(R.id.assetDetailAssetsFragment, AssetDetailAssetsFragment(symbol))
+        insertFragment(R.id.assetDetailPositionsFragment, PositionListFragment(symbol))
     }
 
     private fun lookupSymbol(): String = requireArguments().getString(SYMBOL)!!
@@ -35,5 +35,6 @@ class AssetDetailFragment : DialogFragment() {
     private fun insertFragment(position: Int, fragment: Fragment) {
         childFragmentManager.beginTransaction().replace(position, fragment).commit()
     }
+
 }
 

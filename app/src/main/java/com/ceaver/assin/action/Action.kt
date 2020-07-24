@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.positions.Position
 import java.math.BigDecimal
+import java.math.MathContext
 import java.time.LocalDate
 
 @Entity(tableName = "action")
@@ -17,7 +19,7 @@ data class Action(
         @ColumnInfo(name = "sellAmount") var sellAmount: BigDecimal? = null,
         @ColumnInfo(name = "comment") var comment: String? = null,
         @ColumnInfo(name = "actionType") val actionType: ActionType,
-        @ColumnInfo(name = "positionId") val positionId: Long? = null,
+        @ColumnInfo(name = "positionId") val positionId: Int? = null,
         @ColumnInfo(name = "splitAmount") val splitAmount: BigDecimal? = null,
         @ColumnInfo(name = "valueInBtc") val valueInBtc: BigDecimal? = null,
         @ColumnInfo(name = "valueInUsd") val valueInUsd: BigDecimal? = null
@@ -35,5 +37,16 @@ data class Action(
         val ACTION_ID = "com.ceaver.assin.actions.Action.actionId"
         val ACTION_TYPE = "com.ceaver.assin.actions.Action.actionType"
         val SYMBOL = "com.ceaver.assin.actions.Action.symbol"
+
+        fun withdraw(position: Position) : Action {
+            return Action(
+                    actionType = ActionType.WITHDRAW,
+                    sellAmount = position.amount,
+                    sellTitle = position.title,
+                    positionId = position.id,
+                    valueInUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
+                    valueInBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
+            )
+        }
     }
 }

@@ -3,14 +3,16 @@ package com.ceaver.assin.positions
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
-import kotlin.random.Random
+import java.time.LocalDate
 
 data class Position(
-        val id: Long = Random.nextLong(),
+        val id: Int,
         val title: Title,
         val amount: BigDecimal,
+        val openDate: LocalDate,
         val openPriceBtc: BigDecimal,
         val openPriceUsd: BigDecimal,
+        val closeDate: LocalDate? = null,
         val closePriceBtc: BigDecimal? = null,
         val closePriceUsd: BigDecimal? = null
 ) {
