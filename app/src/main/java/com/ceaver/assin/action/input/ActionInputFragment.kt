@@ -118,23 +118,23 @@ class ActionInputFragment() : DialogFragment() {
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
                 val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                val valueInBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
-                val valueInUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
-                viewModel.onSaveTradeClick(buyTitle, buyAmount, sellTitle, sellAmount, actionDate, comment, valueInBtc, valueInUsd)
+                val priceBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
+                val priceUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
+                viewModel.onSaveTradeClick(buyTitle, buyAmount, sellTitle, sellAmount, actionDate, comment, priceBtc, priceUsd)
             }
             ActionType.DEPOSIT -> {
                 val buyTitle = actionInputFragmentBuySymbolSpinner.selectedItem as Title
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
-                val valueInBtc = buyTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
-                val valueInUsd = buyTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
-                viewModel.onDepositClick(buyTitle, buyAmount, actionDate, comment, valueInBtc, valueInUsd)
+                val priceBtc = buyTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
+                val priceUsd = buyTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
+                viewModel.onDepositClick(buyTitle, buyAmount, actionDate, comment, priceBtc, priceUsd)
             }
             ActionType.WITHDRAW -> {
                 val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                val valueInBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
-                val valueInUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
-                viewModel.onWithdrawClick(sellTitle, sellAmount, actionDate, comment, valueInBtc, valueInUsd)
+                val priceBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
+                val priceUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
+                viewModel.onWithdrawClick(sellTitle, sellAmount, actionDate, comment, priceBtc, priceUsd)
             }
         }
     }
@@ -185,6 +185,7 @@ class ActionInputFragment() : DialogFragment() {
             ActionType.WITHDRAW -> {
                 actionInputFragmentSellAmountTextView.setText(if (action.sellAmount != null) action.sellAmount.toString() else "")
             }
+            else -> throw IllegalStateException()
         }
     }
 
@@ -220,6 +221,7 @@ class ActionInputFragment() : DialogFragment() {
             ActionType.WITHDRAW -> {
                 actionInputFragmentSellAmountTextView.isEnabled = enable
             }
+            else -> throw IllegalStateException()
         }
     }
 
@@ -243,6 +245,7 @@ class ActionInputFragment() : DialogFragment() {
                 actionInputFragmentSellAmountTextView.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
                 actionInputFragmentSellAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
             }
+            else -> throw IllegalStateException()
         }
     }
 

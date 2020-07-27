@@ -4,8 +4,11 @@ import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
+import com.ceaver.assin.extensions.addZeroDotOneToLastDecimal
+import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.threading.BackgroundThreadExecutor
+import java.math.BigDecimal
 import java.time.LocalDate
 
 object PositionRepository {
@@ -23,12 +26,13 @@ object PositionRepository {
 
     fun loadAllPositions(): List<Position> {
         val positions = mutableListOf<Position>()
-        var positionId = 0;
+        var positionId = BigDecimal.ZERO;
         ActionRepository.loadAllActions().forEach { action ->
             when (action.actionType) {
                 ActionType.DEPOSIT -> {
+                    positionId = positionId.inc()
                     positions.add(Position(
-                            id = positionId++,
+                            id = positionId,
                             title = action.buyTitle!!,
                             amount = action.buyAmount!!,
                             openDate = action.actionDate,
@@ -36,12 +40,13 @@ object PositionRepository {
                             openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
                 }
                 ActionType.WITHDRAW -> {
-                    val position = positions.find { it.id == action.positionId }!!
-                    positions.set(positions.indexOf(position), position.copy(closeDate = LocalDate.now(), closePriceBtc = action.valueInBtc, closePriceUsd = action.valueInUsd))
+                    val originalPosition = positions.find { it.id == action.positionId }!!
+                    val modifiedPosition = originalPosition.copy(closeDate = LocalDate.now(), closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd)
+                    positions.set(positions.indexOf(originalPosition), modifiedPosition)
                 }
                 ActionType.TRADE -> { // TODO avoid copy/paste code
-                    val position = positions.find { it.toString().hashCode() == action.positionId }!!
-                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.valueInBtc, closePriceUsd = action.valueInUsd))
+                    val position = positions.find { it.id == action.positionId }!!
+                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd))
                     positions.add(Position(
                             id = positionId++,
                             title = action.buyTitle!!,
@@ -50,9 +55,19 @@ object PositionRepository {
                             openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
                             openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
                 }
+                ActionType.SPLIT -> {
+                    val originalPosition = positions.find { it.id == action.positionId }!!
+                    val splitPosition = originalPosition.copy(id = originalPosition.id.addZeroDotOneToLastDecimal(), amount = action.splitAmount!!)
+                    val remainingPosition = originalPosition.copy(id = originalPosition.id.addZeroDotTwoToLastDecimal(), amount = originalPosition.amount.subtract(action.splitAmount))
+                    positions.remove(originalPosition)
+                    positions.add(splitPosition)
+                    positions.add(remainingPosition)
+                }
+                ActionType.MERGE -> TODO()
             }
         }
-        return positions
+        positions.sortedBy { it.id }.forEach { println(it.id.toPlainString() + " " + it.isActive()) }
+        return positions.sortedBy { it.id }
     }
 
     fun loadAllPositionsAsync(callbackInMainThread: Boolean, callback: (List<Position>) -> Unit) {

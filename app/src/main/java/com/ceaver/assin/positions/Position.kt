@@ -6,7 +6,7 @@ import java.math.MathContext
 import java.time.LocalDate
 
 data class Position(
-        val id: Int,
+        val id: BigDecimal,
         val title: Title,
         val amount: BigDecimal,
         val openDate: LocalDate,

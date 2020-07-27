@@ -51,7 +51,7 @@ class ActionListFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
         actionList.adapter = null
-        actionList.removeItemDecorationAt(0) // TODO Seriously?
+        actionList.removeItemDecorationAt(0)  // TODO Seriously?
         createTradeButton.setOnClickListener(null)
         swipeRefreshLayout.setOnRefreshListener(null)
     }

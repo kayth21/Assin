@@ -19,10 +19,11 @@ data class Action(
         @ColumnInfo(name = "sellAmount") var sellAmount: BigDecimal? = null,
         @ColumnInfo(name = "comment") var comment: String? = null,
         @ColumnInfo(name = "actionType") val actionType: ActionType,
-        @ColumnInfo(name = "positionId") val positionId: Int? = null,
+        @ColumnInfo(name = "positionId") val positionId: BigDecimal? = null,
         @ColumnInfo(name = "splitAmount") val splitAmount: BigDecimal? = null,
-        @ColumnInfo(name = "valueInBtc") val valueInBtc: BigDecimal? = null,
-        @ColumnInfo(name = "valueInUsd") val valueInUsd: BigDecimal? = null
+        @ColumnInfo(name = "splitTitle") val splitTitle: Title? = null,
+        @ColumnInfo(name = "priceBtc") val priceBtc: BigDecimal? = null,
+        @ColumnInfo(name = "priceUsd") val priceUsd: BigDecimal? = null
 ) {
 
     fun getTitles(): Set<Title> {
@@ -30,6 +31,7 @@ data class Action(
             ActionType.TRADE -> setOf(buyTitle!!, sellTitle!!)
             ActionType.DEPOSIT -> setOf(buyTitle!!)
             ActionType.WITHDRAW -> setOf(sellTitle!!)
+            else ->  throw IllegalStateException()
         }
     }
 
@@ -44,8 +46,18 @@ data class Action(
                     sellAmount = position.amount,
                     sellTitle = position.title,
                     positionId = position.id,
-                    valueInUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
-                    valueInBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
+                    priceUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32),
+                    priceBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
+            )
+        }
+
+        fun split(position: Position, amount: BigDecimal) : Action {
+            return Action(
+                    actionType = ActionType.SPLIT,
+                    splitAmount = amount,
+                    splitTitle = position.title,
+                    positionId = position.id
+            // TODO PRICE?
             )
         }
     }

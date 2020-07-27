@@ -117,7 +117,7 @@ class BackupActivity : AppCompatActivity() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty(), action.actionType.name, action.positionId ?: "", if (action.splitAmount != null) action.splitAmount.toPlainString() else "", if (action.valueInBtc != null) action.valueInBtc.toPlainString() else "", if (action.valueInUsd != null) action.valueInUsd.toPlainString() else "")
+            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty(), action.actionType.name, if (action.positionId != null) action.positionId!!.toPlainString() else "", if (action.splitAmount != null) action.splitAmount.toPlainString() else "", action.splitTitle?.symbol.orEmpty(), if (action.priceBtc != null) action.priceBtc.toPlainString() else "", if (action.priceUsd != null) action.priceUsd.toPlainString() else "")
             csvPrinter.flush()
             LogRepository.insertLogAsync("Export actions successful to '$filePath'")
             return Result.success()
@@ -168,12 +168,14 @@ class BackupActivity : AppCompatActivity() {
                     val comment = it.get(5).ifEmpty { null }
                     println(it.get(6))
                     val actionType = ActionType.valueOf(it.get(6))
-                    val positionId: Int? = it.get(7).toIntOrNull()
+                    val positionId = it.get(7).toBigDecimalOrNull()
                     val splitAmount = it.get(8).toBigDecimalOrNull()
-                    val valueInBtc = it.get(9).toBigDecimalOrNull()
-                    val valueInUsd = it.get(10).toBigDecimalOrNull()
+                    val splitTitleString = it.get(9)
+                    val splitTitle = if (splitTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(splitTitleString)
+                    val priceBtc = it.get(10).toBigDecimalOrNull()
+                    val priceUsd = it.get(11).toBigDecimalOrNull()
                     // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
-                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment, actionType, positionId, splitAmount, valueInBtc, valueInUsd) }.toList()
+                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment, actionType, positionId, splitAmount, splitTitle, priceBtc, priceUsd) }.toList()
                 ActionRepository.deleteAllActions()
                 ActionRepository.insertActions(actions)
                 LogRepository.insertLogAsync("Import actions from '$filePath' successful")

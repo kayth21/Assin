@@ -3,8 +3,11 @@ package com.ceaver.assin.action
 import android.os.Handler
 import android.os.Looper
 import com.ceaver.assin.database.Database
+import com.ceaver.assin.positions.Position
+import com.ceaver.assin.positions.PositionRepository
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import org.greenrobot.eventbus.EventBus
+import java.math.BigDecimal
 
 object ActionRepository {
 
@@ -66,8 +69,22 @@ object ActionRepository {
     }
 
     fun insertWithdraw(action: Action) {
-        insertAction(action)
-        // TODO
+        if (action.positionId != null) {
+            insertAction(action)
+        } else {
+            val positions = PositionRepository.loadPositions(action.sellTitle!!).filter { it.isActive() }
+            val oldestPosition = positions.first()
+            when (oldestPosition.amount.compareTo(action.sellAmount)) {
+                0 -> {
+                    insertWithdraw(action.copy(positionId = oldestPosition.id))
+                }
+                1 -> {
+                    insertSplit(oldestPosition, action.sellAmount!!);
+                    insertWithdraw(action)
+                }
+                -1 -> TODO() // insertMerge(); // TODO insertWithdraw()?
+            }
+        }
     }
 
     fun insertWithdrawAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
@@ -77,8 +94,8 @@ object ActionRepository {
         }
     }
 
-    fun insertSplit(action: Action) {
-        TODO()
+    fun insertSplit(position: Position, sellAmount: BigDecimal) {
+        insertAction(Action.split(position, sellAmount))
     }
 
     fun insertMerge(action: Action) {

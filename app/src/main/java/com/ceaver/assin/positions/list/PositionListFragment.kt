@@ -81,7 +81,7 @@ class PositionListFragment(val symbol: String) : Fragment() {
     }
 
     private fun loadAllPositions() {
-        TitleRepository.loadTitleBySymbolAsync(symbol, true) { PositionRepository.loadPositionsAsync(it, true) { onAllPositionsLoaded(it) } }
+        TitleRepository.loadTitleBySymbolAsync(symbol, true) { PositionRepository.loadPositionsAsync(it, true) { onAllPositionsLoaded(it.sortedByDescending { it.id }) } }
     }
 
     private fun onAllPositionsLoaded(positions: List<Position>) {

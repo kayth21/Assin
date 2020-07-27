@@ -1,5 +1,5 @@
 package com.ceaver.assin.action
 
 enum class ActionType {
-    DEPOSIT, WITHDRAW, TRADE
+    DEPOSIT, WITHDRAW, TRADE, SPLIT, MERGE
 }
