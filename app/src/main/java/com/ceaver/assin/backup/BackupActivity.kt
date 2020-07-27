@@ -166,7 +166,6 @@ class BackupActivity : AppCompatActivity() {
                     val sellTitle = if (sellTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(sellTitleString)
                     val sellAmount = it.get(4).toBigDecimalOrNull()
                     val comment = it.get(5).ifEmpty { null }
-                    println(it.get(6))
                     val actionType = ActionType.valueOf(it.get(6))
                     val positionId = it.get(7).toBigDecimalOrNull()
                     val splitAmount = it.get(8).toBigDecimalOrNull()

@@ -108,6 +108,8 @@ object ActionRepository {
                 ActionType.DEPOSIT -> insertDeposit(it)
                 ActionType.TRADE -> insertTrade(it)
                 ActionType.WITHDRAW -> insertWithdraw(it)
+                ActionType.SPLIT -> insertWithdraw(it) // TODO Later it doesn't have to be always a withdraw
+                ActionType.MERGE -> TODO()
             }
         }
         EventBus.getDefault().post(ActionEvents.Insert())
