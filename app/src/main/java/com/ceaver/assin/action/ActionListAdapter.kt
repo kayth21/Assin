@@ -49,7 +49,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.DEPOSIT -> "Deposit ${action.buyTitle!!.name}"
                 ActionType.WITHDRAW -> "Withdraw ${action.sellTitle!!.name}"
                 ActionType.TRADE -> "${action.sellTitle!!.name} -> ${action.buyTitle!!.name}"
-                ActionType.SPLIT -> "Split ${action.splitTitle}"
+                ActionType.SPLIT -> "Split ${action.splitTitle!!.name} position"
             }
         }
 
@@ -58,7 +58,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.DEPOSIT -> "${action.buyAmount!!} ${action.buyTitle!!.symbol}"
                 ActionType.WITHDRAW -> "${action.sellAmount!!} ${action.sellTitle!!.symbol}"
                 ActionType.TRADE -> "${action.sellAmount!!} ${action.sellTitle!!.symbol} -> ${action.buyAmount!!} ${action.buyTitle!!.symbol}"
-                ActionType.SPLIT -> "${action.splitAmount!!} ${action.splitTitle!!.symbol} splitted from existing position" // TODO remaining split amount not available... :S
+                ActionType.SPLIT -> "${action.splitAmount!!.add(action.splitRemaining)} ${action.splitTitle!!.symbol} splitted into ${action.splitAmount} ${action.splitTitle!!.symbol} and ${action.splitRemaining} ${action.splitTitle!!.symbol}"
             }
         }
 
@@ -67,7 +67,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.DEPOSIT -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
                 ActionType.WITHDRAW -> R.drawable.withdraw
                 ActionType.TRADE -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
-                ActionType.SPLIT -> R.drawable.sphtx // TODO get split icon
+                ActionType.SPLIT -> R.drawable.split
             }
         }
 

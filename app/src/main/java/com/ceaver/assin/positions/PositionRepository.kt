@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 object PositionRepository {
 
-    fun loadPositions(title: Title) : List<Position> {
+    fun loadPositions(title: Title): List<Position> {
         return loadAllPositions().filter { it.title == title }
     }
 
@@ -58,7 +58,7 @@ object PositionRepository {
                 ActionType.SPLIT -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!
                     val splitPosition = originalPosition.copy(id = originalPosition.id.addZeroDotOneToLastDecimal(), amount = action.splitAmount!!)
-                    val remainingPosition = originalPosition.copy(id = originalPosition.id.addZeroDotTwoToLastDecimal(), amount = originalPosition.amount.subtract(action.splitAmount))
+                    val remainingPosition = originalPosition.copy(id = originalPosition.id.addZeroDotTwoToLastDecimal(), amount = action.splitRemaining!!)
                     positions.remove(originalPosition)
                     positions.add(splitPosition)
                     positions.add(remainingPosition)

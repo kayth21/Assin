@@ -21,6 +21,7 @@ data class Action(
         @ColumnInfo(name = "actionType") val actionType: ActionType,
         @ColumnInfo(name = "positionId") val positionId: BigDecimal? = null,
         @ColumnInfo(name = "splitAmount") val splitAmount: BigDecimal? = null,
+        @ColumnInfo(name = "splitRemaining") val splitRemaining: BigDecimal? = null,
         @ColumnInfo(name = "splitTitle") val splitTitle: Title? = null,
         @ColumnInfo(name = "priceBtc") val priceBtc: BigDecimal? = null,
         @ColumnInfo(name = "priceUsd") val priceUsd: BigDecimal? = null
@@ -46,6 +47,7 @@ data class Action(
             return Action(
                     actionType = ActionType.SPLIT,
                     splitAmount = amount,
+                    splitRemaining = position.amount,
                     splitTitle = position.title,
                     positionId = position.id
             )
