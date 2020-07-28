@@ -26,15 +26,6 @@ data class Action(
         @ColumnInfo(name = "priceUsd") val priceUsd: BigDecimal? = null
 ) {
 
-    fun getTitles(): Set<Title> {
-        return when (actionType) {
-            ActionType.TRADE -> setOf(buyTitle!!, sellTitle!!)
-            ActionType.DEPOSIT -> setOf(buyTitle!!)
-            ActionType.WITHDRAW -> setOf(sellTitle!!)
-            else ->  throw IllegalStateException()
-        }
-    }
-
     companion object {
         val ACTION_ID = "com.ceaver.assin.actions.Action.actionId"
         val ACTION_TYPE = "com.ceaver.assin.actions.Action.actionType"
@@ -57,7 +48,6 @@ data class Action(
                     splitAmount = amount,
                     splitTitle = position.title,
                     positionId = position.id
-            // TODO PRICE?
             )
         }
     }

@@ -114,7 +114,7 @@ class AssetListFragment : Fragment() {
         override fun onItemClick(item: Asset) {
             val dialogFragment = AssetDetailFragment()
             val arguments = Bundle()
-            arguments.putString(AssetDetailFragment.SYMBOL, item.symbol)
+            arguments.putString(AssetDetailFragment.SYMBOL, item.title.symbol)
             dialogFragment.arguments = arguments
             dialogFragment.show(parentFragmentManager, AssetDetailFragment.FRAGMENT_TAG)
         }
@@ -134,7 +134,7 @@ class AssetListFragment : Fragment() {
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
                     val arguments = Bundle();
-                    arguments.putString(Action.SYMBOL, selectedAsset.symbol)
+                    arguments.putString(Action.SYMBOL, selectedAsset.title.symbol)
                     arguments.putString(Action.ACTION_TYPE, when (item.itemId) {
                         AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT.name
                         AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW.name
@@ -146,7 +146,7 @@ class AssetListFragment : Fragment() {
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
                     val arguments = Bundle();
-                    arguments.putString(IntentionInputFragment.INTENTION_SYMBOL, selectedAsset.symbol)
+                    arguments.putString(IntentionInputFragment.INTENTION_SYMBOL, selectedAsset.title.symbol)
                     arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
                     val intentionInputFragment = IntentionInputFragment()
                     intentionInputFragment.arguments = arguments

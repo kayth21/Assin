@@ -2,10 +2,10 @@ package com.ceaver.assin
 
 import android.content.Context
 import androidx.work.*
-import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
 import com.ceaver.assin.assets.AssetCategory
+import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionWorker
 import com.ceaver.assin.logging.LogRepository
@@ -81,10 +81,10 @@ object AssinWorkers {
 
     private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
         var index: Int = 0
-        val ActionTitles = ActionRepository.loadAllActions().flatMap { it.getTitles() }.toSet() // TODO only trades with positive sum
+        val assetTitles = AssetRepository.loadAllAssets().filter { it.amount.signum() == 1 }.map { it.title }
         val intentionTitles = IntentionRepository.loadAllIntentions().map { it.title }.toSet()
         val alertTitles = AlertRepository.loadAllAlerts().flatMap { setOf(it.symbol, it.reference) }.toSet()
-        return (ActionTitles + intentionTitles + alertTitles).filter { it.category == AssetCategory.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
+        return (assetTitles + intentionTitles + alertTitles).filter { it.category == AssetCategory.CRYPTO }.map { marketPartialUpdateRequestBuilder(it, index++) }.toMutableList()
     }
 
     private fun marketPartialUpdateRequestBuilder(title: Title, index: Int): OneTimeWorkRequest {

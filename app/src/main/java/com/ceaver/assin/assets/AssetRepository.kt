@@ -36,11 +36,10 @@ object AssetRepository {
                 .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
                 .map {
                     Asset(
-                            it.first.name,
-                            it.first.symbol,
-                            it.second,
-                            it.first.priceBtc!!.toBigDecimal().times(it.second),
-                            it.first.priceUsd!!.toBigDecimal().times(it.second))
+                            title = it.first,
+                            amount = it.second,
+                            btcValue = it.first.priceBtc!!.toBigDecimal().times(it.second),
+                            usdValue = it.first.priceUsd!!.toBigDecimal().times(it.second))
                 }
     }
 
@@ -61,10 +60,9 @@ object AssetRepository {
         val allActions = buyActions + sellActions
         val amount = allActions.reduce { x, y -> x.add(y) }
         return Asset(
-                name = title.name,
-                symbol = title.symbol,
+                title = title,
                 amount = amount,
-                btcValue =  title.priceBtc!!.toBigDecimal().times(amount),
+                btcValue = title.priceBtc!!.toBigDecimal().times(amount),
                 usdValue = title.priceUsd!!.toBigDecimal().times(amount))
     }
 

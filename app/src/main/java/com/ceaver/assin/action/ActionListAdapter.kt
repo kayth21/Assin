@@ -50,7 +50,6 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.WITHDRAW -> "Withdraw ${action.sellTitle!!.name}"
                 ActionType.TRADE -> "${action.sellTitle!!.name} -> ${action.buyTitle!!.name}"
                 ActionType.SPLIT -> "Split ${action.splitTitle}"
-                ActionType.MERGE -> "Merge TODO" // TODO
             }
         }
 
@@ -60,7 +59,6 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.WITHDRAW -> "${action.sellAmount!!} ${action.sellTitle!!.symbol}"
                 ActionType.TRADE -> "${action.sellAmount!!} ${action.sellTitle!!.symbol} -> ${action.buyAmount!!} ${action.buyTitle!!.symbol}"
                 ActionType.SPLIT -> "${action.splitAmount!!} ${action.splitTitle!!.symbol} splitted from existing position" // TODO remaining split amount not available... :S
-                ActionType.MERGE -> "Merge TODO" // TODO
             }
         }
 
@@ -70,7 +68,6 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.WITHDRAW -> R.drawable.withdraw
                 ActionType.TRADE -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
                 ActionType.SPLIT -> R.drawable.sphtx // TODO get split icon
-                ActionType.MERGE -> R.drawable.abt // TODO get merge icon
             }
         }
 
@@ -80,7 +77,6 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
                 ActionType.WITHDRAW -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())
                 ActionType.TRADE -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())
                 ActionType.SPLIT -> getImageIdentifier(action.splitTitle!!.symbol.toLowerCase())
-                ActionType.MERGE -> R.drawable.withdraw // TODO
             }
         }
 

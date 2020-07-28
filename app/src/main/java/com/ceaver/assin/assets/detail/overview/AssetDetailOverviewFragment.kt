@@ -44,9 +44,9 @@ class AssetDetailOverviewFragment(val symbol: String) : Fragment() {
     private fun lookupViewModel(): AssetDetailOverviewViewModel = ViewModelProviders.of(this).get(AssetDetailOverviewViewModel::class.java)
 
     private fun onAssetLoaded(asset: Asset) {
-        assetDetailOverviewFragmentAssetImage.setImageResource(getImageIdentifier(asset.symbol))
-        assetDetailOverviewFragmentAssetTitle.text = asset.name
-        assetDetailOverviewFragmentTotalPositionSizeValue.text = asset.amount.toPlainString() + " " + asset.symbol
+        assetDetailOverviewFragmentAssetImage.setImageResource(getImageIdentifier(asset.title.symbol))
+        assetDetailOverviewFragmentAssetTitle.text = asset.title.name
+        assetDetailOverviewFragmentTotalPositionSizeValue.text = asset.amount.toPlainString() + " " + asset.title.symbol
         assetDetailOverviewFragmentValueInBtcValue.text = asset.btcValue.toCurrencyString("BTC") + " BTC"
         assetDetailOverviewFragmentValueInUsdValue.text = asset.usdValue.toCurrencyString("USD") + " USD"
     }

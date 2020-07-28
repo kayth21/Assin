@@ -58,7 +58,6 @@ object ActionRepository {
 
     fun insertTrade(action: Action) {
         insertAction(action)
-        // TODO
     }
 
     fun insertTradeAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {
@@ -82,7 +81,28 @@ object ActionRepository {
                     insertSplit(oldestPosition, action.sellAmount!!);
                     insertWithdraw(action)
                 }
-                -1 -> TODO() // insertMerge(); // TODO insertWithdraw()?
+                -1 -> {
+                    var index = 1
+                    val mergeList = mutableListOf<Position>(oldestPosition, positions.get(1))
+                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount) == -1) {
+                        index++
+                        mergeList.add(positions.get(index))
+                    }
+
+                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount)) {
+                        0 -> {
+                            mergeList.forEach {
+                                insertWithdraw(action.copy(positionId = it.id, sellAmount = it.amount))
+                            }
+                        }
+                        1 -> {
+                            val splitPosition = mergeList.last()
+                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            insertSplit(splitPosition, splitAmount)
+                            insertWithdraw(action)
+                        }
+                    }
+                }
             }
         }
     }
@@ -98,20 +118,8 @@ object ActionRepository {
         insertAction(Action.split(position, sellAmount))
     }
 
-    fun insertMerge(action: Action) {
-        TODO()
-    }
-
-    fun insertActions(alerts: List<Action>) {
-        alerts.forEach {
-            when (it.actionType) {
-                ActionType.DEPOSIT -> insertDeposit(it)
-                ActionType.TRADE -> insertTrade(it)
-                ActionType.WITHDRAW -> insertWithdraw(it)
-                ActionType.SPLIT -> insertWithdraw(it) // TODO Later it doesn't have to be always a withdraw
-                ActionType.MERGE -> TODO()
-            }
-        }
+    fun insertActions(actions: List<Action>) {
+        getActionDao().insertActions(actions)
         EventBus.getDefault().post(ActionEvents.Insert())
     }
 

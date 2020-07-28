@@ -46,11 +46,11 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         }
 
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.symbol))
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.name
-            (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.symbol}"
-            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.symbol) + " " + "BTC"
-            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toCurrencyString(asset.symbol) + " " + "USD"
+            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.title.symbol))
+            (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.title.name
+            (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.title.symbol}"
+            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.title.symbol) + " " + "BTC"
+            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toCurrencyString(asset.title.symbol) + " " + "USD"
 
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(asset) }

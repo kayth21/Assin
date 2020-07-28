@@ -63,7 +63,6 @@ object PositionRepository {
                     positions.add(splitPosition)
                     positions.add(remainingPosition)
                 }
-                ActionType.MERGE -> TODO()
             }
         }
         positions.sortedBy { it.id }.forEach { println(it.id.toPlainString() + " " + it.isActive()) }
