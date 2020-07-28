@@ -47,7 +47,7 @@ data class Action(
             return Action(
                     actionType = ActionType.SPLIT,
                     splitAmount = amount,
-                    splitRemaining = position.amount,
+                    splitRemaining = position.amount.minus(amount),
                     splitTitle = position.title,
                     positionId = position.id
             )

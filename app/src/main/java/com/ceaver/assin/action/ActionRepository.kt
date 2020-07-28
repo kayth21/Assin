@@ -56,8 +56,45 @@ object ActionRepository {
         }
     }
 
+    // TODO Remove copy/paste from withdraw
     fun insertTrade(action: Action) {
-        insertAction(action)
+        if (action.positionId != null) {
+            insertAction(action)
+        } else {
+            val positions = PositionRepository.loadPositions(action.sellTitle!!).filter { it.isActive() }
+            val oldestPosition = positions.first()
+            when (oldestPosition.amount.compareTo(action.sellAmount)) {
+                0 -> {
+                    insertTrade(action.copy(positionId = oldestPosition.id))
+                }
+                1 -> {
+                    insertSplit(oldestPosition, action.sellAmount!!);
+                    insertTrade(action)
+                }
+                -1 -> {
+                    var index = 1
+                    val mergeList = mutableListOf<Position>(oldestPosition, positions.get(1))
+                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount) == -1) {
+                        index++
+                        mergeList.add(positions.get(index))
+                    }
+
+                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount)) {
+                        0 -> {
+                            mergeList.forEach {
+                                insertTrade(action.copy(positionId = it.id, sellAmount = it.amount))
+                            }
+                        }
+                        1 -> {
+                            val splitPosition = mergeList.last()
+                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            insertSplit(splitPosition, splitAmount)
+                            insertTrade(action)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun insertTradeAsync(action: Action, callbackInMainThread: Boolean, callback: () -> Unit) {

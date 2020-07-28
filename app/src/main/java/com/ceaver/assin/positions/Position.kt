@@ -18,7 +18,7 @@ data class Position(
 ) {
 
     fun isActive(): Boolean {
-        return closePriceBtc == null && closePriceUsd == null
+        return closePriceBtc == null && closePriceUsd == null && closeDate == null
     }
 
     fun currentValueInBtc(): BigDecimal {

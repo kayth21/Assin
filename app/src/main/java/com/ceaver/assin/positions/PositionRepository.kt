@@ -41,14 +41,15 @@ object PositionRepository {
                 }
                 ActionType.WITHDRAW -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!
-                    val modifiedPosition = originalPosition.copy(closeDate = LocalDate.now(), closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd)
+                    val modifiedPosition = originalPosition.copy(closeDate = action.actionDate, closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd)
                     positions.set(positions.indexOf(originalPosition), modifiedPosition)
                 }
                 ActionType.TRADE -> { // TODO avoid copy/paste code
                     val position = positions.find { it.id == action.positionId }!!
-                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd))
+                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd, closeDate = action.actionDate))
+                    positionId = positionId.inc()
                     positions.add(Position(
-                            id = positionId++,
+                            id = positionId,
                             title = action.buyTitle!!,
                             amount = action.buyAmount!!,
                             openDate = LocalDate.now(),
