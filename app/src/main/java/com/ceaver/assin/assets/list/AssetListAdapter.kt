@@ -51,6 +51,9 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
             (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.title.symbol}"
             (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.title.symbol) + " " + "BTC"
             (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toCurrencyString(asset.title.symbol) + " " + "USD"
+            (view.findViewById(R.id.asset1hChangeTextView) as TextView).text = "1h: ${asset.title.getPercentChange1hUsdString()}%"
+            (view.findViewById(R.id.asset24hChangeTextView) as TextView).text = "24h: ${asset.title.getPercentChange24hUsdString()}%"
+            (view.findViewById(R.id.asset7dChangeTextView) as TextView).text = "7d: ${asset.title.getPercentChange7dUsdString()}%"
 
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(asset) }
