@@ -36,25 +36,25 @@ object PositionRepository {
                             title = action.buyTitle!!,
                             amount = action.buyAmount!!,
                             openDate = action.actionDate,
-                            openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
-                            openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
+                            openValueBtc = action.valueBtc!!,
+                            openVlaueUsd = action.valueUsd!!))
                 }
                 ActionType.WITHDRAW -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!
-                    val modifiedPosition = originalPosition.copy(closeDate = action.actionDate, closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd)
+                    val modifiedPosition = originalPosition.copy(closeDate = action.actionDate, closeValueBtc = action.valueBtc, closeValueUsd = action.valueUsd)
                     positions.set(positions.indexOf(originalPosition), modifiedPosition)
                 }
                 ActionType.TRADE -> { // TODO avoid copy/paste code
                     val position = positions.find { it.id == action.positionId }!!
-                    positions.set(positions.indexOf(position), position.copy(closePriceBtc = action.priceBtc, closePriceUsd = action.priceUsd, closeDate = action.actionDate))
+                    positions.set(positions.indexOf(position), position.copy(closeDate = action.actionDate, closeValueBtc = action.valueBtc, closeValueUsd = action.valueUsd))
                     positionId = positionId.inc()
                     positions.add(Position(
                             id = positionId,
                             title = action.buyTitle!!,
                             amount = action.buyAmount!!,
                             openDate = LocalDate.now(),
-                            openPriceBtc = action.buyTitle!!.priceBtc!!.toBigDecimal(),
-                            openPriceUsd = action.buyTitle!!.priceUsd!!.toBigDecimal()))
+                            openValueBtc = action.valueBtc!!,
+                            openVlaueUsd = action.valueUsd!!))
                 }
                 ActionType.SPLIT -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!

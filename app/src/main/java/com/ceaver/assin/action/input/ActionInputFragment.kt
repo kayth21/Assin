@@ -118,24 +118,25 @@ class ActionInputFragment() : DialogFragment() {
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
                 val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                val priceBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
-                val priceUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
-                viewModel.onSaveTradeClick(buyTitle, buyAmount, sellTitle, sellAmount, actionDate, comment, priceBtc, priceUsd)
+                val valueBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                val valueUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                viewModel.onSaveTradeClick(buyTitle, buyAmount, sellTitle, sellAmount, actionDate, comment, valueBtc, valueUsd)
             }
             ActionType.DEPOSIT -> {
                 val buyTitle = actionInputFragmentBuySymbolSpinner.selectedItem as Title
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
-                val priceBtc = buyTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
-                val priceUsd = buyTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
-                viewModel.onDepositClick(buyTitle, buyAmount, actionDate, comment, priceBtc, priceUsd)
+                val valueBtc = buyTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
+                val valueUsd = buyTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(buyAmount)
+                viewModel.onDepositClick(buyTitle, buyAmount, actionDate, comment, valueBtc, valueUsd)
             }
             ActionType.WITHDRAW -> {
                 val sellTitle = actionInputFragmentSellSymbolSpinner.selectedItem as Title
                 val sellAmount = actionInputFragmentSellAmountTextView.text.toString().toBigDecimal()
-                val priceBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
-                val priceUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32)
-                viewModel.onWithdrawClick(sellTitle, sellAmount, actionDate, comment, priceBtc, priceUsd)
+                val valueBtc = sellTitle.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                val valueUsd = sellTitle.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(sellAmount)
+                viewModel.onWithdrawClick(sellTitle, sellAmount, actionDate, comment, valueBtc, valueUsd)
             }
+            else -> throw IllegalStateException()
         }
     }
 

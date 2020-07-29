@@ -52,16 +52,16 @@ class ActionInputViewModel : ViewModel() {
             }
     }
 
-    fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, priceBtc: BigDecimal, priceUsd: BigDecimal) {
-        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, priceBtc = priceBtc, priceUsd = priceUsd))
+    fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
+        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
-    fun onDepositClick(buySymbol: Title, buyAmount: BigDecimal, actionDate: LocalDate, comment: String?, priceBtc: BigDecimal, priceUsd: BigDecimal) {
-        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, priceBtc = priceBtc, priceUsd = priceUsd))
+    fun onDepositClick(buySymbol: Title, buyAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
+        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
-    fun onWithdrawClick(sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, priceBtc: BigDecimal, priceUsd: BigDecimal) {
-        saveAction(action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, priceBtc = priceBtc, priceUsd = priceUsd))
+    fun onWithdrawClick(sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
+        saveAction(action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
     enum class ActionInputStatus {

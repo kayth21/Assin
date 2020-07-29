@@ -23,8 +23,8 @@ data class Action(
         @ColumnInfo(name = "splitAmount") val splitAmount: BigDecimal? = null,
         @ColumnInfo(name = "splitRemaining") val splitRemaining: BigDecimal? = null,
         @ColumnInfo(name = "splitTitle") val splitTitle: Title? = null,
-        @ColumnInfo(name = "priceBtc") val priceBtc: BigDecimal? = null,
-        @ColumnInfo(name = "priceUsd") val priceUsd: BigDecimal? = null
+        @ColumnInfo(name = "valueBtc") val valueBtc: BigDecimal? = null,
+        @ColumnInfo(name = "valueUsd") val valueUsd: BigDecimal? = null
 ) {
 
     companion object {
@@ -38,8 +38,8 @@ data class Action(
                     sellAmount = position.amount,
                     sellTitle = position.title,
                     positionId = position.id,
-                    priceUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32),
-                    priceBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32)
+                    valueUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
+                    valueBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
             )
         }
 

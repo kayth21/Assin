@@ -10,15 +10,15 @@ data class Position(
         val title: Title,
         val amount: BigDecimal,
         val openDate: LocalDate,
-        val openPriceBtc: BigDecimal,
-        val openPriceUsd: BigDecimal,
+        val openValueBtc: BigDecimal,
+        val openVlaueUsd: BigDecimal,
         val closeDate: LocalDate? = null,
-        val closePriceBtc: BigDecimal? = null,
-        val closePriceUsd: BigDecimal? = null
+        val closeValueBtc: BigDecimal? = null,
+        val closeValueUsd: BigDecimal? = null
 ) {
 
     fun isActive(): Boolean {
-        return closePriceBtc == null && closePriceUsd == null && closeDate == null
+        return closeValueBtc == null && closeValueUsd == null && closeDate == null
     }
 
     fun currentValueInBtc(): BigDecimal {
@@ -31,14 +31,14 @@ data class Position(
 
     fun profitLossInPercentToBtc(): BigDecimal {
         return ((BigDecimal.valueOf(100)
-                .divide((openPriceBtc.times(amount)), MathContext.DECIMAL32))
+                .divide(openValueBtc, MathContext.DECIMAL32))
                 .times(currentValueInBtc()))
                 .subtract(BigDecimal.valueOf(100))
     }
 
     fun profitLossInPercentToUsd(): BigDecimal {
         return ((BigDecimal.valueOf(100)
-                .divide((openPriceUsd.times(amount)), MathContext.DECIMAL32))
+                .divide(openVlaueUsd, MathContext.DECIMAL32))
                 .times(currentValueInUsd()))
                 .subtract(BigDecimal.valueOf(100))
     }
