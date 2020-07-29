@@ -9,6 +9,7 @@ import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.math.BigDecimal
+import java.math.MathContext
 import java.time.LocalDate
 
 object PositionRepository {
@@ -37,7 +38,7 @@ object PositionRepository {
                             amount = action.buyAmount!!,
                             openDate = action.actionDate,
                             openValueBtc = action.valueBtc!!,
-                            openVlaueUsd = action.valueUsd!!))
+                            openValueUsd = action.valueUsd!!))
                 }
                 ActionType.WITHDRAW -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!
@@ -54,12 +55,24 @@ object PositionRepository {
                             amount = action.buyAmount!!,
                             openDate = LocalDate.now(),
                             openValueBtc = action.valueBtc!!,
-                            openVlaueUsd = action.valueUsd!!))
+                            openValueUsd = action.valueUsd!!))
                 }
                 ActionType.SPLIT -> {
                     val originalPosition = positions.find { it.id == action.positionId }!!
-                    val splitPosition = originalPosition.copy(id = originalPosition.id.addZeroDotOneToLastDecimal(), amount = action.splitAmount!!)
-                    val remainingPosition = originalPosition.copy(id = originalPosition.id.addZeroDotTwoToLastDecimal(), amount = action.splitRemaining!!)
+                    val splitPosition = originalPosition.copy(
+                            id = originalPosition.id.addZeroDotOneToLastDecimal(),
+                            amount = action.splitAmount!!,
+                            openValueBtc = originalPosition.openValueBtc.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.splitAmount),
+                            openValueUsd = originalPosition.openValueUsd.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.splitAmount)
+                            // TOOD closeValueCorrection needed if closed positions can be splitted
+                    )
+                    val remainingPosition = originalPosition.copy(
+                            id = originalPosition.id.addZeroDotTwoToLastDecimal(),
+                            amount = action.splitRemaining!!,
+                            openValueBtc = originalPosition.openValueBtc.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.splitRemaining),
+                            openValueUsd = originalPosition.openValueUsd.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.splitRemaining)
+                            // TOOD closeValueCorrection needed if closed positions can be splitted
+                    )
                     positions.remove(originalPosition)
                     positions.add(splitPosition)
                     positions.add(remainingPosition)

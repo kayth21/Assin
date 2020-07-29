@@ -11,7 +11,7 @@ data class Position(
         val amount: BigDecimal,
         val openDate: LocalDate,
         val openValueBtc: BigDecimal,
-        val openVlaueUsd: BigDecimal,
+        val openValueUsd: BigDecimal,
         val closeDate: LocalDate? = null,
         val closeValueBtc: BigDecimal? = null,
         val closeValueUsd: BigDecimal? = null
@@ -38,7 +38,7 @@ data class Position(
 
     fun profitLossInPercentToUsd(): BigDecimal {
         return ((BigDecimal.valueOf(100)
-                .divide(openVlaueUsd, MathContext.DECIMAL32))
+                .divide(openValueUsd, MathContext.DECIMAL32))
                 .times(currentValueInUsd()))
                 .subtract(BigDecimal.valueOf(100))
     }
