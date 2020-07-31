@@ -134,7 +134,8 @@ object ActionRepository {
                         }
                         1 -> {
                             val splitPosition = mergeList.last()
-                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            val overflowAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            val splitAmount = splitPosition.amount.minus(overflowAmount)
                             insertSplit(splitPosition, splitAmount)
                             insertWithdraw(action)
                         }
