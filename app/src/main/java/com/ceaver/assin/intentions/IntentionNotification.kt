@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.StartActivity
-import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.extensions.toCurrencyString
 import java.util.*
 
@@ -41,7 +40,7 @@ object IntentionNotification {
 
         val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, getImageIdentifier(intention.title.symbol)))
+                .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, intention.title.getIcon()))
                 .setContentTitle("${intention.title.symbol} Intention Change")
                 .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice().toCurrencyString("abc")}%)")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -53,10 +52,5 @@ object IntentionNotification {
         // notificationId is a unique int for each notification that you must define
         // Remember to save the notification ID that you pass to NotificationManagerCompat.notify() because you'll need it later if you want to update or remove the notification.
         notificationManager.notify(Random().nextInt(), notification);
-    }
-
-    private fun getImageIdentifier(symbol: String): Int {
-        val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(), "drawable")
-        return if (identifier == 0) R.drawable.unknown else identifier
     }
 }

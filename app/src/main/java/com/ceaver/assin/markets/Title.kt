@@ -4,8 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.ceaver.assin.MyApplication
+import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
+import com.ceaver.assin.extensions.resIdByName
 import java.time.LocalDateTime
+import java.util.*
 
 @Entity(tableName = "title", indices = [Index(value = ["symbol", "rank"])]) // TODO What is this index good for? https://developer.android.com/training/data-storage/room/defining-data
 data class Title(//
@@ -111,5 +115,10 @@ data class Title(//
 
     override fun toString(): String {
         return "$symbol ($name)"
+    }
+
+    fun getIcon(): Int {
+        val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(Locale.ROOT), "drawable")
+        return if (identifier == 0) R.drawable.generic else identifier
     }
 }

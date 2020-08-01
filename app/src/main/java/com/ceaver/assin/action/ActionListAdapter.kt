@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.util.CalendarHelper
 
 internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
@@ -64,9 +62,9 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
 
         private fun getRightImageResource(action: Action): Int {
             return when (action.actionType) {
-                ActionType.DEPOSIT -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
+                ActionType.DEPOSIT -> action.buyTitle!!.getIcon()
                 ActionType.WITHDRAW -> R.drawable.withdraw
-                ActionType.TRADE -> getImageIdentifier(action.buyTitle!!.symbol.toLowerCase())
+                ActionType.TRADE -> action.buyTitle!!.getIcon()
                 ActionType.SPLIT -> R.drawable.split
             }
         }
@@ -74,15 +72,10 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         private fun getLeftImageResource(action: Action): Int {
             return when (action.actionType) {
                 ActionType.DEPOSIT -> R.drawable.deposit
-                ActionType.WITHDRAW -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())
-                ActionType.TRADE -> getImageIdentifier(action.sellTitle!!.symbol.toLowerCase())
-                ActionType.SPLIT -> getImageIdentifier(action.splitTitle!!.symbol.toLowerCase())
+                ActionType.WITHDRAW -> action.sellTitle!!.getIcon()
+                ActionType.TRADE -> action.sellTitle!!.getIcon()
+                ActionType.SPLIT -> action.splitTitle!!.getIcon()
             }
-        }
-
-        private fun getImageIdentifier(symbol: String): Int {
-            val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(), "drawable")
-            return if (identifier == 0) R.drawable.unknown else identifier
         }
     }
 }

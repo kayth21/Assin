@@ -5,12 +5,9 @@ import android.widget.TextView
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.asFormattedDateTime
-import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.extensions.toCurrencyString
-import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import java.math.RoundingMode
 import kotlin.random.Random
@@ -56,11 +53,6 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
             itemView.setOnClickListener { onClickListener.onItemClick(position) }
             if (position.isActive())
                 view.setOnCreateContextMenuListener(this)
-        }
-
-        private fun getImageIdentifier(title: Title): Int {
-            val identifier = MyApplication.appContext!!.resIdByName(title.symbol.toLowerCase(), "drawable")
-            return if (identifier == 0) R.drawable.unknown else identifier
         }
     }
 }

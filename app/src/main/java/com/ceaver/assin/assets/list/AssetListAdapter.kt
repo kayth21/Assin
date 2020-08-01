@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
-import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.extensions.toCurrencyString
 import kotlin.random.Random
 
@@ -46,7 +44,7 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         }
 
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(getImageIdentifier(asset.title.symbol))
+            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(asset.title.getIcon())
             (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.title.name
             (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.title.symbol}"
             (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.title.symbol) + " " + "BTC"
@@ -57,11 +55,6 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
 
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(asset) }
-        }
-
-        private fun getImageIdentifier(symbol: String): Int {
-            val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(), "drawable")
-            return if (identifier == 0) R.drawable.unknown else identifier
         }
     }
 }

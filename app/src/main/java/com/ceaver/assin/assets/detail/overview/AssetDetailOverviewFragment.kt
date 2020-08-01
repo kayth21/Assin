@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ceaver.assin.AssinWorkerEvents
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
-import com.ceaver.assin.extensions.resIdByName
 import com.ceaver.assin.extensions.toCurrencyString
 import kotlinx.android.synthetic.main.asset_detail_overview_fragment.*
 import org.greenrobot.eventbus.EventBus
@@ -44,16 +42,11 @@ class AssetDetailOverviewFragment(val symbol: String) : Fragment() {
     private fun lookupViewModel(): AssetDetailOverviewViewModel = ViewModelProviders.of(this).get(AssetDetailOverviewViewModel::class.java)
 
     private fun onAssetLoaded(asset: Asset) {
-        assetDetailOverviewFragmentAssetImage.setImageResource(getImageIdentifier(asset.title.symbol))
+        assetDetailOverviewFragmentAssetImage.setImageResource(asset.title.getIcon())
         assetDetailOverviewFragmentAssetTitle.text = asset.title.name
         assetDetailOverviewFragmentTotalPositionSizeValue.text = asset.amount.toPlainString() + " " + asset.title.symbol
         assetDetailOverviewFragmentValueInBtcValue.text = asset.btcValue.toCurrencyString("BTC") + " BTC"
         assetDetailOverviewFragmentValueInUsdValue.text = asset.usdValue.toCurrencyString("USD") + " USD"
-    }
-
-    private fun getImageIdentifier(symbol: String): Int {
-        val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(), "drawable")
-        return if (identifier == 0) R.drawable.unknown else identifier
     }
 
     @Suppress("UNUSED_PARAMETER")
