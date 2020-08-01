@@ -3,12 +3,11 @@ package com.ceaver.assin.markets.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.markets.Title
+import kotlinx.android.synthetic.main.market_list_row.view.*
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
 
@@ -28,15 +27,15 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(title: Title) {
-            (view.findViewById(R.id.titleImageView) as ImageView).setImageResource(title.getIcon())
-            (view.findViewById(R.id.titleRankTextView) as TextView).text = title.rank.toString()
-            (view.findViewById(R.id.titleSymbolTextView) as TextView).text = title.symbol
-            (view.findViewById(R.id.titleNameTextView) as TextView).text = title.name
-            (view.findViewById(R.id.titleCryptoPriceTextView) as TextView).text = title.priceBtc!!.format("BTC") + " BTC"
-            (view.findViewById(R.id.titleFiatPriceTextView) as TextView).text = title.priceUsd!!.format("USD") + " USD"
-            (view.findViewById(R.id.title1hChangeTextView) as TextView).text = "1h: ${title.getPercentChange1hUsdString()}%"
-            (view.findViewById(R.id.title24hChangeTextView) as TextView).text = "24h: ${title.getPercentChange24hUsdString()}%"
-            (view.findViewById(R.id.title7dChangeTextView) as TextView).text = "7d: ${title.getPercentChange7dUsdString()}%"
+            view.titleImageView.setImageResource(title.getIcon())
+            view.titleRankTextView.text = title.rank.toString()
+            view.titleSymbolTextView.text = title.symbol
+            view.titleNameTextView.text = title.name
+            view.titleCryptoPriceTextView.text = title.priceBtc!!.format("BTC") + " BTC"
+            view.titleFiatPriceTextView.text = title.priceUsd!!.format("USD") + " USD"
+            view.title1hChangeTextView.text = "1h: ${title.getPercentChange1hUsdString()}%"
+            view.title24hChangeTextView.text = "24h: ${title.getPercentChange24hUsdString()}%"
+            view.title7dChangeTextView.text = "7d: ${title.getPercentChange7dUsdString()}%"
         }
     }
 }

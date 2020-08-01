@@ -1,11 +1,11 @@
 package com.ceaver.assin.logging
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
+import kotlinx.android.synthetic.main.log_list_row.view.*
 import java.time.format.DateTimeFormatter
 
 class LogListAdapter : RecyclerView.Adapter<LogListAdapter.ViewHolder>() {
@@ -24,9 +24,9 @@ class LogListAdapter : RecyclerView.Adapter<LogListAdapter.ViewHolder>() {
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(log: Log) {
-            (view.findViewById(R.id.logTimestampTextView) as TextView).text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
-            (view.findViewById(R.id.logIdTextView) as TextView).text = "#" + log.id
-            (view.findViewById(R.id.logMessageTextView) as TextView).text = log.message
+            view.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
+            view.logIdTextView.text = "#" + log.id
+            view.logMessageTextView.text = log.message
         }
     }
 }

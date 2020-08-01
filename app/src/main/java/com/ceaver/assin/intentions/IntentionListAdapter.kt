@@ -4,13 +4,12 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.toCurrencyString
+import kotlinx.android.synthetic.main.intention_list_row.view.*
 
-internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
+internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
 
     var intentionList: List<Intention> = ArrayList()
     var currentLongClickIntention: Intention? = null
@@ -32,11 +31,11 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
         }
 
         fun bindItem(intention: Intention, onClickListener: IntentionListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.intentionListRowLeftImageView) as ImageView).setImageResource(intention.title.getIcon())
-            (view.findViewById(R.id.intentionListRowAssetTextView) as TextView).text = "${intention.type} ${intention.amountAsString()} ${intention.title}"
-            (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            (view.findViewById(R.id.intentionListRowReferenceTextView) as TextView).text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            (view.findViewById(R.id.intentionListRowPercentTextView) as TextView).text = "${intention.percentToReferencePrice().toCurrencyString("abc")}%"
+            view.intentionListRowLeftImageView.setImageResource(intention.title.getIcon())
+            view.intentionListRowAssetTextView.text = "${intention.type} ${intention.amountAsString()} ${intention.title}"
+            view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
+            view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
+            view.intentionListRowPercentTextView.text = "${intention.percentToReferencePrice().toCurrencyString("abc")}%"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }

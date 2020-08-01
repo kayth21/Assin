@@ -1,7 +1,6 @@
 package com.ceaver.assin.positions.list
 
 import android.view.*
-import android.widget.TextView
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +8,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.extensions.asFormattedDateTime
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.positions.Position
+import kotlinx.android.synthetic.main.position_list_row.view.*
 import java.math.RoundingMode
 import kotlin.random.Random
 
@@ -42,12 +42,12 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
         }
 
         fun bindItem(position: Position, onClickListener: PositionListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.positionListRowPositionSize) as TextView).text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
-            (view.findViewById(R.id.positionListRowPositionValueBtc) as TextView).text = "${position.currentValueInBtc().toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc().setScale(0, RoundingMode.HALF_UP)}%)"
-            (view.findViewById(R.id.positionListRowPositionValueUsd) as TextView).text = "${position.currentValueInUsd().toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd().setScale(0, RoundingMode.HALF_UP)}%)"
-            (view.findViewById(R.id.positionListRowPositionOpenDate) as TextView).text = "Open: ${position.openDate.asFormattedDateTime()}"
+            view.positionListRowPositionSize.text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
+            view.positionListRowPositionValueBtc.text = "${position.currentValueInBtc().toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc().setScale(0, RoundingMode.HALF_UP)}%)"
+            view.positionListRowPositionValueUsd.text = "${position.currentValueInUsd().toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd().setScale(0, RoundingMode.HALF_UP)}%)"
+            view.positionListRowPositionOpenDate.text = "Open: ${position.openDate.asFormattedDateTime()}"
             if (!position.isActive())
-                (view.findViewById(R.id.positionListRowPositionCloseDate) as TextView).text = "Close: ${position.closeDate!!.asFormattedDateTime()}"
+                view.positionListRowPositionCloseDate.text = "Close: ${position.closeDate!!.asFormattedDateTime()}"
 
 
             itemView.setOnClickListener { onClickListener.onItemClick(position) }

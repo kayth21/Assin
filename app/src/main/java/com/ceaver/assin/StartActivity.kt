@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
 import androidx.work.*
 import com.ceaver.assin.action.ActionListFragment
 import com.ceaver.assin.alerts.AlertListActivity
@@ -26,9 +24,9 @@ import com.ceaver.assin.markets.MarketFragment
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.app_bar_start.*
+import kotlinx.android.synthetic.main.content_start.*
 import java.util.concurrent.TimeUnit
 
 class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -38,10 +36,9 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setContentView(R.layout.activity_start)
         setSupportActionBar(toolbar)
 
-        val viewPager = findViewById<View>(R.id.pager) as ViewPager
-        viewPager.adapter = StartActivity.MainPagerAdapter(supportFragmentManager)
-        val tabLayout = findViewById<View>(R.id.tablayout) as TabLayout
-        tabLayout.setupWithViewPager(viewPager)
+        val viewPager = pager
+        viewPager.adapter = MainPagerAdapter(supportFragmentManager)
+        tablayout.setupWithViewPager(viewPager)
 
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -96,20 +93,16 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_markets -> {
-                val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(0, true)
+                pager.setCurrentItem(0, true)
             }
             R.id.nav_assets -> {
-                val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(1, true)
+                pager.setCurrentItem(1, true)
             }
             R.id.nav_intensions -> {
-                val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(2, true)
+                pager.setCurrentItem(2, true)
             }
             R.id.nav_actions -> {
-                val viewPager = findViewById<View>(R.id.pager) as ViewPager
-                viewPager.setCurrentItem(3, true)
+                pager.setCurrentItem(3, true)
             }
             R.id.nav_alerts -> {
                 val intent = Intent(this, AlertListActivity::class.java)

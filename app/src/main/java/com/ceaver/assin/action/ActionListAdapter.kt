@@ -4,11 +4,10 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.util.CalendarHelper
+import kotlinx.android.synthetic.main.action_list_row.view.*
 
 internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
 
@@ -33,11 +32,11 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.actionListRowLeftImageView) as ImageView).setImageResource(getLeftImageResource(action))
-            (view.findViewById(R.id.actionListRowTradeTypeTextView) as TextView).text = getActionTypeText(action)
-            (view.findViewById(R.id.actionListRowTradeDateTextView) as TextView).text = CalendarHelper.convertDate(action.actionDate)
-            (view.findViewById(R.id.actionListRowTradeTextView) as TextView).text = getActionText(action)
-            (view.findViewById(R.id.actionListRowRightImageView) as ImageView).setImageResource(getRightImageResource(action))
+            view.actionListRowLeftImageView.setImageResource(getLeftImageResource(action))
+            view.actionListRowTradeTypeTextView.text = getActionTypeText(action)
+            view.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.actionDate)
+            view.actionListRowTradeTextView.text = getActionText(action)
+            view.actionListRowRightImageView.setImageResource(getRightImageResource(action))
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(action) }
         }

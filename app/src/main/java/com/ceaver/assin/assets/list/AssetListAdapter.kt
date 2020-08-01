@@ -4,12 +4,11 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.extensions.toCurrencyString
+import kotlinx.android.synthetic.main.asset_list_row.view.*
 import kotlin.random.Random
 
 class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClickListener) : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
@@ -44,14 +43,14 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         }
 
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
-            (view.findViewById(R.id.assetImageView) as ImageView).setImageResource(asset.title.getIcon())
-            (view.findViewById(R.id.assetNameTextView) as TextView).text = asset.title.name
-            (view.findViewById(R.id.assetBalanceTextView) as TextView).text = "${asset.amount} ${asset.title.symbol}"
-            (view.findViewById(R.id.assetBtcValueTextView) as TextView).text = asset.btcValue.toCurrencyString(asset.title.symbol) + " " + "BTC"
-            (view.findViewById(R.id.assetUsdValueTextView) as TextView).text = asset.usdValue.toCurrencyString(asset.title.symbol) + " " + "USD"
-            (view.findViewById(R.id.asset1hChangeTextView) as TextView).text = "1h: ${asset.title.getPercentChange1hUsdString()}%"
-            (view.findViewById(R.id.asset24hChangeTextView) as TextView).text = "24h: ${asset.title.getPercentChange24hUsdString()}%"
-            (view.findViewById(R.id.asset7dChangeTextView) as TextView).text = "7d: ${asset.title.getPercentChange7dUsdString()}%"
+            view.assetImageView.setImageResource(asset.title.getIcon())
+            view.assetNameTextView.text = asset.title.name
+            view.assetBalanceTextView.text = "${asset.amount} ${asset.title.symbol}"
+            view.assetBtcValueTextView.text = asset.btcValue.toCurrencyString(asset.title.symbol) + " " + "BTC"
+            view.assetUsdValueTextView.text = asset.usdValue.toCurrencyString(asset.title.symbol) + " " + "USD"
+            view.asset1hChangeTextView.text = "1h: ${asset.title.getPercentChange1hUsdString()}%"
+            view.asset24hChangeTextView.text = "24h: ${asset.title.getPercentChange24hUsdString()}%"
+            view.asset7dChangeTextView.text = "7d: ${asset.title.getPercentChange7dUsdString()}%"
 
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(asset) }

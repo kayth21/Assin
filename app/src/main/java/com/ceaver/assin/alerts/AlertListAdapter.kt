@@ -1,13 +1,12 @@
 package com.ceaver.assin.alerts
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.format
+import kotlinx.android.synthetic.main.alert_list_row.view.*
 
 internal class AlertListAdapter(private val onClickListener: AlertListActivity.OnItemClickListener) : RecyclerView.Adapter<AlertListAdapter.ViewHolder>() {
 
@@ -32,10 +31,10 @@ internal class AlertListAdapter(private val onClickListener: AlertListActivity.O
         }
 
         fun bindItem(alert: Alert, onClickListener: AlertListActivity.OnItemClickListener) {
-            (view.findViewById(R.id.alertSymbolTextView) as TextView).text = alert.symbol.toString()
-            (view.findViewById(R.id.alertLowerTargetTextView) as TextView).text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.reference.symbol}"
-            (view.findViewById(R.id.alertUpperTargetTextView) as TextView).text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.reference.symbol}"
-            (view.findViewById(R.id.alertRangeTextView) as TextView).text = "Range (+/-): "+ alert.target.toPlainString() + " ${alert.reference.symbol}"
+            view.alertSymbolTextView.text = alert.symbol.toString()
+            view.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.reference.symbol}"
+            view.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.reference.symbol}"
+            view.alertRangeTextView.text = "Range (+/-): "+ alert.target.toPlainString() + " ${alert.reference.symbol}"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(alert) }
         }
