@@ -1,26 +1,28 @@
 package com.ceaver.assin.splash
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
-import com.ceaver.assin.StartActivity
 import com.ceaver.assin.system.SystemRepository
 import com.ceaver.assin.util.isConnected
-import kotlinx.android.synthetic.main.splash_screen_activity.*
+import kotlinx.android.synthetic.main.splash_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class SplashScreenActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        modifyView()
+class SplashFragment : Fragment() {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (requireActivity() as AppCompatActivity?)!!.supportActionBar!!.hide()
+        return inflater.inflate(R.layout.splash_fragment, container, false)
     }
 
     override fun onStart() {
@@ -28,9 +30,8 @@ class SplashScreenActivity : AppCompatActivity() {
         EventBus.getDefault().register(this)
 
         if (SystemRepository.isInitialized())
-            startActivity(Intent(this, StartActivity::class.java))
+            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         else {
-            publishView()
             bindActions()
             loadMarketData()
         }
@@ -41,31 +42,23 @@ class SplashScreenActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
     }
 
-    private fun modifyView() {
-        supportActionBar?.hide()
-    }
-
-    private fun publishView() {
-        setContentView(R.layout.splash_screen_activity)
-    }
-
     private fun bindActions() {
-        splashScreenActivityRetryButton.setOnClickListener { splashScreenActivityRetryButton.visibility = INVISIBLE; loadMarketData() }
+        splashFragmentRetryButton.setOnClickListener { splashFragmentRetryButton.visibility = View.INVISIBLE; loadMarketData() }
     }
 
     private fun loadMarketData() {
         if (isConnected()) {
-            splashScreenActivityActionTextView.setText("Loading data...")
+            splashFragmentActionTextView.setText("Loading data...")
             AssinWorkers.completeUpdate()
         } else {
-            splashScreenActivityActionTextView.setText("No internet connection available...")
-            splashScreenActivityRetryButton.visibility = VISIBLE
+            splashFragmentActionTextView.setText("No internet connection available...")
+            splashFragmentRetryButton.visibility = View.VISIBLE
         }
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        startActivity(Intent(this, StartActivity::class.java))
+        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
     }
 }
