@@ -13,7 +13,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionEvents
 import com.ceaver.assin.action.ActionRepository
-import com.ceaver.assin.markets.TitleRepository
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
 import kotlinx.android.synthetic.main.position_list_fragment.*
@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class PositionListFragment(val symbol: String) : Fragment() {
+class PositionListFragment(val title: Title) : Fragment() {
 
     private val positionListAdapter = PositionListAdapter(OnListItemClickListener(), this)
 
@@ -81,7 +81,7 @@ class PositionListFragment(val symbol: String) : Fragment() {
     }
 
     private fun loadAllPositions() {
-        TitleRepository.loadTitleBySymbolAsync(symbol, true) { PositionRepository.loadPositionsAsync(it, true) { onAllPositionsLoaded(it.sortedByDescending { it.id }) } }
+        PositionRepository.loadPositionsAsync(title, true) { onAllPositionsLoaded(it.sortedByDescending { it.id }) }
     }
 
     private fun onAllPositionsLoaded(positions: List<Position>) {
@@ -111,6 +111,6 @@ class PositionListFragment(val symbol: String) : Fragment() {
     }
 
     private fun withdraw(selectedPosition: Position) {
-        ActionRepository.insertWithdrawAsync(Action.withdraw(selectedPosition), true) { loadAllPositions()}
+        ActionRepository.insertWithdrawAsync(Action.withdraw(selectedPosition), true) { loadAllPositions() }
     }
 }

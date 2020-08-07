@@ -1,7 +1,9 @@
 package com.ceaver.assin.positions.list
 
-import android.view.*
-import androidx.core.view.iterator
+import android.view.ContextMenu
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
@@ -36,9 +38,6 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
     inner class PositionViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_WITHDRAW_ITEM_ID, 0, "Withdraw")
-
-            // hack because of https://stackoverflow.com/questions/15929026/oncontextitemselected-does-not-get-called-in-a-dialogfragment
-            menu.iterator().forEach { it.setOnMenuItemClickListener(MenuItem.OnMenuItemClickListener { fragment.onContextItemSelected(it);true }) }
         }
 
         fun bindItem(position: Position, onClickListener: PositionListFragment.OnItemClickListener) {

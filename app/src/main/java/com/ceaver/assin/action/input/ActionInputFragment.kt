@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.extensions.afterTextChanged
@@ -20,11 +21,7 @@ import kotlinx.android.synthetic.main.action_input_fragment.*
 import java.math.MathContext
 import java.time.LocalDate
 
-class ActionInputFragment() : DialogFragment() {
-
-    companion object {
-        val ACTION_INPUT_FRAGMENT_TAG = "com.ceaver.assin.action.input.ActionInputFragment.Tag"
-    }
+class ActionInputFragment() : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.action_input_fragment, container, false)
@@ -46,13 +43,13 @@ class ActionInputFragment() : DialogFragment() {
         observeDataReady(viewModel)
     }
 
-    private fun lookupTradeId(): Long? = requireArguments().getLong(Action.ACTION_ID).takeUnless { it == 0L }
-    private fun lookupSymbol(): String? = requireArguments().getString(Action.SYMBOL)
-    private fun lookupActionType(): ActionType = ActionType.valueOf(requireArguments().getString(Action.ACTION_TYPE)!!)
+    private fun lookupTradeId(): Action? = ActionInputFragmentArgs.fromBundle(requireArguments()).action
+    private fun lookupSymbol(): Title? = ActionInputFragmentArgs.fromBundle(requireArguments()).title
+    private fun lookupActionType(): ActionType = ActionInputFragmentArgs.fromBundle(requireArguments()).actionType
 
-    private fun lookupViewModel(actionId: Long?, symbol: String?, actionType: ActionType): ActionInputViewModel {
+    private fun lookupViewModel(action: Action?, title: Title?, actionType: ActionType): ActionInputViewModel {
         val viewModel by viewModels<ActionInputViewModel>()
-        viewModel.initTrade(actionId, symbol, actionType)
+        viewModel.initTrade(action, title, actionType)
         return viewModel
     }
 
@@ -227,7 +224,7 @@ class ActionInputFragment() : DialogFragment() {
     }
 
     private fun onEndSave() {
-        dismiss()
+        findNavController().navigateUp()
     }
 
     private fun registerInputValidation() {

@@ -6,12 +6,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
-import com.ceaver.assin.intentions.input.IntentionInputFragment
+import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
@@ -36,9 +37,7 @@ class IntentionListFragment : Fragment() {
         intentionListFragmentIntentionList.adapter = intentionListAdapter
         intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         intentionListFragmentCreateIntentionButton.setOnClickListener {
-            val intentionInputFragment = IntentionInputFragment()
-            intentionInputFragment.arguments = Bundle()
-            intentionInputFragment.show(parentFragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment())
         }
         loadAllIntentions()
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener {
@@ -111,11 +110,7 @@ class IntentionListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Intention) {
-            val arguments = Bundle();
-            arguments.putLong(IntentionInputFragment.INTENTION_ID, item.id)
-            val intentionInputFragment = IntentionInputFragment()
-            intentionInputFragment.arguments = arguments
-            intentionInputFragment.show(parentFragmentManager, IntentionInputFragment.INTENTION_INPUT_FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(item))
         }
     }
 

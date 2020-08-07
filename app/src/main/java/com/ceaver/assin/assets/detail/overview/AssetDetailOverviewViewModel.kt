@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
-import com.ceaver.assin.markets.TitleRepository
+import com.ceaver.assin.markets.Title
 
 class AssetDetailOverviewViewModel : ViewModel() {
 
@@ -17,9 +17,7 @@ class AssetDetailOverviewViewModel : ViewModel() {
         return this
     }
 
-    fun loadAsset(symbol: String) {
-        TitleRepository.loadTitleBySymbolAsync(symbol, false) {
-            AssetRepository.loadAssetAsync(it, false) { asset.postValue(it) }
-        }
+    fun loadAsset(title: Title) {
+        AssetRepository.loadAssetAsync(title, false) { asset.postValue(it) }
     }
 }

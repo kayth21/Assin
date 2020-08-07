@@ -1,14 +1,17 @@
 package com.ceaver.assin.action
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.math.MathContext
 import java.time.LocalDate
 
+@Parcelize
 @Entity(tableName = "action")
 data class Action(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
@@ -25,7 +28,7 @@ data class Action(
         @ColumnInfo(name = "splitTitle") val splitTitle: Title? = null,
         @ColumnInfo(name = "valueBtc") val valueBtc: BigDecimal? = null,
         @ColumnInfo(name = "valueUsd") val valueUsd: BigDecimal? = null
-) {
+) : Parcelable {
 
     companion object {
         val ACTION_ID = "com.ceaver.assin.actions.Action.actionId"

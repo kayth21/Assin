@@ -10,7 +10,6 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -21,20 +20,16 @@ class ActionInputViewModel : ViewModel() {
     val dataReady = zipLiveData(action, symbols)
     val status = SingleLiveEvent<ActionInputStatus>()
 
-    private fun lookupAction(actionId: Long) {
-        ActionRepository.loadActionAsync(actionId, false) { action.postValue(it) }
-    }
-
-    fun initTrade(actionId: Long?, symbol: String?, lookupActionType: ActionType): ActionInputViewModel {
+    fun initTrade(action: Action?, title: Title?, actionType: ActionType): ActionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         when {
-            actionId != null -> lookupAction(actionId)
-            symbol != null -> when (lookupActionType) {
-                ActionType.DEPOSIT -> BackgroundThreadExecutor.execute { action.postValue(Action(actionType = lookupActionType, buyTitle = TitleRepository.loadTitleBySymbol(symbol))) }
-                ActionType.WITHDRAW -> BackgroundThreadExecutor.execute { action.postValue(Action(actionType = lookupActionType, sellTitle = TitleRepository.loadTitleBySymbol(symbol))) }
+            action != null -> this.action.postValue(action)
+            title != null -> when (actionType) {
+                ActionType.DEPOSIT -> this.action.postValue(Action(actionType = actionType, buyTitle = title))
+                ActionType.WITHDRAW -> this.action.postValue(Action(actionType = actionType, sellTitle = title))
                 else -> throw IllegalStateException()
             }
-            else -> action.postValue(Action(actionType = lookupActionType))
+            else -> this.action.postValue(Action(actionType = actionType))
         }
         return this
     }

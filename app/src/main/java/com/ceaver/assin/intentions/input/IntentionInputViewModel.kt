@@ -20,15 +20,15 @@ class IntentionInputViewModel : ViewModel() {
     val status = SingleLiveEvent<IntentionInputStatus>()
 
 
-    fun init(intentionId: Long?, symbol: String?, amount: BigDecimal?): IntentionInputViewModel {
+    fun init(intention: Intention?, title: Title?, amount: BigDecimal?): IntentionInputViewModel {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
-        if (intentionId != null)
-            IntentionRepository.loadIntentionAsync(intentionId, false) { intention.postValue(it) }
+        if (intention != null)
+            this.intention.postValue(intention)
         else
             BackgroundThreadExecutor.execute {
-                val symbolTitle = TitleRepository.loadTitleBySymbol(symbol ?: "BTC")
-                val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
+                val symbolTitle = title ?: TitleRepository.loadTitleBySymbol("BTC")
+                val referenceTitle =  TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
+                this.intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
         return this
     }

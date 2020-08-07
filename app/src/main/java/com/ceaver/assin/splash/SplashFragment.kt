@@ -30,7 +30,7 @@ class SplashFragment : Fragment() {
         EventBus.getDefault().register(this)
 
         if (SystemRepository.isInitialized())
-            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
         else {
             bindActions()
             loadMarketData()
@@ -59,6 +59,6 @@ class SplashFragment : Fragment() {
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+        findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
     }
 }

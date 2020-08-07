@@ -5,24 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
+import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.intention_input_fragment.*
 import java.math.BigDecimal
 
-class IntentionInputFragment : DialogFragment() {
-
-    companion object {
-        val INTENTION_INPUT_FRAGMENT_TAG = "com.ceaver.assin.trades.input.TradeInputFragment.Tag"
-        val INTENTION_ID = "com.ceaver.assin.intentions.input.IntentionInputFragment.intentionId"
-        val INTENTION_SYMBOL = "com.ceaver.assin.intentions.input.IntentionInputFragment.intentionSymbol"
-        val INTENTION_AMOUNT = "com.ceaver.assin.intentions.input.IntentionInputFragment.intentionAmount"
-    }
+class IntentionInputFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.intention_input_fragment, container, false)
@@ -31,10 +26,10 @@ class IntentionInputFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
 
-        val intentionId = lookupIntentionId()
-        val symbol = lookupSymbol()
+        val intention = lookupIntention()
+        val title = lookupTitle()
         val amount = lookupAmount()
-        val viewModel = lookupViewModel(intentionId, symbol, amount)
+        val viewModel = lookupViewModel(intention, title, amount)
 
         prepareView()
         bindActions(viewModel)
@@ -42,13 +37,13 @@ class IntentionInputFragment : DialogFragment() {
         observeDataReady(viewModel)
     }
 
-    private fun lookupIntentionId(): Long? = requireArguments().getLong(INTENTION_ID).takeUnless { it == 0L }
-    private fun lookupSymbol(): String? = requireArguments().getString(INTENTION_SYMBOL)
-    private fun lookupAmount(): BigDecimal? = requireArguments().getString(INTENTION_AMOUNT)?.toBigDecimal()
+    private fun lookupIntention(): Intention? = IntentionInputFragmentArgs.fromBundle(requireArguments()).intention
+    private fun lookupTitle(): Title? = IntentionInputFragmentArgs.fromBundle(requireArguments()).title
+    private fun lookupAmount(): BigDecimal? = IntentionInputFragmentArgs.fromBundle(requireArguments()).amount
 
-    private fun lookupViewModel(intentionId: Long?, symbol: String?, amount: BigDecimal?): IntentionInputViewModel {
+    private fun lookupViewModel(intention: Intention?, title: Title?, amount: BigDecimal?): IntentionInputViewModel {
         val viewModel by viewModels<IntentionInputViewModel>()
-        viewModel.init(intentionId, symbol, amount)
+        viewModel.init(intention, title, amount)
         return viewModel
     }
 
@@ -122,7 +117,7 @@ class IntentionInputFragment : DialogFragment() {
     }
 
     private fun onEndSave() {
-        dismiss()
+        findNavController().navigateUp()
     }
 
     private fun enableInput(enable: Boolean) {

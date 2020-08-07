@@ -1,5 +1,6 @@
 package com.ceaver.assin.markets
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -8,9 +9,11 @@ import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.extensions.resIdByName
+import kotlinx.android.parcel.Parcelize
 import java.time.LocalDateTime
 import java.util.*
 
+@Parcelize
 @Entity(tableName = "title", indices = [Index(value = ["symbol", "rank"])]) // TODO What is this index good for? https://developer.android.com/training/data-storage/room/defining-data
 data class Title(//
         // common
@@ -65,7 +68,7 @@ data class Title(//
         @ColumnInfo(name = "athPriceEth") val athPriceEth: Double? = null,
         @ColumnInfo(name = "athDateEth") val athDateEth: LocalDateTime? = null,
         @ColumnInfo(name = "athPercentEth") val athPercentEth: Double? = null
-) {
+) : Parcelable {
 
     fun inactive(): Boolean {
         return active == -100

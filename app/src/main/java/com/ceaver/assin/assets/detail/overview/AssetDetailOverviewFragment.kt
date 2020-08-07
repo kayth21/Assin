@@ -11,12 +11,13 @@ import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.asset_detail_overview_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class AssetDetailOverviewFragment(val symbol: String) : Fragment() {
+class AssetDetailOverviewFragment(val title: Title) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,6 @@ class AssetDetailOverviewFragment(val symbol: String) : Fragment() {
     }
 
     private fun loadAsset() {
-        lookupViewModel().loadAsset(symbol)
+        lookupViewModel().loadAsset(title)
     }
 }

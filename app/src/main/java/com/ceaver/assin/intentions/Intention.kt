@@ -1,12 +1,15 @@
 package com.ceaver.assin.intentions
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.time.LocalDate
 
+@Parcelize
 @Entity(tableName = "intention")
 data class Intention(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
@@ -17,7 +20,7 @@ data class Intention(
         @ColumnInfo(name = "referencePrice") var referencePrice: BigDecimal,
         @ColumnInfo(name = "creationDate") var creationDate: LocalDate = LocalDate.now(),
         @ColumnInfo(name = "status") val status: IntentionStatus = IntentionStatus.WAIT,
-        @ColumnInfo(name = "comment") var comment: String? = null) {
+        @ColumnInfo(name = "comment") var comment: String? = null) : Parcelable {
 
     fun percentToReferencePrice(): BigDecimal {
         val price = when (referenceTitle.symbol) {

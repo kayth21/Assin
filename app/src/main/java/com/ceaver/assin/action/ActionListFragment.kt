@@ -6,9 +6,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.action.input.ActionInputFragment
+import com.ceaver.assin.home.HomeFragmentDirections
 import kotlinx.android.synthetic.main.fragment_action_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -29,11 +30,7 @@ class ActionListFragment : Fragment() {
         actionList.adapter = actionListAdapter
         actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
-            val arguments = Bundle();
-            arguments.putString(Action.ACTION_TYPE, ActionType.TRADE.name)
-            val actionInputFragment = ActionInputFragment()
-            actionInputFragment.arguments = arguments
-            actionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.TRADE))
         }
         loadAllActions()
         swipeRefreshLayout.setOnRefreshListener { loadAllActions() }
@@ -86,12 +83,8 @@ class ActionListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Action) {
-            val arguments = Bundle();
-            arguments.putLong(Action.ACTION_ID, item.id)
-            arguments.putString(Action.ACTION_TYPE, item.actionType.name)
-            val actionInputFragment = ActionInputFragment()
-            actionInputFragment.arguments = arguments
-            actionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(item.actionType, item))
+
         }
     }
 

@@ -6,18 +6,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
-import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionEvents
 import com.ceaver.assin.action.ActionType
-import com.ceaver.assin.action.input.ActionInputFragment
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
-import com.ceaver.assin.assets.detail.AssetDetailFragment
-import com.ceaver.assin.intentions.input.IntentionInputFragment
+import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
@@ -42,11 +40,7 @@ class AssetListFragment : Fragment() {
         assetList.adapter = assetListAdapter
         assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         assetDepositButton.setOnClickListener {
-            val arguments = Bundle();
-            arguments.putString(Action.ACTION_TYPE, ActionType.DEPOSIT.name)
-            val tradeInputFragment = ActionInputFragment()
-            tradeInputFragment.arguments = arguments
-            tradeInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT))
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
@@ -112,11 +106,7 @@ class AssetListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Asset) {
-            val dialogFragment = AssetDetailFragment()
-            val arguments = Bundle()
-            arguments.putString(AssetDetailFragment.SYMBOL, item.title.symbol)
-            dialogFragment.arguments = arguments
-            dialogFragment.show(parentFragmentManager, AssetDetailFragment.FRAGMENT_TAG)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAssetDetailFragment(item.title))
         }
     }
 
@@ -133,24 +123,15 @@ class AssetListFragment : Fragment() {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
-                    val arguments = Bundle();
-                    arguments.putString(Action.SYMBOL, selectedAsset.title.symbol)
-                    arguments.putString(Action.ACTION_TYPE, when (item.itemId) {
-                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT.name
-                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW.name
+                    val actionType =  when (item.itemId) {
+                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT
+                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW
                         else -> throw IllegalStateException()
-                    })
-                    val actionInputFragment = ActionInputFragment()
-                    actionInputFragment.arguments = arguments
-                    actionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+                    }
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(actionType, null, selectedAsset.title))
                 }
                 item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
-                    val arguments = Bundle();
-                    arguments.putString(IntentionInputFragment.INTENTION_SYMBOL, selectedAsset.title.symbol)
-                    arguments.putString(IntentionInputFragment.INTENTION_AMOUNT, selectedAsset.amount.toString())
-                    val intentionInputFragment = IntentionInputFragment()
-                    intentionInputFragment.arguments = arguments
-                    intentionInputFragment.show(parentFragmentManager, ActionInputFragment.ACTION_INPUT_FRAGMENT_TAG)
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.amount))
                 }
                 else -> throw IllegalStateException()
             }
