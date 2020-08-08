@@ -30,10 +30,6 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_start">
         </activity>
-        <activity
-            android:name=".backup.BackupActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
         <activity android:name=".logging.LogListActivity" />
     </application>
 

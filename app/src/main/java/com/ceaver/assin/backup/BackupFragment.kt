@@ -5,9 +5,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -25,7 +28,7 @@ import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_backup.*
+import kotlinx.android.synthetic.main.backup_fragment.*
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -52,11 +55,10 @@ private fun getOrCreateDirectory(): File {
 }
 
 // TODO try/catch handling on parse or any IO exception
-class BackupActivity : AppCompatActivity() {
+class BackupFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        publishView()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(com.ceaver.assin.R.layout.backup_fragment, container, false)
     }
 
     override fun onStart() {
@@ -72,8 +74,6 @@ class BackupActivity : AppCompatActivity() {
         importButton.setOnClickListener(null)
         EventBus.getDefault().unregister(this);
     }
-
-    private fun publishView() = setContentView(com.ceaver.assin.R.layout.activity_backup)
 
     private fun onExportClick() {
         disableButtons()
@@ -92,7 +92,7 @@ class BackupActivity : AppCompatActivity() {
     }
 
     private fun startExport() {
-        WorkManager.getInstance(this)
+        WorkManager.getInstance(requireContext())
                 .beginWith(listOf(
                         OneTimeWorkRequestBuilder<ActionExportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertExportWorker>().build(),
@@ -102,7 +102,7 @@ class BackupActivity : AppCompatActivity() {
     }
 
     private fun startImport() {
-        WorkManager.getInstance(this)
+        WorkManager.getInstance(requireContext())
                 .beginWith(listOf(
                         OneTimeWorkRequestBuilder<ActionImportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertImportWorker>().build(),
@@ -250,9 +250,9 @@ class BackupActivity : AppCompatActivity() {
         Snackbar.make(backupConstraintLayout, "Successfully done", Snackbar.LENGTH_LONG).show()
     }
 
-    private fun hasPermission(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    private fun hasPermission(permission: String) = ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
 
-    private fun requestPermission(permission: String, requestCode: Int) = ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+    private fun requestPermission(permission: String, requestCode: Int) = ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

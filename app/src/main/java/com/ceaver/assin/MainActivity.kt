@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.work.*
-import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
@@ -22,7 +21,6 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
 import java.util.concurrent.TimeUnit
-
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,8 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_backup -> {
-                val intent = Intent(this, BackupActivity::class.java)
-                startActivity(intent)
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToBackupFragment())
             }
             R.id.nav_chat -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()

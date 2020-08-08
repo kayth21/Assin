@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_homeFragment_to_alertListFragment"
             app:destination="@id/alertListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_backupFragment"
+            app:destination="@id/backupFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -90,4 +93,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/backupFragment"
+        android:name="com.ceaver.assin.backup.BackupFragment"
+        android:label="BackupFragment" />
 </navigation>
