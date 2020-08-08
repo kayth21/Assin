@@ -22,7 +22,6 @@ class HomeFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // (requireActivity() as AppCompatActivity?)!!.supportActionBar!!.show()
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
@@ -52,7 +51,6 @@ class HomeFragment : Fragment() {
         super.onStop()
         requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
-
 }
 
 class HomeFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
