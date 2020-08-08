@@ -1,29 +1,31 @@
 package com.ceaver.assin.logging
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
-import kotlinx.android.synthetic.main.activity_log_list.*
+import kotlinx.android.synthetic.main.log_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class LogListActivity : AppCompatActivity() {
+class LogListFragment : Fragment() {
 
     private val logListAdapter = LogListAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_log_list)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.log_list_fragment, container, false)
     }
 
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
         logList.adapter = logListAdapter
-        logList.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        logList.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
         loadAllLogs()
         logSwipeRefreshLayout.setOnRefreshListener { loadAllLogs() }
     }
@@ -54,5 +56,4 @@ class LogListActivity : AppCompatActivity() {
     fun onMessageEvent(event: LogEvents.Update) {
         loadAllLogs()
     }
-
 }

@@ -1,7 +1,6 @@
 package com.ceaver.assin
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,7 +12,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.work.*
 import com.ceaver.assin.home.HomeFragmentDirections
-import com.ceaver.assin.logging.LogListActivity
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
@@ -109,8 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_logging -> {
-                val intent = Intent(this, LogListActivity::class.java)
-                startActivity(intent)
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToLogListFragment())
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

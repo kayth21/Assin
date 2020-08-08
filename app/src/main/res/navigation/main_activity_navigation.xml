@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_activity_navigation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_navigation"
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
@@ -24,6 +26,9 @@
         <action
             android:id="@+id/action_homeFragment_to_backupFragment"
             app:destination="@id/backupFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_logListFragment"
+            app:destination="@id/logListFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -97,4 +102,9 @@
         android:id="@+id/backupFragment"
         android:name="com.ceaver.assin.backup.BackupFragment"
         android:label="BackupFragment" />
+    <fragment
+        android:id="@+id/logListFragment"
+        android:name="com.ceaver.assin.logging.LogListFragment"
+        android:label="logListFragment"
+        tools:layout="@layout/log_list_fragment" />
 </navigation>

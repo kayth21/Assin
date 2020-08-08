@@ -30,7 +30,6 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_start">
         </activity>
-        <activity android:name=".logging.LogListActivity" />
     </application>
 
 </manifest>
