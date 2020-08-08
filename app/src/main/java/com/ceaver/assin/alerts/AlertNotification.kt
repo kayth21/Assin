@@ -9,9 +9,9 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.ceaver.assin.MainActivity
 import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
-import com.ceaver.assin.StartActivity
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
@@ -37,7 +37,7 @@ object AlertNotification {
 
     fun notify(symbol: Title, reference: Title, targetPrice: BigDecimal, currentPrice: BigDecimal) {
 
-        val intent = Intent(MyApplication.appContext!!, StartActivity::class.java)
+        val intent = Intent(MyApplication.appContext!!, MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
         val pendingIntent = PendingIntent.getActivity(MyApplication.appContext!!, 0, intent, 0)
 

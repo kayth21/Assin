@@ -18,24 +18,20 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".MainActivity"
+            android:name=".splash.SplashActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_start">
+        </activity>
+        <activity
             android:name=".backup.BackupActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".action.input.ActionInputFragment"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".intentions.input.IntentionInputFragment"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".alerts.AlertListActivity" />

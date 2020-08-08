@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -14,13 +14,15 @@ import com.ceaver.assin.intentions.IntentionListFragment
 import com.ceaver.assin.markets.MarketFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.home_fragment.*
+import kotlinx.android.synthetic.main.main_activity.*
+
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewPager: ViewPager2
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (requireActivity() as AppCompatActivity?)!!.supportActionBar!!.show()
+        // (requireActivity() as AppCompatActivity?)!!.supportActionBar!!.show()
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
@@ -40,6 +42,17 @@ class HomeFragment : Fragment() {
             }
         }.attach()
     }
+
+    override fun onStart() {
+        super.onStart()
+        requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
 }
 
 class HomeFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
