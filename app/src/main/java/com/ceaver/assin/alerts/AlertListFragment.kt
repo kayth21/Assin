@@ -1,32 +1,34 @@
 package com.ceaver.assin.alerts
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.MenuItem
 import com.ceaver.assin.R
-import kotlinx.android.synthetic.main.activity_alert_list.*
+import kotlinx.android.synthetic.main.alert_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class AlertListActivity : AppCompatActivity() {
+class AlertListFragment : Fragment() {
 
     private val alertListAdapter = AlertListAdapter(OnListItemClickListener())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alert_list)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.alert_list_fragment, container, false)
     }
 
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
         alertList.adapter = alertListAdapter
-        alertList.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        createAlertButton.setOnClickListener { startActivity(Intent(this, AlertInputActivity::class.java)) }
+        alertList.addItemDecoration(DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
+        createAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
         loadAllAlerts()
         alertSwipeRefreshLayout.setOnRefreshListener { loadAllAlerts() }
     }
@@ -70,14 +72,12 @@ class AlertListActivity : AppCompatActivity() {
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(item: Alert) {
-            val intent = Intent(this@AlertListActivity, AlertInputActivity::class.java);
-            intent.putExtra(AlertInputActivity.INTENT_EXTRA_ALERT_ID, item.id)
-            startActivity(intent)
+        override fun onItemClick(alert: Alert) {
+            findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment(alert))
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
         val selectedAlert = alertListAdapter.currentLongClickAlert!!
         AlertRepository.deleteAlertAsync(selectedAlert)
         return super.onContextItemSelected(item)

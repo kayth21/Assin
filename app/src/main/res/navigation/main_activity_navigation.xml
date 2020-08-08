@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_homeFragment_to_actionListFragment"
             app:destination="@id/actionListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_alertListFragment"
+            app:destination="@id/alertListFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -69,4 +72,22 @@
         android:id="@+id/actionListFragment"
         android:name="com.ceaver.assin.action.ActionListFragment"
         android:label="ActionListFragment" />
+    <fragment
+        android:id="@+id/alertListFragment"
+        android:name="com.ceaver.assin.alerts.AlertListFragment"
+        android:label="alertListFragment" >
+        <action
+            android:id="@+id/action_alertListActivity_to_alertInputFragment"
+            app:destination="@id/alertInputFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alertInputFragment"
+        android:name="com.ceaver.assin.alerts.AlertInputFragment"
+        android:label="AlertInputFragment" >
+        <argument
+            android:name="alert"
+            app:argType="com.ceaver.assin.alerts.Alert"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

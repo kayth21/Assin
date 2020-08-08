@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.work.*
-import com.ceaver.assin.alerts.AlertListActivity
 import com.ceaver.assin.backup.BackupActivity
 import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.logging.LogListActivity
@@ -90,8 +89,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 navController.navigate(HomeFragmentDirections.actionHomeFragmentToActionListFragment())
             }
             R.id.nav_alerts -> {
-                val intent = Intent(this, AlertListActivity::class.java)
-                startActivity(intent)
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToAlertListFragment())
+
             }
             R.id.nav_settings -> {
                 Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()

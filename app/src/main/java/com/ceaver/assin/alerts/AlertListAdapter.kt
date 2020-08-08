@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.alert_list_row.view.*
 
-internal class AlertListAdapter(private val onClickListener: AlertListActivity.OnItemClickListener) : RecyclerView.Adapter<AlertListAdapter.ViewHolder>() {
+internal class AlertListAdapter(private val onClickListener: AlertListFragment.OnItemClickListener) : RecyclerView.Adapter<AlertListAdapter.ViewHolder>() {
 
     var alertList: List<Alert> = ArrayList()
     var currentLongClickAlert: Alert? = null
@@ -30,7 +30,7 @@ internal class AlertListAdapter(private val onClickListener: AlertListActivity.O
             menu!!.add(0, v!!.getId(), 0, "Delete")
         }
 
-        fun bindItem(alert: Alert, onClickListener: AlertListActivity.OnItemClickListener) {
+        fun bindItem(alert: Alert, onClickListener: AlertListFragment.OnItemClickListener) {
             view.alertSymbolTextView.text = alert.symbol.toString()
             view.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.reference.symbol}"
             view.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.reference.symbol}"

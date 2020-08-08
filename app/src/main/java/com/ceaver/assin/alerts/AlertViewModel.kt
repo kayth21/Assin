@@ -16,10 +16,10 @@ class AlertViewModel : ViewModel() {
     val symbol = MutableLiveData<List<Title>>()
     val reference = MutableLiveData<List<Title>>()
 
-    fun init(alertId: Long = 0): AlertViewModel {
+    fun init(alert: Alert?): AlertViewModel {
         TitleRepository.loadAllCryptoTitlesAsync(false) { symbol.postValue(it) }
         TitleRepository.loadAllTitlesAsync(false) { reference.postValue(it) }
-        if (alertId > 0) lookupAlert(alertId) else createAlert(); return this
+        if (alert == null) createAlert() else this.alert.postValue(alert); return this
     }
 
     private fun lookupAlert(alertId: Long) {

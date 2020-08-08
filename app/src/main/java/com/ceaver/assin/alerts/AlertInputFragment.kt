@@ -1,32 +1,32 @@
 package com.ceaver.assin.alerts
 
-import androidx.lifecycle.Observer
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.activity.viewModels
-import com.ceaver.assin.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_alert_input.*
-import java.util.*
 
-class AlertInputActivity : AppCompatActivity() {
+class AlertInputFragment : Fragment() {
 
-    companion object {
-        val INTENT_EXTRA_ALERT_ID = UUID.randomUUID().toString()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(com.ceaver.assin.R.layout.activity_alert_input, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        publishView()
+    override fun onStart() {
+        super.onStart()
 
-        val alertId = lookupAlertId()
-        val viewModel = lookupViewModel().init(alertId)
+        val alert = lookupAlert()
+        val viewModel = lookupViewModel().init(alert)
 
         bindActions(viewModel)
         bindSymbol(viewModel)
@@ -37,9 +37,8 @@ class AlertInputActivity : AppCompatActivity() {
         bindFieldValidators()
     }
 
-    private fun publishView() = setContentView(R.layout.activity_alert_input)
 
-    private fun lookupAlertId() = intent.getLongExtra(INTENT_EXTRA_ALERT_ID, 0)
+    private fun lookupAlert() = AlertInputFragmentArgs.fromBundle(requireArguments()).alert
 
     private fun lookupViewModel(): AlertViewModel {
         val viewModel by viewModels<AlertViewModel>()
@@ -51,14 +50,14 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun bindSymbol(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
         viewModel.symbol.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
     }
 
     private fun bindReference(viewModel: AlertViewModel) {
-        val adapter = ArrayAdapter<Title>(this, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
         viewModel.reference.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
@@ -129,7 +128,7 @@ class AlertInputActivity : AppCompatActivity() {
     }
 
     private fun onEndSave() {
-        exitActivity()
+        findNavController().navigateUp()
     }
 
     private fun bindFieldValidators() {
@@ -141,12 +140,5 @@ class AlertInputActivity : AppCompatActivity() {
 
     private fun checkSaveButton() {
         alertSaveButton.isEnabled = alertSourceEditText.error == null && alertTargetEditText.error == null && alertSymbolText.selectedItem != alertReferenceText.selectedItem
-    }
-
-    private fun exitActivity() {
-        val intent = Intent(this, AlertListActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
     }
 }

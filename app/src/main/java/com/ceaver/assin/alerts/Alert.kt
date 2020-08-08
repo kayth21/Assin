@@ -1,12 +1,15 @@
 package com.ceaver.assin.alerts
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
+@Parcelize
 @Entity(tableName = "alert",
         foreignKeys = arrayOf(
                 ForeignKey(
@@ -25,7 +28,7 @@ data class Alert(//
         @ColumnInfo(name = "reference") val reference: Title,
         @ColumnInfo(name = "alertType") val alertType: AlertType,
         @ColumnInfo(name = "source") val source: BigDecimal,
-        @ColumnInfo(name = "target") val target: BigDecimal) {
+        @ColumnInfo(name = "target") val target: BigDecimal) : Parcelable {
 
     fun isNew(): Boolean = this.id == 0L;
 }
