@@ -12,9 +12,6 @@
             android:id="@+id/action_homeFragment_to_assetDetailFragment"
             app:destination="@id/assetDetailFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_actionInputFragment"
-            app:destination="@id/actionInputFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_intentionInputFragment"
             app:destination="@id/intentionInputFragment" />
         <action
@@ -29,6 +26,9 @@
         <action
             android:id="@+id/action_homeFragment_to_logListFragment"
             app:destination="@id/logListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_actionInputFragment"
+            app:destination="@id/actionInputFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -79,7 +79,11 @@
     <fragment
         android:id="@+id/actionListFragment"
         android:name="com.ceaver.assin.action.ActionListFragment"
-        android:label="Action List" />
+        android:label="Action List" >
+        <action
+            android:id="@+id/action_actionListFragment_to_actionInputFragment"
+            app:destination="@id/actionInputFragment" />
+    </fragment>
     <fragment
         android:id="@+id/alertListFragment"
         android:name="com.ceaver.assin.alerts.AlertListFragment"

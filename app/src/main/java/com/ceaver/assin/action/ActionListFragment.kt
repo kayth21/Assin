@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.home.HomeFragmentDirections
 import kotlinx.android.synthetic.main.fragment_action_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -30,7 +29,7 @@ class ActionListFragment : Fragment() {
         actionList.adapter = actionListAdapter
         actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.TRADE))
+            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE))
         }
         loadAllActions()
         swipeRefreshLayout.setOnRefreshListener { loadAllActions() }
@@ -83,7 +82,7 @@ class ActionListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Action) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(item.actionType, item))
+            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(item.actionType, item))
 
         }
     }
