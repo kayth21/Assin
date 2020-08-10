@@ -4,63 +4,45 @@
     tools:showIn="navigation_view">
 
     <!--<group android:checkableBehavior="single">-->
-        <item
-            android:id="@+id/marketFragment"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Markets" />
-        <item
-            android:id="@+id/nav_assets"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Assets" />
-        <item
-            android:id="@+id/nav_intensions"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Intensions" />
-        <item
-            android:id="@+id/nav_actions"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Action Log" />
-
-
-        <item android:title="More Features">
-            <menu>
-                <item
-                    android:id="@+id/nav_alerts"
-                    android:icon="@drawable/ic_menu_camera"
-                    android:title="Alerts" />
-                <item
-                    android:id="@+id/nav_settings"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="Settings" />
-                <item
-                    android:id="@+id/nav_backup"
-                    android:icon="@drawable/ic_menu_slideshow"
-                    android:title="Import/Export" />
-                <item
-                    android:id="@+id/nav_chat"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="Chat" />
-                <item
-                    android:id="@+id/nav_forum"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="Forum" />
-            </menu>
-        </item>
-        <item android:title="Development Team">
-            <menu>
-                <item
-                    android:id="@+id/nav_contact"
-                    android:icon="@drawable/ic_menu_gallery"
-                    android:title="Contact" />
-                <item
-                    android:id="@+id/nav_donate"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="Donate" />
-                <item
-                    android:id="@+id/nav_logging"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="Logging" />
-            </menu>
-        </item>
+    <item
+        android:id="@+id/nav_actions"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Action Log" />
+    <item
+        android:id="@+id/nav_alerts"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Alerts" />
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Settings" />
+    <item
+        android:id="@+id/nav_backup"
+        android:icon="@drawable/ic_menu_slideshow"
+        android:title="Import/Export" />
+    <item
+        android:id="@+id/nav_chat"
+        android:icon="@drawable/ic_menu_send"
+        android:title="Chat" />
+    <item
+        android:id="@+id/nav_forum"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Forum" />
+    <item android:title="Development Team">
+        <menu>
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Contact" />
+            <item
+                android:id="@+id/nav_donate"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Donate" />
+            <item
+                android:id="@+id/nav_logging"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Logging" />
+        </menu>
+    </item>
     <!--</group>-->
 </menu>

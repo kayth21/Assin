@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.ceaver.assin.MyApplication
+import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.extensions.resIdByName
@@ -121,7 +121,7 @@ data class Title(//
     }
 
     fun getIcon(): Int {
-        val identifier = MyApplication.appContext!!.resIdByName(symbol.toLowerCase(Locale.ROOT), "drawable")
+        val identifier = AssinApplication.appContext!!.resIdByName(symbol.toLowerCase(Locale.ROOT), "drawable")
         return if (identifier == 0) R.drawable.generic else identifier
     }
 }

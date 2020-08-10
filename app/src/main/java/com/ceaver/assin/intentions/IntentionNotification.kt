@@ -9,8 +9,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.MainActivity
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.toCurrencyString
 import java.util.*
@@ -28,19 +28,19 @@ object IntentionNotification {
             val channel = NotificationChannel(CHANNEL_ID, name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance or other notification behaviors after this
-            ContextCompat.getSystemService(MyApplication.appContext!!, NotificationManager::class.java)!!.createNotificationChannel(channel)
+            ContextCompat.getSystemService(AssinApplication.appContext!!, NotificationManager::class.java)!!.createNotificationChannel(channel)
         }
     }
 
     fun notify(intention: Intention) {
 
-        val intent = Intent(MyApplication.appContext!!, MainActivity::class.java)
+        val intent = Intent(AssinApplication.appContext!!, MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
-        val pendingIntent = PendingIntent.getActivity(MyApplication.appContext!!, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(AssinApplication.appContext!!, 0, intent, 0)
 
-        val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(AssinApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, intention.title.getIcon()))
+                .setLargeIcon(BitmapFactory.decodeResource(AssinApplication.appContext!!.resources, intention.title.getIcon()))
                 .setContentTitle("${intention.title.symbol} Intention Change")
                 .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice().toCurrencyString("abc")}%)")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -48,7 +48,7 @@ object IntentionNotification {
                 .setAutoCancel(true)
                 .build()
 
-        val notificationManager = NotificationManagerCompat.from(MyApplication.appContext!!)
+        val notificationManager = NotificationManagerCompat.from(AssinApplication.appContext!!)
         // notificationId is a unique int for each notification that you must define
         // Remember to save the notification ID that you pass to NotificationManagerCompat.notify() because you'll need it later if you want to update or remove the notification.
         notificationManager.notify(Random().nextInt(), notification);

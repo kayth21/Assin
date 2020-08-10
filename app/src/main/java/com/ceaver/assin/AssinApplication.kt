@@ -2,13 +2,16 @@ package com.ceaver.assin
 
 import android.app.Application
 import android.content.Context
+import timber.log.Timber
 
 
-class MyApplication : Application() {
+class AssinApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        MyApplication.appContext = applicationContext
+        appContext = applicationContext
+        Timber.plant(Timber.DebugTree())
+        Timber.i("onCreate called")
     }
 
     companion object {

@@ -3,7 +3,7 @@ package com.ceaver.assin.database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.ceaver.assin.MyApplication
+import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionDao
 import com.ceaver.assin.alerts.Alert
@@ -30,7 +30,7 @@ abstract class Database : RoomDatabase() {
         fun getInstance(): Database {
             if (INSTANCE == null) {
                 synchronized(Database::class) {
-                    INSTANCE = Room.databaseBuilder(MyApplication.appContext!!, Database::class.java, "database").build()
+                    INSTANCE = Room.databaseBuilder(AssinApplication.appContext!!, Database::class.java, "database").build()
                 }
             }
             return INSTANCE!!

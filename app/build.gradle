@@ -75,4 +75,7 @@ dependencies {
     implementation"android.arch.navigation:navigation-fragment-ktx:2.3.0"
     implementation "android.arch.navigation:navigation-ui-ktx:2.3.0"
 
+    // TIMBER LOGGING LIBRARY
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
 }

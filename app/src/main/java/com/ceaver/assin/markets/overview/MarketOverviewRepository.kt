@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.ceaver.assin.MyApplication
+import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 
 object MarketOverviewRepository {
 
     fun loadMarketOverview(): MarketOverview {
-        val sharedPreferences = MyApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
+        val sharedPreferences = AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
         return MarketOverview(
                 marketCapUsd = sharedPreferences.getLong(MarketOverview.MARKET_CAP_USD, -1),
                 dailyMarketCapChange = sharedPreferences.getString(MarketOverview.DAILY_MARKET_CAP_CHANGE, "")!!.toDouble(),
@@ -38,7 +38,7 @@ object MarketOverviewRepository {
 
     @SuppressLint("ApplySharedPref")
     fun insertMarketOverview(marketOverview: MarketOverview) {
-        MyApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit()
+        AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit()
                 .putLong(MarketOverview.MARKET_CAP_USD, marketOverview.marketCapUsd)
                 .putString(MarketOverview.DAILY_MARKET_CAP_CHANGE, marketOverview.dailyMarketCapChange.toString())
                 .putLong(MarketOverview.MARKET_CAP_ATH_VALUE, marketOverview.marketCapAthValue)

@@ -16,7 +16,6 @@ import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.util.isCharging
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
 import java.util.concurrent.TimeUnit
 
@@ -45,6 +44,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
+        } else if (navController.currentDestination!!.id == R.id.homeFragment) {
+            // do nothing (do not exit app on back button press).
+            // back button should move to 'MARKETS' when in homeFragment, but bug in ViewPager2 component doesn't allow so:
+            // https://stackoverflow.com/questions/56311862/viewpager2-default-position
         } else {
             super.onBackPressed()
         }
@@ -72,43 +75,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.marketFragment -> {
-                home_fragment_view_pager.setCurrentItem(0, true)
-            }
-            R.id.nav_assets -> {
-                home_fragment_view_pager.setCurrentItem(1, true)
-            }
-            R.id.nav_intensions -> {
-                home_fragment_view_pager.setCurrentItem(2, true)
-            }
-            R.id.nav_actions -> {
-                navController.navigate(HomeFragmentDirections.actionHomeFragmentToActionListFragment())
-            }
-            R.id.nav_alerts -> {
-                navController.navigate(HomeFragmentDirections.actionHomeFragmentToAlertListFragment())
-
-            }
-            R.id.nav_settings -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_backup -> {
-                navController.navigate(HomeFragmentDirections.actionHomeFragmentToBackupFragment())
-            }
-            R.id.nav_chat -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_forum -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_contact -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_donate -> {
-                Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_logging -> {
-                navController.navigate(HomeFragmentDirections.actionHomeFragmentToLogListFragment())
-            }
+            R.id.nav_actions -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToActionListFragment())
+            R.id.nav_alerts -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToAlertListFragment())
+            R.id.nav_settings -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_backup -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToBackupFragment())
+            R.id.nav_chat -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_forum -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_contact -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_donate -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
+            R.id.nav_logging -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToLogListFragment())
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

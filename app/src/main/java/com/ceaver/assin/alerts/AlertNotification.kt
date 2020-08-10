@@ -9,8 +9,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.MainActivity
-import com.ceaver.assin.MyApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
@@ -31,19 +31,19 @@ object AlertNotification {
             val channel = NotificationChannel(CHANNEL_ID, name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance or other notification behaviors after this
-            getSystemService(MyApplication.appContext!!, NotificationManager::class.java)!!.createNotificationChannel(channel)
+            getSystemService(AssinApplication.appContext!!, NotificationManager::class.java)!!.createNotificationChannel(channel)
         }
     }
 
     fun notify(symbol: Title, reference: Title, targetPrice: BigDecimal, currentPrice: BigDecimal) {
 
-        val intent = Intent(MyApplication.appContext!!, MainActivity::class.java)
+        val intent = Intent(AssinApplication.appContext!!, MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
-        val pendingIntent = PendingIntent.getActivity(MyApplication.appContext!!, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(AssinApplication.appContext!!, 0, intent, 0)
 
-        val notification = NotificationCompat.Builder(MyApplication.appContext!!, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(AssinApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setLargeIcon(BitmapFactory.decodeResource(MyApplication.appContext!!.resources, symbol.getIcon()))
+                .setLargeIcon(BitmapFactory.decodeResource(AssinApplication.appContext!!.resources, symbol.getIcon()))
                 .setContentTitle("$symbol " + (if (targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.toPlainString() + " ${reference.symbol} reached.")
                 .setContentText("Current Price: " + currentPrice.toCurrencyString(reference.symbol) + " ${reference.symbol}")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -51,7 +51,7 @@ object AlertNotification {
                 .setAutoCancel(true)
                 .build()
 
-        val notificationManager = NotificationManagerCompat.from(MyApplication.appContext!!)
+        val notificationManager = NotificationManagerCompat.from(AssinApplication.appContext!!)
         // notificationId is a unique int for each notification that you must define
         // Remember to save the notification ID that you pass to NotificationManagerCompat.notify() because you'll need it later if you want to update or remove the notification.
         notificationManager.notify(Random().nextInt(), notification);
