@@ -1,9 +1,6 @@
 package com.ceaver.assin.intentions.input
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
@@ -13,14 +10,14 @@ import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.math.BigDecimal
 
-class IntentionInputViewModel : ViewModel() {
+class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigDecimal?) : ViewModel() {
+
     val intention = MutableLiveData<Intention>()
     val symbols = MutableLiveData<List<Title>>()
-    val dataReady = zipLiveData(intention, symbols)
+    val dataReady = zipLiveData(this.intention, symbols)
     val status = SingleLiveEvent<IntentionInputStatus>()
 
-
-    fun init(intention: Intention?, title: Title?, amount: BigDecimal?): IntentionInputViewModel {
+    init {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         if (intention != null)
             this.intention.postValue(intention)
@@ -30,7 +27,6 @@ class IntentionInputViewModel : ViewModel() {
                 val referenceTitle =  TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
                 this.intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
-        return this
     }
 
     fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: BigDecimal?, sellTitle: Title, sellAmount: BigDecimal, comment: String?) {
@@ -67,4 +63,12 @@ class IntentionInputViewModel : ViewModel() {
             }
         }
     }
+
+    class Factory(val intention: Intention?, val title: Title?, val amount: BigDecimal?) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return IntentionInputViewModel(intention, title, amount) as T
+        }
+    }
 }
+

@@ -1,23 +1,26 @@
 package com.ceaver.assin.assets.detail.overview
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.markets.Title
 
-class AssetDetailOverviewViewModel : ViewModel() {
+class AssetDetailOverviewViewModel(lifecycleOwner: LifecycleOwner, observer: Observer<Asset>) : ViewModel() {
 
     val asset = MutableLiveData<Asset>()
 
-    fun init(owner: LifecycleOwner, assetObserver: Observer<Asset>): AssetDetailOverviewViewModel {
-        asset.observe(owner, assetObserver)
-        return this
+    init {
+        asset.observe(lifecycleOwner, observer)
     }
 
     fun loadAsset(title: Title) {
         AssetRepository.loadAssetAsync(title, false) { asset.postValue(it) }
+    }
+
+    class Factory(val lifecycleOwner: LifecycleOwner, val observer: Observer<Asset>) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return AssetDetailOverviewViewModel(lifecycleOwner, observer) as T
+        }
     }
 }

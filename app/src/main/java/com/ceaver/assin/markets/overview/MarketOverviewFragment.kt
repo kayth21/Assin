@@ -1,12 +1,12 @@
 package com.ceaver.assin.markets.overview
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.market_overview_fragment.*
@@ -16,9 +16,11 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MarketOverviewFragment : Fragment() {
 
+    private lateinit var viewModel: MarketOverviewViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        createViewModel(Observer { onMarketOverviewLoaded(it!!) })
+        viewModel = viewModels<MarketOverviewViewModel> { MarketOverviewViewModel.Factory(this, Observer { onMarketOverviewLoaded(it!!) }) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,12 +35,6 @@ class MarketOverviewFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-    }
-
-    private fun createViewModel(marketOverviewObserver: Observer<MarketOverview>): MarketOverviewViewModel {
-        val viewModel by viewModels<MarketOverviewViewModel>()
-        viewModel.init(this, marketOverviewObserver)
-        return viewModel
     }
 
     private fun onMarketOverviewLoaded(marketOverview: MarketOverview) {

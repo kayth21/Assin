@@ -1,10 +1,10 @@
 package com.ceaver.assin.markets
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.ceaver.assin.R
 import com.ceaver.assin.markets.list.MarketListFragment
 import com.ceaver.assin.markets.overview.MarketOverviewFragment

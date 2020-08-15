@@ -23,6 +23,14 @@ import java.time.LocalDate
 
 class ActionInputFragment() : Fragment() {
 
+    private lateinit var viewModel: ActionInputViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val args = ActionInputFragmentArgs.fromBundle(requireArguments())
+        viewModel = viewModels<ActionInputViewModel> { ActionInputViewModel.Factory(args.action, args.title, args.actionType) }.value
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.action_input_fragment, container, false)
     }
@@ -30,27 +38,12 @@ class ActionInputFragment() : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val actionId = lookupTradeId()
-        val symbol = lookupSymbol()
-        val actionType = lookupActionType()
-        val viewModel = lookupViewModel(actionId, symbol, actionType)
-
-        prepareView(actionType)
+        prepareView(ActionInputFragmentArgs.fromBundle(requireArguments()).actionType)
         bindActions(viewModel)
         observeSymbols(viewModel)
         observeTrade(viewModel)
         observeStatus(viewModel)
         observeDataReady(viewModel)
-    }
-
-    private fun lookupTradeId(): Action? = ActionInputFragmentArgs.fromBundle(requireArguments()).action
-    private fun lookupSymbol(): Title? = ActionInputFragmentArgs.fromBundle(requireArguments()).title
-    private fun lookupActionType(): ActionType = ActionInputFragmentArgs.fromBundle(requireArguments()).actionType
-
-    private fun lookupViewModel(action: Action?, title: Title?, actionType: ActionType): ActionInputViewModel {
-        val viewModel by viewModels<ActionInputViewModel>()
-        viewModel.initTrade(action, title, actionType)
-        return viewModel
     }
 
     private fun prepareView(actionType: ActionType) {
@@ -109,7 +102,7 @@ class ActionInputFragment() : Fragment() {
     private fun onSaveClick(viewModel: ActionInputViewModel) {
         val comment = actionInputFragmentCommentTextView.text.toString().ifEmpty { null }
         val actionDate = CalendarHelper.convertDate(actionInputFragmentTradeDateTextView.text.toString())
-        when (lookupActionType()) {
+        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
                 val buyTitle = actionInputFragmentBuySymbolSpinner.selectedItem as Title
                 val buyAmount = actionInputFragmentBuyAmountTextView.text.toString().toBigDecimal()
@@ -172,7 +165,7 @@ class ActionInputFragment() : Fragment() {
     private fun publishFields(action: Action) {
         actionInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(action.actionDate))
         actionInputFragmentCommentTextView.setText(action.comment.orEmpty())
-        when (lookupActionType()) {
+        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
                 actionInputFragmentBuyAmountTextView.setText(if (action.buyAmount != null) action.buyAmount.toString() else "")
                 actionInputFragmentSellAmountTextView.setText(if (action.sellAmount != null) action.sellAmount.toString() else "")
@@ -205,7 +198,7 @@ class ActionInputFragment() : Fragment() {
         actionInputFragmentSaveButton.isEnabled = enable && checkSaveButton()
         actionInputFragmentCommentTextView.isEnabled = enable
         actionInputFragmentTradeDateTextView.isEnabled = enable
-        when (lookupActionType()) {
+        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
                 actionInputFragmentBuyAmountTextView.isEnabled = enable
                 actionInputFragmentBuySymbolSpinner.isEnabled = enable
@@ -228,7 +221,7 @@ class ActionInputFragment() : Fragment() {
     }
 
     private fun registerInputValidation() {
-        when (lookupActionType()) {
+        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
                 actionInputFragmentBuyAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
                 actionInputFragmentSellAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")

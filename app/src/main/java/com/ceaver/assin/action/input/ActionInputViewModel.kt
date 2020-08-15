@@ -1,9 +1,6 @@
 package com.ceaver.assin.action.input
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
@@ -13,14 +10,13 @@ import com.ceaver.assin.markets.TitleRepository
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ActionInputViewModel : ViewModel() {
-
+class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionType) : ViewModel() {
     val action = MutableLiveData<Action>()
     val symbols = MutableLiveData<List<Title>>()
-    val dataReady = zipLiveData(action, symbols)
+    val dataReady = zipLiveData(this.action, symbols)
     val status = SingleLiveEvent<ActionInputStatus>()
 
-    fun initTrade(action: Action?, title: Title?, actionType: ActionType): ActionInputViewModel {
+    init {
         TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
         when {
             action != null -> this.action.postValue(action)
@@ -31,7 +27,6 @@ class ActionInputViewModel : ViewModel() {
             }
             else -> this.action.postValue(Action(actionType = actionType))
         }
-        return this
     }
 
     private fun saveAction(action: Action) {
@@ -84,6 +79,13 @@ class ActionInputViewModel : ViewModel() {
                 lastB = it
                 update()
             }
+        }
+    }
+
+    class Factory(val action: Action?, val title: Title?, val actionType: ActionType) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return ActionInputViewModel(action, title, actionType) as T
         }
     }
 }

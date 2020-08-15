@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.Asset
@@ -19,9 +19,11 @@ import org.greenrobot.eventbus.ThreadMode
 
 class AssetDetailOverviewFragment(val title: Title) : Fragment() {
 
+    private lateinit var viewModel: AssetDetailOverviewViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lookupViewModel().init(this, Observer { onAssetLoaded(it!!) })
+        viewModel = viewModels<AssetDetailOverviewViewModel> { AssetDetailOverviewViewModel.Factory(this, Observer { onAssetLoaded(it!!) }) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,9 +40,6 @@ class AssetDetailOverviewFragment(val title: Title) : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
-
-
-    private fun lookupViewModel(): AssetDetailOverviewViewModel = ViewModelProviders.of(this).get(AssetDetailOverviewViewModel::class.java)
 
     private fun onAssetLoaded(asset: Asset) {
         assetDetailOverviewFragmentAssetImage.setImageResource(asset.title.getIcon())
@@ -63,6 +62,6 @@ class AssetDetailOverviewFragment(val title: Title) : Fragment() {
     }
 
     private fun loadAsset() {
-        lookupViewModel().loadAsset(title)
+        viewModel.loadAsset(title)
     }
 }

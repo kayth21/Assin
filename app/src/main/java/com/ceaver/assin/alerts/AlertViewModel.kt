@@ -2,6 +2,7 @@ package com.ceaver.assin.alerts
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
@@ -9,17 +10,17 @@ import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.math.BigDecimal
 import java.math.MathContext
 
-class AlertViewModel : ViewModel() {
+class AlertViewModel(alert: Alert?) : ViewModel() {
 
     val alert = MutableLiveData<Alert>()
     val status = SingleLiveEvent<AlertInputStatus>()
     val symbol = MutableLiveData<List<Title>>()
     val reference = MutableLiveData<List<Title>>()
 
-    fun init(alert: Alert?): AlertViewModel {
+    init {
         TitleRepository.loadAllCryptoTitlesAsync(false) { symbol.postValue(it) }
         TitleRepository.loadAllTitlesAsync(false) { reference.postValue(it) }
-        if (alert == null) createAlert() else this.alert.postValue(alert); return this
+        if (alert == null) createAlert() else this.alert.postValue(alert)
     }
 
     private fun lookupAlert(alertId: Long) {
@@ -55,5 +56,12 @@ class AlertViewModel : ViewModel() {
     enum class AlertInputStatus {
         START_SAVE,
         END_SAVE
+    }
+
+    class Factory(val alert: Alert?) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return AlertViewModel(alert) as T
+        }
     }
 }

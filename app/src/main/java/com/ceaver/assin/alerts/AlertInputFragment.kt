@@ -18,6 +18,14 @@ import kotlinx.android.synthetic.main.activity_alert_input.*
 
 class AlertInputFragment : Fragment() {
 
+    private lateinit var viewModel: AlertViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val args = AlertInputFragmentArgs.fromBundle(requireArguments())
+        viewModel = viewModels<AlertViewModel> { AlertViewModel.Factory(args.alert) }.value
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.activity_alert_input, container, false)
     }
@@ -25,54 +33,43 @@ class AlertInputFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val alert = lookupAlert()
-        val viewModel = lookupViewModel().init(alert)
-
-        bindActions(viewModel)
-        bindSymbol(viewModel)
-        bindReference(viewModel)
-        bindAlert(viewModel)
-        observeStatus(viewModel)
-        bindViewLogic(viewModel)
+        bindActions()
+        bindSymbol()
+        bindReference()
+        bindAlert()
+        observeStatus()
+        bindViewLogic()
         bindFieldValidators()
     }
 
-
-    private fun lookupAlert() = AlertInputFragmentArgs.fromBundle(requireArguments()).alert
-
-    private fun lookupViewModel(): AlertViewModel {
-        val viewModel by viewModels<AlertViewModel>()
-        return viewModel
+    private fun bindActions() {
+        alertSaveButton.setOnClickListener { onSaveClick() }
     }
 
-    private fun bindActions(viewModel: AlertViewModel) {
-        alertSaveButton.setOnClickListener { onSaveClick(viewModel) }
-    }
-
-    private fun bindSymbol(viewModel: AlertViewModel) {
+    private fun bindSymbol() {
         val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertSymbolText.setAdapter(adapter)
-        viewModel.symbol.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
+        viewModel.symbol.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields() })
     }
 
-    private fun bindReference(viewModel: AlertViewModel) {
+    private fun bindReference() {
         val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alertReferenceText.setAdapter(adapter)
-        viewModel.reference.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields(viewModel) })
+        viewModel.reference.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields() })
     }
 
-    private fun bindAlert(viewModel: AlertViewModel) {
-        viewModel.alert.observe(this, Observer { bindFields(it!!, viewModel); alertSaveButton.isEnabled = true })
+    private fun bindAlert() {
+        viewModel.alert.observe(this, Observer { bindFields(it!!); alertSaveButton.isEnabled = true })
     }
 
-    private fun bindViewLogic(viewModel: AlertViewModel) {
+    private fun bindViewLogic() {
         fun updatePrice() {
             if (viewModel.isNew() && alertSymbolText.selectedItem != null && alertReferenceText.selectedItem != null) {
                 val symbol = alertSymbolText.selectedItem as Title
                 val reference = alertReferenceText.selectedItem as Title
-                lookupViewModel().lookupPrice(symbol, reference) {
+                viewModel.lookupPrice(symbol, reference) {
                     alertSourceEditText.setText(it.first.format(reference.symbol))
                     alertTargetEditText.setText(it.second.format(reference.symbol))
                 }
@@ -88,24 +85,24 @@ class AlertInputFragment : Fragment() {
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
-    private fun bindFields(alert: Alert, viewModel: AlertViewModel) {
+    private fun bindFields(alert: Alert ) {
         alertSourceEditText.setText(alert.source.toPlainString())
         alertTargetEditText.setText(alert.target.toPlainString())
 
-        updateSpinnerFields(viewModel)
+        updateSpinnerFields()
 
         alertSymbolText.isEnabled = alert.isNew()
         alertReferenceText.isEnabled = alert.isNew()
     }
 
-    private fun updateSpinnerFields(viewModel: AlertViewModel) {
+    private fun updateSpinnerFields() {
         if (viewModel.alert.value != null && viewModel.symbol.value != null && viewModel.reference.value != null) {
             alertSymbolText.setSelection(viewModel.symbol.value!!.indexOf(viewModel.alert.value!!.symbol))
-            alertReferenceText.setSelection(lookupViewModel().reference.value!!.indexOf(viewModel.alert.value!!.reference))
+            alertReferenceText.setSelection(viewModel.reference.value!!.indexOf(viewModel.alert.value!!.reference))
         }
     }
 
-    private fun observeStatus(viewModel: AlertViewModel) {
+    private fun observeStatus() {
         viewModel.status.observe(this, Observer {
             when (it) {
                 AlertViewModel.AlertInputStatus.START_SAVE -> onStartSave()
@@ -115,7 +112,7 @@ class AlertInputFragment : Fragment() {
         })
     }
 
-    private fun onSaveClick(viewModel: AlertViewModel) {
+    private fun onSaveClick() {
         val symbol = alertSymbolText.selectedItem as Title
         val reference = alertReferenceText.selectedItem as Title
         val startPrice = alertSourceEditText.text.toString().toBigDecimal()

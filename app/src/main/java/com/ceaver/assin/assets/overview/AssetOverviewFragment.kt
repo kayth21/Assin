@@ -18,9 +18,11 @@ import org.greenrobot.eventbus.ThreadMode
 
 class AssetOverviewFragment : Fragment() {
 
+    private lateinit var viewModel: AssetOverviewViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        createViewModel(Observer { onAssetOverviewLoaded(it!!) })
+        viewModel = viewModels<AssetOverviewViewModel> { AssetOverviewViewModel.Factory(this, Observer { onAssetOverviewLoaded(it!!) }) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,12 +38,6 @@ class AssetOverviewFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-    }
-
-    private fun createViewModel(assetOverviewObserver: Observer<AssetOverview>): AssetOverviewViewModel {
-        val viewModel by viewModels<AssetOverviewViewModel>()
-        viewModel.init(this, assetOverviewObserver)
-        return viewModel
     }
 
     private fun loadAssetOverview() {

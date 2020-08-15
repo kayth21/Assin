@@ -11,13 +11,19 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
-import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.intention_input_fragment.*
-import java.math.BigDecimal
 
 class IntentionInputFragment : Fragment() {
+
+    private lateinit var viewModel: IntentionInputViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val args = IntentionInputFragmentArgs.fromBundle(requireArguments())
+        viewModel = viewModels<IntentionInputViewModel> { IntentionInputViewModel.Factory(args.intention, args.title, args.amount) }.value
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.ceaver.assin.R.layout.intention_input_fragment, container, false)
@@ -26,25 +32,10 @@ class IntentionInputFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val intention = lookupIntention()
-        val title = lookupTitle()
-        val amount = lookupAmount()
-        val viewModel = lookupViewModel(intention, title, amount)
-
         prepareView()
-        bindActions(viewModel)
-        observeStatus(viewModel)
-        observeDataReady(viewModel)
-    }
-
-    private fun lookupIntention(): Intention? = IntentionInputFragmentArgs.fromBundle(requireArguments()).intention
-    private fun lookupTitle(): Title? = IntentionInputFragmentArgs.fromBundle(requireArguments()).title
-    private fun lookupAmount(): BigDecimal? = IntentionInputFragmentArgs.fromBundle(requireArguments()).amount
-
-    private fun lookupViewModel(intention: Intention?, title: Title?, amount: BigDecimal?): IntentionInputViewModel {
-        val viewModel by viewModels<IntentionInputViewModel>()
-        viewModel.init(intention, title, amount)
-        return viewModel
+        bindActions()
+        observeStatus()
+        observeDataReady()
     }
 
     private fun prepareView() {
@@ -52,11 +43,11 @@ class IntentionInputFragment : Fragment() {
         intentionInputFragmentReferenceSymbolSpinner.isEnabled = false // not possible in XML
     }
 
-    private fun bindActions(viewModel: IntentionInputViewModel) {
-        intentionInputFragmentSaveButton.setOnClickListener { onSaveClick(viewModel) }
+    private fun bindActions() {
+        intentionInputFragmentSaveButton.setOnClickListener { onSaveClick() }
     }
 
-    private fun onSaveClick(viewModel: IntentionInputViewModel) {
+    private fun onSaveClick() {
         val type = if (intentionInputFragmentBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
         val title = intentionInputFragmentTitleSymbolSpinner.selectedItem as Title
         val amount = intentionInputFragmentTitleAmountTextView.text.toString().toBigDecimalOrNull()
@@ -66,7 +57,7 @@ class IntentionInputFragment : Fragment() {
         viewModel.onSaveClick(type, title, amount, referenceTitle, referencePrice, comment.ifEmpty { null })
     }
 
-    private fun observeDataReady(viewModel: IntentionInputViewModel) {
+    private fun observeDataReady() {
         viewModel.dataReady.observe(this, Observer {
             val intention = it!!.first
             val titles = it.second
@@ -102,7 +93,7 @@ class IntentionInputFragment : Fragment() {
         return amount.times(referencePrice).toString()
     }
 
-    private fun observeStatus(viewModel: IntentionInputViewModel) {
+    private fun observeStatus() {
         viewModel.status.observe(this, Observer {
             when (it) {
                 IntentionInputViewModel.IntentionInputStatus.START_SAVE -> onStartSave()
