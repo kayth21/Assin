@@ -20,10 +20,11 @@ class MarketOverviewFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = viewModels<MarketOverviewViewModel> { MarketOverviewViewModel.Factory(this, Observer { onMarketOverviewLoaded(it!!) }) }.value
+        viewModel = viewModels<MarketOverviewViewModel>().value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModel.marketOverview.observe(viewLifecycleOwner, Observer { onMarketOverviewLoaded(it!!) })
         return inflater.inflate(R.layout.market_overview_fragment, container, false)
     }
 

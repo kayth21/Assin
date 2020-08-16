@@ -23,10 +23,11 @@ class AssetDetailOverviewFragment(val title: Title) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = viewModels<AssetDetailOverviewViewModel> { AssetDetailOverviewViewModel.Factory(this, Observer { onAssetLoaded(it!!) }) }.value
+        viewModel = viewModels<AssetDetailOverviewViewModel>().value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModel.asset.observe(viewLifecycleOwner,  Observer { onAssetLoaded(it!!) })
         return inflater.inflate(R.layout.asset_detail_overview_fragment, container, false)
     }
 

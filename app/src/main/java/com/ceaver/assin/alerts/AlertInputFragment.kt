@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.ceaver.assin.R
 import com.ceaver.assin.common.SpinnerSelectionListener
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.format
@@ -27,16 +28,16 @@ class AlertInputFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.ceaver.assin.R.layout.activity_alert_input, container, false)
+        bindSymbol()
+        bindReference()
+        bindAlert()
+        return inflater.inflate(R.layout.activity_alert_input, container, false)
     }
 
     override fun onStart() {
         super.onStart()
 
         bindActions()
-        bindSymbol()
-        bindReference()
-        bindAlert()
         observeStatus()
         bindViewLogic()
         bindFieldValidators()
@@ -47,21 +48,30 @@ class AlertInputFragment : Fragment() {
     }
 
     private fun bindSymbol() {
-        val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        alertSymbolText.setAdapter(adapter)
-        viewModel.symbol.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields() })
+        viewModel.symbol.observe(viewLifecycleOwner, Observer {
+            val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            alertSymbolText.setAdapter(adapter)
+            adapter.addAll(it!!); updateSpinnerFields()
+        })
     }
 
     private fun bindReference() {
-        val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        alertReferenceText.setAdapter(adapter)
-        viewModel.reference.observe(this, Observer { adapter.addAll(it!!); updateSpinnerFields() })
+        viewModel.reference.observe(viewLifecycleOwner, Observer {
+            val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            alertReferenceText.setAdapter(adapter)
+            adapter.addAll(it!!); updateSpinnerFields()
+        })
     }
 
     private fun bindAlert() {
-        viewModel.alert.observe(this, Observer { bindFields(it!!); alertSaveButton.isEnabled = true })
+        viewModel.alert.observe(viewLifecycleOwner, Observer {
+            val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            alertReferenceText.setAdapter(adapter)
+            bindFields(it!!); alertSaveButton.isEnabled = true
+        })
     }
 
     private fun bindViewLogic() {
@@ -85,7 +95,7 @@ class AlertInputFragment : Fragment() {
         alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
-    private fun bindFields(alert: Alert ) {
+    private fun bindFields(alert: Alert) {
         alertSourceEditText.setText(alert.source.toPlainString())
         alertTargetEditText.setText(alert.target.toPlainString())
 

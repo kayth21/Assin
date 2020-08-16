@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.extensions.afterTextChanged
@@ -32,18 +33,17 @@ class ActionInputFragment() : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.ceaver.assin.R.layout.action_input_fragment, container, false)
+        observeSymbols()
+        observeTrade()
+        observeStatus()
+        observeDataReady()
+        return inflater.inflate(R.layout.action_input_fragment, container, false)
     }
 
     override fun onStart() {
         super.onStart()
-
         prepareView(ActionInputFragmentArgs.fromBundle(requireArguments()).actionType)
-        bindActions(viewModel)
-        observeSymbols(viewModel)
-        observeTrade(viewModel)
-        observeStatus(viewModel)
-        observeDataReady(viewModel)
+        bindActions()
     }
 
     private fun prepareView(actionType: ActionType) {
@@ -95,11 +95,11 @@ class ActionInputFragment() : Fragment() {
         actionInputFragmentTradeDateTextView.keyListener = null // hack to disable user input
     }
 
-    private fun bindActions(viewModel: ActionInputViewModel) {
-        actionInputFragmentSaveButton.setOnClickListener { onSaveClick(viewModel) }
+    private fun bindActions() {
+        actionInputFragmentSaveButton.setOnClickListener { onSaveClick() }
     }
 
-    private fun onSaveClick(viewModel: ActionInputViewModel) {
+    private fun onSaveClick() {
         val comment = actionInputFragmentCommentTextView.text.toString().ifEmpty { null }
         val actionDate = CalendarHelper.convertDate(actionInputFragmentTradeDateTextView.text.toString())
         when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
@@ -130,30 +130,31 @@ class ActionInputFragment() : Fragment() {
         }
     }
 
-    private fun observeSymbols(viewModel: ActionInputViewModel) {
-        val adapter = ArrayAdapter<Title>(this.requireContext(), android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        actionInputFragmentBuySymbolSpinner.adapter = adapter
-        actionInputFragmentSellSymbolSpinner.adapter = adapter
-        viewModel.symbols.observe(this, Observer { adapter.addAll(it!!) })
+    private fun observeSymbols() {
+        viewModel.symbols.observe(viewLifecycleOwner, Observer {
+            val adapter = ArrayAdapter<Title>(this.requireContext(), android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            actionInputFragmentBuySymbolSpinner.adapter = adapter
+            actionInputFragmentSellSymbolSpinner.adapter = adapter
+            adapter.addAll(it!!) })
     }
 
-    private fun observeTrade(viewModel: ActionInputViewModel) {
-        viewModel.action.observe(this, Observer {
+    private fun observeTrade() {
+        viewModel.action.observe(viewLifecycleOwner, Observer {
             publishFields(it!!);
         })
     }
 
-    private fun observeDataReady(viewModel: ActionInputViewModel) {
-        viewModel.dataReady.observe(this, Observer {
-            updateSpinnerFields(viewModel, it!!.first)
+    private fun observeDataReady() {
+        viewModel.dataReady.observe(viewLifecycleOwner, Observer {
+            updateSpinnerFields(it!!.first)
             registerInputValidation()
             enableInput(true)
             viewModel.dataReady.removeObservers(this)
         })
     }
 
-    private fun updateSpinnerFields(viewModel: ActionInputViewModel, action: Action) {
+    private fun updateSpinnerFields(action: Action) {
         if (action.buyTitle != null) {
             actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(action.buyTitle!!))
         }
@@ -180,7 +181,7 @@ class ActionInputFragment() : Fragment() {
         }
     }
 
-    private fun observeStatus(viewModel: ActionInputViewModel) {
+    private fun observeStatus() {
         viewModel.status.observe(this, Observer {
             when (it) {
                 ActionInputViewModel.ActionInputStatus.START_SAVE -> onStartSave()

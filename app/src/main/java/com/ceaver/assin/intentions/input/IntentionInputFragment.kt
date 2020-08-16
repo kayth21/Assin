@@ -26,16 +26,15 @@ class IntentionInputFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        observeDataReady()
         return inflater.inflate(com.ceaver.assin.R.layout.intention_input_fragment, container, false)
     }
 
     override fun onStart() {
         super.onStart()
-
         prepareView()
         bindActions()
         observeStatus()
-        observeDataReady()
     }
 
     private fun prepareView() {
@@ -58,7 +57,7 @@ class IntentionInputFragment : Fragment() {
     }
 
     private fun observeDataReady() {
-        viewModel.dataReady.observe(this, Observer {
+        viewModel.dataReady.observe(viewLifecycleOwner, Observer {
             val intention = it!!.first
             val titles = it.second
 
