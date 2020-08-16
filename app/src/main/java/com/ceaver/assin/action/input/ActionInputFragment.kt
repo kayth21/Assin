@@ -35,7 +35,6 @@ class ActionInputFragment() : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         observeSymbols()
         observeTrade()
-        observeStatus()
         observeDataReady()
         return inflater.inflate(R.layout.action_input_fragment, container, false)
     }
@@ -44,6 +43,7 @@ class ActionInputFragment() : Fragment() {
         super.onStart()
         prepareView(ActionInputFragmentArgs.fromBundle(requireArguments()).actionType)
         bindActions()
+        observeStatus()
     }
 
     private fun prepareView(actionType: ActionType) {

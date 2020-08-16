@@ -11,47 +11,54 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionType) : ViewModel() {
-    val action = MutableLiveData<Action>()
-    val symbols = MutableLiveData<List<Title>>()
-    val dataReady = zipLiveData(this.action, symbols)
-    val status = SingleLiveEvent<ActionInputStatus>()
+    private val _action = MutableLiveData<Action>()
+    private val _symbols = MutableLiveData<List<Title>>()
+    val dataReady = zipLiveData(this._action, _symbols)
+    private val _status = SingleLiveEvent<ActionInputStatus>()
+    val action: LiveData<Action>
+        get() = _action
+    val symbols: LiveData<List<Title>>
+        get() = _symbols
+    val status: LiveData<ActionInputStatus>
+        get() = _status
+
 
     init {
-        TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
+        TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }
         when {
-            action != null -> this.action.postValue(action)
+            action != null -> this._action.postValue(action)
             title != null -> when (actionType) {
-                ActionType.DEPOSIT -> this.action.postValue(Action(actionType = actionType, buyTitle = title))
-                ActionType.WITHDRAW -> this.action.postValue(Action(actionType = actionType, sellTitle = title))
+                ActionType.DEPOSIT -> this._action.postValue(Action(actionType = actionType, buyTitle = title))
+                ActionType.WITHDRAW -> this._action.postValue(Action(actionType = actionType, sellTitle = title))
                 else -> throw IllegalStateException()
             }
-            else -> this.action.postValue(Action(actionType = actionType))
+            else -> this._action.postValue(Action(actionType = actionType))
         }
     }
 
     private fun saveAction(action: Action) {
-        status.value = ActionInputStatus.START_SAVE
+        _status.value = ActionInputStatus.START_SAVE
         if (action.id > 0) {
             // TODO update... could be tricky when actions are "linked" to positions
-            ActionRepository.updateActionAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+            ActionRepository.updateActionAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
         } else
             when (action.actionType) {
-                ActionType.DEPOSIT -> ActionRepository.insertDepositAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
-                ActionType.WITHDRAW -> ActionRepository.insertWithdrawAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
-                ActionType.TRADE -> ActionRepository.insertTradeAsync(action, true) { status.value = ActionInputStatus.END_SAVE }
+                ActionType.DEPOSIT -> ActionRepository.insertDepositAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
+                ActionType.WITHDRAW -> ActionRepository.insertWithdrawAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
+                ActionType.TRADE -> ActionRepository.insertTradeAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
             }
     }
 
     fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
+        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
     fun onDepositClick(buySymbol: Title, buyAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
+        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
     fun onWithdrawClick(sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
+        saveAction(_action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueBtc = valueBtc, valueUsd = valueUsd))
     }
 
     enum class ActionInputStatus {

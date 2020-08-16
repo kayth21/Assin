@@ -12,27 +12,33 @@ import java.math.BigDecimal
 
 class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigDecimal?) : ViewModel() {
 
-    val intention = MutableLiveData<Intention>()
-    val symbols = MutableLiveData<List<Title>>()
-    val dataReady = zipLiveData(this.intention, symbols)
-    val status = SingleLiveEvent<IntentionInputStatus>()
+    private val _intention = MutableLiveData<Intention>()
+    private val _symbols = MutableLiveData<List<Title>>()
+    val dataReady = zipLiveData(this._intention, _symbols)
+    private val _status = SingleLiveEvent<IntentionInputStatus>()
+    val intention: LiveData<Intention>
+        get() = _intention
+    val symbols: LiveData<List<Title>>
+        get() = _symbols
+    val status: LiveData<IntentionInputStatus>
+        get() = _status
 
     init {
-        TitleRepository.loadAllTitlesAsync(false) { symbols.postValue(it) }
+        TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }
         if (intention != null)
-            this.intention.postValue(intention)
+            this._intention.postValue(intention)
         else
             BackgroundThreadExecutor.execute {
                 val symbolTitle = title ?: TitleRepository.loadTitleBySymbol("BTC")
-                val referenceTitle =  TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                this.intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
+                val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
+                this._intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
     }
 
     fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: BigDecimal?, sellTitle: Title, sellAmount: BigDecimal, comment: String?) {
-        status.postValue(IntentionInputStatus.START_SAVE)
-        IntentionRepository.saveIntentionAsync(intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
-            status.postValue(IntentionInputStatus.END_SAVE)
+        _status.postValue(IntentionInputStatus.START_SAVE)
+        IntentionRepository.saveIntentionAsync(_intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
+            _status.postValue(IntentionInputStatus.END_SAVE)
         }
     }
 

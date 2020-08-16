@@ -1,5 +1,6 @@
 package com.ceaver.assin.alerts
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,32 +12,39 @@ import java.math.BigDecimal
 import java.math.MathContext
 
 class AlertViewModel(alert: Alert?) : ViewModel() {
-
-    val alert = MutableLiveData<Alert>()
-    val status = SingleLiveEvent<AlertInputStatus>()
-    val symbol = MutableLiveData<List<Title>>()
-    val reference = MutableLiveData<List<Title>>()
+    private val _alert = MutableLiveData<Alert>()
+    private val _status = SingleLiveEvent<AlertInputStatus>()
+    private val _symbol = MutableLiveData<List<Title>>()
+    private val _reference = MutableLiveData<List<Title>>()
+    val alert: LiveData<Alert>
+        get() = _alert
+    val status: LiveData<AlertInputStatus>
+        get() = _status
+    val symbol: LiveData<List<Title>>
+        get() = _symbol
+    val reference: LiveData<List<Title>>
+        get() = _reference
 
     init {
-        TitleRepository.loadAllCryptoTitlesAsync(false) { symbol.postValue(it) }
-        TitleRepository.loadAllTitlesAsync(false) { reference.postValue(it) }
-        if (alert == null) createAlert() else this.alert.postValue(alert)
+        TitleRepository.loadAllCryptoTitlesAsync(false) { _symbol.postValue(it) }
+        TitleRepository.loadAllTitlesAsync(false) { _reference.postValue(it) }
+        if (alert == null) createAlert() else this._alert.postValue(alert)
     }
 
     private fun lookupAlert(alertId: Long) {
-        AlertRepository.loadAlertAsync(alertId, false) { alert.postValue(it) }
+        AlertRepository.loadAlertAsync(alertId, false) { _alert.postValue(it) }
     }
 
     private fun createAlert() {
         BackgroundThreadExecutor.execute {
-            alert.postValue(Alert(symbol = TitleRepository.loadTitleBySymbol("BTC"), reference = TitleRepository.loadTitleBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = BigDecimal.ZERO, target = BigDecimal.ZERO))
+            _alert.postValue(Alert(symbol = TitleRepository.loadTitleBySymbol("BTC"), reference = TitleRepository.loadTitleBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = BigDecimal.ZERO, target = BigDecimal.ZERO))
         }
     }
 
     fun onSaveClick(symbol: Title, reference: Title, source: BigDecimal, target: BigDecimal) {
-        status.value = AlertInputStatus.START_SAVE
-        val alert = alert.value!!.copy(symbol = symbol, reference = reference, source = source, target = target)
-        AlertRepository.saveAlertAsync(alert, true) { status.value = AlertInputStatus.END_SAVE }
+        _status.value = AlertInputStatus.START_SAVE
+        val alert = _alert.value!!.copy(symbol = symbol, reference = reference, source = source, target = target)
+        AlertRepository.saveAlertAsync(alert, true) { _status.value = AlertInputStatus.END_SAVE }
     }
 
     fun lookupPrice(symbol: Title, reference: Title, callback: (Pair<Double, Double>) -> Unit) {
@@ -51,7 +59,7 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
         }
     }
 
-    fun isNew(): Boolean = alert.value!!.isNew()
+    fun isNew(): Boolean = _alert.value!!.isNew()
 
     enum class AlertInputStatus {
         START_SAVE,

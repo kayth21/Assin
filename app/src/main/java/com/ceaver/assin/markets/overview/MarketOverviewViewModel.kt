@@ -1,17 +1,20 @@
 package com.ceaver.assin.markets.overview
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.ceaver.assin.common.SingleLiveEvent
 
 class MarketOverviewViewModel() : ViewModel() {
-     val marketOverview = SingleLiveEvent<MarketOverview>()
+    private val _marketOverview = SingleLiveEvent<MarketOverview>()
+    val marketOverview: LiveData<MarketOverview>
+        get() = _marketOverview
 
-    init{
+    init {
         loadMarketOverview()
     }
 
     fun loadMarketOverview() {
-        MarketOverviewRepository.loadMarketOverviewAsync(false) { marketOverview.postValue(it) }
+        MarketOverviewRepository.loadMarketOverviewAsync(false) { _marketOverview.postValue(it) }
     }
 
 }
