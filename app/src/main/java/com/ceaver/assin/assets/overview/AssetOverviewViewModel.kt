@@ -8,8 +8,7 @@ import com.ceaver.assin.common.SingleLiveEvent
 class AssetOverviewViewModel() : ViewModel() {
 
     private val _assetOverview = SingleLiveEvent<AssetOverview>()
-    val assetOverview: LiveData<AssetOverview>
-        get() = _assetOverview
+    val assetOverview: LiveData<AssetOverview> get() = _assetOverview
 
     fun loadAssetOverview() {
         AssetRepository.loadAssetOverviewAsync(false) { _assetOverview.postValue(it) }

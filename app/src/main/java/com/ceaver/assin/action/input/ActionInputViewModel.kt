@@ -15,13 +15,9 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._action, _symbols)
     private val _status = SingleLiveEvent<ActionInputStatus>()
-    val action: LiveData<Action>
-        get() = _action
-    val symbols: LiveData<List<Title>>
-        get() = _symbols
-    val status: LiveData<ActionInputStatus>
-        get() = _status
-
+    val action: LiveData<Action> get() = _action
+    val symbols: LiveData<List<Title>> get() = _symbols
+    val status: LiveData<ActionInputStatus> get() = _status
 
     init {
         TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }

@@ -10,8 +10,7 @@ import com.ceaver.assin.markets.Title
 class AssetDetailOverviewViewModel() : ViewModel() {
 
     private val _asset = MutableLiveData<Asset>()
-    val asset: LiveData<Asset>
-        get() = _asset
+    val asset: LiveData<Asset> get() = _asset
 
 
     fun loadAsset(title: Title) {

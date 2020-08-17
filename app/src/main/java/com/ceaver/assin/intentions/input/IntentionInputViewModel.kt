@@ -16,12 +16,9 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._intention, _symbols)
     private val _status = SingleLiveEvent<IntentionInputStatus>()
-    val intention: LiveData<Intention>
-        get() = _intention
-    val symbols: LiveData<List<Title>>
-        get() = _symbols
-    val status: LiveData<IntentionInputStatus>
-        get() = _status
+    val intention: LiveData<Intention> get() = _intention
+    val symbols: LiveData<List<Title>> get() = _symbols
+    val status: LiveData<IntentionInputStatus> get() = _status
 
     init {
         TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }

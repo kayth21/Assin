@@ -16,14 +16,10 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
     private val _status = SingleLiveEvent<AlertInputStatus>()
     private val _symbol = MutableLiveData<List<Title>>()
     private val _reference = MutableLiveData<List<Title>>()
-    val alert: LiveData<Alert>
-        get() = _alert
-    val status: LiveData<AlertInputStatus>
-        get() = _status
-    val symbol: LiveData<List<Title>>
-        get() = _symbol
-    val reference: LiveData<List<Title>>
-        get() = _reference
+    val alert: LiveData<Alert> get() = _alert
+    val status: LiveData<AlertInputStatus> get() = _status
+    val symbol: LiveData<List<Title>> get() = _symbol
+    val reference: LiveData<List<Title>> get() = _reference
 
     init {
         TitleRepository.loadAllCryptoTitlesAsync(false) { _symbol.postValue(it) }
