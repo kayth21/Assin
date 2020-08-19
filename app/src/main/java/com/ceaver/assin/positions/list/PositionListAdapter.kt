@@ -42,8 +42,8 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
 
         fun bindItem(position: Position, onClickListener: PositionListFragment.OnItemClickListener) {
             view.positionListRowPositionSize.text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
-            view.positionListRowPositionValueBtc.text = "${position.currentValueInBtc().toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc().setScale(0, RoundingMode.HALF_UP)}%)"
-            view.positionListRowPositionValueUsd.text = "${position.currentValueInUsd().toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd().setScale(0, RoundingMode.HALF_UP)}%)"
+            view.positionListRowPositionValueBtc.text = "${position.currentValueInBtc.toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc.setScale(0, RoundingMode.HALF_UP)}%)"
+            view.positionListRowPositionValueUsd.text = "${position.currentValueInUsd.toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd.setScale(0, RoundingMode.HALF_UP)}%)"
             view.positionListRowPositionOpenDate.text = "Open: ${position.openDate.asFormattedDateTime()}"
             if (!position.isActive())
                 view.positionListRowPositionCloseDate.text = "Close: ${position.closeDate!!.asFormattedDateTime()}"

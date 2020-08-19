@@ -42,7 +42,7 @@ object IntentionNotification {
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setLargeIcon(BitmapFactory.decodeResource(AssinApplication.appContext!!.resources, intention.title.getIcon()))
                 .setContentTitle("${intention.title.symbol} Intention Change")
-                .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice().toCurrencyString("abc")}%)")
+                .setContentText("New State: ${intention.status} (${intention.percentToReferencePrice.toCurrencyString("abc")}%)")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

@@ -21,25 +21,29 @@ data class Position(
         return closeValueBtc == null && closeValueUsd == null && closeDate == null
     }
 
-    fun currentValueInBtc(): BigDecimal {
-        return amount * title.priceBtc!!.toBigDecimal()
-    }
+    val currentValueInBtc: BigDecimal
+        get() {
+            return amount * title.priceBtc!!.toBigDecimal()
+        }
 
-    fun currentValueInUsd(): BigDecimal {
-        return amount * title.priceUsd!!.toBigDecimal()
-    }
+    val currentValueInUsd: BigDecimal
+        get() {
+            return amount * title.priceUsd!!.toBigDecimal()
+        }
 
-    fun profitLossInPercentToBtc(): BigDecimal {
-        return ((BigDecimal.valueOf(100)
-                .divide(openValueBtc, MathContext.DECIMAL32))
-                .times(currentValueInBtc()))
-                .subtract(BigDecimal.valueOf(100))
-    }
+    val profitLossInPercentToBtc: BigDecimal
+        get() {
+            return (BigDecimal.valueOf(100)
+                    .divide(openValueBtc, MathContext.DECIMAL32))
+                    .times(currentValueInBtc)
+                    .subtract(BigDecimal.valueOf(100))
+        }
 
-    fun profitLossInPercentToUsd(): BigDecimal {
-        return ((BigDecimal.valueOf(100)
-                .divide(openValueUsd, MathContext.DECIMAL32))
-                .times(currentValueInUsd()))
-                .subtract(BigDecimal.valueOf(100))
-    }
+    val profitLossInPercentToUsd: BigDecimal
+        get() {
+            return (BigDecimal.valueOf(100)
+                    .divide(openValueUsd, MathContext.DECIMAL32))
+                    .times(currentValueInUsd)
+                    .subtract(BigDecimal.valueOf(100))
+        }
 }

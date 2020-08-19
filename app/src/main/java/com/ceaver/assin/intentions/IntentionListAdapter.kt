@@ -35,7 +35,7 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
             view.intentionListRowAssetTextView.text = "${intention.type} ${intention.amountAsString()} ${intention.title}"
             view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
             view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            view.intentionListRowPercentTextView.text = "${intention.percentToReferencePrice().toCurrencyString("abc")}%"
+            view.intentionListRowPercentTextView.text = "${intention.percentToReferencePrice.toCurrencyString("abc")}%"
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }

@@ -6,8 +6,7 @@ import com.ceaver.assin.common.SingleLiveEvent
 
 class MarketOverviewViewModel() : ViewModel() {
     private val _marketOverview = SingleLiveEvent<MarketOverview>()
-    val marketOverview: LiveData<MarketOverview>
-        get() = _marketOverview
+    val marketOverview: LiveData<MarketOverview> get() = _marketOverview
 
     init {
         loadMarketOverview()
