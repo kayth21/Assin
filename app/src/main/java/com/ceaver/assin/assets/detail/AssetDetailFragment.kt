@@ -12,6 +12,13 @@ import com.ceaver.assin.positions.list.PositionListFragment
 
 class AssetDetailFragment : Fragment() {
 
+    private lateinit var arguments: AssetDetailFragmentArgs
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments = AssetDetailFragmentArgs.fromBundle(requireArguments())
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.asset_detail_fragment, container, false)
     }
@@ -19,7 +26,7 @@ class AssetDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val title = AssetDetailFragmentArgs.fromBundle(requireArguments()).title
+        val title = arguments.title
         insertFragment(R.id.assetDetailOverviewFragment, AssetDetailOverviewFragment(title))
         insertFragment(R.id.assetDetailPositionsFragment, PositionListFragment(title))
     }
