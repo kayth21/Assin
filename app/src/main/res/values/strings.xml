@@ -13,6 +13,6 @@
     <string name="assetDetailFragmentAssetImageViewDescription">Asset Icon</string>
     <string name="assetDetailFragmentAssetTextView">Title (TODO)</string>
     <string name="assetDetailOverviewFragmentAssetImageDescription">Image Description</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="market_overview_marketcap_usd">%d bn USD (%.2f%%)</string>
+    <string name="market_overview_bitcoin_dominance">%.2f%%</string>
 </resources>

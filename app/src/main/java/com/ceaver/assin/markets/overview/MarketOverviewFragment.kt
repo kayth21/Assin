@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
-import kotlinx.android.synthetic.main.market_overview_fragment.*
+import com.ceaver.assin.databinding.MarketOverviewFragmentBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -24,8 +24,10 @@ class MarketOverviewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel.marketOverview.observe(viewLifecycleOwner, Observer { onMarketOverviewLoaded(it!!) })
-        return inflater.inflate(R.layout.market_overview_fragment, container, false)
+        val binding: MarketOverviewFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.market_overview_fragment, container, false)
+        binding.marketOverviewViewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
     }
 
     override fun onStart() {
@@ -38,15 +40,9 @@ class MarketOverviewFragment : Fragment() {
         EventBus.getDefault().unregister(this);
     }
 
-    private fun onMarketOverviewLoaded(marketOverview: MarketOverview) {
-        marketOverviewFragmentMarketCapUsdValue.text = "${marketOverview.marketCapUsd.div(1000000000).toString()} bn USD (${marketOverview.dailyMarketCapChange}%)"
-        marketOverviewFragmentBtcDominanceValue.text = marketOverview.btcDominancePercentage.toString() + "%"
-    }
-
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        val viewModel by viewModels<MarketOverviewViewModel>()
         viewModel.loadMarketOverview()
     }
 }
