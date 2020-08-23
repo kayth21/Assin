@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.action.ActionEvents
-import com.ceaver.assin.extensions.toCurrencyString
-import kotlinx.android.synthetic.main.asset_overview_fragment.*
+import com.ceaver.assin.databinding.AssetOverviewFragmentBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -26,8 +25,10 @@ class AssetOverviewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel.assetOverview.observe(viewLifecycleOwner, Observer { onAssetOverviewLoaded(it!!) })
-        return inflater.inflate(R.layout.asset_overview_fragment, container, false)
+        val binding: AssetOverviewFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.asset_overview_fragment, container, false)
+        binding.assetOverviewViewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
     }
 
     override fun onStart() {
@@ -42,13 +43,7 @@ class AssetOverviewFragment : Fragment() {
     }
 
     private fun loadAssetOverview() {
-        val viewModel by viewModels<AssetOverviewViewModel>()
         viewModel.loadAssetOverview()
-    }
-
-    private fun onAssetOverviewLoaded(assetOverview: AssetOverview) {
-        assetOverviewFragmentTotalBtcValue.text = "${assetOverview.btcValue.toCurrencyString("BTC")} BTC"
-        assetOverviewFragmentTotalUsdValue.text = "${assetOverview.usdValue.toCurrencyString("USD")} USD"
     }
 
     @Suppress("UNUSED_PARAMETER")
