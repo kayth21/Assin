@@ -25,19 +25,18 @@ abstract class Database : RoomDatabase() {
     abstract fun titleDao(): TitleDao
 
     companion object {
+        @Volatile
         private var INSTANCE: Database? = null
 
         fun getInstance(): Database {
-            if (INSTANCE == null) {
-                synchronized(Database::class) {
-                    INSTANCE = Room.databaseBuilder(AssinApplication.appContext!!, Database::class.java, "database").build()
+            synchronized(this) {
+                var instance = INSTANCE
+                if (instance == null) {
+                    instance = Room.databaseBuilder(AssinApplication.appContext!!, Database::class.java, "database").fallbackToDestructiveMigration().build()
+                    INSTANCE = instance
                 }
+                return instance
             }
-            return INSTANCE!!
-        }
-
-        fun destroyInstance() {
-            INSTANCE = null
         }
     }
 }
