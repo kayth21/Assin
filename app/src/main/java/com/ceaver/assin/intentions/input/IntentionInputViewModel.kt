@@ -7,10 +7,16 @@ import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.threading.BackgroundThreadExecutor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigDecimal?) : ViewModel() {
+
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private val _intention = MutableLiveData<Intention>()
     private val _symbols = MutableLiveData<List<Title>>()
@@ -21,23 +27,32 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
     val status: LiveData<IntentionInputStatus> get() = _status
 
     init {
-        TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }
-        if (intention != null)
-            this._intention.postValue(intention)
-        else
-            BackgroundThreadExecutor.execute {
+        viewModelScope.launch {
+            val titles = TitleRepository.loadAllTitles()
+            _symbols.postValue(titles)
+            if (intention != null)
+                _intention.postValue(intention)
+            else {
                 val symbolTitle = title ?: TitleRepository.loadTitleBySymbol("BTC")
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                this._intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
+                _intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
             }
+        }
     }
 
     fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: BigDecimal?, sellTitle: Title, sellAmount: BigDecimal, comment: String?) {
         _status.postValue(IntentionInputStatus.START_SAVE)
-        IntentionRepository.saveIntentionAsync(_intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment), true) {
+        viewModelScope.launch {
+            IntentionRepository.saveIntention(_intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment))
             _status.postValue(IntentionInputStatus.END_SAVE)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
 
     enum class IntentionInputStatus {
         START_SAVE,
@@ -73,5 +88,5 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
             return IntentionInputViewModel(intention, title, amount) as T
         }
     }
-}
 
+}

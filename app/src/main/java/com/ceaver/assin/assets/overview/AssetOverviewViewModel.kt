@@ -2,8 +2,10 @@ package com.ceaver.assin.assets.overview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.common.SingleLiveEvent
+import kotlinx.coroutines.launch
 
 class AssetOverviewViewModel() : ViewModel() {
 
@@ -11,6 +13,9 @@ class AssetOverviewViewModel() : ViewModel() {
     val assetOverview: LiveData<AssetOverview> get() = _assetOverview
 
     fun loadAssetOverview() {
-        AssetRepository.loadAssetOverviewAsync(false) { _assetOverview.postValue(it) }
+        viewModelScope.launch {
+            val assertOverview = AssetRepository.loadAssetOverview()
+            _assetOverview.postValue(assertOverview)
+        }
     }
 }

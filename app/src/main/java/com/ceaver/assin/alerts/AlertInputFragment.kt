@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.R
 import com.ceaver.assin.common.SpinnerSelectionListener
@@ -16,6 +17,7 @@ import com.ceaver.assin.extensions.format
 import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.activity_alert_input.*
+import kotlinx.coroutines.launch
 
 class AlertInputFragment : Fragment() {
 
@@ -76,12 +78,14 @@ class AlertInputFragment : Fragment() {
 
     private fun bindViewLogic() {
         fun updatePrice() {
-            if (viewModel.isNew() && alertSymbolText.selectedItem != null && alertReferenceText.selectedItem != null) {
-                val symbol = alertSymbolText.selectedItem as Title
-                val reference = alertReferenceText.selectedItem as Title
-                viewModel.lookupPrice(symbol, reference) {
-                    alertSourceEditText.setText(it.first.format(reference.symbol))
-                    alertTargetEditText.setText(it.second.format(reference.symbol))
+            lifecycleScope.launch {
+                if (viewModel.isNew() && alertSymbolText.selectedItem != null && alertReferenceText.selectedItem != null) {
+                    val symbol = alertSymbolText.selectedItem as Title
+                    val reference = alertReferenceText.selectedItem as Title
+                    viewModel.lookupPrice(symbol, reference) {
+                        alertSourceEditText.setText(it.first.format(reference.symbol))
+                        alertTargetEditText.setText(it.second.format(reference.symbol))
+                    }
                 }
             }
         }
@@ -91,8 +95,8 @@ class AlertInputFragment : Fragment() {
             startUnitTextView.text = symbol.symbol
             targetUnitTextView.text = symbol.symbol
         }
-        alertSymbolText.onItemSelectedListener = SpinnerSelectionListener() { updatePrice(); checkSaveButton() }
-        alertReferenceText.onItemSelectedListener = SpinnerSelectionListener() { updateUnit(); updatePrice(); checkSaveButton() }
+        alertSymbolText.onItemSelectedListener = SpinnerSelectionListener { updatePrice(); checkSaveButton() }
+        alertReferenceText.onItemSelectedListener = SpinnerSelectionListener { updateUnit(); updatePrice(); checkSaveButton() }
     }
 
     private fun bindFields(alert: Alert) {

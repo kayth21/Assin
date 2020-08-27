@@ -6,11 +6,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.alert_list_fragment.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,7 +36,10 @@ class AlertListFragment : Fragment() {
     }
 
     private fun loadAllAlerts() {
-        AlertRepository.loadAllAlertsAsync(true) { onAllAlertsLoaded(it) }
+        lifecycleScope.launch {
+            val alerts = AlertRepository.loadAllAlerts()
+            onAllAlertsLoaded(alerts)
+        }
     }
 
     private fun onAllAlertsLoaded(alerts: List<Alert>) {
@@ -78,8 +83,10 @@ class AlertListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val selectedAlert = alertListAdapter.currentLongClickAlert!!
-        AlertRepository.deleteAlertAsync(selectedAlert)
+        lifecycleScope.launch {
+            val selectedAlert = alertListAdapter.currentLongClickAlert!!
+            AlertRepository.deleteAlert(selectedAlert)
+        }
         return super.onContextItemSelected(item)
     }
 }

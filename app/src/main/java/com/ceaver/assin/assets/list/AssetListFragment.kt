@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,12 +17,12 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.home.HomeFragmentDirections
-import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_asset_list.*
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
 import kotlinx.android.synthetic.main.fragment_market_list.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -44,7 +45,7 @@ class AssetListFragment : Fragment() {
         }
         assetSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
-                BackgroundThreadExecutor.execute { AssinWorkers.observedUpdate() }
+                lifecycleScope.launch { AssinWorkers.observedUpdate() }
             else {
                 Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
             }
@@ -93,7 +94,10 @@ class AssetListFragment : Fragment() {
     }
 
     private fun loadAllAssets() {
-        AssetRepository.loadAllAssetsAsync(true) { onAllAssetsLoaded(it) };
+        lifecycleScope.launch {
+            val assets = AssetRepository.loadAllAssets()
+            onAllAssetsLoaded(assets)
+        }
     }
 
     private fun onAllAssetsLoaded(assets: List<Asset>) {
@@ -123,7 +127,7 @@ class AssetListFragment : Fragment() {
             val selectedAsset = assetListAdapter.currentLongClickAsset!!
             when {
                 item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
-                    val actionType =  when (item.itemId) {
+                    val actionType = when (item.itemId) {
                         AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT
                         AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW
                         else -> throw IllegalStateException()

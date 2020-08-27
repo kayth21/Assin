@@ -32,7 +32,7 @@ object AssinWorkers {
     }
 
 
-    fun observedUpdate() {
+    suspend fun observedUpdate() {
         val identifier = UUID.randomUUID();
         WorkManager.getInstance(AssinApplication.appContext!!)
                 .beginWith(notifyObservedStart(identifier))
@@ -79,7 +79,7 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<MarketOverviewUpdateWorker>().build()
     }
 
-    private fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
+    private suspend fun updateObservedTitles(): MutableList<OneTimeWorkRequest> {
         var index: Int = 0
         val assetTitles = AssetRepository.loadAllAssets().filter { it.amount.signum() == 1 }.map { it.title }
         val intentionTitles = IntentionRepository.loadAllIntentions().map { it.title }.toSet()
@@ -92,24 +92,24 @@ object AssinWorkers {
         return OneTimeWorkRequestBuilder<MarketPartialUpdateWorker>().setInputData(data).build()
     }
 
-    class StartCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class StartCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting complete update...", uuid)
             return Result.success()
         }
     }
 
-    class StartObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class StartObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting observed update...", uuid)
             return Result.success()
         }
     }
 
-    class EndCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class EndCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             SystemRepository.setInitialized(true)
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
@@ -120,8 +120,8 @@ object AssinWorkers {
         }
     }
 
-    class EndObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class EndObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)

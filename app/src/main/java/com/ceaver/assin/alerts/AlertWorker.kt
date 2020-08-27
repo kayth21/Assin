@@ -1,24 +1,30 @@
 package com.ceaver.assin.alerts
 
 import android.content.Context
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.markets.TitleRepository
 import java.math.BigDecimal
 
-class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-    override fun doWork(): Result {
+class AlertWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+    override suspend fun doWork(): Result {
         AlertRepository.loadAllAlerts().forEach { checkAlert(it) }
         return Result.success()
     }
 
-    private fun checkAlert(alert: Alert) {
+    private suspend fun checkAlert(alert: Alert) {
         val price = TitleRepository.lookupPrice(alert.symbol, alert.reference)
-        if(price.isPresent) {
+        if (price.isPresent) {
             val currentPrice = BigDecimal.valueOf(price.get())
             val result = alert.alertType.check(alert, currentPrice)
-            result.ifPresent { AlertRepository.updateAlert(it); checkAlert(it); AlertNotification.notify(alert.symbol, alert.reference, targetPrice(alert, currentPrice), currentPrice) }
+            if (result.isPresent.not()) {
+                return
+            }
+            val it = result.get()
+            AlertRepository.updateAlert(it)
+            checkAlert(it)
+            AlertNotification.notify(alert.symbol, alert.reference, targetPrice(alert, currentPrice), currentPrice)
         } else {
             LogRepository.insertLog("Failed to check alert ${alert.symbol.symbol}/${alert.reference.symbol} (no path found).")
         }

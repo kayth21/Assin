@@ -6,47 +6,50 @@ import androidx.room.*
 interface TitleDao {
 
     @Query("select * from title order by rank")
-    fun loadAllTitles(): List<Title>
+    suspend fun loadAllTitles(): List<Title>
 
     @Query("select * from title where category = 'CRYPTO' order by rank")
-    fun loadAllCryptoTitles(): List<Title>
+    suspend fun loadAllCryptoTitles(): List<Title>
 
     @Query("select * from title where active >= 0 order by rank")
-    fun loadActiveTitles(): List<Title>
+    suspend fun loadActiveTitles(): List<Title>
 
     @Query("select * from title where active >= 0 and category = 'CRYPTO' order by rank")
-    fun loadActiveCryptoTitles(): List<Title>
+    suspend fun loadActiveCryptoTitles(): List<Title>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTitle(title: Title)
+    suspend fun insertTitle(title: Title)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTitles(titles: Set<Title>)
+    suspend fun insertTitles(titles: Set<Title>)
 
     @Update
-    fun updateTitle(title: Title)
+    suspend fun updateTitle(title: Title)
 
     @Update
-    fun updateTitles(titles: Set<Title>)
+    suspend fun updateTitles(titles: Set<Title>)
 
     @Delete
-    fun deleteTitle(title: Title)
+    suspend fun deleteTitle(title: Title)
 
     @Delete
-    fun deleteTitles(title: Set<Title>)
+    suspend fun deleteTitles(title: Set<Title>)
 
     @Query("delete from title")
-    fun deleteAllTitles()
+    suspend fun deleteAllTitles()
 
     @Query("select * from title where id = :id")
-    fun loadTitle(id: String): Title?
+    suspend fun loadTitle(id: String): Title?
+
+    @Query("select * from title where id = :id")
+    fun loadTitleReg(id: String): Title? // TODO only used because of TypeConverter cannot deal with suspend function, may find a better solution
 
     @Query("select * from title where symbol = :symbol")
-    fun loadTitleBySymbol(symbol: String): Title
+    suspend fun loadTitleBySymbol(symbol: String): Title
 
     @Query("select symbol from title where category = 'CRYPTO' order by rank")
-    fun loadCryptoSymbols(): List<String>
+    suspend fun loadCryptoSymbols(): List<String>
 
     @Query("select symbol from title where category = 'FIAT' order by rank")
-    fun loadFiatSymbols(): List<String>
+    suspend fun loadFiatSymbols(): List<String>
 }

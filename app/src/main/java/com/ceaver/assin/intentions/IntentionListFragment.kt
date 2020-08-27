@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,12 +14,12 @@ import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.R
 import com.ceaver.assin.home.HomeFragmentDirections
-import com.ceaver.assin.threading.BackgroundThreadExecutor
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
 import kotlinx.android.synthetic.main.fragment_intention_list.*
 import kotlinx.android.synthetic.main.fragment_market_list.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -42,7 +43,9 @@ class IntentionListFragment : Fragment() {
         loadAllIntentions()
         intentionListFragmentSwipeRefreshLayout.setOnRefreshListener {
             if (isConnected())
-                BackgroundThreadExecutor.execute { AssinWorkers.observedUpdate() }
+                lifecycleScope.launch {
+                    AssinWorkers.observedUpdate()
+                }
             else {
                 Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
             }
@@ -95,7 +98,10 @@ class IntentionListFragment : Fragment() {
     }
 
     private fun loadAllIntentions() {
-        IntentionRepository.loadAllIntentionsAsync(true) { onAllIntentionsLoaded(it) }
+        lifecycleScope.launch {
+            val intentions = IntentionRepository.loadAllIntentions()
+            onAllIntentionsLoaded(intentions)
+        }
     }
 
     private fun onAllIntentionsLoaded(intentions: List<Intention>) {
@@ -116,8 +122,10 @@ class IntentionListFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (item.groupId == 2 && item.itemId == 0) {
-            val selectedIntention = intentionListAdapter.currentLongClickIntention!!
-            IntentionRepository.deleteIntentionAsync(selectedIntention)
+            lifecycleScope.launch {
+                val selectedIntention = intentionListAdapter.currentLongClickIntention!!
+                IntentionRepository.deleteIntention(selectedIntention)
+            }
         }
         return super.onContextItemSelected(item)
     }

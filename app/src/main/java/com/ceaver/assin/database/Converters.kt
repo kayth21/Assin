@@ -44,7 +44,7 @@ class Converters {
     fun fromTitle(title: Title?): String? = title?.id
 
     @TypeConverter
-    fun toTitle(string: String?): Title? = string?.let { TitleRepository.loadTitle(it) }
+    fun toTitle(string: String?): Title? = string?.let { TitleRepository.loadTitleReg(it) }
 
     @TypeConverter
     fun fromAlertType(alertType: AlertType?): String? = alertType?.name

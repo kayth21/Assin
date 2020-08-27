@@ -6,10 +6,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_action_list.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,10 +38,13 @@ class ActionListFragment : Fragment() {
     }
 
     private fun loadAllActions() {
-        ActionRepository.loadAllActionsAsync(true) { onAllTradesLoaded(it) }
+        lifecycleScope.launch {
+            val actions = ActionRepository.loadAllActions()
+            onAllActionsLoaded(actions)
+        }
     }
 
-    private fun onAllTradesLoaded(actions: List<Action>) {
+    private fun onAllActionsLoaded(actions: List<Action>) {
         actionListAdapter.actionList = actions.toMutableList().sortedBy { it.actionDate }.reversed(); actionListAdapter.notifyDataSetChanged(); swipeRefreshLayout?.isRefreshing = false
     }
 
@@ -89,9 +94,11 @@ class ActionListFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (item.groupId == 3 && item.itemId == 0) {
-            val selectedTrade = actionListAdapter.currentLongClickAction!!
-            // TODO Delete... could be tricky meanwhile actions are "linked" to positions. Maybe allow only last element to be deleted.
-            ActionRepository.deleteActionAsync(selectedTrade)
+            lifecycleScope.launch {
+                val selectedTrade = actionListAdapter.currentLongClickAction!!
+                // TODO Delete... could be tricky meanwhile actions are "linked" to positions. Maybe allow only last element to be deleted.
+                ActionRepository.deleteAction(selectedTrade)
+            }
         }
         return super.onContextItemSelected(item)
     }

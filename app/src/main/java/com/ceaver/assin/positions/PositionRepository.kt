@@ -1,31 +1,21 @@
 package com.ceaver.assin.positions
 
-import android.os.Handler
-import android.os.Looper
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.extensions.addZeroDotOneToLastDecimal
 import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.markets.Title
-import com.ceaver.assin.threading.BackgroundThreadExecutor
 import java.math.BigDecimal
 import java.math.MathContext
 import java.time.LocalDate
 
 object PositionRepository {
 
-    fun loadPositions(title: Title): List<Position> {
+    suspend fun loadPositions(title: Title): List<Position> {
         return loadAllPositions().filter { it.title == title }
     }
 
-    fun loadPositionsAsync(title: Title, callbackInMainThread: Boolean, callback: (List<Position>) -> Unit) {
-        BackgroundThreadExecutor.execute {
-            val positions = loadPositions(title)
-            handleCallback(callbackInMainThread, callback, positions)
-        }
-    }
-
-    fun loadAllPositions(): List<Position> {
+    suspend fun loadAllPositions(): List<Position> {
         val positions = mutableListOf<Position>()
         var positionId = BigDecimal.ZERO;
         ActionRepository.loadAllActions().forEach { action ->
@@ -81,19 +71,5 @@ object PositionRepository {
         }
         positions.sortedBy { it.id }.forEach { println(it.id.toPlainString() + " " + it.isActive()) }
         return positions.sortedBy { it.id }
-    }
-
-    fun loadAllPositionsAsync(callbackInMainThread: Boolean, callback: (List<Position>) -> Unit) {
-        BackgroundThreadExecutor.execute {
-            val positions = loadAllPositions()
-            handleCallback(callbackInMainThread, callback, positions)
-        }
-    }
-
-    private fun handleCallback(callbackInMainThread: Boolean, callback: (List<Position>) -> Unit, positions: List<Position>) {
-        if (callbackInMainThread)
-            Handler(Looper.getMainLooper()).post { callback.invoke(positions) }
-        else
-            callback.invoke(positions)
     }
 }

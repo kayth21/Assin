@@ -2,14 +2,11 @@ package com.ceaver.assin.markets.overview
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.ceaver.assin.AssinApplication
-import com.ceaver.assin.threading.BackgroundThreadExecutor
 
 object MarketOverviewRepository {
 
-    fun loadMarketOverview(): MarketOverview {
+    suspend fun loadMarketOverview(): MarketOverview {
         val sharedPreferences = AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
         return MarketOverview(
                 marketCapUsd = sharedPreferences.getLong(MarketOverview.MARKET_CAP_USD, -1),
@@ -26,18 +23,8 @@ object MarketOverviewRepository {
         )
     }
 
-    fun loadMarketOverviewAsync(callbackInMainThread: Boolean, callback: (MarketOverview) -> Unit) {
-        BackgroundThreadExecutor.execute {
-            val marketOverview = loadMarketOverview()
-            if (callbackInMainThread)
-                Handler(Looper.getMainLooper()).post { callback.invoke(marketOverview) }
-            else
-                callback.invoke(marketOverview)
-        }
-    }
-
     @SuppressLint("ApplySharedPref")
-    fun insertMarketOverview(marketOverview: MarketOverview) {
+    suspend fun insertMarketOverview(marketOverview: MarketOverview) {
         AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit()
                 .putLong(MarketOverview.MARKET_CAP_USD, marketOverview.marketCapUsd)
                 .putString(MarketOverview.DAILY_MARKET_CAP_CHANGE, marketOverview.dailyMarketCapChange.toString())

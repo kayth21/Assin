@@ -2,7 +2,9 @@ package com.ceaver.assin.markets.overview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ceaver.assin.common.SingleLiveEvent
+import kotlinx.coroutines.launch
 
 class MarketOverviewViewModel() : ViewModel() {
     private val _marketOverview = SingleLiveEvent<MarketOverview>()
@@ -13,7 +15,10 @@ class MarketOverviewViewModel() : ViewModel() {
     }
 
     fun loadMarketOverview() {
-        MarketOverviewRepository.loadMarketOverviewAsync(false) { _marketOverview.postValue(it) }
+        viewModelScope.launch {
+            val result = MarketOverviewRepository.loadMarketOverview()
+            _marketOverview.postValue(result)
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
@@ -17,6 +18,7 @@ import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
 import kotlinx.android.synthetic.main.position_list_fragment.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -81,7 +83,10 @@ class PositionListFragment(val title: Title) : Fragment() {
     }
 
     private fun loadAllPositions() {
-        PositionRepository.loadPositionsAsync(title, true) { onAllPositionsLoaded(it.sortedByDescending { it.id }) }
+        lifecycleScope.launch {
+            val loadPositions = PositionRepository.loadPositions(title)
+            onAllPositionsLoaded(loadPositions.sortedByDescending { it.id })
+        }
     }
 
     private fun onAllPositionsLoaded(positions: List<Position>) {
@@ -111,6 +116,9 @@ class PositionListFragment(val title: Title) : Fragment() {
     }
 
     private fun withdraw(selectedPosition: Position) {
-        ActionRepository.insertWithdrawAsync(Action.withdraw(selectedPosition), true) { loadAllPositions() }
+        lifecycleScope.launch {
+            ActionRepository.insertWithdraw(Action.withdraw(selectedPosition))
+            loadAllPositions()
+        }
     }
 }

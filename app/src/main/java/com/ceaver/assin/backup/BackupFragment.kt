@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
@@ -111,47 +108,47 @@ class BackupFragment : Fragment() {
                 .enqueue()
     }
 
-    class ActionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class ActionExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val actions = ActionRepository.loadAllActions()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty(), action.actionType.name, if (action.positionId != null) action.positionId!!.toPlainString() else "", if (action.splitAmount != null) action.splitAmount.toPlainString() else "", if (action.splitRemaining != null) action.splitRemaining.toPlainString() else "", action.splitTitle?.symbol.orEmpty(), if (action.valueBtc != null) action.valueBtc.toPlainString() else "", if (action.valueUsd != null) action.valueUsd.toPlainString() else "")
             csvPrinter.flush()
-            LogRepository.insertLogAsync("Export actions successful to '$filePath'")
+            LogRepository.insertLog("Export actions successful to '$filePath'")
             return Result.success()
         }
     }
 
-    class AlertExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class AlertExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val alerts = AlertRepository.loadAllAlerts()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
             csvPrinter.flush()
-            LogRepository.insertLogAsync("Export alerts successful to '$filePath'")
+            LogRepository.insertLog("Export alerts successful to '$filePath'")
             return Result.success()
         }
     }
 
-    class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val intentions = IntentionRepository.loadAllIntentions()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
             csvPrinter.flush()
-            LogRepository.insertLogAsync("Export intentions successful to '$filePath'")
+            LogRepository.insertLog("Export intentions successful to '$filePath'")
             return Result.success()
         }
     }
 
-    class ActionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class ActionImportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + ACTION_FILE_NAME;
             if (File(filePath).exists()) {
@@ -179,16 +176,16 @@ class BackupFragment : Fragment() {
                 }.toList()
                 ActionRepository.deleteAllActions()
                 ActionRepository.insertActions(actions)
-                LogRepository.insertLogAsync("Import actions from '$filePath' successful")
+                LogRepository.insertLog("Import actions from '$filePath' successful")
             } else {
-                LogRepository.insertLogAsync("Import actions failed. '$filePath' not found")
+                LogRepository.insertLog("Import actions failed. '$filePath' not found")
             }
             return Result.success()
         }
     }
 
-    class AlertImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class AlertImportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + ALERT_FILE_NAME;
             if (File(filePath).exists()) {
@@ -197,16 +194,16 @@ class BackupFragment : Fragment() {
                 val alerts = csvParser.map { Alert(0, TitleRepository.loadTitleBySymbol(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toBigDecimal(), it.get(4).toBigDecimal()) }.toList()
                 AlertRepository.deleteAllAlerts()
                 AlertRepository.insertAlerts(alerts)
-                LogRepository.insertLogAsync("Import alerts from '$filePath' successful")
+                LogRepository.insertLog("Import alerts from '$filePath' successful")
             } else {
-                LogRepository.insertLogAsync("Import alerts failed. '$filePath' not found")
+                LogRepository.insertLog("Import alerts failed. '$filePath' not found")
             }
             return Result.success()
         }
     }
 
-    class IntentionImportWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-        override fun doWork(): Result {
+    class IntentionImportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
             val sourceDirectory = getOrCreateDirectory()
             val filePath = sourceDirectory.path + "/" + INTENTION_FILE_NAME;
             if (File(filePath).exists()) {
@@ -215,9 +212,9 @@ class BackupFragment : Fragment() {
                 val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toBigDecimalOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toBigDecimal(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
                 IntentionRepository.deleteAllIntentions()
                 IntentionRepository.insertIntentions(intentions)
-                LogRepository.insertLogAsync("Import intentions from '$filePath' successful")
+                LogRepository.insertLog("Import intentions from '$filePath' successful")
             } else {
-                LogRepository.insertLogAsync("Import intentions failed. '$filePath' not found")
+                LogRepository.insertLog("Import intentions failed. '$filePath' not found")
             }
             return Result.success()
         }

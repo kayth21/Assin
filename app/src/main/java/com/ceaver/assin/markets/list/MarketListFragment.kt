@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
@@ -15,6 +16,7 @@ import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_market_list.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -45,7 +47,10 @@ class MarketListFragment : Fragment() {
     }
 
     private fun loadActiveCryptoTitles() {
-        TitleRepository.loadActiveCryptoTitlesAsync(true) { onAllTitlesLoaded(it) };
+        lifecycleScope.launch {
+            val cryptoTitles = TitleRepository.loadActiveCryptoTitles()
+            onAllTitlesLoaded(cryptoTitles);
+        }
     }
 
     private fun onAllTitlesLoaded(titles: List<Title>) {

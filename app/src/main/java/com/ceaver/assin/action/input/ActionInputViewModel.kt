@@ -7,6 +7,7 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -20,7 +21,10 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
     val status: LiveData<ActionInputStatus> get() = _status
 
     init {
-        TitleRepository.loadAllTitlesAsync(false) { _symbols.postValue(it) }
+        viewModelScope.launch {
+            val titles = TitleRepository.loadAllTitles()
+            _symbols.postValue(titles)
+        }
         when {
             action != null -> this._action.postValue(action)
             title != null -> when (actionType) {
@@ -33,16 +37,28 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
     }
 
     private fun saveAction(action: Action) {
-        _status.value = ActionInputStatus.START_SAVE
-        if (action.id > 0) {
-            // TODO update... could be tricky when actions are "linked" to positions
-            ActionRepository.updateActionAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
-        } else
-            when (action.actionType) {
-                ActionType.DEPOSIT -> ActionRepository.insertDepositAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
-                ActionType.WITHDRAW -> ActionRepository.insertWithdrawAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
-                ActionType.TRADE -> ActionRepository.insertTradeAsync(action, true) { _status.value = ActionInputStatus.END_SAVE }
-            }
+        viewModelScope.launch {
+            _status.value = ActionInputStatus.START_SAVE
+            if (action.id > 0) {
+                // TODO update... could be tricky when actions are "linked" to positions
+                ActionRepository.updateAction(action)
+                _status.value = ActionInputStatus.END_SAVE
+            } else
+                when (action.actionType) {
+                    ActionType.DEPOSIT -> {
+                        ActionRepository.insertDeposit(action)
+                        _status.value = ActionInputStatus.END_SAVE
+                    }
+                    ActionType.WITHDRAW -> {
+                        ActionRepository.insertWithdraw(action)
+                        _status.value = ActionInputStatus.END_SAVE
+                    }
+                    ActionType.TRADE -> {
+                        ActionRepository.insertTrade(action)
+                        _status.value = ActionInputStatus.END_SAVE
+                    }
+                }
+        }
     }
 
     fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {

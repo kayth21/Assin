@@ -5,23 +5,23 @@ import androidx.room.*
 @Dao
 interface AlertDao {
     @Query("select * from alert")
-    fun loadAllAlerts(): List<Alert>
+    suspend fun loadAllAlerts(): List<Alert>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAlert(alert: Alert)
+    suspend fun insertAlert(alert: Alert)
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAlerts(alerts: List<Alert>)
+    suspend fun insertAlerts(alerts: List<Alert>)
 
     @Update
-    fun updateAlert(alert: Alert)
+    suspend fun updateAlert(alert: Alert)
 
     @Delete
-    fun deleteAlert(alert: Alert)
+    suspend fun deleteAlert(alert: Alert)
 
     @Query("delete from alert")
-    fun deleteAllAlerts()
+    suspend fun deleteAllAlerts()
 
     @Query("select * from alert where id = :id")
-    fun loadAlert(id: Long): Alert
+    suspend fun loadAlert(id: Long): Alert
 }

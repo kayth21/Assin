@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
 import kotlinx.android.synthetic.main.log_list_fragment.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,7 +33,10 @@ class LogListFragment : Fragment() {
     }
 
     private fun loadAllLogs() {
-        LogRepository.loadAllLogsAsync(true) { onAllLogsLoaded(it.sortedByDescending { it.id }) }
+        lifecycleScope.launch {
+            val allLogs = LogRepository.loadAllLogs()
+            onAllLogsLoaded(allLogs.sortedByDescending { it.id })
+        }
     }
 
     private fun onAllLogsLoaded(logs: List<Log>) {

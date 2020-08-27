@@ -1,12 +1,10 @@
 package com.ceaver.assin.assets.detail.overview
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.markets.Title
+import kotlinx.coroutines.launch
 
 class AssetDetailOverviewViewModel(val title: Title) : ViewModel() {
 
@@ -14,7 +12,10 @@ class AssetDetailOverviewViewModel(val title: Title) : ViewModel() {
     val asset: LiveData<Asset> get() = _asset
 
     fun loadAsset() {
-        AssetRepository.loadAssetAsync(title, false) { _asset.postValue(it) }
+        viewModelScope.launch {
+            val asset = AssetRepository.loadAsset(title)
+            _asset.postValue(asset)
+        }
     }
 
     class Factory(val title: Title) : ViewModelProvider.Factory {
