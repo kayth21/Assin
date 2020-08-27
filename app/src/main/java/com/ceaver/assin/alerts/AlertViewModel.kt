@@ -22,13 +22,9 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
     val reference: LiveData<List<Title>> get() = _reference
 
     init {
+        if (alert == null) createAlert() else this._alert.postValue(alert)
         TitleRepository.loadAllCryptoTitlesAsync(false) { _symbol.postValue(it) }
         TitleRepository.loadAllTitlesAsync(false) { _reference.postValue(it) }
-        if (alert == null) createAlert() else this._alert.postValue(alert)
-    }
-
-    private fun lookupAlert(alertId: Long) {
-        AlertRepository.loadAlertAsync(alertId, false) { _alert.postValue(it) }
     }
 
     private fun createAlert() {
