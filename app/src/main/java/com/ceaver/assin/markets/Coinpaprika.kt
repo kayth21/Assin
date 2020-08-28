@@ -9,14 +9,12 @@ import com.coinpaprika.apiclient.entity.TickerEntity
 import com.coinpaprika.apiclient.exception.NotFoundError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 import java.util.*
 
 object Coinpaprika {
 
-    suspend fun loadGlobalStats(): MarketOverview = withContext(Dispatchers.IO) {
+    fun loadGlobalStats(): MarketOverview {
         lateinit var marketOverview: MarketOverview
         CoinpaprikaApi()
                 .global()
@@ -25,7 +23,7 @@ object Coinpaprika {
                 .blockingSubscribe(
                         { marketOverview = transformGlobalStats(it!!) },
                         { error -> error.printStackTrace() }) // TODO
-        return@withContext marketOverview
+        return marketOverview
     }
 
     private fun transformGlobalStats(globalStatsEntity: GlobalStatsEntity): MarketOverview {
@@ -44,20 +42,16 @@ object Coinpaprika {
         )
     }
 
-    suspend fun load(id: String): Optional<Title> = withContext(Dispatchers.IO) {
+    suspend fun load(id: String): Optional<Title> {
         // TODO handle other Errors
-        return@withContext try {
-            Optional.of(transform(CoinpaprikaApi().ticker(id)))
-        } catch (e: NotFoundError) {
-            Optional.empty<Title>()
-        }
+        return try { Optional.of(transform(CoinpaprikaApi().ticker(id))) } catch (e: NotFoundError) { Optional.empty<Title>() }
     }
 
-    suspend fun loadAllTitles(): Set<Title> = withContext(Dispatchers.IO) {
+    suspend fun loadAllTitles(): Set<Title> {
         val resultSet = mutableSetOf<Title>()
         CoinpaprikaApi().fiats().forEach { resultSet.add(transform(it)) }
         CoinpaprikaApi().tickers().forEach { resultSet.add(transform(it)) }
-        return@withContext resultSet
+        return resultSet
     }
 
     private fun transform(fiatEntity: FiatEntity): Title {
