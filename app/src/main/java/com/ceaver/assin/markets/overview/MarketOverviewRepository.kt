@@ -6,7 +6,7 @@ import com.ceaver.assin.AssinApplication
 
 object MarketOverviewRepository {
 
-    suspend fun loadMarketOverview(): MarketOverview {
+    fun loadMarketOverview(): MarketOverview {
         val sharedPreferences = AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
         return MarketOverview(
                 marketCapUsd = sharedPreferences.getLong(MarketOverview.MARKET_CAP_USD, -1),
@@ -24,7 +24,7 @@ object MarketOverviewRepository {
     }
 
     @SuppressLint("ApplySharedPref")
-    suspend fun insertMarketOverview(marketOverview: MarketOverview) {
+    fun insertMarketOverview(marketOverview: MarketOverview) {
         AssinApplication.appContext!!.getSharedPreferences(MarketOverview.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit()
                 .putLong(MarketOverview.MARKET_CAP_USD, marketOverview.marketCapUsd)
                 .putString(MarketOverview.DAILY_MARKET_CAP_CHANGE, marketOverview.dailyMarketCapChange.toString())

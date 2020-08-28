@@ -7,17 +7,10 @@ import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigDecimal?) : ViewModel() {
-
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     private val _intention = MutableLiveData<Intention>()
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._intention, _symbols)
@@ -47,12 +40,6 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
             _status.postValue(IntentionInputStatus.END_SAVE)
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-
 
     enum class IntentionInputStatus {
         START_SAVE,

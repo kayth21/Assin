@@ -5,17 +5,19 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.extensions.addZeroDotOneToLastDecimal
 import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.markets.Title
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.math.MathContext
 import java.time.LocalDate
 
 object PositionRepository {
 
-    suspend fun loadPositions(title: Title): List<Position> {
-        return loadAllPositions().filter { it.title == title }
+    suspend fun loadPositions(title: Title): List<Position> = withContext(Dispatchers.IO) {
+        return@withContext loadAllPositions().filter { it.title == title }
     }
 
-    suspend fun loadAllPositions(): List<Position> {
+    suspend fun loadAllPositions(): List<Position> = withContext(Dispatchers.IO) {
         val positions = mutableListOf<Position>()
         var positionId = BigDecimal.ZERO;
         ActionRepository.loadAllActions().forEach { action ->
@@ -70,6 +72,6 @@ object PositionRepository {
             }
         }
         positions.sortedBy { it.id }.forEach { println(it.id.toPlainString() + " " + it.isActive()) }
-        return positions.sortedBy { it.id }
+        return@withContext positions.sortedBy { it.id }
     }
 }
