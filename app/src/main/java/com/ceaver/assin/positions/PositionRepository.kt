@@ -7,7 +7,6 @@ import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
-import java.time.LocalDate
 
 object PositionRepository {
 
@@ -43,7 +42,7 @@ object PositionRepository {
                             id = positionId,
                             title = action.buyTitle!!,
                             amount = action.buyAmount!!,
-                            openDate = LocalDate.now(),
+                            openDate = action.actionDate,
                             openValueBtc = action.valueBtc!!,
                             openValueUsd = action.valueUsd!!))
                 }
