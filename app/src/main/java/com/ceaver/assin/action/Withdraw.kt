@@ -3,8 +3,10 @@ package com.ceaver.assin.action
 import com.ceaver.assin.R
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
+import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
+import java.math.MathContext
 import java.time.LocalDate
 
 data class Withdraw(
@@ -16,20 +18,20 @@ data class Withdraw(
         val valueUsd: BigDecimal,
         val comment: String? = null,
         val positionId: BigDecimal?
-) : IAction {
+) : Action {
 
     companion object Factory {
-        fun fromAction(action: Action): Withdraw {
-            require(ActionType.WITHDRAW == action.actionType)
+        fun fromAction(actionEntity: ActionEntity): Withdraw {
+            require(ActionType.WITHDRAW == actionEntity.actionType)
             return Withdraw(
-                    id = action.id,
-                    date = action.actionDate,
-                    title = action.sellTitle!!,
-                    amount = action.sellAmount!!,
-                    valueBtc = action.valueBtc!!,
-                    valueUsd = action.valueUsd!!,
-                    comment = action.comment,
-                    positionId = action.positionId)
+                    id = actionEntity.id,
+                    date = actionEntity.actionDate,
+                    title = actionEntity.sellTitle!!,
+                    amount = actionEntity.sellAmount!!,
+                    valueBtc = actionEntity.valueBtc!!,
+                    valueUsd = actionEntity.valueUsd!!,
+                    comment = actionEntity.comment,
+                    positionId = actionEntity.positionId)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Withdraw {
@@ -42,6 +44,16 @@ data class Withdraw(
                     valueUsd = csvRecord.get(5).toBigDecimal(),
                     comment = csvRecord.get(6).ifEmpty { null },
                     positionId = csvRecord.get(7).toBigDecimal())
+        }
+
+        fun fromPosition(position: Position): Withdraw {
+            return Withdraw(
+                    amount = position.amount,
+                    title = position.title,
+                    positionId = position.id,
+                    valueUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
+                    valueBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
+            )
         }
     }
 
@@ -65,8 +77,8 @@ data class Withdraw(
     override fun getTitleText(): String = "Withdraw ${title.name}"
     override fun getDetailText(): String = "$amount ${title.symbol}"
 
-    override fun toAction(): Action {
-        return Action(
+    override fun toActionEntity(): ActionEntity {
+        return ActionEntity(
                 actionType = ActionType.WITHDRAW,
                 id = id,
                 actionDate = date,

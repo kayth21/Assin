@@ -8,16 +8,16 @@ import java.math.BigDecimal
 
 object ActionRepository {
 
-    suspend fun loadAction(id: Long): IAction {
-        return getActionDao().loadAction(id).toIAction()
+    suspend fun loadAction(id: Long): Action {
+        return getActionDao().loadActionEntity(id).toAction()
     }
 
-    suspend fun loadAllActions(): List<IAction> {
-        return getActionDao().loadAllActions().map { it.toIAction() }
+    suspend fun loadAllActions(): List<Action> {
+        return getActionDao().loadAllActionEntities().map { it.toAction() }
     }
 
-    suspend fun loadActions(symbol: String): List<IAction> {
-        return getActionDao().loadAllActions().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }.map { it.toIAction() }
+    suspend fun loadActions(symbol: String): List<Action> {
+        return getActionDao().loadAllActionEntities().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }.map { it.toAction() }
     }
 
     suspend fun insertDeposit(deposit: Deposit) {
@@ -107,32 +107,32 @@ object ActionRepository {
     }
 
     suspend fun insertSplit(position: Position, sellAmount: BigDecimal) {
-        insertAction(Action.split(position, sellAmount))
+        insertAction(Split.fromPosition(position, sellAmount))
     }
 
-    suspend fun insertActions(actions: List<IAction>) {
-        getActionDao().insertActions(actions.map { it.toAction() })
+    suspend fun insertActions(actions: List<Action>) {
+        getActionDao().insertActionEntities(actions.map { it.toActionEntity() })
         EventBus.getDefault().post(ActionEvents.Insert())
     }
 
-    private suspend fun insertAction(action: IAction) {
-        getActionDao().insertAction(action.toAction())
+    private suspend fun insertAction(action: Action) {
+        getActionDao().insertActionEntity(action.toActionEntity())
         EventBus.getDefault().post(ActionEvents.Insert())
     }
 
-    suspend fun updateAction(action: IAction) {
-        getActionDao().updateAction(action.toAction()); EventBus.getDefault().post(ActionEvents.Update())
+    suspend fun updateAction(action: Action) {
+        getActionDao().updateActionEntity(action.toActionEntity()); EventBus.getDefault().post(ActionEvents.Update())
     }
 
-    suspend fun deleteAction(action: IAction) {
-        getActionDao().deleteAction(action.toAction()); EventBus.getDefault().post(ActionEvents.Delete())
+    suspend fun deleteAction(action: Action) {
+        getActionDao().deleteActionEntity(action.toActionEntity()); EventBus.getDefault().post(ActionEvents.Delete())
     }
 
     suspend fun deleteAllActions() {
-        getActionDao().deleteAllActions(); EventBus.getDefault().post(ActionEvents.DeleteAll())
+        getActionDao().deleteAllActionEntities(); EventBus.getDefault().post(ActionEvents.DeleteAll())
     }
 
-    private fun getActionDao(): ActionDao {
+    private fun getActionDao(): ActionEntityDao {
         return getDatabase().actionDao()
     }
 

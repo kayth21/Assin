@@ -46,8 +46,8 @@
             android:name="actionType"
             app:argType="com.ceaver.assin.action.ActionType" />
         <argument
-            android:name="action"
-            app:argType="com.ceaver.assin.action.Action"
+            android:name="actionEntity"
+            app:argType="com.ceaver.assin.action.ActionEntity"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument

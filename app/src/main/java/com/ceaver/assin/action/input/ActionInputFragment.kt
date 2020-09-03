@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.R
-import com.ceaver.assin.action.Action
+import com.ceaver.assin.action.ActionEntity
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.extensions.afterTextChanged
 import com.ceaver.assin.extensions.registerInputValidator
@@ -29,7 +29,7 @@ class ActionInputFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = ActionInputFragmentArgs.fromBundle(requireArguments())
-        viewModel = viewModels<ActionInputViewModel> { ActionInputViewModel.Factory(args.action, args.title, args.actionType) }.value
+        viewModel = viewModels<ActionInputViewModel> { ActionInputViewModel.Factory(args.actionEntity, args.title, args.actionType) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -140,7 +140,7 @@ class ActionInputFragment() : Fragment() {
     }
 
     private fun observeTrade() {
-        viewModel.action.observe(viewLifecycleOwner, Observer {
+        viewModel.actionEntity.observe(viewLifecycleOwner, Observer {
             publishFields(it!!);
         })
     }
@@ -154,28 +154,28 @@ class ActionInputFragment() : Fragment() {
         })
     }
 
-    private fun updateSpinnerFields(action: Action) {
-        if (action.buyTitle != null) {
-            actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(action.buyTitle!!))
+    private fun updateSpinnerFields(actionEntity: ActionEntity) {
+        if (actionEntity.buyTitle != null) {
+            actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.buyTitle!!))
         }
-        if (action.sellTitle != null) {
-            actionInputFragmentSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(action.sellTitle!!))
+        if (actionEntity.sellTitle != null) {
+            actionInputFragmentSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.sellTitle!!))
         }
     }
 
-    private fun publishFields(action: Action) {
-        actionInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(action.actionDate))
-        actionInputFragmentCommentTextView.setText(action.comment.orEmpty())
+    private fun publishFields(actionEntity: ActionEntity) {
+        actionInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(actionEntity.actionDate))
+        actionInputFragmentCommentTextView.setText(actionEntity.comment.orEmpty())
         when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
-                actionInputFragmentBuyAmountTextView.setText(if (action.buyAmount != null) action.buyAmount.toString() else "")
-                actionInputFragmentSellAmountTextView.setText(if (action.sellAmount != null) action.sellAmount.toString() else "")
+                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyAmount != null) actionEntity.buyAmount.toString() else "")
+                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellAmount != null) actionEntity.sellAmount.toString() else "")
             }
             ActionType.DEPOSIT -> {
-                actionInputFragmentBuyAmountTextView.setText(if (action.buyAmount != null) action.buyAmount.toString() else "")
+                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyAmount != null) actionEntity.buyAmount.toString() else "")
             }
             ActionType.WITHDRAW -> {
-                actionInputFragmentSellAmountTextView.setText(if (action.sellAmount != null) action.sellAmount.toString() else "")
+                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellAmount != null) actionEntity.sellAmount.toString() else "")
             }
             else -> throw IllegalStateException()
         }

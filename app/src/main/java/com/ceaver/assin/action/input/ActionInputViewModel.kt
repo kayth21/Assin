@@ -9,12 +9,12 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionType) : ViewModel() {
-    private val _action = MutableLiveData<Action>()
+class ActionInputViewModel(actionEntity: ActionEntity?, title: Title?, actionType: ActionType) : ViewModel() {
+    private val _action = MutableLiveData<ActionEntity>()
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._action, _symbols)
     private val _status = SingleLiveEvent<ActionInputStatus>()
-    val action: LiveData<Action> get() = _action
+    val actionEntity: LiveData<ActionEntity> get() = _action
     val symbols: LiveData<List<Title>> get() = _symbols
     val status: LiveData<ActionInputStatus> get() = _status
 
@@ -24,35 +24,35 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
             _symbols.postValue(titles)
         }
         when {
-            action != null -> this._action.postValue(action)
+            actionEntity != null -> this._action.postValue(actionEntity)
             title != null -> when (actionType) {
-                ActionType.DEPOSIT -> this._action.postValue(Action(actionType = actionType, buyTitle = title))
-                ActionType.WITHDRAW -> this._action.postValue(Action(actionType = actionType, sellTitle = title))
+                ActionType.DEPOSIT -> this._action.postValue(ActionEntity(actionType = actionType, buyTitle = title))
+                ActionType.WITHDRAW -> this._action.postValue(ActionEntity(actionType = actionType, sellTitle = title))
                 else -> throw IllegalStateException()
             }
-            else -> this._action.postValue(Action(actionType = actionType))
+            else -> this._action.postValue(ActionEntity(actionType = actionType))
         }
     }
 
-    private fun saveAction(action: Action) {
+    private fun saveAction(actionEntity: ActionEntity) {
         viewModelScope.launch {
             _status.value = ActionInputStatus.START_SAVE
-            if (action.id > 0) {
+            if (actionEntity.id > 0) {
                 // TODO update... could be tricky when actions are "linked" to positions
-                ActionRepository.updateAction(action.toIAction())
+                ActionRepository.updateAction(actionEntity.toAction())
                 _status.value = ActionInputStatus.END_SAVE
             } else
-                when (action.actionType) {
+                when (actionEntity.actionType) {
                     ActionType.DEPOSIT -> {
-                        ActionRepository.insertDeposit(Deposit.fromAction(action))
+                        ActionRepository.insertDeposit(Deposit.fromAction(actionEntity))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                     ActionType.WITHDRAW -> {
-                        ActionRepository.insertWithdraw(Withdraw.fromAction(action))
+                        ActionRepository.insertWithdraw(Withdraw.fromAction(actionEntity))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                     ActionType.TRADE -> {
-                        ActionRepository.insertTrade(Trade.fromAction(action))
+                        ActionRepository.insertTrade(Trade.fromAction(actionEntity))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                 }
@@ -99,10 +99,10 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
         }
     }
 
-    class Factory(val action: Action?, val title: Title?, val actionType: ActionType) : ViewModelProvider.Factory {
+    class Factory(val actionEntity: ActionEntity?, val title: Title?, val actionType: ActionType) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return ActionInputViewModel(action, title, actionType) as T
+            return ActionInputViewModel(actionEntity, title, actionType) as T
         }
     }
 }

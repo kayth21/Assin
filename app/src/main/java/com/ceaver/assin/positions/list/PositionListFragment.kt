@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
-import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionEvents
 import com.ceaver.assin.action.ActionRepository
+import com.ceaver.assin.action.Withdraw
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
@@ -117,7 +117,7 @@ class PositionListFragment(val title: Title) : Fragment() {
 
     private fun withdraw(selectedPosition: Position) {
         lifecycleScope.launch {
-            ActionRepository.insertWithdraw(Action.withdraw(selectedPosition))
+            ActionRepository.insertWithdraw(Withdraw.fromPosition(selectedPosition))
             loadAllPositions()
         }
     }

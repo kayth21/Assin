@@ -15,18 +15,18 @@ data class Deposit(
         val valueBtc: BigDecimal,
         val valueUsd: BigDecimal,
         val comment: String?
-) : IAction {
+) : Action {
     companion object Factory {
-        fun fromAction(action: Action): Deposit {
-            require(ActionType.DEPOSIT == action.actionType)
+        fun fromAction(actionEntity: ActionEntity): Deposit {
+            require(ActionType.DEPOSIT == actionEntity.actionType)
             return Deposit(
-                    id = action.id,
-                    date = action.actionDate,
-                    title = action.buyTitle!!,
-                    amount = action.buyAmount!!,
-                    valueBtc = action.valueBtc!!,
-                    valueUsd = action.valueUsd!!,
-                    comment = action.comment)
+                    id = actionEntity.id,
+                    date = actionEntity.actionDate,
+                    title = actionEntity.buyTitle!!,
+                    amount = actionEntity.buyAmount!!,
+                    valueBtc = actionEntity.valueBtc!!,
+                    valueUsd = actionEntity.valueUsd!!,
+                    comment = actionEntity.comment)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Deposit {
@@ -59,8 +59,8 @@ data class Deposit(
     override fun getTitleText(): String = "Deposit ${title.name}"
     override fun getDetailText(): String = "$amount ${title.symbol}"
 
-    override fun toAction(): Action {
-        return Action(
+    override fun toActionEntity(): ActionEntity {
+        return ActionEntity(
                 actionType = ActionType.DEPOSIT,
                 id = id,
                 actionDate = date,

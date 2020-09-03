@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.action_list_row.view.*
 
 internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
 
-    var actionList: List<IAction> = ArrayList()
-    var currentLongClickAction: IAction? = null
+    var actionList: List<Action> = ArrayList()
+    var currentLongClickAction: Action? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.action_list_row, parent, false))
@@ -31,7 +31,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
             menu!!.add(3, 0, 0, "Delete")
         }
 
-        fun bindItem(action: IAction, onClickListener: ActionListFragment.OnItemClickListener) {
+        fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
             view.actionListRowLeftImageView.setImageResource(action.getLeftImageResource())
             view.actionListRowTradeTypeTextView.text = action.getTitleText()
             view.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.getActionDate())

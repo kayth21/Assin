@@ -16,7 +16,7 @@ object AssetRepository {
 
 
     suspend fun loadAllAssets(): List<Asset> {
-        val assets = ActionRepository.loadAllActions().map { it.toAction() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
+        val assets = ActionRepository.loadAllActions().map { it.toActionEntity() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
         val buyPairs = assets.filter { it.buyTitle != null }.map { Pair(it.buyTitle!!, it.buyAmount!!) }
         val sellPairs = assets.filter { it.sellTitle != null }.map { Pair(it.sellTitle!!, it.sellAmount!!.unaryMinus()) }
         val allPairs = buyPairs + sellPairs
@@ -32,7 +32,7 @@ object AssetRepository {
     }
 
     suspend fun loadAsset(title: Title): Asset {
-        val actions = ActionRepository.loadActions(title.symbol).map { it.toAction() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
+        val actions = ActionRepository.loadActions(title.symbol).map { it.toActionEntity() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
         val buyActions = actions.filter { it.buyTitle?.symbol == title.symbol }.map { it.buyAmount!! }
         val sellActions = actions.filter { it.sellTitle?.symbol == title.symbol }.map { it.sellAmount!!.unaryMinus() }
         val allActions = buyActions + sellActions

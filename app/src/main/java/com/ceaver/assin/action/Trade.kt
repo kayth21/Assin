@@ -17,22 +17,22 @@ data class Trade(
         val valueBtc: BigDecimal,
         val valueUsd: BigDecimal,
         val comment: String?
-) : IAction {
+) : Action {
 
     companion object Factory {
-        fun fromAction(action: Action): Trade {
-            require(ActionType.TRADE == action.actionType)
+        fun fromAction(actionEntity: ActionEntity): Trade {
+            require(ActionType.TRADE == actionEntity.actionType)
             return Trade(
-                    id = action.id,
-                    date = action.actionDate,
-                    buyTitle = action.buyTitle!!,
-                    buyAmount = action.buyAmount!!,
-                    sellTitle = action.sellTitle!!,
-                    sellAmount = action.sellAmount!!,
-                    positionId = action.positionId,
-                    valueBtc = action.valueBtc!!,
-                    valueUsd = action.valueUsd!!,
-                    comment = action.comment)
+                    id = actionEntity.id,
+                    date = actionEntity.actionDate,
+                    buyTitle = actionEntity.buyTitle!!,
+                    buyAmount = actionEntity.buyAmount!!,
+                    sellTitle = actionEntity.sellTitle!!,
+                    sellAmount = actionEntity.sellAmount!!,
+                    positionId = actionEntity.positionId,
+                    valueBtc = actionEntity.valueBtc!!,
+                    valueUsd = actionEntity.valueUsd!!,
+                    comment = actionEntity.comment)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Trade {
@@ -71,8 +71,8 @@ data class Trade(
                 comment.orEmpty())
     }
 
-    override fun toAction(): Action {
-        return Action(
+    override fun toActionEntity(): ActionEntity {
+        return ActionEntity(
                 actionType = ActionType.TRADE,
                 id = id,
                 actionDate = date,

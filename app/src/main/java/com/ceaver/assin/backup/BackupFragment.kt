@@ -152,7 +152,7 @@ class BackupFragment : Fragment() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ACTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val actions: List<IAction> = csvParser.map {
+                val actions: List<Action> = csvParser.map {
                     when (ActionType.valueOf(it.get(0))) {
                         ActionType.TRADE -> Trade.fromImport(it)
                         ActionType.SPLIT -> Split.fromImport(it)
