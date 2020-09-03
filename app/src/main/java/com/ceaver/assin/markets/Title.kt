@@ -122,6 +122,6 @@ data class Title(//
 
     fun getIcon(): Int {
         val identifier = AssinApplication.appContext!!.resIdByName(symbol.toLowerCase(Locale.ROOT), "drawable")
-        return if (identifier == 0) R.drawable.generic else identifier
+        return if (identifier == 0 || Character.isDigit(symbol[0])) R.drawable.generic else identifier // TODO some weird bug with symols that start with a number, e.g. 42
     }
 }
