@@ -12,9 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
-import com.ceaver.assin.action.Action
-import com.ceaver.assin.action.ActionRepository
-import com.ceaver.assin.action.ActionType
+import com.ceaver.assin.action.*
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertType
@@ -114,7 +112,7 @@ class BackupFragment : Fragment() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (action in actions) csvPrinter.printRecord(action.actionDate, action.buyTitle?.symbol.orEmpty(), if (action.buyAmount != null) action.buyAmount!!.toPlainString() else "", action.sellTitle?.symbol.orEmpty(), if (action.sellAmount != null) action.sellAmount!!.toPlainString() else "", action.comment.orEmpty(), action.actionType.name, if (action.positionId != null) action.positionId!!.toPlainString() else "", if (action.splitAmount != null) action.splitAmount.toPlainString() else "", if (action.splitRemaining != null) action.splitRemaining.toPlainString() else "", action.splitTitle?.symbol.orEmpty(), if (action.valueBtc != null) action.valueBtc.toPlainString() else "", if (action.valueUsd != null) action.valueUsd.toPlainString() else "")
+            for (action in actions) csvPrinter.printRecord(action.toExport())
             csvPrinter.flush()
             LogRepository.insertLog("Export actions successful to '$filePath'")
             return Result.success()
@@ -154,25 +152,13 @@ class BackupFragment : Fragment() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ACTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val actions = csvParser.map {
-                    val actionDate = LocalDate.parse(it.get(0))
-                    val buyTitleString = it.get(1)
-                    val buyTitle = if (buyTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(buyTitleString)
-                    val buyAmount = it.get(2).toBigDecimalOrNull()
-                    val sellTitleString = it.get(3)
-                    val sellTitle = if (sellTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(sellTitleString)
-                    val sellAmount = it.get(4).toBigDecimalOrNull()
-                    val comment = it.get(5).ifEmpty { null }
-                    val actionType = ActionType.valueOf(it.get(6))
-                    val positionId = it.get(7).toBigDecimalOrNull()
-                    val splitAmount = it.get(8).toBigDecimalOrNull()
-                    val splitRemaining = it.get(9).toBigDecimalOrNull()
-                    val splitTitleString = it.get(10)
-                    val splitTitle = if (splitTitleString.isEmpty()) null else TitleRepository.loadTitleBySymbol(splitTitleString)
-                    val priceBtc = it.get(11).toBigDecimalOrNull()
-                    val priceUsd = it.get(12).toBigDecimalOrNull()
-                    // TODO check if any titleString is notNull but corresponding title is null. Happens if no title is not active anymore. Abort import.
-                    Action(0, actionDate, buyTitle, buyAmount, sellTitle, sellAmount, comment, actionType, positionId, splitAmount, splitRemaining, splitTitle, priceBtc, priceUsd)
+                val actions: List<IAction> = csvParser.map {
+                    when (ActionType.valueOf(it.get(0))) {
+                        ActionType.TRADE -> Trade.fromImport(it)
+                        ActionType.SPLIT -> Split.fromImport(it)
+                        ActionType.WITHDRAW -> Withdraw.fromImport(it)
+                        ActionType.DEPOSIT -> Deposit.fromImport(it)
+                    }
                 }.toList()
                 ActionRepository.deleteAllActions()
                 ActionRepository.insertActions(actions)

@@ -1,9 +1,7 @@
 package com.ceaver.assin.action.input
 
 import androidx.lifecycle.*
-import com.ceaver.assin.action.Action
-import com.ceaver.assin.action.ActionRepository
-import com.ceaver.assin.action.ActionType
+import com.ceaver.assin.action.*
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
@@ -41,20 +39,20 @@ class ActionInputViewModel(action: Action?, title: Title?, actionType: ActionTyp
             _status.value = ActionInputStatus.START_SAVE
             if (action.id > 0) {
                 // TODO update... could be tricky when actions are "linked" to positions
-                ActionRepository.updateAction(action)
+                ActionRepository.updateAction(action.toIAction())
                 _status.value = ActionInputStatus.END_SAVE
             } else
                 when (action.actionType) {
                     ActionType.DEPOSIT -> {
-                        ActionRepository.insertDeposit(action)
+                        ActionRepository.insertDeposit(Deposit.fromAction(action))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                     ActionType.WITHDRAW -> {
-                        ActionRepository.insertWithdraw(action)
+                        ActionRepository.insertWithdraw(Withdraw.fromAction(action))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                     ActionType.TRADE -> {
-                        ActionRepository.insertTrade(action)
+                        ActionRepository.insertTrade(Trade.fromAction(action))
                         _status.value = ActionInputStatus.END_SAVE
                     }
                 }

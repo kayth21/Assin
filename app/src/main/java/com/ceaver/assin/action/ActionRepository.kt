@@ -8,56 +8,56 @@ import java.math.BigDecimal
 
 object ActionRepository {
 
-    suspend fun loadAction(id: Long): Action {
-        return getActionDao().loadAction(id)
+    suspend fun loadAction(id: Long): IAction {
+        return getActionDao().loadAction(id).toIAction()
     }
 
-    suspend fun loadAllActions(): List<Action> {
-        return getActionDao().loadAllActions()
+    suspend fun loadAllActions(): List<IAction> {
+        return getActionDao().loadAllActions().map { it.toIAction() }
     }
 
-    suspend fun loadActions(symbol: String): List<Action> {
-        return getActionDao().loadAllActions().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }
+    suspend fun loadActions(symbol: String): List<IAction> {
+        return getActionDao().loadAllActions().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }.map { it.toIAction() }
     }
 
-    suspend fun insertDeposit(action: Action) {
-        insertAction(action)
+    suspend fun insertDeposit(deposit: Deposit) {
+        insertAction(deposit)
     }
 
     // TODO Remove copy/paste from withdraw
-    suspend fun insertTrade(action: Action) {
-        if (action.positionId != null) {
-            insertAction(action)
+    suspend fun insertTrade(trade: Trade) {
+        if (trade.positionId != null) {
+            insertAction(trade)
         } else {
-            val positions = PositionRepository.loadPositions(action.sellTitle!!).filter { it.isActive() }
+            val positions = PositionRepository.loadPositions(trade.sellTitle).filter { it.isActive() }
             val oldestPosition = positions.first()
-            when (oldestPosition.amount.compareTo(action.sellAmount)) {
+            when (oldestPosition.amount.compareTo(trade.sellAmount)) {
                 0 -> {
-                    insertTrade(action.copy(positionId = oldestPosition.id))
+                    insertTrade(trade.copy(positionId = oldestPosition.id))
                 }
                 1 -> {
-                    insertSplit(oldestPosition, action.sellAmount!!);
-                    insertTrade(action)
+                    insertSplit(oldestPosition, trade.sellAmount);
+                    insertTrade(trade)
                 }
                 -1 -> {
                     var index = 1
-                    val mergeList = mutableListOf<Position>(oldestPosition, positions.get(1))
-                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount) == -1) {
+                    val mergeList = mutableListOf(oldestPosition, positions.get(1))
+                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellAmount) == -1) {
                         index++
                         mergeList.add(positions.get(index))
                     }
 
-                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount)) {
+                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellAmount)) {
                         0 -> {
                             mergeList.forEach {
-                                insertTrade(action.copy(positionId = it.id, sellAmount = it.amount))
+                                insertTrade(trade.copy(positionId = it.id, sellAmount = it.amount))
                             }
                         }
                         1 -> {
                             val splitPosition = mergeList.last()
-                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(trade.sellAmount)
                             insertSplit(splitPosition, splitAmount)
-                            insertTrade(action)
+                            insertTrade(trade)
                         }
                     }
                 }
@@ -65,41 +65,40 @@ object ActionRepository {
         }
     }
 
-
-    suspend fun insertWithdraw(action: Action) {
-        if (action.positionId != null) {
-            insertAction(action)
+    suspend fun insertWithdraw(withdraw: Withdraw) {
+        if (withdraw.positionId != null) {
+            insertAction(withdraw)
         } else {
-            val positions = PositionRepository.loadPositions(action.sellTitle!!).filter { it.isActive() }
+            val positions = PositionRepository.loadPositions(withdraw.title).filter { it.isActive() }
             val oldestPosition = positions.first()
-            when (oldestPosition.amount.compareTo(action.sellAmount)) {
+            when (oldestPosition.amount.compareTo(withdraw.amount)) {
                 0 -> {
-                    insertWithdraw(action.copy(positionId = oldestPosition.id))
+                    insertWithdraw(withdraw.copy(positionId = oldestPosition.id))
                 }
                 1 -> {
-                    insertSplit(oldestPosition, action.sellAmount!!);
-                    insertWithdraw(action)
+                    insertSplit(oldestPosition, withdraw.amount);
+                    insertWithdraw(withdraw)
                 }
                 -1 -> {
                     var index = 1
                     val mergeList = mutableListOf<Position>(oldestPosition, positions.get(1))
-                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount) == -1) {
+                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.amount) == -1) {
                         index++
                         mergeList.add(positions.get(index))
                     }
 
-                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(action.sellAmount)) {
+                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.amount)) {
                         0 -> {
                             mergeList.forEach {
-                                insertWithdraw(action.copy(positionId = it.id, sellAmount = it.amount))
+                                insertWithdraw(withdraw.copy(positionId = it.id, amount = it.amount))
                             }
                         }
                         1 -> {
                             val splitPosition = mergeList.last()
-                            val overflowAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(action.sellAmount!!)
+                            val overflowAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(withdraw.amount)
                             val splitAmount = splitPosition.amount.minus(overflowAmount)
                             insertSplit(splitPosition, splitAmount)
-                            insertWithdraw(action)
+                            insertWithdraw(withdraw)
                         }
                     }
                 }
@@ -111,22 +110,22 @@ object ActionRepository {
         insertAction(Action.split(position, sellAmount))
     }
 
-    suspend fun insertActions(actions: List<Action>) {
-        getActionDao().insertActions(actions)
+    suspend fun insertActions(actions: List<IAction>) {
+        getActionDao().insertActions(actions.map { it.toAction() })
         EventBus.getDefault().post(ActionEvents.Insert())
     }
 
-    suspend private fun insertAction(action: Action) {
-        getActionDao().insertAction(action)
+    private suspend fun insertAction(action: IAction) {
+        getActionDao().insertAction(action.toAction())
         EventBus.getDefault().post(ActionEvents.Insert())
     }
 
-    suspend fun updateAction(action: Action) {
-        getActionDao().updateAction(action); EventBus.getDefault().post(ActionEvents.Update())
+    suspend fun updateAction(action: IAction) {
+        getActionDao().updateAction(action.toAction()); EventBus.getDefault().post(ActionEvents.Update())
     }
 
-    suspend fun deleteAction(action: Action) {
-        getActionDao().deleteAction(action); EventBus.getDefault().post(ActionEvents.Delete())
+    suspend fun deleteAction(action: IAction) {
+        getActionDao().deleteAction(action.toAction()); EventBus.getDefault().post(ActionEvents.Delete())
     }
 
     suspend fun deleteAllActions() {

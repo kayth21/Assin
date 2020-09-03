@@ -30,28 +30,32 @@ data class Action(
         @ColumnInfo(name = "valueUsd") val valueUsd: BigDecimal? = null
 ) : Parcelable {
 
-    companion object {
-        val ACTION_ID = "com.ceaver.assin.actions.Action.actionId"
-        val ACTION_TYPE = "com.ceaver.assin.actions.Action.actionType"
-        val SYMBOL = "com.ceaver.assin.actions.Action.symbol"
+    fun toIAction(): IAction {
+        return when (actionType) {
+            ActionType.TRADE -> Trade.fromAction(this)
+            ActionType.SPLIT -> Split.fromAction(this)
+            ActionType.WITHDRAW -> Withdraw.fromAction(this)
+            ActionType.DEPOSIT -> Deposit.fromAction(this)
+        }
+    }
 
-        fun withdraw(position: Position) : Action {
-            return Action(
-                    actionType = ActionType.WITHDRAW,
-                    sellAmount = position.amount,
-                    sellTitle = position.title,
+    companion object {
+
+        fun withdraw(position: Position): Withdraw {
+            return Withdraw(
+                    amount = position.amount,
+                    title = position.title,
                     positionId = position.id,
                     valueUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
                     valueBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
             )
         }
 
-        fun split(position: Position, amount: BigDecimal) : Action {
-            return Action(
-                    actionType = ActionType.SPLIT,
-                    splitAmount = amount,
-                    splitRemaining = position.amount.minus(amount),
-                    splitTitle = position.title,
+        fun split(position: Position, amount: BigDecimal): Split {
+            return Split(
+                    amount = amount,
+                    remaining = position.amount.minus(amount),
+                    title = position.title,
                     positionId = position.id
             )
         }

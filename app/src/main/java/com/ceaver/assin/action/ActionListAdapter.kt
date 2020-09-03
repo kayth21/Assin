@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.action_list_row.view.*
 
 internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
 
-    var actionList: List<Action> = ArrayList()
-    var currentLongClickAction: Action? = null
+    var actionList: List<IAction> = ArrayList()
+    var currentLongClickAction: IAction? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.action_list_row, parent, false))
@@ -31,50 +31,14 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
             menu!!.add(3, 0, 0, "Delete")
         }
 
-        fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
-            view.actionListRowLeftImageView.setImageResource(getLeftImageResource(action))
-            view.actionListRowTradeTypeTextView.text = getActionTypeText(action)
-            view.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.actionDate)
-            view.actionListRowTradeTextView.text = getActionText(action)
-            view.actionListRowRightImageView.setImageResource(getRightImageResource(action))
+        fun bindItem(action: IAction, onClickListener: ActionListFragment.OnItemClickListener) {
+            view.actionListRowLeftImageView.setImageResource(action.getLeftImageResource())
+            view.actionListRowTradeTypeTextView.text = action.getTitleText()
+            view.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.getActionDate())
+            view.actionListRowTradeTextView.text = action.getDetailText()
+            view.actionListRowRightImageView.setImageResource(action.getRightImageResource())
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(action) }
-        }
-
-        private fun getActionTypeText(action: Action): String {
-            return when (action.actionType) {
-                ActionType.DEPOSIT -> "Deposit ${action.buyTitle!!.name}"
-                ActionType.WITHDRAW -> "Withdraw ${action.sellTitle!!.name}"
-                ActionType.TRADE -> "${action.sellTitle!!.name} -> ${action.buyTitle!!.name}"
-                ActionType.SPLIT -> "Split ${action.splitTitle!!.name} position"
-            }
-        }
-
-        private fun getActionText(action: Action): String {
-            return when (action.actionType) {
-                ActionType.DEPOSIT -> "${action.buyAmount!!} ${action.buyTitle!!.symbol}"
-                ActionType.WITHDRAW -> "${action.sellAmount!!} ${action.sellTitle!!.symbol}"
-                ActionType.TRADE -> "${action.sellAmount!!} ${action.sellTitle!!.symbol} -> ${action.buyAmount!!} ${action.buyTitle!!.symbol}"
-                ActionType.SPLIT -> "${action.splitAmount!!.add(action.splitRemaining)} ${action.splitTitle!!.symbol} splitted into ${action.splitAmount} ${action.splitTitle!!.symbol} and ${action.splitRemaining} ${action.splitTitle!!.symbol}"
-            }
-        }
-
-        private fun getRightImageResource(action: Action): Int {
-            return when (action.actionType) {
-                ActionType.DEPOSIT -> action.buyTitle!!.getIcon()
-                ActionType.WITHDRAW -> R.drawable.withdraw
-                ActionType.TRADE -> action.buyTitle!!.getIcon()
-                ActionType.SPLIT -> R.drawable.split
-            }
-        }
-
-        private fun getLeftImageResource(action: Action): Int {
-            return when (action.actionType) {
-                ActionType.DEPOSIT -> R.drawable.deposit
-                ActionType.WITHDRAW -> action.sellTitle!!.getIcon()
-                ActionType.TRADE -> action.sellTitle!!.getIcon()
-                ActionType.SPLIT -> action.splitTitle!!.getIcon()
-            }
         }
     }
 }

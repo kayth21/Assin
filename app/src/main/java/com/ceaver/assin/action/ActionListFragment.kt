@@ -44,8 +44,8 @@ class ActionListFragment : Fragment() {
         }
     }
 
-    private fun onAllActionsLoaded(actions: List<Action>) {
-        actionListAdapter.actionList = actions.toMutableList().sortedBy { it.actionDate }.reversed(); actionListAdapter.notifyDataSetChanged(); swipeRefreshLayout?.isRefreshing = false
+    private fun onAllActionsLoaded(actions: List<IAction>) {
+        actionListAdapter.actionList = actions.reversed(); actionListAdapter.notifyDataSetChanged(); swipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onStop() {
@@ -82,13 +82,12 @@ class ActionListFragment : Fragment() {
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: Action)
+        fun onItemClick(item: IAction)
     }
 
     private inner class OnListItemClickListener : OnItemClickListener {
-        override fun onItemClick(item: Action) {
-            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(item.actionType, item))
-
+        override fun onItemClick(item: IAction) {
+            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(item.getActionType(), item.toAction()))
         }
     }
 
