@@ -1,5 +1,6 @@
 package com.ceaver.assin.markets
 
+import androidx.lifecycle.LiveData
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.database.Database
 import java.util.*
@@ -42,7 +43,7 @@ object TitleRepository {
         return getTitleDao().loadActiveTitles()
     }
 
-    suspend fun loadActiveCryptoTitles(): List<Title> {
+    fun loadActiveCryptoTitles(): LiveData<List<Title>> {
         return getTitleDao().loadActiveCryptoTitles()
     }
 

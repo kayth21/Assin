@@ -5,77 +5,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
-import com.ceaver.assin.AssinWorkers
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.util.isConnected
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_market_list.*
-import kotlinx.coroutines.launch
+import com.ceaver.assin.R
+import com.ceaver.assin.databinding.MarketListFragmentBinding
+import kotlinx.android.synthetic.main.market_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class MarketListFragment : Fragment() {
 
+    private lateinit var viewModel: MarketListViewModel
     private val marketListAdapter = MarketListAdapter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = viewModels<MarketListViewModel>().value
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.ceaver.assin.R.layout.fragment_market_list, container, false)
+        val binding: MarketListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.market_list_fragment, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.marketList.adapter = marketListAdapter
+
+        viewModel.titles.observe(viewLifecycleOwner, Observer { marketListAdapter.titles = it })
+
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
-        marketList.adapter = marketListAdapter
         marketList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        marketSwipeRefreshLayout.setOnRefreshListener { refreshAllTitles() }
-        loadActiveCryptoTitles()
-    }
-
-    private fun refreshAllTitles() {
-        if (isConnected())
-            AssinWorkers.completeUpdate()
-        else {
-            Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
-        }
-    }
-
-    private fun loadActiveCryptoTitles() {
-        lifecycleScope.launch {
-            val cryptoTitles = TitleRepository.loadActiveCryptoTitles()
-            onAllTitlesLoaded(cryptoTitles);
-        }
-    }
-
-    private fun onAllTitlesLoaded(titles: List<Title>) {
-        marketListAdapter.titles = titles; marketListAdapter.notifyDataSetChanged(); marketSwipeRefreshLayout?.isRefreshing = false
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        loadActiveCryptoTitles()
-        Toast.makeText(getActivity(), "Markets refreshed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Markets refreshed", Toast.LENGTH_SHORT).show();
+        marketSwipeRefreshLayout?.isRefreshing = false
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
-        loadActiveCryptoTitles()
-        Toast.makeText(getActivity(), "Observed refreshed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Observed refreshed", Toast.LENGTH_SHORT).show();
+        marketSwipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-        marketList.adapter = null
-        marketSwipeRefreshLayout.setOnRefreshListener(null)
         marketList.removeItemDecorationAt(0) // TODO Seriously?
     }
 }

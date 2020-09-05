@@ -16,9 +16,8 @@ import com.ceaver.assin.R
 import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.util.isConnected
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_asset_list.marketFrameLayout
+import kotlinx.android.synthetic.main.fragment_asset_list.*
 import kotlinx.android.synthetic.main.fragment_intention_list.*
-import kotlinx.android.synthetic.main.fragment_market_list.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -47,7 +46,7 @@ class IntentionListFragment : Fragment() {
                     AssinWorkers.observedUpdate()
                 }
             else {
-                Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); marketSwipeRefreshLayout.isRefreshing = false
+                Snackbar.make(marketFrameLayout, "no internet connection", Snackbar.LENGTH_LONG).show(); intentionListFragmentSwipeRefreshLayout.isRefreshing = false
             }
         }
     }

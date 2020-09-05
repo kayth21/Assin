@@ -1,5 +1,6 @@
 package com.ceaver.assin.markets
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -15,7 +16,7 @@ interface TitleDao {
     suspend fun loadActiveTitles(): List<Title>
 
     @Query("select * from title where active >= 0 and category = 'CRYPTO' order by rank")
-    suspend fun loadActiveCryptoTitles(): List<Title>
+    fun loadActiveCryptoTitles(): LiveData<List<Title>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTitle(title: Title)

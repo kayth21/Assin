@@ -11,8 +11,11 @@ import kotlinx.android.synthetic.main.market_list_row.view.*
 
 internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHolder>() {
 
-    var titles: List<Title> = ArrayList()
-
+    var titles = listOf<Title>()
+        set(value) {
+            field = value
+            notifyDataSetChanged();
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.market_list_row, parent, false))
@@ -24,7 +27,7 @@ internal class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.ViewHo
 
     override fun getItemCount() = titles.size
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(title: Title) {
             view.titleImageView.setImageResource(title.getIcon())
