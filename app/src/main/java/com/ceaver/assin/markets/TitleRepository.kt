@@ -95,6 +95,10 @@ object TitleRepository {
         getTitleDao().deleteTitles(titles)
     }
 
+    suspend fun marketUpdate(titlesToInsert: Set<Title>, titlesToUpdate: Set<Title>, titlesToDelete: Set<Title>) {
+        getTitleDao().marketUpdate(titlesToInsert, titlesToUpdate, titlesToDelete)
+    }
+
     private fun getTitleDao(): TitleDao {
         return getDatabase().titleDao()
     }
@@ -102,6 +106,4 @@ object TitleRepository {
     private fun getDatabase(): Database {
         return Database.getInstance()
     }
-
-
 }

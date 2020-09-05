@@ -53,4 +53,11 @@ interface TitleDao {
 
     @Query("select symbol from title where category = 'FIAT' order by rank")
     suspend fun loadFiatSymbols(): List<String>
+
+    @Transaction
+    suspend fun marketUpdate(titlesToInsert: Set<Title>, titlesToUpdate: Set<Title>, titlesToDelete: Set<Title>) {
+        insertTitles(titlesToInsert)
+        updateTitles(titlesToUpdate)
+        deleteTitles(titlesToDelete)
+    }
 }

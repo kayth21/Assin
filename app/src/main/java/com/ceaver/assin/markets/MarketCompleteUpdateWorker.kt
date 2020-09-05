@@ -20,10 +20,9 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
             val removedTitlesToDelete = removedTitles.filter { it.inactive() }
             val removedTitlesToUpdate = (removedTitles - removedTitlesToDelete).map { it.decreaseActiveCounter() }
 
-            TitleRepository.insertAll(newTitlesToInsert)
-            TitleRepository.updateAll((existingTitlesToUpdate + removedTitlesToUpdate).toSet())
-            TitleRepository.deleteTitles(removedTitlesToDelete.toSet())
+            TitleRepository.marketUpdate(newTitlesToInsert, (existingTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
 
+            // TODO Transaction Update
             existingTitlesToUpdate.filter { it.active == 50 }.forEach { LogRepository.insertLog("Activated  ${it.name} (${it.symbol}).") }
             removedTitlesToDelete.forEach { LogRepository.insertLog("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }

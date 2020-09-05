@@ -20,7 +20,11 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         val CONTEXT_MENU_INTENTION_ITEM_ID = Random.nextInt()
     }
 
-    var assets: List<Asset> = ArrayList()
+    var assets = listOf<Asset>()
+        set(value) {
+            field = value.sortedBy { it.btcValue }.reversed()
+            notifyDataSetChanged();
+        }
     var currentLongClickAsset: Asset? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +38,7 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
 
     override fun getItemCount() = assets.size
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_DEPOSIT_ITEM_ID, 0, "Deposit")

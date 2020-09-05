@@ -1,8 +1,11 @@
 package com.ceaver.assin.assets
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.assets.overview.AssetOverview
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleRepository
 
 object AssetRepository {
 
@@ -12,6 +15,38 @@ object AssetRepository {
             AssetOverview()
         else
             allAssets.map { AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue); }
+    }
+
+    fun loadAllAssetsObserved(): LiveData<List<Asset>> {
+        val titleLiveData = TitleRepository.loadActiveCryptoTitles()
+        val actionLiveData = ActionRepository.loadAllActionsObserved()
+
+        return MediatorLiveData<List<Asset>>().apply {
+            fun update() {
+                val titles = titleLiveData.value ?: return
+                val actions = actionLiveData.value ?: return
+
+                val assets = actions.map { it.toActionEntity() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
+                val buyPairs = assets.filter { it.buyTitle != null }.map { Pair(it.buyTitle!!, it.buyAmount!!) }
+                val sellPairs = assets.filter { it.sellTitle != null }.map { Pair(it.sellTitle!!, it.sellAmount!!.unaryMinus()) }
+                val allPairs = buyPairs + sellPairs
+
+                value = allPairs.groupBy { it.first }
+                        .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
+                        .map {
+                            Asset(
+                                    title = it.first,
+                                    amount = it.second,
+                                    btcValue = it.first.priceBtc!!.toBigDecimal().times(it.second),
+                                    usdValue = it.first.priceUsd!!.toBigDecimal().times(it.second))
+                        }
+            }
+
+            addSource(titleLiveData) { update() }
+            addSource(actionLiveData) { update() }
+
+            update()
+        }
     }
 
 
