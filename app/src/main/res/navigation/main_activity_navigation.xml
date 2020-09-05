@@ -78,7 +78,7 @@
     </fragment>
     <fragment
         android:id="@+id/actionListFragment"
-        android:name="com.ceaver.assin.action.ActionListFragment"
+        android:name="com.ceaver.assin.action.list.ActionListFragment"
         android:label="Action List" >
         <action
             android:id="@+id/action_actionListFragment_to_actionInputFragment"

@@ -1,84 +1,60 @@
-package com.ceaver.assin.action
+package com.ceaver.assin.action.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_action_list.*
+import com.ceaver.assin.R
+import com.ceaver.assin.action.Action
+import com.ceaver.assin.action.ActionRepository
+import com.ceaver.assin.action.ActionType
+import com.ceaver.assin.databinding.ActionListFragmentBinding
+import kotlinx.android.synthetic.main.action_list_fragment.*
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 class ActionListFragment : Fragment() {
 
     private val actionListAdapter = ActionListAdapter(OnListItemClickListener())
+    private lateinit var viewModel: ActionListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = viewModels<ActionListViewModel>().value
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.ceaver.assin.R.layout.fragment_action_list, container, false)
+        val binding: ActionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.action_list_fragment, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.actionList.adapter = actionListAdapter
+
+        viewModel.titles.observe(viewLifecycleOwner, Observer { actionListAdapter.actions = it })
+
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
-        actionList.adapter = actionListAdapter
         actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createTradeButton.setOnClickListener {
             findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE))
         }
-        loadAllActions()
-        swipeRefreshLayout.setOnRefreshListener { loadAllActions() }
-    }
-
-    private fun loadAllActions() {
-        lifecycleScope.launch {
-            val actions = ActionRepository.loadAllActions()
-            onAllActionsLoaded(actions)
-        }
-    }
-
-    private fun onAllActionsLoaded(actions: List<Action>) {
-        actionListAdapter.actionList = actions.reversed(); actionListAdapter.notifyDataSetChanged(); swipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this)
-        actionList.adapter = null
         actionList.removeItemDecorationAt(0)  // TODO Seriously?
         createTradeButton.setOnClickListener(null)
-        swipeRefreshLayout.setOnRefreshListener(null)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.DeleteAll) {
-        loadAllActions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Delete) {
-        loadAllActions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Insert) {
-        loadAllActions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Update) {
-        loadAllActions()
     }
 
     interface OnItemClickListener {

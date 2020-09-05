@@ -1,5 +1,6 @@
 package com.ceaver.assin.action
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -7,6 +8,9 @@ interface ActionEntityDao {
 
     @Query("select * from action where id = :id")
     suspend fun loadActionEntity(id: Long): ActionEntity
+
+    @Query("select * from action")
+    fun loadAllActionEntitiesObserved(): LiveData<List<ActionEntity>>
 
     @Query("select * from action")
     suspend fun loadAllActionEntities(): List<ActionEntity>

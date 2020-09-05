@@ -1,5 +1,7 @@
 package com.ceaver.assin.action
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
@@ -10,6 +12,10 @@ object ActionRepository {
 
     suspend fun loadAction(id: Long): Action {
         return getActionDao().loadActionEntity(id).toAction()
+    }
+
+    fun loadAllActionsObserved(): LiveData<List<Action>> {
+        return Transformations.map(getActionDao().loadAllActionEntitiesObserved()) { it.map { it.toAction() } }
     }
 
     suspend fun loadAllActions(): List<Action> {
