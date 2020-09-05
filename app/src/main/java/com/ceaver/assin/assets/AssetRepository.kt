@@ -2,6 +2,7 @@ package com.ceaver.assin.assets
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Transformations
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.assets.overview.AssetOverview
 import com.ceaver.assin.markets.Title
@@ -9,12 +10,9 @@ import com.ceaver.assin.markets.TitleRepository
 
 object AssetRepository {
 
-    suspend fun loadAssetOverview(): AssetOverview {
-        val allAssets = loadAllAssets()
-        return if (allAssets.isEmpty())
-            AssetOverview()
-        else
-            allAssets.map { AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue); }
+    fun loadAssetOverviewObserved(): LiveData<AssetOverview> {
+        val assetLiveData = loadAllAssetsObserved()
+        return Transformations.map(assetLiveData) { it.map {AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue)}}
     }
 
     fun loadAllAssetsObserved(): LiveData<List<Asset>> {
