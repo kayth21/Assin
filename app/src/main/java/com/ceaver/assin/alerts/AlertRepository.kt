@@ -1,5 +1,6 @@
 package com.ceaver.assin.alerts
 
+import androidx.lifecycle.LiveData
 import com.ceaver.assin.database.Database
 import org.greenrobot.eventbus.EventBus
 
@@ -9,8 +10,12 @@ object AlertRepository {
         return getAlertDao().loadAlert(id)
     }
 
-    suspend fun loadAllAlerts(): List<Alert> {
+    fun loadAllAlerts(): List<Alert> {
         return getAlertDao().loadAllAlerts()
+    }
+
+    fun loadAllAlertsObserved(): LiveData<List<Alert>> {
+        return getAlertDao().loadAllAlertsObserved()
     }
 
     suspend fun saveAlert(alert: Alert) {

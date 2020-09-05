@@ -1,75 +1,56 @@
-package com.ceaver.assin.alerts
+package com.ceaver.assin.alerts.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
+import com.ceaver.assin.alerts.Alert
+import com.ceaver.assin.alerts.AlertRepository
+import com.ceaver.assin.databinding.AlertListFragmentBinding
 import kotlinx.android.synthetic.main.alert_list_fragment.*
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class AlertListFragment : Fragment() {
 
     private val alertListAdapter = AlertListAdapter(OnListItemClickListener())
+    private lateinit var viewModel: AlertListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = viewModels<AlertListViewModel>().value
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.alert_list_fragment, container, false)
+        val binding: AlertListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.alert_list_fragment, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.alertList.adapter = alertListAdapter
+
+        viewModel.alerts.observe(viewLifecycleOwner, Observer { alertListAdapter.alerts = it })
+
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
-        alertList.adapter = alertListAdapter
         alertList.addItemDecoration(DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
         createAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
-        loadAllAlerts()
-        alertSwipeRefreshLayout.setOnRefreshListener { loadAllAlerts() }
-    }
-
-    private fun loadAllAlerts() {
-        lifecycleScope.launch {
-            val alerts = AlertRepository.loadAllAlerts()
-            onAllAlertsLoaded(alerts)
-        }
-    }
-
-    private fun onAllAlertsLoaded(alerts: List<Alert>) {
-        alertListAdapter.alertList = alerts; alertListAdapter.notifyDataSetChanged(); alertSwipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this);
-        alertList.adapter = null
+        alertList.removeItemDecorationAt(0)  // TODO Seriously?
         createAlertButton.setOnClickListener(null)
-        alertSwipeRefreshLayout.setOnRefreshListener(null)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AlertEvents.Delete) {
-        loadAllAlerts()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AlertEvents.Insert) {
-        loadAllAlerts()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AlertEvents.Update) {
-        loadAllAlerts()
     }
 
     interface OnItemClickListener {

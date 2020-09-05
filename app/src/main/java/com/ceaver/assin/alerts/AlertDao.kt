@@ -1,11 +1,15 @@
 package com.ceaver.assin.alerts
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
 interface AlertDao {
     @Query("select * from alert")
-    suspend fun loadAllAlerts(): List<Alert>
+    fun loadAllAlerts(): List<Alert>
+
+    @Query("select * from alert")
+    fun loadAllAlertsObserved(): LiveData<List<Alert>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAlert(alert: Alert)

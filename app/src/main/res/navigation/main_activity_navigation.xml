@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/alertListFragment"
-        android:name="com.ceaver.assin.alerts.AlertListFragment"
+        android:name="com.ceaver.assin.alerts.list.AlertListFragment"
         android:label="Alert List" >
         <action
             android:id="@+id/action_alertListActivity_to_alertInputFragment"
