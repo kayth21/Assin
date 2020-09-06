@@ -62,6 +62,7 @@ data class Split(
                 comment.orEmpty())
     }
 
+    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.SPLIT
     override fun getLeftImageResource(): Int = title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.split

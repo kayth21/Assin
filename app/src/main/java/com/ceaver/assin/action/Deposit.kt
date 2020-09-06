@@ -52,6 +52,7 @@ data class Deposit(
                 comment.orEmpty())
     }
 
+    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.DEPOSIT
     override fun getLeftImageResource(): Int = R.drawable.deposit
     override fun getRightImageResource(): Int = title.getIcon()

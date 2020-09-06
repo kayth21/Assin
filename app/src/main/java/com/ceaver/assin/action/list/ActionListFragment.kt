@@ -38,7 +38,7 @@ class ActionListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.actionList.adapter = actionListAdapter
 
-        viewModel.titles.observe(viewLifecycleOwner, Observer { actionListAdapter.actions = it })
+        viewModel.titles.observe(viewLifecycleOwner, Observer { actionListAdapter.submitList(it.reversed()) })
 
         return binding.root
     }

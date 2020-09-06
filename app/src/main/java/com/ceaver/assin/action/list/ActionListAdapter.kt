@@ -4,45 +4,40 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
+import com.ceaver.assin.databinding.ActionListRowBinding
 import com.ceaver.assin.util.CalendarHelper
-import kotlinx.android.synthetic.main.action_list_row.view.*
 
-internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
+internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : ListAdapter<Action, ActionListAdapter.ViewHolder>(Action.Difference) {
 
-    var actions = listOf<Action>()
-    set(value) {
-        field = value.reversed()
-        notifyDataSetChanged();
-    }
     var currentLongClickAction: Action? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.action_list_row, parent, false))
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ActionListRowBinding.inflate(layoutInflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(actions[position], onClickListener)
-        holder.itemView.setOnLongClickListener { currentLongClickAction = actions[position]; false }
+        holder.bindItem(getItem(position), onClickListener)
+        holder.itemView.setOnLongClickListener { currentLongClickAction = getItem(holder.layoutPosition); false }
     }
 
-    override fun getItemCount() = actions.size
-
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+    class ViewHolder(val binding: ActionListRowBinding) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(3, 0, 0, "Delete")
         }
 
         fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
-            view.actionListRowLeftImageView.setImageResource(action.getLeftImageResource())
-            view.actionListRowTradeTypeTextView.text = action.getTitleText()
-            view.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.getActionDate())
-            view.actionListRowTradeTextView.text = action.getDetailText()
-            view.actionListRowRightImageView.setImageResource(action.getRightImageResource())
-            view.setOnCreateContextMenuListener(this)
+            binding.actionListRowLeftImageView.setImageResource(action.getLeftImageResource())
+            binding.actionListRowTradeTypeTextView.text = action.getTitleText()
+            binding.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.getActionDate())
+            binding.actionListRowTradeTextView.text = action.getDetailText()
+            binding.actionListRowRightImageView.setImageResource(action.getRightImageResource())
+            itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(action) }
         }
     }

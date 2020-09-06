@@ -50,6 +50,7 @@ data class Trade(
         }
     }
 
+    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.TRADE
     override fun getLeftImageResource(): Int = sellTitle.getIcon()
     override fun getRightImageResource(): Int = buyTitle.getIcon()

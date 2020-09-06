@@ -70,6 +70,7 @@ data class Withdraw(
                 positionId!!.toPlainString())
     }
 
+    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.WITHDRAW
     override fun getLeftImageResource(): Int = title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.withdraw
