@@ -1,4 +1,4 @@
-package com.ceaver.assin.intentions
+package com.ceaver.assin.intentions.list
 
 import android.view.ContextMenu
 import android.view.LayoutInflater
@@ -7,25 +7,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.intentions.Intention
 import kotlinx.android.synthetic.main.intention_list_row.view.*
 
 internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
 
-    var intentionList: List<Intention> = ArrayList()
+    var intentions = listOf<Intention>()
+        set(value) {
+            field = value.sortedBy { it.percentToReferencePrice }.reversed()
+            notifyDataSetChanged();
+        }
     var currentLongClickIntention: Intention? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntentionListAdapter.IntentionViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntentionViewHolder {
         return IntentionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.intention_list_row, parent, false))
     }
 
-    override fun getItemCount(): Int = intentionList.size
+    override fun getItemCount(): Int = intentions.size
 
     override fun onBindViewHolder(holder: IntentionViewHolder, position: Int) {
-        holder.bindItem(intentionList[position], onClickListener)
-        holder.itemView.setOnLongClickListener { currentLongClickIntention = intentionList[position]; false }
+        holder.bindItem(intentions[position], onClickListener)
+        holder.itemView.setOnLongClickListener { currentLongClickIntention = intentions[position]; false }
     }
 
-    inner class IntentionViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+    class IntentionViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(2, 0, 0, "Delete")
         }

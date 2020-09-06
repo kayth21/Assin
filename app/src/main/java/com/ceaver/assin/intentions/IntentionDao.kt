@@ -1,10 +1,15 @@
 package com.ceaver.assin.intentions
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
+
 @Dao
 interface IntentionDao {
     @Query("select * from intention")
-    suspend fun loadAllIntentions(): List<Intention>
+    fun loadAllIntentions(): List<Intention>
+
+    @Query("select * from intention")
+    fun loadAllIntentionsObserved(): LiveData<List<Intention>>
 
     @Query("select * from intention where id = :id")
     suspend fun loadIntentionById(id: Long): Intention

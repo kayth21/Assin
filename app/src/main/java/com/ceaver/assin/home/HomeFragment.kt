@@ -10,7 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetFragment
-import com.ceaver.assin.intentions.IntentionListFragment
+import com.ceaver.assin.intentions.list.IntentionListFragment
 import com.ceaver.assin.markets.MarketFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.home_fragment.*

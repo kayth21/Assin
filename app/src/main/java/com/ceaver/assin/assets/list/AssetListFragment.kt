@@ -65,14 +65,14 @@ class AssetListFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Complete) {
         Toast.makeText(activity, "Markets refreshed", Toast.LENGTH_SHORT).show();
-        assetSwipeRefreshLayout?.isRefreshing = false
+        viewModel.loading.set(false)
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: AssinWorkerEvents.Observed) {
         Toast.makeText(activity, "Observed refreshed", Toast.LENGTH_SHORT).show();
-        assetSwipeRefreshLayout?.isRefreshing = false
+        viewModel.loading.set(false)
     }
 
     interface OnItemClickListener {

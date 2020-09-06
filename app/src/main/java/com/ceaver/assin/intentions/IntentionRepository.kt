@@ -1,6 +1,9 @@
 package com.ceaver.assin.intentions
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.ceaver.assin.database.Database
+import com.ceaver.assin.markets.TitleRepository
 import org.greenrobot.eventbus.EventBus
 
 object IntentionRepository {
@@ -9,8 +12,27 @@ object IntentionRepository {
         return getIntentionDao().loadIntentionById(id)
     }
 
-    suspend fun loadAllIntentions(): List<Intention> {
+    fun loadAllIntentions(): List<Intention> {
         return getIntentionDao().loadAllIntentions()
+    }
+
+    fun loadAllIntentionsObserved(): LiveData<List<Intention>> {
+        val activeCryptoTitlesObserved = TitleRepository.loadActiveCryptoTitles()
+        val intentionsObserved = getIntentionDao().loadAllIntentionsObserved()
+
+        return MediatorLiveData<List<Intention>>().apply {
+            fun update() {
+                val titles = activeCryptoTitlesObserved.value ?: return
+                val intentions = intentionsObserved.value ?: return
+
+                value = intentions
+            }
+
+            addSource(activeCryptoTitlesObserved) { update() }
+            addSource(intentionsObserved) { update() }
+
+            update()
+        }
     }
 
     suspend fun saveIntention(intention: Intention) {
