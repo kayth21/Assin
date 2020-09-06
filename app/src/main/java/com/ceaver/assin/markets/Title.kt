@@ -1,6 +1,7 @@
 package com.ceaver.assin.markets
 
 import android.os.Parcelable
+import androidx.recyclerview.widget.DiffUtil
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -124,4 +125,15 @@ data class Title(//
         val identifier = AssinApplication.appContext!!.resIdByName(symbol.toLowerCase(Locale.ROOT), "drawable")
         return if (identifier == 0 || Character.isDigit(symbol[0])) R.drawable.generic else identifier // TODO some weird bug with symols that start with a number, e.g. 42
     }
+
+    object Difference : DiffUtil.ItemCallback<Title>() {
+        override fun areItemsTheSame(oldItem: Title, newItem: Title): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Title, newItem: Title): Boolean {
+            return oldItem == newItem
+        }
+    }
 }
+

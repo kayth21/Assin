@@ -1,105 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/titleRankTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="2dp"
-        android:text="TextView"
-        android:textSize="8sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="title"
+            type="com.ceaver.assin.markets.Title" />
+    </data>
 
-    <TextView
-        android:id="@+id/titleSymbolTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:text="TextView"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/titleImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/titleNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/titleSymbolTextView"
-        app:layout_constraintTop_toBottomOf="@+id/titleSymbolTextView" />
+        <TextView
+            android:id="@+id/titleRankTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="2dp"
+            android:textSize="8sp"
+            app:titleRank="@{title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/titleCryptoPriceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/title1hChangeTextView"
-        app:layout_constraintStart_toEndOf="@+id/titleSymbolTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/titleSymbolTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:text="@{title.symbol}"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/titleImageView"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/titleFiatPriceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="@+id/titleCryptoPriceTextView"
-        app:layout_constraintStart_toStartOf="@+id/titleCryptoPriceTextView"
-        app:layout_constraintTop_toBottomOf="@+id/titleCryptoPriceTextView" />
+        <TextView
+            android:id="@+id/titleNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{title.name}"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@+id/titleSymbolTextView"
+            app:layout_constraintTop_toBottomOf="@+id/titleSymbolTextView" />
 
-    <TextView
-        android:id="@+id/title1hChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="12dp"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/titleCryptoPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:titleBtcPrice="@{title}"
+            app:layout_constraintEnd_toStartOf="@+id/title1hChangeTextView"
+            app:layout_constraintStart_toEndOf="@+id/titleSymbolTextView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/title24hChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/title1hChangeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/title1hChangeTextView" />
+        <TextView
+            android:id="@+id/titleFiatPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:titleUsdPrice="@{title}"
+            app:layout_constraintEnd_toEndOf="@+id/titleCryptoPriceTextView"
+            app:layout_constraintStart_toStartOf="@+id/titleCryptoPriceTextView"
+            app:layout_constraintTop_toBottomOf="@+id/titleCryptoPriceTextView" />
 
-    <TextView
-        android:id="@+id/title7dChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/title24hChangeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/title24hChangeTextView" />
+        <TextView
+            android:id="@+id/title1hChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="12dp"
+            android:textSize="10sp"
+            app:title1hChange="@{title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/titleImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/title24hChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            app:title24hChange="@{title}"
+            app:layout_constraintEnd_toEndOf="@+id/title1hChangeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/title1hChangeTextView" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/title7dChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="10sp"
+            app:title7dChange="@{title}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/title24hChangeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/title24hChangeTextView" />
+
+        <ImageView
+            android:id="@+id/titleImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:titleImage="@{title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

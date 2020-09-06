@@ -35,7 +35,7 @@ class MarketListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.marketList.adapter = marketListAdapter
 
-        viewModel.titles.observe(viewLifecycleOwner, Observer { marketListAdapter.titles = it })
+        viewModel.titles.observe(viewLifecycleOwner, Observer { marketListAdapter.submitList(it) })
 
         return binding.root
     }
