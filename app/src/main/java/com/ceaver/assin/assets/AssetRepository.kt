@@ -12,7 +12,7 @@ object AssetRepository {
 
     fun loadAssetOverviewObserved(): LiveData<AssetOverview> {
         val assetLiveData = loadAllAssetsObserved()
-        return Transformations.map(assetLiveData) { it.map {AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue)}}
+        return Transformations.map(assetLiveData) { it.map { AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue) } }
     }
 
     fun loadAllAssetsObserved(): LiveData<List<Asset>> {
@@ -64,16 +64,32 @@ object AssetRepository {
                 }
     }
 
-    suspend fun loadAsset(title: Title): Asset {
-        val actions = ActionRepository.loadActions(title.symbol).map { it.toActionEntity() } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
-        val buyActions = actions.filter { it.buyTitle?.symbol == title.symbol }.map { it.buyAmount!! }
-        val sellActions = actions.filter { it.sellTitle?.symbol == title.symbol }.map { it.sellAmount!!.unaryMinus() }
-        val allActions = buyActions + sellActions
-        val amount = allActions.reduce { x, y -> x.add(y) }
-        return Asset(
-                title = title,
-                amount = amount,
-                btcValue = title.priceBtc!!.toBigDecimal().times(amount),
-                usdValue = title.priceUsd!!.toBigDecimal().times(amount))
+    fun loadAssetObserved(title: Title): LiveData<Asset> {
+        val titleLiveData = TitleRepository.loadActiveCryptoTitles()
+        val actionLiveData = ActionRepository.loadAllActionsObserved()
+
+        return MediatorLiveData<Asset>()
+                .apply {
+                    fun update() {
+                        val titles = titleLiveData.value ?: return
+                        val actions = actionLiveData.value ?: return
+
+                        val actionEntities = actions.map { it.toActionEntity() }.filter { it.buyTitle?.symbol == title.symbol || it.sellTitle?.symbol == title.symbol } // TODO ActionRepository.loadDeposits, loadWithdraws, etc.
+                        val buyActions = actionEntities.filter { it.buyTitle?.symbol == title.symbol }.map { it.buyAmount!! }
+                        val sellActions = actionEntities.filter { it.sellTitle?.symbol == title.symbol }.map { it.sellAmount!!.unaryMinus() }
+                        val allActions = buyActions + sellActions
+                        val amount = allActions.reduce { x, y -> x.add(y) }
+                        value = Asset(
+                                title = title,
+                                amount = amount,
+                                btcValue = title.priceBtc!!.toBigDecimal().times(amount),
+                                usdValue = title.priceUsd!!.toBigDecimal().times(amount))
+                    }
+
+                    addSource(titleLiveData) { update() }
+                    addSource(actionLiveData) { update() }
+
+                    update()
+                }
     }
 }
