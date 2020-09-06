@@ -1,5 +1,6 @@
 package com.ceaver.assin.logging
 
+import androidx.lifecycle.LiveData
 import com.ceaver.assin.database.Database
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
@@ -31,6 +32,10 @@ object LogRepository {
 
     suspend fun loadAllLogs(): List<Log> {
         return getLogDao().loadAllLogs()
+    }
+
+    fun loadAllLogsObserved(): LiveData<List<Log>> {
+        return getLogDao().loadAllLogsObserved()
     }
 
     private fun getLogDao(): LogDao {

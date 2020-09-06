@@ -1,5 +1,6 @@
 package com.ceaver.assin.logging
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import java.util.*
 
@@ -7,6 +8,9 @@ import java.util.*
 interface LogDao {
     @Query("select * from log")
     suspend fun loadAllLogs(): List<Log>
+
+    @Query("select * from log")
+    fun loadAllLogsObserved(): LiveData<List<Log>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertLog(log: Log)

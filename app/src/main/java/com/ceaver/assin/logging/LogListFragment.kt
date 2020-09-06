@@ -4,61 +4,45 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
+import com.ceaver.assin.databinding.LogListFragmentBinding
 import kotlinx.android.synthetic.main.log_list_fragment.*
-import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class LogListFragment : Fragment() {
 
     private val logListAdapter = LogListAdapter()
+    private lateinit var viewModel: LogListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = viewModels<LogListViewModel>().value
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.log_list_fragment, container, false)
+        val binding: LogListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.log_list_fragment, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.logList.adapter = logListAdapter
+
+        viewModel.logs.observe(viewLifecycleOwner, Observer { logListAdapter.logs = it })
+
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
-        logList.adapter = logListAdapter
         logList.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        loadAllLogs()
-        logSwipeRefreshLayout.setOnRefreshListener { loadAllLogs() }
-    }
-
-    private fun loadAllLogs() {
-        lifecycleScope.launch {
-            val allLogs = LogRepository.loadAllLogs()
-            onAllLogsLoaded(allLogs.sortedByDescending { it.id })
-        }
-    }
-
-    private fun onAllLogsLoaded(logs: List<Log>) {
-        logListAdapter.logList = logs; logListAdapter.notifyDataSetChanged(); logSwipeRefreshLayout.isRefreshing = false
     }
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this);
-        logList.adapter = null
-        logSwipeRefreshLayout.setOnRefreshListener(null)
+        logList.removeItemDecorationAt(0) // TODO Seriously?
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: LogEvents.Insert) {
-        loadAllLogs()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: LogEvents.Update) {
-        loadAllLogs()
-    }
 }

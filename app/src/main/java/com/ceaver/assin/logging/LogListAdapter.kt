@@ -9,19 +9,23 @@ import kotlinx.android.synthetic.main.log_list_row.view.*
 import java.time.format.DateTimeFormatter
 
 class LogListAdapter : RecyclerView.Adapter<LogListAdapter.ViewHolder>() {
-    var logList: List<Log> = ArrayList()
+    var logs = listOf<Log>()
+        set(value) {
+            field = value.sortedByDescending { it.id }
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.log_list_row, parent, false))
     }
 
-    override fun onBindViewHolder(holder: LogListAdapter.ViewHolder, position: Int) {
-        holder.bindItem(logList[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindItem(logs[position])
     }
 
-    override fun getItemCount() = logList.size
+    override fun getItemCount() = logs.size
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindItem(log: Log) {
             view.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
