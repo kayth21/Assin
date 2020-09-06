@@ -36,7 +36,7 @@ class AlertListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alertList.adapter = alertListAdapter
 
-        viewModel.alerts.observe(viewLifecycleOwner, Observer { alertListAdapter.alerts = it })
+        viewModel.alerts.observe(viewLifecycleOwner, Observer { alertListAdapter.submitList(it) })
 
         return binding.root
     }

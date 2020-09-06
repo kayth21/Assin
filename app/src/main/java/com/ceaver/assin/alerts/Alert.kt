@@ -1,6 +1,7 @@
 package com.ceaver.assin.alerts
 
 import android.os.Parcelable
+import androidx.recyclerview.widget.DiffUtil
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -31,4 +32,14 @@ data class Alert(//
         @ColumnInfo(name = "target") val target: BigDecimal) : Parcelable {
 
     fun isNew(): Boolean = this.id == 0L;
+
+    object Difference : DiffUtil.ItemCallback<Alert>() {
+        override fun areItemsTheSame(oldItem: Alert, newItem: Alert): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Alert, newItem: Alert): Boolean {
+            return oldItem == newItem
+        }
+    }
 }
