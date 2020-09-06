@@ -21,21 +21,25 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
         val CONTEXT_MENU_WITHDRAW_ITEM_ID = Random.nextInt() // TODO
     }
 
-    var positionList: List<Position> = ArrayList()
+    var positions = listOf<Position>()
+        set(value) {
+            field = value.sortedByDescending { it.id }
+            notifyDataSetChanged()
+        }
     var currentLongClickPosition: Position? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PositionViewHolder {
         return PositionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.position_list_row, parent, false))
     }
 
-    override fun getItemCount(): Int = positionList.size
+    override fun getItemCount(): Int = positions.size
 
     override fun onBindViewHolder(holder: PositionViewHolder, position: Int) {
-        holder.bindItem(positionList[position], onClickListener)
-        holder.itemView.setOnLongClickListener { currentLongClickPosition = positionList[position]; false }
+        holder.bindItem(positions[position], onClickListener)
+        holder.itemView.setOnLongClickListener { currentLongClickPosition = positions[position]; false }
     }
 
-    inner class PositionViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+    class PositionViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             menu!!.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_WITHDRAW_ITEM_ID, 0, "Withdraw")
         }

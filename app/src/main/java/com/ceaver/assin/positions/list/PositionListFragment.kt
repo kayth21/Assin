@@ -5,93 +5,52 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
-import com.ceaver.assin.action.ActionEvents
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.Withdraw
+import com.ceaver.assin.databinding.PositionListFragmentBinding
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
-import com.ceaver.assin.positions.PositionRepository
 import kotlinx.android.synthetic.main.position_list_fragment.*
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class PositionListFragment(val title: Title) : Fragment() {
 
     private val positionListAdapter = PositionListAdapter(OnListItemClickListener(), this)
+    private lateinit var viewModel: PositionListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = viewModels<PositionListViewModel> { PositionListViewModel.Factory(title) }.value
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.position_list_fragment, container, false)
+        val binding: PositionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.position_list_fragment, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.positionListFragmentPositionList.adapter = positionListAdapter
+
+        viewModel.positions.observe(viewLifecycleOwner, Observer { positionListAdapter.positions = it })
+
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this);
-        positionListFragmentPositionList.adapter = positionListAdapter
         positionListFragmentPositionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO seriously?
-        loadAllPositions()
     }
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this)
-        positionListFragmentPositionList.adapter = null
         positionListFragmentPositionList.removeItemDecorationAt(0) // TODO seriously?
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AssinWorkerEvents.Complete) {
-        loadAllPositions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: AssinWorkerEvents.Observed) {
-        loadAllPositions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Delete) {
-        loadAllPositions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Insert) {
-        loadAllPositions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.Update) {
-        loadAllPositions()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ActionEvents.DeleteAll) {
-        loadAllPositions()
-    }
-
-    private fun loadAllPositions() {
-        lifecycleScope.launch {
-            val loadPositions = PositionRepository.loadPositions(title)
-            onAllPositionsLoaded(loadPositions.sortedByDescending { it.id })
-        }
-    }
-
-    private fun onAllPositionsLoaded(positions: List<Position>) {
-        positionListAdapter.positionList = positions
-        positionListFragmentPositionList.adapter = positionListAdapter // instead of positionListAdapter.notifyDataSetChanged() to force context-menu reset
     }
 
     interface OnItemClickListener {
@@ -118,7 +77,6 @@ class PositionListFragment(val title: Title) : Fragment() {
     private fun withdraw(selectedPosition: Position) {
         lifecycleScope.launch {
             ActionRepository.insertWithdraw(Withdraw.fromPosition(selectedPosition))
-            loadAllPositions()
         }
     }
 }
