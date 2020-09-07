@@ -1,91 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/assetImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="Asset"
+            type="com.ceaver.assin.assets.Asset" />
+    </data>
 
-    <TextView
-        android:id="@+id/assetNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/assetImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/assetBalanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/assetNameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/assetNameTextView" />
+        <ImageView
+            android:id="@+id/assetImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/assetBtcValueTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/assetImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/assetNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/assetImageView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/assetUsdValueTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:textAlignment="viewEnd"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="@+id/assetBtcValueTextView"
-        app:layout_constraintStart_toStartOf="@+id/assetBtcValueTextView"
-        app:layout_constraintTop_toBottomOf="@+id/assetBtcValueTextView" />
+        <TextView
+            android:id="@+id/assetBalanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@+id/assetNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/assetNameTextView" />
 
-    <TextView
-        android:id="@+id/asset1hChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="12dp"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/assetBtcValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/assetImageView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/asset24hChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/asset1hChangeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/asset1hChangeTextView" />
+        <TextView
+            android:id="@+id/assetUsdValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:textAlignment="viewEnd"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@+id/assetBtcValueTextView"
+            app:layout_constraintStart_toStartOf="@+id/assetBtcValueTextView"
+            app:layout_constraintTop_toBottomOf="@+id/assetBtcValueTextView" />
 
-    <TextView
-        android:id="@+id/asset7dChangeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/asset24hChangeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/asset24hChangeTextView" />
+        <TextView
+            android:id="@+id/asset1hChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="12dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/asset24hChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="@+id/asset1hChangeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/asset1hChangeTextView" />
+
+        <TextView
+            android:id="@+id/asset7dChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/asset24hChangeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/asset24hChangeTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

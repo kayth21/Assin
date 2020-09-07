@@ -40,7 +40,7 @@ class AssetListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.assetList.adapter = assetListAdapter
 
-        viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.assets = it })
+        viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.submitList(it.sortedBy { it.btcValue }.reversed()) })
 
         return binding.root
     }
