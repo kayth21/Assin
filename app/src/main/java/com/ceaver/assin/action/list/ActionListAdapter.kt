@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.databinding.ActionListRowBinding
-import com.ceaver.assin.util.CalendarHelper
 
 internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : ListAdapter<Action, ActionListAdapter.ViewHolder>(Action.Difference) {
 
@@ -32,11 +31,8 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
         }
 
         fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
-            binding.actionListRowLeftImageView.setImageResource(action.getLeftImageResource())
-            binding.actionListRowTradeTypeTextView.text = action.getTitleText()
-            binding.actionListRowTradeDateTextView.text = CalendarHelper.convertDate(action.getActionDate())
-            binding.actionListRowTradeTextView.text = action.getDetailText()
-            binding.actionListRowRightImageView.setImageResource(action.getRightImageResource())
+            binding.action = action
+            binding.executePendingBindings()
             itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(action) }
         }
