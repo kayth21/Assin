@@ -1,36 +1,30 @@
 package com.ceaver.assin.logging
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.R
-import kotlinx.android.synthetic.main.log_list_row.view.*
+import com.ceaver.assin.databinding.LogListRowBinding
 import java.time.format.DateTimeFormatter
 
-class LogListAdapter : RecyclerView.Adapter<LogListAdapter.ViewHolder>() {
-    var logs = listOf<Log>()
-        set(value) {
-            field = value.sortedByDescending { it.id }
-            notifyDataSetChanged()
-        }
+class LogListAdapter : ListAdapter<Log, LogListAdapter.ViewHolder>(Log.Difference) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.log_list_row, parent, false))
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = LogListRowBinding.inflate(layoutInflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(logs[position])
+        holder.bindItem(getItem(position))
     }
 
-    override fun getItemCount() = logs.size
-
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val binding: LogListRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindItem(log: Log) {
-            view.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
-            view.logIdTextView.text = "#" + log.id
-            view.logMessageTextView.text = log.message
+            binding.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"))
+            binding.logIdTextView.text = "#" + log.id
+            binding.logMessageTextView.text = log.message
         }
     }
 }

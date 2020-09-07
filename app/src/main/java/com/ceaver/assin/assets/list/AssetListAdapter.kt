@@ -25,7 +25,7 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = AssetListRowBinding.inflate(layoutInflater, parent, false)
-        return AssetListAdapter.ViewHolder(binding)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

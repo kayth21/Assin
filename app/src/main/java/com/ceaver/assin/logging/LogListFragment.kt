@@ -30,7 +30,7 @@ class LogListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.logList.adapter = logListAdapter
 
-        viewModel.logs.observe(viewLifecycleOwner, Observer { logListAdapter.logs = it })
+        viewModel.logs.observe(viewLifecycleOwner, Observer { logListAdapter.submitList(it.sortedByDescending { it.id }) })
 
         return binding.root
     }
