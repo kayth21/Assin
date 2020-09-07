@@ -38,7 +38,7 @@ class PositionListFragment(val title: Title) : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.positionListFragmentPositionList.adapter = positionListAdapter
 
-        viewModel.positions.observe(viewLifecycleOwner, Observer { positionListAdapter.positions = it })
+        viewModel.positions.observe(viewLifecycleOwner, Observer { positionListAdapter.submitList(it.sortedByDescending { it.id }) })
 
         return binding.root
     }

@@ -1,5 +1,6 @@
 package com.ceaver.assin.positions
 
+import androidx.recyclerview.widget.DiffUtil
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
@@ -46,4 +47,15 @@ data class Position(
                     .times(currentValueInUsd)
                     .subtract(BigDecimal.valueOf(100))
         }
+
+    object Difference : DiffUtil.ItemCallback<Position>() {
+        override fun areItemsTheSame(oldItem: Position, newItem: Position): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Position, newItem: Position): Boolean {
+            return oldItem == newItem
+        }
+    }
+
 }
