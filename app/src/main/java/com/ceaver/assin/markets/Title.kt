@@ -55,20 +55,7 @@ data class Title(//
         @ColumnInfo(name = "percentChange1yBtc") val percentChange1yBtc: Double? = null,
         @ColumnInfo(name = "athPriceBtc") val athPriceBtc: Double? = null,
         @ColumnInfo(name = "athDateBtc") val athDateBtc: LocalDateTime? = null,
-        @ColumnInfo(name = "athPercentBtc") val athPercentBtc: Double? = null,
-        // eth
-        @ColumnInfo(name = "priceEth") val priceEth: Double? = null,
-        @ColumnInfo(name = "volume24hEth") val volume24hEth: Double? = null,
-        @ColumnInfo(name = "marketCapEth") val marketCapEth: Double? = null,
-        @ColumnInfo(name = "marketCapChange24hEth") val marketCapChange24hEth: Double? = null,
-        @ColumnInfo(name = "percentChange1hEth") val percentChange1hEth: Double? = null,
-        @ColumnInfo(name = "percentChange24hEth") val percentChange24hEth: Double? = null,
-        @ColumnInfo(name = "percentChange7dEth") val percentChange7dEth: Double? = null,
-        @ColumnInfo(name = "percentChange30dEth") val percentChange30dEth: Double? = null,
-        @ColumnInfo(name = "percentChange1yEth") val percentChange1yEth: Double? = null,
-        @ColumnInfo(name = "athPriceEth") val athPriceEth: Double? = null,
-        @ColumnInfo(name = "athDateEth") val athDateEth: LocalDateTime? = null,
-        @ColumnInfo(name = "athPercentEth") val athPercentEth: Double? = null
+        @ColumnInfo(name = "athPercentBtc") val athPercentBtc: Double? = null
 ) : Parcelable {
 
     fun inactive(): Boolean {

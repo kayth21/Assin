@@ -12,7 +12,10 @@ object AssetRepository {
 
     fun loadAssetOverviewObserved(): LiveData<AssetOverview> {
         val assetLiveData = loadAllAssetsObserved()
-        return Transformations.map(assetLiveData) { it.map { AssetOverview(it.btcValue, it.usdValue) }.reduce { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue) } }
+        return Transformations.map(assetLiveData) {
+            it.map { AssetOverview(it.btcValue, it.usdValue) }
+                    .fold(AssetOverview()) { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue) }
+        }
     }
 
     fun loadAllAssetsObserved(): LiveData<List<Asset>> {

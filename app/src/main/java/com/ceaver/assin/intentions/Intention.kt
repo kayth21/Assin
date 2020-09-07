@@ -28,7 +28,6 @@ data class Intention(
             val price = when (referenceTitle.symbol) {
                 "USD" -> title.priceUsd
                 "BTC" -> title.priceBtc
-                "ETH" -> title.priceEth
                 else -> throw IllegalStateException()
             }
             return when (type) {

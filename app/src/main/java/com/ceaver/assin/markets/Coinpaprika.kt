@@ -68,7 +68,6 @@ object Coinpaprika {
     private fun transform(ticker: TickerEntity): Title {
         val usdQuotes = ticker.quotes!!.get("USD")!!
         val btcQuotes = ticker.quotes!!.get("BTC")!!
-        val ethQuotes = ticker.quotes!!.get("ETH")!!
 
         return Title(
                 id = ticker.id,
@@ -108,20 +107,7 @@ object Coinpaprika {
                 percentChange1yBtc = btcQuotes.percentChange1y,
                 athPriceBtc = btcQuotes.athPrice,
                 athDateBtc = if (btcQuotes.athDate == null) null else transformTimestamp(btcQuotes.athDate!!),
-                athPercentBtc = btcQuotes.athPrice,
-
-                priceEth = ethQuotes.price,
-                volume24hEth = ethQuotes.dailyVolume,
-                marketCapEth = ethQuotes.marketCap,
-                marketCapChange24hEth = ethQuotes.marketCapDailyChange,
-                percentChange1hEth = ethQuotes.percentChange1h,
-                percentChange24hEth = ethQuotes.percentChange24h,
-                percentChange7dEth = ethQuotes.percentChange7d,
-                percentChange30dEth = ethQuotes.percentChange30d,
-                percentChange1yEth = ethQuotes.percentChange1y,
-                athPriceEth = ethQuotes.athPrice,
-                athDateEth = if (ethQuotes.athDate == null) null else transformTimestamp(ethQuotes.athDate!!),
-                athPercentEth = ethQuotes.athPrice
+                athPercentBtc = btcQuotes.athPrice
         )
     }
 
