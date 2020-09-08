@@ -20,7 +20,6 @@ import com.ceaver.assin.databinding.IntentionListFragmentBinding
 import com.ceaver.assin.home.HomeFragmentDirections
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
-import kotlinx.android.synthetic.main.intention_list_fragment.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -41,6 +40,8 @@ class IntentionListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.intentionListFragmentIntentionList.adapter = intentionListAdapter
+        binding.intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        binding.intentionListFragmentCreateIntentionButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment()) }
 
         viewModel.intentions.observe(viewLifecycleOwner, Observer { intentionListAdapter.intentions = it })
 
@@ -50,15 +51,11 @@ class IntentionListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
-        intentionListFragmentIntentionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        intentionListFragmentCreateIntentionButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment()) }
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-        intentionListFragmentIntentionList.removeItemDecorationAt(0) // TODO Seriously?
-        intentionListFragmentCreateIntentionButton.setOnClickListener(null)
     }
 
     @Suppress("UNUSED_PARAMETER")

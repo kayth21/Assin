@@ -18,7 +18,6 @@ import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.databinding.ActionListFragmentBinding
-import kotlinx.android.synthetic.main.action_list_fragment.*
 import kotlinx.coroutines.launch
 
 
@@ -37,24 +36,12 @@ class ActionListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.actionList.adapter = actionListAdapter
+        binding.createTradeButton.setOnClickListener { findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE)) }
+        binding.actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
         viewModel.titles.observe(viewLifecycleOwner, Observer { actionListAdapter.submitList(it.reversed()) })
 
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        createTradeButton.setOnClickListener {
-            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE))
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        actionList.removeItemDecorationAt(0)  // TODO Seriously?
-        createTradeButton.setOnClickListener(null)
     }
 
     interface OnItemClickListener {

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
 import com.ceaver.assin.databinding.LogListFragmentBinding
-import kotlinx.android.synthetic.main.log_list_fragment.*
 
 class LogListFragment : Fragment() {
 
@@ -29,20 +28,10 @@ class LogListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.logList.adapter = logListAdapter
+        binding.logList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
         viewModel.logs.observe(viewLifecycleOwner, Observer { logListAdapter.submitList(it.sortedByDescending { it.id }) })
 
         return binding.root
     }
-
-    override fun onStart() {
-        super.onStart()
-        logList.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
-    }
-
-    override fun onStop() {
-        super.onStop()
-        logList.removeItemDecorationAt(0) // TODO Seriously?
-    }
-
 }

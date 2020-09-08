@@ -19,7 +19,6 @@ import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.databinding.AssetListFragmentBinding
 import com.ceaver.assin.home.HomeFragmentDirections
-import kotlinx.android.synthetic.main.asset_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -39,6 +38,8 @@ class AssetListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.assetList.adapter = assetListAdapter
+        binding.assetDepositButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT)) }
+        binding.assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
         viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.submitList(it.sortedBy { it.btcValue }.reversed()) })
 
@@ -48,17 +49,11 @@ class AssetListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
-        assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        assetDepositButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT))
-        }
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-        assetList.removeItemDecorationAt(0) // TODO Seriously?
-        assetDepositButton.setOnClickListener(null)
     }
 
     @Suppress("UNUSED_PARAMETER")

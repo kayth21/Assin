@@ -17,7 +17,6 @@ import com.ceaver.assin.R
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.databinding.AlertListFragmentBinding
-import kotlinx.android.synthetic.main.alert_list_fragment.*
 import kotlinx.coroutines.launch
 
 class AlertListFragment : Fragment() {
@@ -35,22 +34,12 @@ class AlertListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alertList.adapter = alertListAdapter
+        binding.alertList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        binding.createAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
 
         viewModel.alerts.observe(viewLifecycleOwner, Observer { alertListAdapter.submitList(it) })
 
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        alertList.addItemDecoration(DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)) // TODO Seriously?
-        createAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        alertList.removeItemDecorationAt(0)  // TODO Seriously?
-        createAlertButton.setOnClickListener(null)
     }
 
     interface OnItemClickListener {

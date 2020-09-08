@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.R
 import com.ceaver.assin.databinding.MarketListFragmentBinding
-import kotlinx.android.synthetic.main.market_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,6 +33,7 @@ class MarketListFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.marketList.adapter = marketListAdapter
+        binding.marketList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
         viewModel.titles.observe(viewLifecycleOwner, Observer { marketListAdapter.submitList(it) })
 
@@ -43,7 +43,6 @@ class MarketListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this);
-        marketList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO Seriously?
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -63,6 +62,5 @@ class MarketListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this);
-        marketList.removeItemDecorationAt(0) // TODO Seriously?
     }
 }

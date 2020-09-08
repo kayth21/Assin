@@ -18,7 +18,6 @@ import com.ceaver.assin.action.Withdraw
 import com.ceaver.assin.databinding.PositionListFragmentBinding
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
-import kotlinx.android.synthetic.main.position_list_fragment.*
 import kotlinx.coroutines.launch
 
 class PositionListFragment(val title: Title) : Fragment() {
@@ -31,26 +30,16 @@ class PositionListFragment(val title: Title) : Fragment() {
         viewModel = viewModels<PositionListViewModel> { PositionListViewModel.Factory(title) }.value
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: PositionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.position_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.positionListFragmentPositionList.adapter = positionListAdapter
+        binding.positionListFragmentPositionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO seriously?
 
         viewModel.positions.observe(viewLifecycleOwner, Observer { positionListAdapter.submitList(it.sortedByDescending { it.id }) })
 
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        positionListFragmentPositionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO seriously?
-    }
-
-    override fun onStop() {
-        super.onStop()
-        positionListFragmentPositionList.removeItemDecorationAt(0) // TODO seriously?
     }
 
     interface OnItemClickListener {
