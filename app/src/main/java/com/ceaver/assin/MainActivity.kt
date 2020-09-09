@@ -1,6 +1,5 @@
 package com.ceaver.assin
 
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -10,14 +9,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.work.*
 import com.ceaver.assin.home.HomeFragmentDirections
-import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.util.isCharging
-import com.ceaver.assin.util.isConnected
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.main_activity.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,9 +29,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
         main_activity_navigation_view.setNavigationItemSelectedListener(this)
-
-        val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("UNIQUE", ExistingPeriodicWorkPolicy.KEEP, backgroundProcess)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -53,19 +44,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // https://stackoverflow.com/questions/56311862/viewpager2-default-position
         } else {
             super.onBackPressed()
-        }
-    }
-
-    class StartWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
-        override suspend  fun doWork(): Result {
-            if (isConnected())
-                if (isCharging())
-                    AssinWorkers.completeUpdate()
-                else
-                    AssinWorkers.observedUpdate()
-            else
-                LogRepository.insertLog("update skipped because of missing connection")
-            return Result.success()
         }
     }
 

@@ -1,6 +1,5 @@
 package com.ceaver.assin.assets.list
 
-import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.assets.AssetRepository
@@ -8,10 +7,9 @@ import com.ceaver.assin.assets.AssetRepository
 class AssetListViewModel : ViewModel() {
 
     val assets = AssetRepository.loadAllAssetsObserved()
-    val loading = ObservableBoolean()
+    val loading = AssinWorkers.running
 
     fun refresh() {
-        loading.set(true)
         AssinWorkers.completeUpdate()
     }
 

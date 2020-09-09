@@ -1,6 +1,7 @@
 package com.ceaver.assin
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.alerts.AlertWorker
@@ -21,7 +22,10 @@ import java.util.*
 
 object AssinWorkers {
 
+    val running = MutableLiveData<Boolean>()
+
     fun completeUpdate() {
+        WorkManager.getInstance(AssinApplication.appContext!!)
         val identifier = UUID.randomUUID();
         WorkManager.getInstance(AssinApplication.appContext!!)
                 .beginWith(notifyCompleteStart(identifier))
@@ -94,6 +98,7 @@ object AssinWorkers {
 
     class StartCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
+            running.postValue(true)
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting complete update...", uuid)
             return Result.success()
@@ -102,6 +107,7 @@ object AssinWorkers {
 
     class StartObservedNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
+            running.postValue(true)
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             LogRepository.insertLog("Assin workers: starting observed update...", uuid)
             return Result.success()
@@ -116,6 +122,7 @@ object AssinWorkers {
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
             LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Complete())
+            running.postValue(false)
             return Result.success()
         }
     }
@@ -127,6 +134,7 @@ object AssinWorkers {
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
             LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Observed())
+            running.postValue(false)
             return Result.success()
         }
     }
