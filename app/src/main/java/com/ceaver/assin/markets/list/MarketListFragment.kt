@@ -12,15 +12,26 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
 import com.ceaver.assin.databinding.MarketListFragmentBinding
+import com.ceaver.assin.markets.Title
 
 class MarketListFragment : Fragment() {
 
     private lateinit var viewModel: MarketListViewModel
-    private val marketListAdapter = MarketListAdapter()
+    private val marketListAdapter = MarketListAdapter(OnListItemClickListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = viewModels<MarketListViewModel>().value
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: Title)
+    }
+
+    private inner class OnListItemClickListener : OnItemClickListener {
+        override fun onItemClick(item: Title) {
+            // TODO
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

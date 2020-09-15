@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.databinding.MarketListRowBinding
 import com.ceaver.assin.markets.Title
 
-internal class MarketListAdapter : ListAdapter<Title, MarketListAdapter.ViewHolder>(Title.Difference) {
+internal class MarketListAdapter(private val onClickListener: MarketListFragment.OnItemClickListener) : ListAdapter<Title, MarketListAdapter.ViewHolder>(Title.Difference) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -16,14 +16,15 @@ internal class MarketListAdapter : ListAdapter<Title, MarketListAdapter.ViewHold
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position))
+        holder.bindItem(getItem(position), onClickListener)
     }
 
     class ViewHolder(val binding: MarketListRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItem(title: Title) {
+        fun bindItem(title: Title, onClickListener: MarketListFragment.OnItemClickListener) {
             binding.title = title
             binding.executePendingBindings()
+            itemView.setOnClickListener { onClickListener.onItemClick(title) }
         }
     }
 }
