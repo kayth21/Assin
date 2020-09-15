@@ -12,11 +12,14 @@ data class Asset(//
 ) {
     object Difference : DiffUtil.ItemCallback<Asset>() {
         override fun areItemsTheSame(oldItem: Asset, newItem: Asset): Boolean {
-            return oldItem.title == newItem.title
+            return oldItem.title.id == newItem.title.id
         }
 
         override fun areContentsTheSame(oldItem: Asset, newItem: Asset): Boolean {
-            return oldItem == newItem
+            return oldItem.title.id == newItem.title.id
+                    && oldItem.amount == newItem.amount
+                    && oldItem.btcValue == newItem.btcValue
+                    && oldItem.usdValue == newItem.usdValue
         }
     }
 }
