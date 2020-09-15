@@ -9,16 +9,20 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
 
     override suspend fun doWork(): Result {
         val allRemoteTitles = MarketRepository.loadAllTitles()
+        val allRemoteTitleIds = allRemoteTitles.map { it.id }.toSet()
         val allLocalTitles = TitleRepository.loadAllTitles()
+        val allLocalTitleIds = allLocalTitles.map { it.id }.toSet()
 
         if (allLocalTitles.isEmpty()) { // initial load
             TitleRepository.insertAll(allRemoteTitles.map { it.copy(active = 50) }.toSet())
         } else {
-            val newTitlesToInsert = allRemoteTitles - allLocalTitles
+            val newTitlesToInsert = allRemoteTitles.filterNot { it.id in allLocalTitleIds }.toSet()
             val existingTitlesToUpdate = (allRemoteTitles - newTitlesToInsert).map { it.incrementActiveCounter() }
-            val removedTitles = allLocalTitles - allRemoteTitles
-            val removedTitlesToDelete = removedTitles.filter { it.inactive() }
-            val removedTitlesToUpdate = (removedTitles - removedTitlesToDelete).map { it.decreaseActiveCounter() }
+            val removedTitles = allLocalTitles.filterNot { it.id in allRemoteTitleIds }
+            val removedTitlesPartitioned = removedTitles.partition { it.inactive() }
+            val removedTitlesToDelete = removedTitlesPartitioned.first
+            val removedTitlesToUpdate = removedTitlesPartitioned.second
+            removedTitlesToUpdate.forEach { it.decreaseActiveCounter() }
 
             TitleRepository.marketUpdate(newTitlesToInsert, (existingTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
 
