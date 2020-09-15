@@ -3,6 +3,7 @@ package com.ceaver.assin.intentions
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
 import kotlinx.android.parcel.Parcelize
@@ -10,7 +11,18 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @Parcelize
-@Entity(tableName = "intention")
+@Entity(tableName = "intention",
+        foreignKeys = arrayOf(
+                ForeignKey(
+                        entity = Title::class,
+                        parentColumns = arrayOf("id"),
+                        childColumns = arrayOf("title"),
+                        onDelete = ForeignKey.CASCADE),
+                ForeignKey(
+                        entity = Title::class,
+                        parentColumns = arrayOf("id"),
+                        childColumns = arrayOf("referenceTitle"),
+                        onDelete = ForeignKey.CASCADE)))
 data class Intention(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
         @ColumnInfo(name = "type") val type: IntentionType,
