@@ -2,7 +2,6 @@ package com.ceaver.assin.alerts
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -24,12 +23,13 @@ import java.math.BigDecimal
                         childColumns = arrayOf("symbol"),
                         onDelete = ForeignKey.CASCADE)))
 data class Alert(//
-        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long = 0,
-        @ColumnInfo(name = "symbol") val symbol: Title,
-        @ColumnInfo(name = "reference") val reference: Title,
-        @ColumnInfo(name = "alertType") val alertType: AlertType,
-        @ColumnInfo(name = "source") val source: BigDecimal,
-        @ColumnInfo(name = "target") val target: BigDecimal) : Parcelable {
+        @PrimaryKey(autoGenerate = true)
+        val id: Long = 0,
+        val symbol: Title,
+        val reference: Title,
+        val alertType: AlertType,
+        val source: BigDecimal,
+        val target: BigDecimal) : Parcelable {
 
     fun isNew(): Boolean = this.id == 0L;
 

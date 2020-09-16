@@ -1,7 +1,6 @@
 package com.ceaver.assin.intentions
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -24,15 +23,16 @@ import java.time.LocalDate
                         childColumns = arrayOf("referenceTitle"),
                         onDelete = ForeignKey.CASCADE)))
 data class Intention(
-        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
-        @ColumnInfo(name = "type") val type: IntentionType,
-        @ColumnInfo(name = "title") var title: Title,
-        @ColumnInfo(name = "amount") var amount: BigDecimal? = null,
-        @ColumnInfo(name = "referenceTitle") var referenceTitle: Title,
-        @ColumnInfo(name = "referencePrice") var referencePrice: BigDecimal,
-        @ColumnInfo(name = "creationDate") var creationDate: LocalDate = LocalDate.now(),
-        @ColumnInfo(name = "status") val status: IntentionStatus = IntentionStatus.WAIT,
-        @ColumnInfo(name = "comment") var comment: String? = null)
+        @PrimaryKey(autoGenerate = true)
+        var id: Long = 0,
+        val type: IntentionType,
+        var title: Title,
+        var amount: BigDecimal? = null,
+        var referenceTitle: Title,
+        var referencePrice: BigDecimal,
+        var creationDate: LocalDate = LocalDate.now(),
+        val status: IntentionStatus = IntentionStatus.WAIT,
+        var comment: String? = null)
     : Parcelable {
 
     val percentToReferencePrice: BigDecimal

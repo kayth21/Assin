@@ -2,7 +2,6 @@ package com.ceaver.assin.markets
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -18,44 +17,45 @@ import java.util.*
 @Entity(tableName = "title", indices = [Index(value = ["symbol", "rank"])]) // TODO What is this index good for? https://developer.android.com/training/data-storage/room/defining-data
 data class Title(//
         // common
-        @ColumnInfo(name = "id") @PrimaryKey val id: String,
-        @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "symbol") val symbol: String,
-        @ColumnInfo(name = "category") val category: AssetCategory,
-        @ColumnInfo(name = "active") val active: Int,
+        @PrimaryKey
+        val id: String,
+        val name: String,
+        val symbol: String,
+        val category: AssetCategory,
+        val active: Int,
         // common crypto
-        @ColumnInfo(name = "rank") val rank: Int = -1,
-        @ColumnInfo(name = "circulatingSupply") val circulatingSupply: Long? = null,
-        @ColumnInfo(name = "totalSupply") val totalSupply: Long? = null,
-        @ColumnInfo(name = "maxSupply") val maxSupply: Long? = null,
-        @ColumnInfo(name = "betaValue") val betaValue: Double? = null,
-        @ColumnInfo(name = "lastUpdated") val lastUpdated: LocalDateTime? = null,
+        val rank: Int = -1,
+        val circulatingSupply: Long? = null,
+        val totalSupply: Long? = null,
+        val maxSupply: Long? = null,
+        val betaValue: Double? = null,
+        val lastUpdated: LocalDateTime? = null,
         // usd
-        @ColumnInfo(name = "priceUsd") val priceUsd: Double? = null,
-        @ColumnInfo(name = "volume24hUsd") val volume24hUsd: Double? = null,
-        @ColumnInfo(name = "marketCapUsd") val marketCapUsd: Double? = null,
-        @ColumnInfo(name = "marketCapChange24hUsd") val marketCapChange24hUsd: Double? = null,
-        @ColumnInfo(name = "percentChange1hUsd") val percentChange1hUsd: Double? = null,
-        @ColumnInfo(name = "percentChange24hUsd") val percentChange24hUsd: Double? = null,
-        @ColumnInfo(name = "percentChange7dUsd") val percentChange7dUsd: Double? = null,
-        @ColumnInfo(name = "percentChange30dUsd") val percentChange30dUsd: Double? = null,
-        @ColumnInfo(name = "percentChange1yUsd") val percentChange1yUsd: Double? = null,
-        @ColumnInfo(name = "athPriceUsd") val athPriceUsd: Double? = null,
-        @ColumnInfo(name = "athDateUsd") val athDateUsd: LocalDateTime? = null,
-        @ColumnInfo(name = "athPercentUsd") val athPercentUsd: Double? = null,
+        val priceUsd: Double? = null,
+        val volume24hUsd: Double? = null,
+        val marketCapUsd: Double? = null,
+        val marketCapChange24hUsd: Double? = null,
+        val percentChange1hUsd: Double? = null,
+        val percentChange24hUsd: Double? = null,
+        val percentChange7dUsd: Double? = null,
+        val percentChange30dUsd: Double? = null,
+        val percentChange1yUsd: Double? = null,
+        val athPriceUsd: Double? = null,
+        val athDateUsd: LocalDateTime? = null,
+        val athPercentUsd: Double? = null,
         // btc
-        @ColumnInfo(name = "priceBtc") val priceBtc: Double? = null,
-        @ColumnInfo(name = "volume24hBtc") val volume24hBtc: Double? = null,
-        @ColumnInfo(name = "marketCapBtc") val marketCapBtc: Double? = null,
-        @ColumnInfo(name = "marketCapChange24hBtc") val marketCapChange24hBtc: Double? = null,
-        @ColumnInfo(name = "percentChange1hBtc") val percentChange1hBtc: Double? = null,
-        @ColumnInfo(name = "percentChange24hBtc") val percentChange24hBtc: Double? = null,
-        @ColumnInfo(name = "percentChange7dBtc") val percentChange7dBtc: Double? = null,
-        @ColumnInfo(name = "percentChange30dBtc") val percentChange30dBtc: Double? = null,
-        @ColumnInfo(name = "percentChange1yBtc") val percentChange1yBtc: Double? = null,
-        @ColumnInfo(name = "athPriceBtc") val athPriceBtc: Double? = null,
-        @ColumnInfo(name = "athDateBtc") val athDateBtc: LocalDateTime? = null,
-        @ColumnInfo(name = "athPercentBtc") val athPercentBtc: Double? = null
+        val priceBtc: Double? = null,
+        val volume24hBtc: Double? = null,
+        val marketCapBtc: Double? = null,
+        val marketCapChange24hBtc: Double? = null,
+        val percentChange1hBtc: Double? = null,
+        val percentChange24hBtc: Double? = null,
+        val percentChange7dBtc: Double? = null,
+        val percentChange30dBtc: Double? = null,
+        val percentChange1yBtc: Double? = null,
+        val athPriceBtc: Double? = null,
+        val athDateBtc: LocalDateTime? = null,
+        val athPercentBtc: Double? = null
 ) : Parcelable {
 
     fun inactive(): Boolean {
