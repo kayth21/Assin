@@ -7,8 +7,8 @@ import java.math.BigDecimal
 data class Asset(//
         val title: Title,
         val amount: BigDecimal,
-        val btcValue: BigDecimal,
-        val usdValue: BigDecimal
+        val valueCrypto: BigDecimal,
+        val valueFiat: BigDecimal
 ) {
     object Difference : DiffUtil.ItemCallback<Asset>() {
         override fun areItemsTheSame(oldItem: Asset, newItem: Asset): Boolean {
@@ -18,8 +18,8 @@ data class Asset(//
         override fun areContentsTheSame(oldItem: Asset, newItem: Asset): Boolean {
             return oldItem.title.id == newItem.title.id
                     && oldItem.amount == newItem.amount
-                    && oldItem.btcValue == newItem.btcValue
-                    && oldItem.usdValue == newItem.usdValue
+                    && oldItem.valueCrypto == newItem.valueCrypto
+                    && oldItem.valueFiat == newItem.valueFiat
         }
     }
 }

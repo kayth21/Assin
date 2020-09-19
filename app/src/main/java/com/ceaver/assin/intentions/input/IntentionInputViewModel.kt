@@ -35,7 +35,13 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
             else {
                 val symbolTitle = title ?: TitleRepository.loadTitleBySymbol("BTC")
                 val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
-                _intention.postValue(Intention(0, IntentionType.SELL, symbolTitle, amount, referenceTitle, if (symbolTitle.symbol == "BTC") symbolTitle.priceUsd!!.toBigDecimal() else symbolTitle.priceBtc!!.toBigDecimal()))
+                _intention.postValue(Intention(
+                        0,
+                        IntentionType.SELL,
+                        symbolTitle,
+                        amount,
+                        referenceTitle,
+                        if (symbolTitle.symbol == "BTC") symbolTitle.cryptoQuotes.price.toBigDecimal() else BigDecimal.ONE)) // TODO
             }
         }
     }

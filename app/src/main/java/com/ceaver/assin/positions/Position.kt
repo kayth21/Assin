@@ -11,40 +11,38 @@ data class Position(
         val title: Title,
         val amount: BigDecimal,
         val openDate: LocalDate,
-        val openValueBtc: BigDecimal,
-        val openValueUsd: BigDecimal,
+        val openValueCrypto: BigDecimal,
+        val openValueFiat: BigDecimal,
         val closeDate: LocalDate? = null,
-        val closeValueBtc: BigDecimal? = null,
-        val closeValueUsd: BigDecimal? = null
+        val closeValueCrypto: BigDecimal? = null,
+        val closeValueFiat: BigDecimal? = null
 ) {
 
     fun isActive(): Boolean {
-        return closeValueBtc == null && closeValueUsd == null && closeDate == null
+        return closeValueCrypto == null && closeValueFiat == null && closeDate == null
     }
 
-    val currentValueInBtc: BigDecimal
+    val currentValuePrimary: BigDecimal
         get() {
-            return amount * title.priceBtc!!.toBigDecimal()
+            return amount * title.cryptoQuotes.price.toBigDecimal()
         }
 
-    val currentValueInUsd: BigDecimal
+    val currentValueSecondary: BigDecimal
         get() {
-            return amount * title.priceUsd!!.toBigDecimal()
+            return amount * title.fiatQuotes.price.toBigDecimal()
         }
 
-    val profitLossInPercentToBtc: BigDecimal
+    val profitLossInPercentToPrimaryTitle: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100)
-                    .divide(openValueBtc, MathContext.DECIMAL32))
-                    .times(currentValueInBtc)
+            return (BigDecimal.valueOf(100).divide(openValueCrypto, MathContext.DECIMAL32))
+                    .times(currentValuePrimary)
                     .subtract(BigDecimal.valueOf(100))
         }
 
-    val profitLossInPercentToUsd: BigDecimal
+    val profitLossInPercentToSecondaryValue: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100)
-                    .divide(openValueUsd, MathContext.DECIMAL32))
-                    .times(currentValueInUsd)
+            return (BigDecimal.valueOf(100).divide(openValueFiat, MathContext.DECIMAL32))
+                    .times(currentValueSecondary)
                     .subtract(BigDecimal.valueOf(100))
         }
 

@@ -12,8 +12,8 @@ object AssetRepository {
     fun loadAssetOverviewObserved(): LiveData<AssetOverview> {
         val assetLiveData = loadAllAssetsObserved()
         return Transformations.map(assetLiveData) {
-            it.map { AssetOverview(it.btcValue, it.usdValue) }
-                    .fold(AssetOverview()) { x, y -> AssetOverview(x.btcValue + y.btcValue, x.usdValue + y.usdValue) }
+            it.map { AssetOverview(it.valueCrypto, it.valueFiat) }
+                    .fold(AssetOverview()) { x, y -> AssetOverview(x.valueCrypto + y.valueCrypto, x.valueFiat + y.valueFiat) }
         }
     }
 
@@ -35,8 +35,8 @@ object AssetRepository {
                             Asset(
                                     title = it.first,
                                     amount = it.second,
-                                    btcValue = it.first.priceBtc!!.toBigDecimal().times(it.second),
-                                    usdValue = it.first.priceUsd!!.toBigDecimal().times(it.second))
+                                    valueCrypto = it.first.cryptoQuotes.price.toBigDecimal().times(it.second),
+                                    valueFiat = it.first.fiatQuotes.price.toBigDecimal().times(it.second))
                         }
 
             }
@@ -54,8 +54,8 @@ object AssetRepository {
                     Asset(
                             title = it.first,
                             amount = it.second,
-                            btcValue = it.first.priceBtc!!.toBigDecimal().times(it.second),
-                            usdValue = it.first.priceUsd!!.toBigDecimal().times(it.second))
+                            valueCrypto = it.first.cryptoQuotes.price.toBigDecimal().times(it.second),
+                            valueFiat = it.first.fiatQuotes.price.toBigDecimal().times(it.second))
                 }
     }
 
@@ -72,8 +72,8 @@ object AssetRepository {
                 Asset(
                         title = title,
                         amount = amount,
-                        btcValue = title.priceBtc!!.toBigDecimal().times(amount),
-                        usdValue = title.priceUsd!!.toBigDecimal().times(amount))
+                        valueCrypto = title.cryptoQuotes.price.toBigDecimal().times(amount),
+                        valueFiat = title.fiatQuotes.price.toBigDecimal().times(amount))
             }
 
         }

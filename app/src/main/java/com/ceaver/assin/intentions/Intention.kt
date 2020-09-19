@@ -37,14 +37,12 @@ data class Intention(
 
     val percentToReferencePrice: BigDecimal
         get() {
-            val price = when (referenceTitle.symbol) {
-                "USD" -> title.priceUsd
-                "BTC" -> title.priceBtc
-                else -> throw IllegalStateException()
-            }
+            val currentValue = title.cryptoQuotes.price
+            val desiredValue = referenceTitle.cryptoQuotes.price * referencePrice.toDouble()
+
             return when (type) {
-                IntentionType.SELL -> (100.div(referencePrice.toDouble())).times(price!!.toDouble()).toBigDecimal()
-                IntentionType.BUY -> (100.div(price!!.toDouble())).times(referencePrice.toDouble()).toBigDecimal()
+                IntentionType.SELL -> (100.div(desiredValue)).times(currentValue).toBigDecimal()
+                IntentionType.BUY -> (100.div(currentValue)).times(desiredValue).toBigDecimal()
             }
         }
 

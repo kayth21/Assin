@@ -13,3 +13,7 @@ fun Double.format(symbol: String): String {
     }
 }
 
+fun Double.asFactor() : Double {
+    return  (this + 100.0) / 100.0
+}
+

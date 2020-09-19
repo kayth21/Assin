@@ -5,7 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.ceaver.assin.logging.LogRepository
 
-class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
         val allRemoteTitles = MarketRepository.loadAllTitles()
@@ -30,8 +30,6 @@ class MarketCompleteUpdateWorker(appContext: Context, workerParams: WorkerParame
             existingTitlesToUpdate.filter { it.active == 50 }.forEach { LogRepository.insertLog("Activated  ${it.name} (${it.symbol}).") }
             removedTitlesToDelete.forEach { LogRepository.insertLog("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }
-
-        TitleRepository.update(TitleRepository.loadTitleBySymbol("USD").copy(priceBtc = 1 / TitleRepository.loadTitleBySymbol("BTC").priceUsd!!))
 
         return Result.success()
     }

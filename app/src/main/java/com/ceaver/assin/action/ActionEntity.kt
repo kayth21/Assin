@@ -41,8 +41,8 @@ data class ActionEntity(
         val splitAmount: BigDecimal? = null,
         val splitRemaining: BigDecimal? = null,
         val splitTitle: Title? = null,
-        val valueBtc: BigDecimal? = null,
-        val valueUsd: BigDecimal? = null
+        val valueCrypto: BigDecimal? = null,
+        val valueFiat: BigDecimal? = null
 ) : Parcelable {
 
     fun toAction(): Action {

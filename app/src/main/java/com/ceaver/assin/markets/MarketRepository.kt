@@ -1,7 +1,10 @@
 package com.ceaver.assin.markets
 
+import android.preference.PreferenceManager
+import com.ceaver.assin.AssinApplication
+import com.ceaver.assin.extensions.setTitle
 import com.ceaver.assin.markets.overview.MarketOverview
-import java.util.*
+import com.ceaver.assin.preferences.Preferences
 
 object MarketRepository {
     fun loadMarketOverview(): MarketOverview {
@@ -11,18 +14,18 @@ object MarketRepository {
     suspend fun loadAllTitles(): Set<Title> {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
         val allLocalTitles = TitleRepository.loadAllTitles()
+
+        val cryptoTitle = allRemoteTitles.single { it.symbol == Preferences.getCryptoTitleSymbol() }
+        val fiatTitle = allRemoteTitles.single { it.symbol == Preferences.getFiatTitleSymbol() }
+
+        PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).edit()
+                .setTitle(Preferences.CRYPTO_TITLE, cryptoTitle)
+                .setTitle(Preferences.FIAT_TITLE, fiatTitle)
+                .apply()
+
         return allRemoteTitles.map { remoteTitle ->
             val localTitle = allLocalTitles.find { localTitle -> remoteTitle.id == localTitle.id }
             remoteTitle.copy(active = localTitle?.active ?: -75)
         }.toSet()
-    }
-
-    suspend fun loadTitle(id: String): Optional<Title> {
-        val remoteTitle = Coinpaprika.load(id)
-        val localTitle = TitleRepository.loadTitle(id)
-        return if (remoteTitle.isPresent)
-            Optional.of(remoteTitle.get().copy(active = localTitle?.active ?: -75))
-        else
-            remoteTitle
     }
 }

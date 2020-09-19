@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/positionListRowPositionValueBtc"
+            android:id="@+id/position_list_row_position_value_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/positionListRowPositionValueUsd"
+            android:id="@+id/position_list_row_position_value_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -43,7 +43,7 @@
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/positionListRowPositionValueBtc" />
+            app:layout_constraintTop_toBottomOf="@+id/position_list_row_position_value_primary" />
 
         <TextView
             android:id="@+id/positionListRowPositionOpenDate"

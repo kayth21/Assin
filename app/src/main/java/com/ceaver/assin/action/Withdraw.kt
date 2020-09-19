@@ -14,8 +14,8 @@ data class Withdraw(
         val date: LocalDate = LocalDate.now(),
         val title: Title,
         val amount: BigDecimal,
-        val valueBtc: BigDecimal,
-        val valueUsd: BigDecimal,
+        val valueCrypto: BigDecimal,
+        val valueFiat: BigDecimal,
         val comment: String? = null,
         val positionId: BigDecimal?
 ) : Action {
@@ -28,8 +28,8 @@ data class Withdraw(
                     date = actionEntity.actionDate,
                     title = actionEntity.sellTitle!!,
                     amount = actionEntity.sellAmount!!,
-                    valueBtc = actionEntity.valueBtc!!,
-                    valueUsd = actionEntity.valueUsd!!,
+                    valueCrypto = actionEntity.valueCrypto!!,
+                    valueFiat = actionEntity.valueFiat!!,
                     comment = actionEntity.comment,
                     positionId = actionEntity.positionId)
         }
@@ -40,8 +40,8 @@ data class Withdraw(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
                     amount = csvRecord.get(3).toBigDecimal(),
-                    valueBtc = csvRecord.get(4).toBigDecimal(),
-                    valueUsd = csvRecord.get(5).toBigDecimal(),
+                    valueCrypto = csvRecord.get(4).toBigDecimal(),
+                    valueFiat = csvRecord.get(5).toBigDecimal(),
                     comment = csvRecord.get(6).ifEmpty { null },
                     positionId = csvRecord.get(7).toBigDecimal())
         }
@@ -51,12 +51,11 @@ data class Withdraw(
                     amount = position.amount,
                     title = position.title,
                     positionId = position.id,
-                    valueUsd = position.title.priceUsd!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
-                    valueBtc = position.title.priceBtc!!.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
+                    valueFiat = position.title.fiatQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.amount),
+                    valueCrypto = position.title.cryptoQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.amount)
             )
         }
     }
-
 
     override fun toExport(): List<String> {
         return listOf(
@@ -64,8 +63,8 @@ data class Withdraw(
                 date.toString(),
                 title.symbol,
                 amount.toPlainString(),
-                valueBtc.toPlainString(),
-                valueUsd.toPlainString(),
+                valueCrypto.toPlainString(),
+                valueFiat.toPlainString(),
                 comment.orEmpty(),
                 positionId!!.toPlainString())
     }
@@ -85,8 +84,8 @@ data class Withdraw(
                 actionDate = date,
                 sellTitle = title,
                 sellAmount = amount,
-                valueBtc = valueBtc,
-                valueUsd = valueUsd,
+                valueCrypto = valueCrypto,
+                valueFiat = valueFiat,
                 comment = comment,
                 positionId = positionId
         )

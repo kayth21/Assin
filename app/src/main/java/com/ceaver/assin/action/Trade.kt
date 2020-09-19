@@ -14,8 +14,8 @@ data class Trade(
         val sellTitle: Title,
         val sellAmount: BigDecimal,
         val positionId: BigDecimal?,
-        val valueBtc: BigDecimal,
-        val valueUsd: BigDecimal,
+        val valueCrypto: BigDecimal,
+        val valueFiat: BigDecimal,
         val comment: String?
 ) : Action {
 
@@ -30,8 +30,8 @@ data class Trade(
                     sellTitle = actionEntity.sellTitle!!,
                     sellAmount = actionEntity.sellAmount!!,
                     positionId = actionEntity.positionId,
-                    valueBtc = actionEntity.valueBtc!!,
-                    valueUsd = actionEntity.valueUsd!!,
+                    valueCrypto = actionEntity.valueCrypto!!,
+                    valueFiat = actionEntity.valueFiat!!,
                     comment = actionEntity.comment)
         }
 
@@ -44,8 +44,8 @@ data class Trade(
                     sellTitle = TitleRepository.loadTitleBySymbol(csvRecord.get(4)),
                     sellAmount = csvRecord.get(5).toBigDecimal(),
                     positionId = csvRecord.get(6).toBigDecimal(),
-                    valueBtc = csvRecord.get(7).toBigDecimal(),
-                    valueUsd = csvRecord.get(8).toBigDecimal(),
+                    valueCrypto = csvRecord.get(7).toBigDecimal(),
+                    valueFiat = csvRecord.get(8).toBigDecimal(),
                     comment = csvRecord.get(9).ifEmpty { null })
         }
     }
@@ -67,8 +67,8 @@ data class Trade(
                 sellTitle.symbol,
                 sellAmount.toPlainString(),
                 positionId!!.toPlainString(),
-                valueBtc.toPlainString(),
-                valueUsd.toPlainString(),
+                valueCrypto.toPlainString(),
+                valueFiat.toPlainString(),
                 comment.orEmpty())
     }
 
@@ -82,8 +82,8 @@ data class Trade(
                 sellTitle = sellTitle,
                 sellAmount = sellAmount,
                 positionId = positionId,
-                valueBtc = valueBtc,
-                valueUsd = valueUsd,
+                valueCrypto = valueCrypto,
+                valueFiat = valueFiat,
                 comment = comment
         )
     }

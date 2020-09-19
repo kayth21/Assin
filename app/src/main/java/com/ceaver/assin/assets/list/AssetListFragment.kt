@@ -36,7 +36,7 @@ class AssetListFragment : Fragment() {
         binding.assetDepositButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT)) }
         binding.assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
-        viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.submitList(it.sortedBy { it.btcValue }.reversed()) })
+        viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.submitList(it.sortedBy { it.valueCrypto }.reversed()) })
 
         return binding.root
     }

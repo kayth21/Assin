@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="com.ceaver.assin.preferences.Preferences" />
+
         <import type="com.ceaver.assin.extensions.BigDecimalExtensionKt" />
+
         <variable
             name="assetOverviewViewModel"
             type="com.ceaver.assin.assets.overview.AssetOverviewViewModel" />
@@ -27,7 +31,7 @@
                 android:id="@+id/assetOverviewFragmentTotalBtcLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Assets (BTC):"
+                android:text="Total Assets: "
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -39,8 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
+                android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueCrypto, assetOverviewViewModel.cryptoTitleSymbol) + " " + assetOverviewViewModel.cryptoTitleSymbol}'
                 android:textColor="#FFFFFF"
-                android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.btcValue, `BTC`) + " BTC"}'
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/assetOverviewFragmentTotalBtcLabel"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
-                android:text="Total Assets (USD):"
+                android:text="Total Assets:"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -61,8 +65,8 @@
                 android:id="@+id/assetOverviewFragmentTotalUsdValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueFiat, assetOverviewViewModel.fiatTitleSymbol) + " " + assetOverviewViewModel.fiatTitleSymbol}'
                 android:textColor="#FFFFFF"
-                android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.usdValue, `USD`) + " USD"}'
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

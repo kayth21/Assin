@@ -2,6 +2,7 @@ package com.ceaver.assin.markets
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -30,32 +31,12 @@ data class Title(//
         val maxSupply: Long? = null,
         val betaValue: Double? = null,
         val lastUpdated: LocalDateTime? = null,
-        // usd
-        val priceUsd: Double? = null,
-        val volume24hUsd: Double? = null,
-        val marketCapUsd: Double? = null,
-        val marketCapChange24hUsd: Double? = null,
-        val percentChange1hUsd: Double? = null,
-        val percentChange24hUsd: Double? = null,
-        val percentChange7dUsd: Double? = null,
-        val percentChange30dUsd: Double? = null,
-        val percentChange1yUsd: Double? = null,
-        val athPriceUsd: Double? = null,
-        val athDateUsd: LocalDateTime? = null,
-        val athPercentUsd: Double? = null,
-        // btc
-        val priceBtc: Double? = null,
-        val volume24hBtc: Double? = null,
-        val marketCapBtc: Double? = null,
-        val marketCapChange24hBtc: Double? = null,
-        val percentChange1hBtc: Double? = null,
-        val percentChange24hBtc: Double? = null,
-        val percentChange7dBtc: Double? = null,
-        val percentChange30dBtc: Double? = null,
-        val percentChange1yBtc: Double? = null,
-        val athPriceBtc: Double? = null,
-        val athDateBtc: LocalDateTime? = null,
-        val athPercentBtc: Double? = null
+        // primary
+        @Embedded(prefix = "crypto")
+        val cryptoQuotes: Quotes,
+        // secondary
+        @Embedded(prefix = "fiat")
+        val fiatQuotes: Quotes
 ) : Parcelable {
 
     fun inactive(): Boolean {
@@ -80,16 +61,16 @@ data class Title(//
         }
     }
 
-    fun getPercentChange1hUsdString(): String {
-        return "%.1f".format(percentChange1hUsd)
+    fun getPercentChange1hString(): String {
+        return "%.1f".format(cryptoQuotes.percentChange1h) // TODO let the user decide if primary or secondary
     }
 
-    fun getPercentChange24hUsdString(): String {
-        return "%.1f".format(percentChange24hUsd)
+    fun getPercentChange24hString(): String {
+        return "%.1f".format(cryptoQuotes.percentChange24h) // TODO let the user decide if primary or secondary
     }
 
-    fun getPercentChange7dUsdString(): String {
-        return "%.1f".format(percentChange7dUsd)
+    fun getPercentChange7dString(): String {
+        return "%.1f".format(cryptoQuotes.percentChange7d) // TODO let the user decide if primary or secondary
     }
 
     override fun toString(): String {
@@ -112,3 +93,15 @@ data class Title(//
     }
 }
 
+@Parcelize
+data class Quotes(
+        val price: Double,
+        val volume24h: Double? = null,
+        val marketCap: Double? = null,
+        val marketCapChange24h: Double? = null,
+        val percentChange1h: Double? = null,
+        val percentChange24h: Double? = null,
+        val percentChange7d: Double? = null,
+        val percentChange30d: Double? = null,
+        val percentChange1y: Double? = null
+) : Parcelable

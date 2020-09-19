@@ -68,7 +68,7 @@ object TitleRepository {
         return unionList
     }
 
-    suspend fun lookupPrice(symbol: Title, reference: Title): Optional<Double> {
+    suspend fun lookupPrice(symbol: Title, reference: Title): Optional<Double> { // TODO no need for Optional?
         if (reference.symbol == "EUR" || reference.symbol == "CHF") {
             TODO("not yet implemented")
         }
@@ -78,13 +78,13 @@ object TitleRepository {
         if (reference.symbol == "USD" || reference.symbol == "BTC") {
             val title = loadTitleBySymbol(symbol.symbol)
 //            if (!title.isPresent) return Optional.empty()
-            return if (reference.symbol == "USD") Optional.of(title.priceUsd!!) else Optional.of(title.priceBtc!!)
+            return if (reference.symbol == "USD") Optional.of(title.fiatQuotes.price) else Optional.of(title.cryptoQuotes.price)
         }
         // symbol and reference can only be crypto here
         val symbolTitle = loadTitleBySymbol(symbol.symbol)
         val referenceTitle = loadTitleBySymbol(reference.symbol)
 //        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
-        return Optional.of(symbolTitle.priceBtc!! / referenceTitle.priceBtc!!)
+        return Optional.of(symbolTitle.cryptoQuotes.price / referenceTitle.cryptoQuotes.price)
     }
 
     suspend fun deleteTitle(title: Title) {

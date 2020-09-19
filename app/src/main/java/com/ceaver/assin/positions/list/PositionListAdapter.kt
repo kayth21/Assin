@@ -11,6 +11,7 @@ import com.ceaver.assin.databinding.PositionListRowBinding
 import com.ceaver.assin.extensions.asFormattedDateTime
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.positions.Position
+import com.ceaver.assin.preferences.Preferences
 import java.math.RoundingMode
 import kotlin.random.Random
 
@@ -42,8 +43,8 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
 
         fun bindItem(position: Position, onClickListener: PositionListFragment.OnItemClickListener) {
             binding.positionListRowPositionSize.text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
-            binding.positionListRowPositionValueBtc.text = "${position.currentValueInBtc.toCurrencyString("BTC")} BTC (${position.profitLossInPercentToBtc.setScale(0, RoundingMode.HALF_UP)}%)"
-            binding.positionListRowPositionValueUsd.text = "${position.currentValueInUsd.toCurrencyString("USD")} USD (${position.profitLossInPercentToUsd.setScale(0, RoundingMode.HALF_UP)}%)"
+            binding.positionListRowPositionValuePrimary.text = "${position.currentValuePrimary.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()} (${position.profitLossInPercentToPrimaryTitle.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
+            binding.positionListRowPositionValueSecondary.text = "${position.currentValueSecondary.toCurrencyString(Preferences.getFiatTitleSymbol())} ${Preferences.getFiatTitleSymbol()} (${position.profitLossInPercentToSecondaryValue.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
             binding.positionListRowPositionOpenDate.text = "Open: ${position.openDate.asFormattedDateTime()}"
             if (!position.isActive())
                 binding.positionListRowPositionCloseDate.text = "Close: ${position.closeDate!!.asFormattedDateTime()}"

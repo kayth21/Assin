@@ -12,8 +12,8 @@ data class Deposit(
         val date: LocalDate = LocalDate.now(),
         val title: Title,
         val amount: BigDecimal,
-        val valueBtc: BigDecimal,
-        val valueUsd: BigDecimal,
+        val valueCrypto: BigDecimal,
+        val valueFiat: BigDecimal,
         val comment: String?
 ) : Action {
     companion object Factory {
@@ -24,8 +24,8 @@ data class Deposit(
                     date = actionEntity.actionDate,
                     title = actionEntity.buyTitle!!,
                     amount = actionEntity.buyAmount!!,
-                    valueBtc = actionEntity.valueBtc!!,
-                    valueUsd = actionEntity.valueUsd!!,
+                    valueCrypto = actionEntity.valueCrypto!!,
+                    valueFiat = actionEntity.valueFiat!!,
                     comment = actionEntity.comment)
         }
 
@@ -35,8 +35,8 @@ data class Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
                     amount = csvRecord.get(3).toBigDecimal(),
-                    valueBtc = csvRecord.get(4).toBigDecimal(),
-                    valueUsd = csvRecord.get(5).toBigDecimal(),
+                    valueCrypto = csvRecord.get(4).toBigDecimal(),
+                    valueFiat = csvRecord.get(5).toBigDecimal(),
                     comment = csvRecord.get(6).ifEmpty { null })
         }
     }
@@ -47,8 +47,8 @@ data class Deposit(
                 date.toString(),
                 title.symbol,
                 amount.toPlainString(),
-                valueBtc.toPlainString(),
-                valueUsd.toPlainString(),
+                valueCrypto.toPlainString(),
+                valueFiat.toPlainString(),
                 comment.orEmpty())
     }
 
@@ -67,8 +67,8 @@ data class Deposit(
                 actionDate = date,
                 buyTitle = title,
                 buyAmount = amount,
-                valueBtc = valueBtc,
-                valueUsd = valueUsd,
+                valueCrypto = valueCrypto,
+                valueFiat = valueFiat,
                 comment = comment
         )
     }
