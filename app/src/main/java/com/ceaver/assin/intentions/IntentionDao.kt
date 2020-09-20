@@ -6,28 +6,28 @@ import androidx.room.*
 @Dao
 interface IntentionDao {
     @Query("select * from intention")
-    fun loadAllIntentions(): List<Intention>
+    fun loadAllIntentions(): List<IntentionDto>
 
     @Query("select * from intention")
-    fun loadAllIntentionsObserved(): LiveData<List<Intention>>
+    fun loadAllIntentionsObserved(): LiveData<List<IntentionDto>>
 
     @Query("select * from intention where id = :id")
-    suspend fun loadIntentionById(id: Long): Intention
+    suspend fun loadIntentionById(id: Long): IntentionDto
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertIntention(intention: Intention)
+    suspend fun insertIntention(intention: IntentionEntity)
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertIntentions(intentions: List<Intention>)
+    suspend fun insertIntentions(intentions: List<IntentionEntity>)
 
     @Update
-    suspend fun updateIntention(intention: Intention)
+    suspend fun updateIntention(intention: IntentionEntity)
 
     @Update
-    suspend fun updateIntention(intentions: List<Intention>)
+    suspend fun updateIntention(intentions: List<IntentionEntity>)
 
     @Delete
-    suspend fun deleteIntention(intention: Intention)
+    suspend fun deleteIntention(intention: IntentionEntity)
 
     @Query("delete from intention")
     suspend fun deleteAllIntentions()

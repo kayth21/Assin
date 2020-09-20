@@ -16,10 +16,10 @@ data class ActionDto (
 ) {
     fun toAction(): Action {
         return when (action.actionType) {
-            ActionType.TRADE -> Trade.fromAction(this)
-            ActionType.SPLIT -> Split.fromAction(this)
-            ActionType.WITHDRAW -> Withdraw.fromAction(this)
-            ActionType.DEPOSIT -> Deposit.fromAction(this)
+            ActionType.TRADE -> Trade.fromDto(this)
+            ActionType.SPLIT -> Split.fromDto(this)
+            ActionType.WITHDRAW -> Withdraw.fromDto(this)
+            ActionType.DEPOSIT -> Deposit.fromDto(this)
         }
     }
 }

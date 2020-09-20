@@ -21,17 +21,17 @@ data class Withdraw(
 ) : Action {
 
     companion object Factory {
-        fun fromAction(actionEntity: ActionDto): Withdraw {
-            require(ActionType.WITHDRAW == actionEntity.action.actionType)
+        fun fromDto(actionDto: ActionDto): Withdraw {
+            require(ActionType.WITHDRAW == actionDto.action.actionType)
             return Withdraw(
-                    id = actionEntity.action.id,
-                    date = actionEntity.action.actionDate,
-                    title = actionEntity.sellTitle!!,
-                    amount = actionEntity.action.sellAmount!!,
-                    valueCrypto = actionEntity.action.valueCrypto!!,
-                    valueFiat = actionEntity.action.valueFiat!!,
-                    comment = actionEntity.action.comment,
-                    positionId = actionEntity.action.positionId)
+                    id = actionDto.action.id,
+                    date = actionDto.action.actionDate,
+                    title = actionDto.sellTitle!!,
+                    amount = actionDto.action.sellAmount!!,
+                    valueCrypto = actionDto.action.valueCrypto!!,
+                    valueFiat = actionDto.action.valueFiat!!,
+                    comment = actionDto.action.comment,
+                    positionId = actionDto.action.positionId)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Withdraw {

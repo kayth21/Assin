@@ -1,29 +1,13 @@
 package com.ceaver.assin.intentions
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.time.LocalDate
 
 @Parcelize
-@Entity(tableName = "intention",
-        foreignKeys = arrayOf(
-                ForeignKey(
-                        entity = Title::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("title"),
-                        onDelete = ForeignKey.CASCADE),
-                ForeignKey(
-                        entity = Title::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("referenceTitle"),
-                        onDelete = ForeignKey.CASCADE)))
 data class Intention(
-        @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
         val type: IntentionType,
         var title: Title,
@@ -32,8 +16,36 @@ data class Intention(
         var referencePrice: BigDecimal,
         var creationDate: LocalDate = LocalDate.now(),
         val status: IntentionStatus = IntentionStatus.WAIT,
-        var comment: String? = null)
-    : Parcelable {
+        var comment: String? = null) : Parcelable {
+
+    companion object Factory {
+        fun fromDto(dto: IntentionDto): Intention {
+            return Intention(
+                    id = dto.intention.id,
+                    amount = dto.intention.amount,
+                    title = dto.title,
+                    comment = dto.intention.comment,
+                    creationDate = dto.intention.creationDate,
+                    referencePrice = dto.intention.referencePrice,
+                    referenceTitle = dto.referenceTitle,
+                    status = dto.intention.status,
+                    type = dto.intention.type)
+        }
+    }
+
+    fun toIntentionEntity(): IntentionEntity {
+        return IntentionEntity(
+                id = id,
+                type = type,
+                status = status,
+                referencePrice = referencePrice,
+                creationDate = creationDate,
+                comment = comment,
+                amount = amount,
+                referenceTitleId = referenceTitle.id,
+                titleId = title.id
+        )
+    }
 
     val percentToReferencePrice: BigDecimal
         get() {

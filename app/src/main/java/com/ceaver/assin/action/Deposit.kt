@@ -17,16 +17,16 @@ data class Deposit(
         val comment: String?
 ) : Action {
     companion object Factory {
-        fun fromAction(actionEntity: ActionDto): Deposit {
-            require(ActionType.DEPOSIT == actionEntity.action.actionType)
+        fun fromDto(actionDto: ActionDto): Deposit {
+            require(ActionType.DEPOSIT == actionDto.action.actionType)
             return Deposit(
-                    id = actionEntity.action.id,
-                    date = actionEntity.action.actionDate,
-                    title = actionEntity.buyTitle!!,
-                    amount = actionEntity.action.buyAmount!!,
-                    valueCrypto = actionEntity.action.valueCrypto!!,
-                    valueFiat = actionEntity.action.valueFiat!!,
-                    comment = actionEntity.action.comment)
+                    id = actionDto.action.id,
+                    date = actionDto.action.actionDate,
+                    title = actionDto.buyTitle!!,
+                    amount = actionDto.action.buyAmount!!,
+                    valueCrypto = actionDto.action.valueCrypto!!,
+                    valueFiat = actionDto.action.valueFiat!!,
+                    comment = actionDto.action.comment)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Deposit {

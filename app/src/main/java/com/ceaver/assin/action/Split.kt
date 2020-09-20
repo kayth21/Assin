@@ -19,16 +19,16 @@ data class Split(
 ) : Action {
 
     companion object Factory {
-        fun fromAction(actionEntity: ActionDto): Split {
-            require(ActionType.SPLIT == actionEntity.action.actionType)
+        fun fromDto(actionDto: ActionDto): Split {
+            require(ActionType.SPLIT == actionDto.action.actionType)
             return Split(
-                    id = actionEntity.action.id,
-                    date = actionEntity.action.actionDate,
-                    title = actionEntity.splitTitle!!,
-                    amount = actionEntity.action.splitAmount!!,
-                    remaining = actionEntity.action.splitRemaining!!,
-                    positionId = actionEntity.action.positionId!!,
-                    comment = actionEntity.action.comment)
+                    id = actionDto.action.id,
+                    date = actionDto.action.actionDate,
+                    title = actionDto.splitTitle!!,
+                    amount = actionDto.action.splitAmount!!,
+                    remaining = actionDto.action.splitRemaining!!,
+                    positionId = actionDto.action.positionId!!,
+                    comment = actionDto.action.comment)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Split {
