@@ -11,19 +11,15 @@ import java.math.BigDecimal
 object ActionRepository {
 
     suspend fun loadAction(id: Long): Action {
-        return getActionDao().loadActionEntity(id).toAction()
+        return getActionDao().loadActionDto(id).toAction()
     }
 
     fun loadAllActionsObserved(): LiveData<List<Action>> {
-        return Transformations.map(getActionDao().loadAllActionEntitiesObserved()) { it.map { it.toAction() } }
+        return Transformations.map(getActionDao().getActionDtosObserved()) { it.map { it.toAction() } }
     }
 
     suspend fun loadAllActions(): List<Action> {
-        return getActionDao().loadAllActionEntities().map { it.toAction() }
-    }
-
-    suspend fun loadActions(symbol: String): List<Action> {
-        return getActionDao().loadAllActionEntities().filter { it.buyTitle?.symbol == symbol || it.sellTitle?.symbol == symbol }.map { it.toAction() }
+        return getActionDao().getActionDtos().map { it.toAction() }
     }
 
     suspend fun insertDeposit(deposit: Deposit) {

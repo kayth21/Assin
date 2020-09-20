@@ -28,10 +28,10 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/assetOverviewFragmentTotalBtcLabel"
+                android:id="@+id/assetOverviewFragmentTotalCryptoLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Assets: "
+                android:text="Total Crypto Assets: "
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -39,30 +39,30 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/assetOverviewFragmentTotalBtcValue"
+                android:id="@+id/assetOverviewFragmentTotalCryptoValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueCrypto, assetOverviewViewModel.cryptoTitleSymbol) + " " + assetOverviewViewModel.cryptoTitleSymbol}'
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@id/assetOverviewFragmentTotalBtcLabel"
+                app:layout_constraintStart_toEndOf="@id/assetOverviewFragmentTotalCryptoLabel"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/assetOverviewFragmentTotalUsdLabel"
+                android:id="@+id/assetOverviewFragmentTotalFiatLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
-                android:text="Total Assets:"
+                android:text="Total Fiat Assets:"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/assetOverviewFragmentTotalUsdValue"
+                app:layout_constraintEnd_toStartOf="@+id/assetOverviewFragmentTotalFiatValue"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/assetOverviewFragmentTotalUsdValue"
+                android:id="@+id/assetOverviewFragmentTotalFiatValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueFiat, assetOverviewViewModel.fiatTitleSymbol) + " " + assetOverviewViewModel.fiatTitleSymbol}'

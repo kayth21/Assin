@@ -1,7 +1,8 @@
 package com.ceaver.assin.action.input
 
 import androidx.lifecycle.*
-import com.ceaver.assin.action.*
+import com.ceaver.assin.action.ActionEntity
+import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.common.SingleLiveEvent
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
@@ -24,51 +25,51 @@ class ActionInputViewModel(actionEntity: ActionEntity?, title: Title?, actionTyp
             _symbols.postValue(titles)
         }
         when {
-            actionEntity != null -> this._action.postValue(actionEntity)
-            title != null -> when (actionType) {
-                ActionType.DEPOSIT -> this._action.postValue(ActionEntity(actionType = actionType, buyTitle = title))
-                ActionType.WITHDRAW -> this._action.postValue(ActionEntity(actionType = actionType, sellTitle = title))
-                else -> throw IllegalStateException()
-            }
+//            actionEntity != null -> this._action.postValue(actionEntity)
+//            title != null -> when (actionType) {
+//                ActionType.DEPOSIT -> this._action.postValue(ActionEntity(actionType = actionType, buyTitle = title))
+//                ActionType.WITHDRAW -> this._action.postValue(ActionEntity(actionType = actionType, sellTitle = title))
+//                else -> throw IllegalStateException()
+//            }
             else -> this._action.postValue(ActionEntity(actionType = actionType))
         }
     }
 
     private fun saveAction(actionEntity: ActionEntity) {
-        viewModelScope.launch {
-            _status.value = ActionInputStatus.START_SAVE
-            if (actionEntity.id > 0) {
-                // TODO update... could be tricky when actions are "linked" to positions
-                ActionRepository.updateAction(actionEntity.toAction())
-                _status.value = ActionInputStatus.END_SAVE
-            } else
-                when (actionEntity.actionType) {
-                    ActionType.DEPOSIT -> {
-                        ActionRepository.insertDeposit(Deposit.fromAction(actionEntity))
-                        _status.value = ActionInputStatus.END_SAVE
-                    }
-                    ActionType.WITHDRAW -> {
-                        ActionRepository.insertWithdraw(Withdraw.fromAction(actionEntity))
-                        _status.value = ActionInputStatus.END_SAVE
-                    }
-                    ActionType.TRADE -> {
-                        ActionRepository.insertTrade(Trade.fromAction(actionEntity))
-                        _status.value = ActionInputStatus.END_SAVE
-                    }
-                }
-        }
+//        viewModelScope.launch {
+//            _status.value = ActionInputStatus.START_SAVE
+//            if (actionEntity.id > 0) {
+//                // TODO update... could be tricky when actions are "linked" to positions
+////                ActionRepository.updateAction(actionEntity.toAction())
+//                _status.value = ActionInputStatus.END_SAVE
+//            } else
+//                when (actionEntity.actionType) {
+//                    ActionType.DEPOSIT -> {
+//                        ActionRepository.insertDeposit(Deposit.fromAction(actionEntity))
+//                        _status.value = ActionInputStatus.END_SAVE
+//                    }
+//                    ActionType.WITHDRAW -> {
+//                        ActionRepository.insertWithdraw(Withdraw.fromAction(actionEntity))
+//                        _status.value = ActionInputStatus.END_SAVE
+//                    }
+//                    ActionType.TRADE -> {
+//                        ActionRepository.insertTrade(Trade.fromAction(actionEntity))
+//                        _status.value = ActionInputStatus.END_SAVE
+//                    }
+//                }
+//        }
     }
 
     fun onSaveTradeClick(buySymbol: Title, buyAmount: BigDecimal, sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
+//        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
     }
 
     fun onDepositClick(buySymbol: Title, buyAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
+//        saveAction(_action.value!!.copy(buyTitle = buySymbol, buyAmount = buyAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
     }
 
     fun onWithdrawClick(sellSymbol: Title, sellAmount: BigDecimal, actionDate: LocalDate, comment: String?, valueBtc: BigDecimal, valueUsd: BigDecimal) {
-        saveAction(_action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
+//        saveAction(_action.value!!.copy(sellTitle = sellSymbol, sellAmount = sellAmount, actionDate = actionDate, comment = comment, valueCrypto = valueBtc, valueFiat = valueUsd))
     }
 
     enum class ActionInputStatus {

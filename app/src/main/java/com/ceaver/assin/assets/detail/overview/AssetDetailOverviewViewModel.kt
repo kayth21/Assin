@@ -8,7 +8,7 @@ import com.ceaver.assin.preferences.Preferences
 
 class AssetDetailOverviewViewModel(val title: Title) : ViewModel() {
 
-    val asset = AssetRepository.loadAssetObserved(title)
+    val asset =  AssetRepository.loadAssetObserved(title)
     val primaryTitle = Preferences.getCryptoTitle()
     val secondaryTitle = Preferences.getFiatTitle()
 

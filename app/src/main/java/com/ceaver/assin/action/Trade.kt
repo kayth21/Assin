@@ -20,19 +20,19 @@ data class Trade(
 ) : Action {
 
     companion object Factory {
-        fun fromAction(actionEntity: ActionEntity): Trade {
-            require(ActionType.TRADE == actionEntity.actionType)
+        fun fromAction(actionEntity: ActionDto): Trade {
+            require(ActionType.TRADE == actionEntity.action.actionType)
             return Trade(
-                    id = actionEntity.id,
-                    date = actionEntity.actionDate,
+                    id = actionEntity.action.id,
+                    date = actionEntity.action.actionDate,
                     buyTitle = actionEntity.buyTitle!!,
-                    buyAmount = actionEntity.buyAmount!!,
+                    buyAmount = actionEntity.action.buyAmount!!,
                     sellTitle = actionEntity.sellTitle!!,
-                    sellAmount = actionEntity.sellAmount!!,
-                    positionId = actionEntity.positionId,
-                    valueCrypto = actionEntity.valueCrypto!!,
-                    valueFiat = actionEntity.valueFiat!!,
-                    comment = actionEntity.comment)
+                    sellAmount = actionEntity.action.sellAmount!!,
+                    positionId = actionEntity.action.positionId,
+                    valueCrypto = actionEntity.action.valueCrypto!!,
+                    valueFiat = actionEntity.action.valueFiat!!,
+                    comment = actionEntity.action.comment)
         }
 
         suspend fun fromImport(csvRecord: CSVRecord): Trade {
@@ -77,9 +77,9 @@ data class Trade(
                 actionType = ActionType.TRADE,
                 id = id,
                 actionDate = date,
-                buyTitle = buyTitle,
+                buyTitleId = buyTitle.id,
                 buyAmount = buyAmount,
-                sellTitle = sellTitle,
+                sellTitleId = sellTitle.id,
                 sellAmount = sellAmount,
                 positionId = positionId,
                 valueCrypto = valueCrypto,

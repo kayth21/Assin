@@ -6,14 +6,16 @@ import androidx.room.*
 @Dao
 interface ActionEntityDao {
 
+    @Transaction
+    @Query("SELECT * FROM action")
+    fun getActionDtosObserved(): LiveData<List<ActionDto>>
+
+    @Transaction
+    @Query("SELECT * FROM action")
+    suspend fun getActionDtos(): List<ActionDto>
+
     @Query("select * from action where id = :id")
-    suspend fun loadActionEntity(id: Long): ActionEntity
-
-    @Query("select * from action")
-    fun loadAllActionEntitiesObserved(): LiveData<List<ActionEntity>>
-
-    @Query("select * from action")
-    suspend fun loadAllActionEntities(): List<ActionEntity>
+    suspend fun loadActionDto(id: Long): ActionDto
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertActionEntity(actionEntity: ActionEntity)

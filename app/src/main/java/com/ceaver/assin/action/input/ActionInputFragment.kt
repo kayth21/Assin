@@ -155,11 +155,11 @@ class ActionInputFragment() : Fragment() {
     }
 
     private fun updateSpinnerFields(actionEntity: ActionEntity) {
-        if (actionEntity.buyTitle != null) {
-            actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.buyTitle!!))
+        if (actionEntity.buyTitleId != null) {
+//            actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.buyTitle!!))
         }
-        if (actionEntity.sellTitle != null) {
-            actionInputFragmentSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.sellTitle!!))
+        if (actionEntity.sellTitleId != null) {
+//            actionInputFragmentSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.sellTitle!!))
         }
     }
 
