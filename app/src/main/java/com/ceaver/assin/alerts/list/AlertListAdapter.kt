@@ -31,10 +31,10 @@ internal class AlertListAdapter(private val onClickListener: AlertListFragment.O
         }
 
         fun bindItem(alert: Alert, onClickListener: AlertListFragment.OnItemClickListener) {
-            binding.alertSymbolTextView.text = alert.symbol.toString()
-            binding.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.reference.symbol}"
-            binding.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.reference.symbol}"
-            binding.alertRangeTextView.text = "Range (+/-): " + alert.target.toPlainString() + " ${alert.reference.symbol}"
+            binding.alertSymbolTextView.text = alert.title.toString()
+            binding.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
+            binding.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
+            binding.alertRangeTextView.text = "Range (+/-): " + alert.target.toPlainString() + " ${alert.referenceTitle.symbol}"
             itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(alert) }
         }

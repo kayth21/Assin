@@ -73,6 +73,7 @@ data class Title(//
         return "%.1f".format(cryptoQuotes.percentChange7d) // TODO let the user decide if primary or secondary
     }
 
+    // TODO really??
     override fun toString(): String {
         return "$symbol ($name)"
     }

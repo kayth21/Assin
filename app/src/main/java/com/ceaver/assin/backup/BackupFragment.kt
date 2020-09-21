@@ -125,7 +125,7 @@ class BackupFragment : Fragment() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (alert in alerts) csvPrinter.printRecord(alert.symbol.symbol, alert.reference.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
+            for (alert in alerts) csvPrinter.printRecord(alert.title.symbol, alert.referenceTitle.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
             csvPrinter.flush()
             LogRepository.insertLog("Export alerts successful to '$filePath'")
             return Result.success()

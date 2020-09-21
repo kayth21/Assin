@@ -14,7 +14,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
     }
 
     private suspend fun checkAlert(alert: Alert) {
-        val price = TitleRepository.lookupPrice(alert.symbol, alert.reference)
+        val price = TitleRepository.lookupPrice(alert.title, alert.referenceTitle)
         if (price.isPresent) {
             val currentPrice = BigDecimal.valueOf(price.get())
             val result = alert.alertType.check(alert, currentPrice)
@@ -24,9 +24,9 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
             val it = result.get()
             AlertRepository.updateAlert(it)
             checkAlert(it)
-            AlertNotification.notify(alert.symbol, alert.reference, targetPrice(alert, currentPrice), currentPrice)
+            AlertNotification.notify(alert.title, alert.referenceTitle, targetPrice(alert, currentPrice), currentPrice)
         } else {
-            LogRepository.insertLog("Failed to check alert ${alert.symbol.symbol}/${alert.reference.symbol} (no path found).")
+            LogRepository.insertLog("Failed to check alert ${alert.title.symbol}/${alert.referenceTitle.symbol} (no path found).")
         }
     }
 

@@ -1,21 +1,22 @@
 package com.ceaver.assin.alerts
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
 import org.greenrobot.eventbus.EventBus
 
 object AlertRepository {
 
     suspend fun loadAlert(id: Long): Alert {
-        return getAlertDao().loadAlert(id)
+        return getAlertDao().loadAlert(id).toAlert()
     }
 
     fun loadAllAlerts(): List<Alert> {
-        return getAlertDao().loadAllAlerts()
+        return getAlertDao().loadAllAlerts().map { it.toAlert() }
     }
 
     fun loadAllAlertsObserved(): LiveData<List<Alert>> {
-        return getAlertDao().loadAllAlertsObserved()
+        return Transformations.map(getAlertDao().loadAllAlertsObserved()) { it.map { it.toAlert() } }
     }
 
     suspend fun saveAlert(alert: Alert) {
@@ -23,19 +24,19 @@ object AlertRepository {
     }
 
     suspend fun insertAlert(alert: Alert) {
-        getAlertDao().insertAlert(alert); EventBus.getDefault().post(AlertEvents.Insert())
+        getAlertDao().insertAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Insert())
     }
 
     suspend fun insertAlerts(alerts: List<Alert>) {
-        getAlertDao().insertAlerts(alerts); EventBus.getDefault().post(AlertEvents.Insert())
+        getAlertDao().insertAlerts(alerts.map { it.toEntity() }); EventBus.getDefault().post(AlertEvents.Insert())
     }
 
     suspend fun updateAlert(alert: Alert) {
-        getAlertDao().updateAlert(alert); EventBus.getDefault().post(AlertEvents.Update())
+        getAlertDao().updateAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Update())
     }
 
     suspend fun deleteAlert(alert: Alert) {
-        getAlertDao().deleteAlert(alert); EventBus.getDefault().post(AlertEvents.Delete())
+        getAlertDao().deleteAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Delete())
     }
 
     suspend fun deleteAllAlerts() {

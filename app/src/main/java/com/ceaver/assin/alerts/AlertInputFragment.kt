@@ -50,7 +50,7 @@ class AlertInputFragment : Fragment() {
     }
 
     private fun bindSymbol() {
-        viewModel.symbol.observe(viewLifecycleOwner, Observer {
+        viewModel.title.observe(viewLifecycleOwner, Observer {
             val adapter = ArrayAdapter<Title>(requireContext(), android.R.layout.simple_spinner_item)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             alertSymbolText.setAdapter(adapter)
@@ -110,9 +110,9 @@ class AlertInputFragment : Fragment() {
     }
 
     private fun updateSpinnerFields() {
-        if (viewModel.alert.value != null && viewModel.symbol.value != null && viewModel.reference.value != null) {
-            alertSymbolText.setSelection(viewModel.symbol.value!!.indexOf(viewModel.alert.value!!.symbol))
-            alertReferenceText.setSelection(viewModel.reference.value!!.indexOf(viewModel.alert.value!!.reference))
+        if (viewModel.alert.value != null && viewModel.title.value != null && viewModel.reference.value != null) {
+            alertSymbolText.setSelection(viewModel.title.value!!.indexOf(viewModel.alert.value!!.title))
+            alertReferenceText.setSelection(viewModel.reference.value!!.indexOf(viewModel.alert.value!!.referenceTitle))
         }
     }
 

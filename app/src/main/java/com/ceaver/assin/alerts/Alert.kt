@@ -2,36 +2,44 @@ package com.ceaver.assin.alerts
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.Title
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
 @Parcelize
-@Entity(tableName = "alert",
-        foreignKeys = arrayOf(
-                ForeignKey(
-                        entity = Title::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("reference"),
-                        onDelete = ForeignKey.CASCADE),
-                ForeignKey(
-                        entity = Title::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("symbol"),
-                        onDelete = ForeignKey.CASCADE)))
 data class Alert(//
-        @PrimaryKey(autoGenerate = true)
         val id: Long = 0,
-        val symbol: Title,
-        val reference: Title,
+        val title: Title,
+        val referenceTitle: Title,
         val alertType: AlertType,
         val source: BigDecimal,
         val target: BigDecimal) : Parcelable {
 
     fun isNew(): Boolean = this.id == 0L;
+
+    companion object Factory {
+        fun fromDto(dto: AlertDto): Alert {
+            return Alert(
+                    id = dto.alert.id,
+                    title = dto.title,
+                    referenceTitle = dto.referenceTitle,
+                    alertType = dto.alert.alertType,
+                    source = dto.alert.source,
+                    target = dto.alert.target
+            )
+        }
+    }
+
+    fun toEntity(): AlertEntity {
+        return AlertEntity(
+                id = id,
+                titleId = title.id,
+                referenceTitleId = referenceTitle.id,
+                alertType = alertType,
+                source = source,
+                target = target
+        )
+    }
 
     object Difference : DiffUtil.ItemCallback<Alert>() {
         override fun areItemsTheSame(oldItem: Alert, newItem: Alert): Boolean {
