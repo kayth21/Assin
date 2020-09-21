@@ -6,8 +6,6 @@ import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.intentions.IntentionStatus
 import com.ceaver.assin.intentions.IntentionType
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,7 +21,7 @@ class Converters {
     fun toLocalDate(long: Long?): LocalDate? = long?.let { LocalDate.MIN.plusDays(it) }
 
     @TypeConverter
-    fun fromBigDecimal(bigDecimal: BigDecimal?): String? =  bigDecimal?.toPlainString()
+    fun fromBigDecimal(bigDecimal: BigDecimal?): String? = bigDecimal?.toPlainString()
 
     @TypeConverter
     fun toBigDecimal(string: String?): BigDecimal? = string?.toBigDecimalOrNull()
@@ -39,12 +37,6 @@ class Converters {
 
     @TypeConverter
     fun toUuid(string: String?): UUID? = string?.let { UUID.fromString(string) }
-
-    @TypeConverter
-    fun fromTitle(title: Title?): String? = title?.id
-
-    @TypeConverter
-    fun toTitle(string: String?): Title? = string?.let { TitleRepository.loadTitleReg(it) }
 
     @TypeConverter
     fun fromAlertType(alertType: AlertType?): String? = alertType?.name

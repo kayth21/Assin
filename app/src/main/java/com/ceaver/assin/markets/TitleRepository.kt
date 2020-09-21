@@ -27,10 +27,6 @@ object TitleRepository {
         return getTitleDao().loadTitle(id)
     }
 
-    fun loadTitleReg(id: String): Title? {
-        return getTitleDao().loadTitleReg(id)
-    }
-
     suspend fun loadAllTitles(): List<Title> {
         return getTitleDao().loadAllTitles().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }
     }
