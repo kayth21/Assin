@@ -14,6 +14,7 @@ interface ActionEntityDao {
     @Query("SELECT * FROM action")
     suspend fun getActionDtos(): List<ActionDto>
 
+    @Transaction
     @Query("select * from action where id = :id")
     suspend fun loadActionDto(id: Long): ActionDto
 

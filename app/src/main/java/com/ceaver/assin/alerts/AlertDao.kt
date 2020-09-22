@@ -5,12 +5,15 @@ import androidx.room.*
 
 @Dao
 interface AlertDao {
+    @Transaction
     @Query("select * from alert")
     fun loadAllAlerts(): List<AlertDto>
 
+    @Transaction
     @Query("select * from alert")
     fun loadAllAlertsObserved(): LiveData<List<AlertDto>>
 
+    @Transaction
     @Query("select * from alert where id = :id")
     suspend fun loadAlert(id: Long): AlertDto
 

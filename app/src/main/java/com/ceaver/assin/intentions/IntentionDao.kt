@@ -5,12 +5,15 @@ import androidx.room.*
 
 @Dao
 interface IntentionDao {
+    @Transaction
     @Query("select * from intention")
     fun loadAllIntentions(): List<IntentionDto>
 
+    @Transaction
     @Query("select * from intention")
     fun loadAllIntentionsObserved(): LiveData<List<IntentionDto>>
 
+    @Transaction
     @Query("select * from intention where id = :id")
     suspend fun loadIntentionById(id: Long): IntentionDto
 
