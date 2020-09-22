@@ -26,7 +26,7 @@ data class Withdraw(
             return Withdraw(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.sellTitle!!,
+                    title = actionDto.sellTitle!!.toTitle(),
                     amount = actionDto.action.sellAmount!!,
                     valueCrypto = actionDto.action.valueCrypto!!,
                     valueFiat = actionDto.action.valueFiat!!,

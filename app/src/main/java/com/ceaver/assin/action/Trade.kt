@@ -25,9 +25,9 @@ data class Trade(
             return Trade(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    buyTitle = actionDto.buyTitle!!,
+                    buyTitle = actionDto.buyTitle!!.toTitle(),
                     buyAmount = actionDto.action.buyAmount!!,
-                    sellTitle = actionDto.sellTitle!!,
+                    sellTitle = actionDto.sellTitle!!.toTitle(),
                     sellAmount = actionDto.action.sellAmount!!,
                     positionId = actionDto.action.positionId,
                     valueCrypto = actionDto.action.valueCrypto!!,

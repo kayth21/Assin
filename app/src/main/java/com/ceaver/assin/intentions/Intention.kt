@@ -23,11 +23,11 @@ data class Intention(
             return Intention(
                     id = dto.intention.id,
                     amount = dto.intention.amount,
-                    title = dto.title,
+                    title = dto.title.toTitle(),
                     comment = dto.intention.comment,
                     creationDate = dto.intention.creationDate,
                     referencePrice = dto.intention.referencePrice,
-                    referenceTitle = dto.referenceTitle,
+                    referenceTitle = dto.referenceTitle.toTitle(),
                     status = dto.intention.status,
                     type = dto.intention.type)
         }

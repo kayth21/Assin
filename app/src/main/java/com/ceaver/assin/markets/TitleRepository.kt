@@ -1,6 +1,7 @@
 package com.ceaver.assin.markets
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.database.Database
 import java.util.*
@@ -8,43 +9,43 @@ import java.util.*
 object TitleRepository {
 
     suspend fun updateAll(allTitles: Set<Title>) {
-        getTitleDao().updateTitles(allTitles)
+        getTitleDao().updateTitles(allTitles.map { it.toEntity() })
     }
 
     suspend fun update(title: Title) {
-        getTitleDao().updateTitle(title)
+        getTitleDao().updateTitle(title.toEntity())
     }
 
     suspend fun insertAll(allTitles: Set<Title>) {
-        getTitleDao().insertTitles(allTitles)
+        getTitleDao().insertTitles(allTitles.map { it.toEntity() })
     }
 
     suspend fun insert(title: Title) {
-        getTitleDao().insertTitle(title)
+        getTitleDao().insertTitle(title.toEntity())
     }
 
     suspend fun loadTitle(id: String): Title? {
-        return getTitleDao().loadTitle(id)
+        return getTitleDao().loadTitle(id)?.toTitle()
     }
 
     suspend fun loadAllTitles(): List<Title> {
-        return getTitleDao().loadAllTitles().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }
+        return getTitleDao().loadAllTitles().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }.map { it.toTitle() }
     }
 
     suspend fun loadAllCryptoTitles(): List<Title> {
-        return getTitleDao().loadAllCryptoTitles()
+        return getTitleDao().loadAllCryptoTitles().map { it.toTitle() }
     }
 
     suspend fun loadActiveTitles(): List<Title> {
-        return getTitleDao().loadActiveTitles()
+        return getTitleDao().loadActiveTitles().map { it.toTitle() }
     }
 
     fun loadActiveCryptoTitles(): LiveData<List<Title>> {
-        return getTitleDao().loadActiveCryptoTitles()
+        return Transformations.map(getTitleDao().loadActiveCryptoTitles()) { it.map { it.toTitle() } }
     }
 
     suspend fun loadTitleBySymbol(symbol: String): Title {
-        return getTitleDao().loadTitleBySymbol(symbol);
+        return getTitleDao().loadTitleBySymbol(symbol).toTitle();
     }
 
     suspend fun loadAllCryptoSymbols(): List<String> {
@@ -84,15 +85,15 @@ object TitleRepository {
     }
 
     suspend fun deleteTitle(title: Title) {
-        getTitleDao().deleteTitle(title)
+        getTitleDao().deleteTitle(title.toEntity())
     }
 
     suspend fun deleteTitles(titles: Set<Title>) {
-        getTitleDao().deleteTitles(titles)
+        getTitleDao().deleteTitles(titles.map { it.toEntity() })
     }
 
     suspend fun marketUpdate(titlesToInsert: Set<Title>, titlesToUpdate: Set<Title>, titlesToDelete: Set<Title>) {
-        getTitleDao().marketUpdate(titlesToInsert, titlesToUpdate, titlesToDelete)
+        getTitleDao().marketUpdate(titlesToInsert.map { it.toEntity() }, titlesToUpdate.map { it.toEntity() }, titlesToDelete.map { it.toEntity() })
     }
 
     private fun getTitleDao(): TitleDao {

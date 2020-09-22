@@ -21,8 +21,8 @@ data class Alert(//
         fun fromDto(dto: AlertDto): Alert {
             return Alert(
                     id = dto.alert.id,
-                    title = dto.title,
-                    referenceTitle = dto.referenceTitle,
+                    title = dto.title.toTitle(),
+                    referenceTitle = dto.referenceTitle.toTitle(),
                     alertType = dto.alert.alertType,
                     source = dto.alert.source,
                     target = dto.alert.target

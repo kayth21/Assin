@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleEntity
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -13,17 +13,17 @@ import java.time.LocalDate
 @Entity(tableName = "action",
         foreignKeys = arrayOf(
                 ForeignKey(
-                        entity = Title::class,
+                        entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("buyTitleId"),
                         onDelete = ForeignKey.RESTRICT), // TODO but what if..?
                 ForeignKey(
-                        entity = Title::class,
+                        entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("sellTitleId"),
                         onDelete = ForeignKey.RESTRICT), // TODO but what if..?
                 ForeignKey(
-                        entity = Title::class,
+                        entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("splitTitleId"),
                         onDelete = ForeignKey.RESTRICT))) // TODO but what if..?

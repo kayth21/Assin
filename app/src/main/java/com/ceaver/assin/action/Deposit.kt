@@ -22,7 +22,7 @@ data class Deposit(
             return Deposit(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.buyTitle!!,
+                    title = actionDto.buyTitle!!.toTitle(),
                     amount = actionDto.action.buyAmount!!,
                     valueCrypto = actionDto.action.valueCrypto!!,
                     valueFiat = actionDto.action.valueFiat!!,

@@ -2,17 +2,17 @@ package com.ceaver.assin.action
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleEntity
 
 data class ActionDto (
         @Embedded
         val action: ActionEntity,
         @Relation(parentColumn = "buyTitleId", entityColumn = "id")
-        val buyTitle: Title?,
+        val buyTitle: TitleEntity?,
         @Relation(parentColumn = "sellTitleId", entityColumn = "id")
-        val sellTitle: Title?,
+        val sellTitle: TitleEntity?,
         @Relation(parentColumn = "splitTitleId", entityColumn = "id")
-        val splitTitle: Title?
+        val splitTitle: TitleEntity?
 ) {
     fun toAction(): Action {
         return when (action.actionType) {

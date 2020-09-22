@@ -24,7 +24,7 @@ data class Split(
             return Split(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.splitTitle!!,
+                    title = actionDto.splitTitle!!.toTitle(),
                     amount = actionDto.action.splitAmount!!,
                     remaining = actionDto.action.splitRemaining!!,
                     positionId = actionDto.action.positionId!!,
