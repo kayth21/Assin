@@ -3,6 +3,7 @@ package com.ceaver.assin.action
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ceaver.assin.markets.TitleEntity
 import kotlinx.android.parcel.Parcelize
@@ -11,22 +12,23 @@ import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = "action",
-        foreignKeys = arrayOf(
+        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId"])],
+        foreignKeys = [
                 ForeignKey(
                         entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("buyTitleId"),
-                        onDelete = ForeignKey.RESTRICT), // TODO but what if..?
+                        onDelete = ForeignKey.RESTRICT),
                 ForeignKey(
                         entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("sellTitleId"),
-                        onDelete = ForeignKey.RESTRICT), // TODO but what if..?
+                        onDelete = ForeignKey.RESTRICT),
                 ForeignKey(
                         entity = TitleEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("splitTitleId"),
-                        onDelete = ForeignKey.RESTRICT))) // TODO but what if..?
+                        onDelete = ForeignKey.RESTRICT)]) // TODO but what if..?
 data class ActionEntity(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
