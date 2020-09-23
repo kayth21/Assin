@@ -138,7 +138,7 @@ class BackupFragment : Fragment() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.amountAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
+            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.quantityAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
             csvPrinter.flush()
             LogRepository.insertLog("Export intentions successful to '$filePath'")
             return Result.success()

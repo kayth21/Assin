@@ -33,32 +33,32 @@ object ActionRepository {
         } else {
             val positions = PositionRepository.loadPositions(trade.sellTitle).filter { it.isActive() }
             val oldestPosition = positions.first()
-            when (oldestPosition.amount.compareTo(trade.sellAmount)) {
+            when (oldestPosition.quantity.compareTo(trade.sellQuantity)) {
                 0 -> {
                     insertTrade(trade.copy(positionId = oldestPosition.id))
                 }
                 1 -> {
-                    insertSplit(oldestPosition, trade.sellAmount);
+                    insertSplit(oldestPosition, trade.sellQuantity);
                     insertTrade(trade)
                 }
                 -1 -> {
                     var index = 1
                     val mergeList = mutableListOf(oldestPosition, positions.get(1))
-                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellAmount) == -1) {
+                    while (mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellQuantity) == -1) {
                         index++
                         mergeList.add(positions.get(index))
                     }
 
-                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellAmount)) {
+                    when (mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(trade.sellQuantity)) {
                         0 -> {
                             mergeList.forEach {
-                                insertTrade(trade.copy(positionId = it.id, sellAmount = it.amount))
+                                insertTrade(trade.copy(positionId = it.id, sellQuantity = it.quantity))
                             }
                         }
                         1 -> {
                             val splitPosition = mergeList.last()
-                            val splitAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(trade.sellAmount)
-                            insertSplit(splitPosition, splitAmount)
+                            val splitQuantity = mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(trade.sellQuantity)
+                            insertSplit(splitPosition, splitQuantity)
                             insertTrade(trade)
                         }
                     }
@@ -73,33 +73,33 @@ object ActionRepository {
         } else {
             val positions = PositionRepository.loadPositions(withdraw.title).filter { it.isActive() }
             val oldestPosition = positions.first()
-            when (oldestPosition.amount.compareTo(withdraw.amount)) {
+            when (oldestPosition.quantity.compareTo(withdraw.quantity)) {
                 0 -> {
                     insertWithdraw(withdraw.copy(positionId = oldestPosition.id))
                 }
                 1 -> {
-                    insertSplit(oldestPosition, withdraw.amount);
+                    insertSplit(oldestPosition, withdraw.quantity);
                     insertWithdraw(withdraw)
                 }
                 -1 -> {
                     var index = 1
                     val mergeList = mutableListOf<Position>(oldestPosition, positions.get(1))
-                    while (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.amount) == -1) {
+                    while (mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.quantity) == -1) {
                         index++
                         mergeList.add(positions.get(index))
                     }
 
-                    when (mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.amount)) {
+                    when (mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.compareTo(withdraw.quantity)) {
                         0 -> {
                             mergeList.forEach {
-                                insertWithdraw(withdraw.copy(positionId = it.id, amount = it.amount))
+                                insertWithdraw(withdraw.copy(positionId = it.id, quantity = it.quantity))
                             }
                         }
                         1 -> {
                             val splitPosition = mergeList.last()
-                            val overflowAmount = mergeList.map { it.amount }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(withdraw.amount)
-                            val splitAmount = splitPosition.amount.minus(overflowAmount)
-                            insertSplit(splitPosition, splitAmount)
+                            val overflowQuantity = mergeList.map { it.quantity }.reduce { acc, bigDecimal -> acc.add(bigDecimal) }.minus(withdraw.quantity)
+                            val splitQuantity = splitPosition.quantity.minus(overflowQuantity)
+                            insertSplit(splitPosition, splitQuantity)
                             insertWithdraw(withdraw)
                         }
                     }
@@ -108,8 +108,8 @@ object ActionRepository {
         }
     }
 
-    suspend fun insertSplit(position: Position, sellAmount: BigDecimal) {
-        insertAction(Split.fromPosition(position, sellAmount))
+    suspend fun insertSplit(position: Position, sellQuantity: BigDecimal) {
+        insertAction(Split.fromPosition(position, sellQuantity))
     }
 
     suspend fun insertActions(actions: List<Action>) {

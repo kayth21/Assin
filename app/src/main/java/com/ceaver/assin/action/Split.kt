@@ -12,7 +12,7 @@ data class Split(
         val id: Long = 0,
         val date: LocalDate = LocalDate.now(),
         val title: Title,
-        val amount: BigDecimal,
+        val quantity: BigDecimal,
         val remaining: BigDecimal,
         val positionId: BigDecimal,
         val comment: String? = null
@@ -25,7 +25,7 @@ data class Split(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
                     title = actionDto.splitTitle!!.toTitle(),
-                    amount = actionDto.action.splitAmount!!,
+                    quantity = actionDto.action.splitQuantity!!,
                     remaining = actionDto.action.splitRemaining!!,
                     positionId = actionDto.action.positionId!!,
                     comment = actionDto.action.comment)
@@ -36,15 +36,15 @@ data class Split(
             return Split(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
-                    amount = csvRecord.get(3).toBigDecimal(),
+                    quantity = csvRecord.get(3).toBigDecimal(),
                     remaining = csvRecord.get(4).toBigDecimal(),
                     positionId = csvRecord.get(5).toBigDecimal(),
                     comment = csvRecord.get(6).ifEmpty { null })
         }
-        fun fromPosition(position: Position, amount: BigDecimal): Split {
+        fun fromPosition(position: Position, quantity: BigDecimal): Split {
             return Split(
-                    amount = amount,
-                    remaining = position.amount.minus(amount),
+                    quantity = quantity,
+                    remaining = position.quantity.minus(quantity),
                     title = position.title,
                     positionId = position.id
             )
@@ -56,7 +56,7 @@ data class Split(
                 ActionType.SPLIT.name,
                 date.toString(),
                 title.symbol,
-                amount.toPlainString(),
+                quantity.toPlainString(),
                 remaining.toPlainString(),
                 positionId.toPlainString(),
                 comment.orEmpty())
@@ -68,7 +68,7 @@ data class Split(
     override fun getRightImageResource(): Int = R.drawable.split
     override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "Split ${title.name} position"
-    override fun getDetailText(): String = "${amount.add(remaining)} ${title.symbol} splitted into $amount ${title.symbol} and $remaining ${title.symbol}"
+    override fun getDetailText(): String = "${quantity.add(remaining)} ${title.symbol} splitted into $quantity ${title.symbol} and $remaining ${title.symbol}"
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
@@ -76,7 +76,7 @@ data class Split(
                 id = id,
                 actionDate = date,
                 splitTitleId = title.id,
-                splitAmount = amount,
+                splitQuantity = quantity,
                 splitRemaining = remaining,
                 positionId = positionId,
                 comment = comment

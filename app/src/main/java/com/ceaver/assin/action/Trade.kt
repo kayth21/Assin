@@ -10,9 +10,9 @@ data class Trade(
         val id: Long = 0,
         val date: LocalDate = LocalDate.now(),
         val buyTitle: Title,
-        val buyAmount: BigDecimal,
+        val buyQuantity: BigDecimal,
         val sellTitle: Title,
-        val sellAmount: BigDecimal,
+        val sellQuantity: BigDecimal,
         val positionId: BigDecimal?,
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
@@ -26,9 +26,9 @@ data class Trade(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
                     buyTitle = actionDto.buyTitle!!.toTitle(),
-                    buyAmount = actionDto.action.buyAmount!!,
+                    buyQuantity = actionDto.action.buyQuantity!!,
                     sellTitle = actionDto.sellTitle!!.toTitle(),
-                    sellAmount = actionDto.action.sellAmount!!,
+                    sellQuantity = actionDto.action.sellQuantity!!,
                     positionId = actionDto.action.positionId,
                     valueCrypto = actionDto.action.valueCrypto!!,
                     valueFiat = actionDto.action.valueFiat!!,
@@ -40,9 +40,9 @@ data class Trade(
             return Trade(
                     date = LocalDate.parse(csvRecord.get(1)),
                     buyTitle = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
-                    buyAmount = csvRecord.get(3).toBigDecimal(),
+                    buyQuantity = csvRecord.get(3).toBigDecimal(),
                     sellTitle = TitleRepository.loadTitleBySymbol(csvRecord.get(4)),
-                    sellAmount = csvRecord.get(5).toBigDecimal(),
+                    sellQuantity = csvRecord.get(5).toBigDecimal(),
                     positionId = csvRecord.get(6).toBigDecimal(),
                     valueCrypto = csvRecord.get(7).toBigDecimal(),
                     valueFiat = csvRecord.get(8).toBigDecimal(),
@@ -56,16 +56,16 @@ data class Trade(
     override fun getRightImageResource(): Int = buyTitle.getIcon()
     override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "${sellTitle.name} -> ${buyTitle.name}"
-    override fun getDetailText(): String = "$sellAmount ${sellTitle.symbol} -> $buyAmount ${buyTitle.symbol}"
+    override fun getDetailText(): String = "$sellQuantity ${sellTitle.symbol} -> $buyQuantity ${buyTitle.symbol}"
 
     override fun toExport(): List<String> {
         return listOf(
                 ActionType.TRADE.name,
                 date.toString(),
                 buyTitle.symbol,
-                buyAmount.toPlainString(),
+                buyQuantity.toPlainString(),
                 sellTitle.symbol,
-                sellAmount.toPlainString(),
+                sellQuantity.toPlainString(),
                 positionId!!.toPlainString(),
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
@@ -78,9 +78,9 @@ data class Trade(
                 id = id,
                 actionDate = date,
                 buyTitleId = buyTitle.id,
-                buyAmount = buyAmount,
+                buyQuantity = buyQuantity,
                 sellTitleId = sellTitle.id,
-                sellAmount = sellAmount,
+                sellQuantity = sellQuantity,
                 positionId = positionId,
                 valueCrypto = valueCrypto,
                 valueFiat = valueFiat,

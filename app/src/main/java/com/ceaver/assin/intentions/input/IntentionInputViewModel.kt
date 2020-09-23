@@ -49,7 +49,7 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
     fun onSaveClick(type: IntentionType, buyTitle: Title, buyAmount: BigDecimal?, sellTitle: Title, sellAmount: BigDecimal, comment: String?) {
         _status.postValue(IntentionInputStatus.START_SAVE)
         viewModelScope.launch {
-            IntentionRepository.saveIntention(_intention.value!!.copy(type = type, title = buyTitle, amount = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment))
+            IntentionRepository.saveIntention(_intention.value!!.copy(type = type, title = buyTitle, quantity = buyAmount, referenceTitle = sellTitle, referencePrice = sellAmount, comment = comment))
             _status.postValue(IntentionInputStatus.END_SAVE)
         }
     }

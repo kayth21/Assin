@@ -168,14 +168,14 @@ class ActionInputFragment() : Fragment() {
         actionInputFragmentCommentTextView.setText(actionEntity.comment.orEmpty())
         when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
-                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyAmount != null) actionEntity.buyAmount.toString() else "")
-                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellAmount != null) actionEntity.sellAmount.toString() else "")
+                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
+                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
             }
             ActionType.DEPOSIT -> {
-                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyAmount != null) actionEntity.buyAmount.toString() else "")
+                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
             }
             ActionType.WITHDRAW -> {
-                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellAmount != null) actionEntity.sellAmount.toString() else "")
+                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
             }
             else -> throw IllegalStateException()
         }

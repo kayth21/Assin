@@ -42,7 +42,7 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
         }
 
         fun bindItem(position: Position, onClickListener: PositionListFragment.OnItemClickListener) {
-            binding.positionListRowPositionSize.text = "${position.amount.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
+            binding.positionListRowPositionSize.text = "${position.quantity.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
             binding.positionListRowPositionValuePrimary.text = "${position.currentValuePrimary.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()} (${position.profitLossInPercentToPrimaryTitle.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
             binding.positionListRowPositionValueSecondary.text = "${position.currentValueSecondary.toCurrencyString(Preferences.getFiatTitleSymbol())} ${Preferences.getFiatTitleSymbol()} (${position.profitLossInPercentToSecondaryValue.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
             binding.positionListRowPositionOpenDate.text = "Open: ${position.openDate.asFormattedDateTime()}"

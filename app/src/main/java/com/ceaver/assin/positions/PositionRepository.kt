@@ -49,7 +49,7 @@ object PositionRepository {
                                     positions.add(Position(
                                             id = positionId,
                                             title = action.title,
-                                            amount = action.amount,
+                                            quantity = action.quantity,
                                             openDate = action.date,
                                             openValueCrypto = action.valueCrypto,
                                             openValueFiat = action.valueFiat))
@@ -68,7 +68,7 @@ object PositionRepository {
                                     positions.add(Position(
                                             id = positionId,
                                             title = action.buyTitle,
-                                            amount = action.buyAmount,
+                                            quantity = action.buyQuantity,
                                             openDate = action.date,
                                             openValueCrypto = action.valueCrypto,
                                             openValueFiat = action.valueFiat))
@@ -78,16 +78,16 @@ object PositionRepository {
                                     val originalPosition = positions.find { it.id == action.positionId }!!
                                     val splitPosition = originalPosition.copy(
                                             id = originalPosition.id.addZeroDotOneToLastDecimal(),
-                                            amount = action.amount,
-                                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.amount),
-                                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.amount)
+                                            quantity = action.quantity,
+                                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity),
+                                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity)
                                             // TOOD closeValueCorrection needed if closed positions can be splitted
                                     )
                                     val remainingPosition = originalPosition.copy(
                                             id = originalPosition.id.addZeroDotTwoToLastDecimal(),
-                                            amount = action.remaining,
-                                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.remaining),
-                                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.remaining)
+                                            quantity = action.remaining,
+                                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining),
+                                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining)
                                             // TOOD closeValueCorrection needed if closed positions can be splitted
                                     )
                                     positions.remove(originalPosition)
@@ -122,7 +122,7 @@ object PositionRepository {
                     positions.add(Position(
                             id = positionId,
                             title = action.title,
-                            amount = action.amount,
+                            quantity = action.quantity,
                             openDate = action.date,
                             openValueCrypto = action.valueCrypto,
                             openValueFiat = action.valueFiat))
@@ -141,7 +141,7 @@ object PositionRepository {
                     positions.add(Position(
                             id = positionId,
                             title = action.buyTitle,
-                            amount = action.buyAmount,
+                            quantity = action.buyQuantity,
                             openDate = action.date,
                             openValueCrypto = action.valueCrypto,
                             openValueFiat = action.valueFiat))
@@ -151,16 +151,16 @@ object PositionRepository {
                     val originalPosition = positions.find { it.id == action.positionId }!!
                     val splitPosition = originalPosition.copy(
                             id = originalPosition.id.addZeroDotOneToLastDecimal(),
-                            amount = action.amount,
-                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.amount),
-                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.amount)
+                            quantity = action.quantity,
+                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity),
+                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity)
                             // TOOD closeValueCorrection needed if closed positions can be splitted
                     )
                     val remainingPosition = originalPosition.copy(
                             id = originalPosition.id.addZeroDotTwoToLastDecimal(),
-                            amount = action.remaining,
-                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.remaining),
-                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.amount, MathContext.DECIMAL32).times(action.remaining)
+                            quantity = action.remaining,
+                            openValueCrypto = originalPosition.openValueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining),
+                            openValueFiat = originalPosition.openValueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining)
                             // TOOD closeValueCorrection needed if closed positions can be splitted
                     )
                     positions.remove(originalPosition)

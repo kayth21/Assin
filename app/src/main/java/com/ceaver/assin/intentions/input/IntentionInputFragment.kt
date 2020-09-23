@@ -49,7 +49,7 @@ class IntentionInputFragment : Fragment() {
     private fun onSaveClick() {
         val type = if (intentionInputFragmentBuyRadio.isChecked) IntentionType.BUY else IntentionType.SELL
         val title = intentionInputFragmentTitleSymbolSpinner.selectedItem as Title
-        val amount = intentionInputFragmentTitleAmountTextView.text.toString().toBigDecimalOrNull()
+        val amount = intentionInputFragmentTitleQuantityTextView.text.toString().toBigDecimalOrNull()
         val referenceTitle = intentionInputFragmentReferenceSymbolSpinner.selectedItem as Title
         val referencePrice = intentionInputFragmentReferencePriceTextView.text.toString().toBigDecimal()
         val comment = intentionInputFragmentCommentTextView.text.toString()
@@ -73,7 +73,7 @@ class IntentionInputFragment : Fragment() {
 
             if (IntentionType.BUY == intention.type) intentionInputFragmentBuyRadio.isChecked = true else intentionInputFragmentSellRadio.isChecked = true
             intentionInputFragmentTitleSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.title))
-            intentionInputFragmentTitleAmountTextView.setText(intention.amountAsString())
+            intentionInputFragmentTitleQuantityTextView.setText(intention.quantityAsString())
             intentionInputFragmentReferenceSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(intention.referenceTitle))
             intentionInputFragmentReferencePriceTextView.setText(intention.referencePrice.toPlainString())
             intentionInputFragmentCommentTextView.setText(intention.comment.orEmpty())
@@ -85,7 +85,7 @@ class IntentionInputFragment : Fragment() {
     }
 
     private fun calculateValue(): String {
-        val amount = intentionInputFragmentTitleAmountTextView.text.toString().toDoubleOrNull()
+        val amount = intentionInputFragmentTitleQuantityTextView.text.toString().toDoubleOrNull()
         val referencePrice = intentionInputFragmentReferencePriceTextView.text.toString().toDoubleOrNull()
         if (amount == null || referencePrice == null)
             return ""
@@ -113,7 +113,7 @@ class IntentionInputFragment : Fragment() {
     private fun enableInput(enable: Boolean) {
         intentionInputFragmentSaveButton.isEnabled = enable && checkSaveButton()
         intentionInputFragmentTitleSymbolSpinner.isEnabled = enable
-        intentionInputFragmentTitleAmountTextView.isEnabled = enable
+        intentionInputFragmentTitleQuantityTextView.isEnabled = enable
         intentionInputFragmentReferenceSymbolSpinner.isEnabled = enable
         intentionInputFragmentReferencePriceTextView.isEnabled = enable
         intentionInputFragmentCommentTextView.isEnabled = enable
@@ -121,11 +121,11 @@ class IntentionInputFragment : Fragment() {
 
     private fun registerInputValidation() {
         intentionInputFragmentReferencePriceTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-        intentionInputFragmentTitleAmountTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+        intentionInputFragmentTitleQuantityTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
         intentionInputFragmentReferencePriceTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
     }
 
     private fun checkSaveButton(): Boolean {
-        return intentionInputFragmentTitleAmountTextView.error == null && intentionInputFragmentReferencePriceTextView.error == null
+        return intentionInputFragmentTitleQuantityTextView.error == null && intentionInputFragmentReferencePriceTextView.error == null
     }
 }

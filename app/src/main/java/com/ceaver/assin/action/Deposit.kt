@@ -11,7 +11,7 @@ data class Deposit(
         val id: Long = 0,
         val date: LocalDate = LocalDate.now(),
         val title: Title,
-        val amount: BigDecimal,
+        val quantity: BigDecimal,
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
         val comment: String?
@@ -23,7 +23,7 @@ data class Deposit(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
                     title = actionDto.buyTitle!!.toTitle(),
-                    amount = actionDto.action.buyAmount!!,
+                    quantity = actionDto.action.buyQuantity!!,
                     valueCrypto = actionDto.action.valueCrypto!!,
                     valueFiat = actionDto.action.valueFiat!!,
                     comment = actionDto.action.comment)
@@ -34,7 +34,7 @@ data class Deposit(
             return Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
-                    amount = csvRecord.get(3).toBigDecimal(),
+                    quantity = csvRecord.get(3).toBigDecimal(),
                     valueCrypto = csvRecord.get(4).toBigDecimal(),
                     valueFiat = csvRecord.get(5).toBigDecimal(),
                     comment = csvRecord.get(6).ifEmpty { null })
@@ -46,7 +46,7 @@ data class Deposit(
                 ActionType.DEPOSIT.name,
                 date.toString(),
                 title.symbol,
-                amount.toPlainString(),
+                quantity.toPlainString(),
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
                 comment.orEmpty())
@@ -58,7 +58,7 @@ data class Deposit(
     override fun getRightImageResource(): Int = title.getIcon()
     override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "Deposit ${title.name}"
-    override fun getDetailText(): String = "$amount ${title.symbol}"
+    override fun getDetailText(): String = "$quantity ${title.symbol}"
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
@@ -66,7 +66,7 @@ data class Deposit(
                 id = id,
                 actionDate = date,
                 buyTitleId = title.id,
-                buyAmount = amount,
+                buyQuantity = quantity,
                 valueCrypto = valueCrypto,
                 valueFiat = valueFiat,
                 comment = comment

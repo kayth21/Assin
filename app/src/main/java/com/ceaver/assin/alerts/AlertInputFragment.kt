@@ -143,8 +143,8 @@ class AlertInputFragment : Fragment() {
     }
 
     private fun bindFieldValidators() {
-        alertSourceEditText.registerInputValidator({ s -> (s.replace(".", "").length >= 1) }, "Please enter amount")
-        alertTargetEditText.registerInputValidator({ s -> ((s.replace(".", "").length >= 1) && (s.toDouble() > 0.0)) }, "Please enter amount")
+        alertSourceEditText.registerInputValidator({ s -> (s.replace(".", "").length >= 1) }, "Please enter quantity")
+        alertTargetEditText.registerInputValidator({ s -> ((s.replace(".", "").length >= 1) && (s.toDouble() > 0.0)) }, "Please enter quantity")
         alertSourceEditText.afterTextChanged { checkSaveButton() }
         alertTargetEditText.afterTextChanged { checkSaveButton() }
     }

@@ -11,7 +11,7 @@ data class Intention(
         var id: Long = 0,
         val type: IntentionType,
         var title: Title,
-        var amount: BigDecimal? = null,
+        var quantity: BigDecimal? = null,
         var referenceTitle: Title,
         var referencePrice: BigDecimal,
         var creationDate: LocalDate = LocalDate.now(),
@@ -22,7 +22,7 @@ data class Intention(
         fun fromDto(dto: IntentionDto): Intention {
             return Intention(
                     id = dto.intention.id,
-                    amount = dto.intention.amount,
+                    quantity = dto.intention.quantity,
                     title = dto.title.toTitle(),
                     comment = dto.intention.comment,
                     creationDate = dto.intention.creationDate,
@@ -41,7 +41,7 @@ data class Intention(
                 referencePrice = referencePrice,
                 creationDate = creationDate,
                 comment = comment,
-                amount = amount,
+                quantity = quantity,
                 referenceTitleId = referenceTitle.id,
                 titleId = title.id
         )
@@ -59,8 +59,8 @@ data class Intention(
         }
 
     // TODO Use extension function
-    fun amountAsString(): String {
-        return if (amount == null) "" else amount!!.toPlainString()
+    fun quantityAsString(): String {
+        return if (quantity == null) "" else quantity!!.toPlainString()
     }
 
     fun calculateState(): IntentionStatus {

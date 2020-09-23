@@ -9,7 +9,7 @@ import java.time.LocalDate
 data class Position(
         val id: BigDecimal,
         val title: Title,
-        val amount: BigDecimal,
+        val quantity: BigDecimal,
         val openDate: LocalDate,
         val openValueCrypto: BigDecimal,
         val openValueFiat: BigDecimal,
@@ -24,12 +24,12 @@ data class Position(
 
     val currentValuePrimary: BigDecimal
         get() {
-            return amount * title.cryptoQuotes.price.toBigDecimal()
+            return quantity * title.cryptoQuotes.price.toBigDecimal()
         }
 
     val currentValueSecondary: BigDecimal
         get() {
-            return amount * title.fiatQuotes.price.toBigDecimal()
+            return quantity * title.fiatQuotes.price.toBigDecimal()
         }
 
     val profitLossInPercentToPrimaryTitle: BigDecimal

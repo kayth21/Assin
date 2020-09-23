@@ -28,10 +28,10 @@ object AssetRepository {
             val tradeActions = actions.filterIsInstance<Trade>()
             val withdrawActions = actions.filterIsInstance<Withdraw>()
 
-            val buyPairsFromDeposits = depositActions.map { Pair(it.title, it.amount) }
-            val buyPairsFromTrades = tradeActions.map { Pair(it.buyTitle, it.buyAmount) }
-            val sellPairsFromTrades = tradeActions.map { Pair(it.sellTitle, it.sellAmount.unaryMinus()) }
-            val sellPairsFromWithdraws = withdrawActions.map { Pair(it.title, it.amount.unaryMinus()) }
+            val buyPairsFromDeposits = depositActions.map { Pair(it.title, it.quantity) }
+            val buyPairsFromTrades = tradeActions.map { Pair(it.buyTitle, it.buyQuantity) }
+            val sellPairsFromTrades = tradeActions.map { Pair(it.sellTitle, it.sellQuantity.unaryMinus()) }
+            val sellPairsFromWithdraws = withdrawActions.map { Pair(it.title, it.quantity.unaryMinus()) }
 
             val allPairs = buyPairsFromDeposits + buyPairsFromTrades + sellPairsFromTrades + sellPairsFromWithdraws
 
@@ -40,7 +40,7 @@ object AssetRepository {
                     .map {
                         Asset(
                                 title = it.first,
-                                amount = it.second,
+                                quantity = it.second,
                                 valueCrypto = it.first.cryptoQuotes.price.toBigDecimal().times(it.second),
                                 valueFiat = it.first.fiatQuotes.price.toBigDecimal().times(it.second))
                     }
@@ -56,10 +56,10 @@ object AssetRepository {
         val tradeActions = actions.filterIsInstance<Trade>()
         val withdrawActions = actions.filterIsInstance<Withdraw>()
 
-        val buyPairsFromDeposits = depositActions.map { Pair(it.title, it.amount) }
-        val buyPairsFromTrades = tradeActions.map { Pair(it.buyTitle, it.buyAmount) }
-        val sellPairsFromTrades = tradeActions.map { Pair(it.sellTitle, it.sellAmount.unaryMinus()) }
-        val sellPairsFromWithdraws = withdrawActions.map { Pair(it.title, it.amount.unaryMinus()) }
+        val buyPairsFromDeposits = depositActions.map { Pair(it.title, it.quantity) }
+        val buyPairsFromTrades = tradeActions.map { Pair(it.buyTitle, it.buyQuantity) }
+        val sellPairsFromTrades = tradeActions.map { Pair(it.sellTitle, it.sellQuantity.unaryMinus()) }
+        val sellPairsFromWithdraws = withdrawActions.map { Pair(it.title, it.quantity.unaryMinus()) }
 
         val allPairs = buyPairsFromDeposits + buyPairsFromTrades + sellPairsFromTrades + sellPairsFromWithdraws
 
@@ -68,7 +68,7 @@ object AssetRepository {
                 .map {
                     Asset(
                             title = it.first,
-                            amount = it.second,
+                            quantity = it.second,
                             valueCrypto = it.first.cryptoQuotes.price.toBigDecimal().times(it.second),
                             valueFiat = it.first.fiatQuotes.price.toBigDecimal().times(it.second))
                 }
@@ -84,19 +84,19 @@ object AssetRepository {
             val tradeActions = actions.filterIsInstance<Trade>().filter { it.sellTitle == title || it.buyTitle == title }
             val withdrawActions = actions.filterIsInstance<Withdraw>().filter { it.title == title }
 
-            val amountsFromDeposits = depositActions.map { it.amount }
-            val buyAmountsfromTrades = tradeActions.map { it.buyAmount }
-            val sellAmoountsFromTrades = tradeActions.map { it.sellAmount.unaryMinus() }
-            val amountsFromWithdraws = withdrawActions.map { it.amount.unaryMinus() }
+            val quantityFromDeposits = depositActions.map { it.quantity }
+            val buyQuantityfromTrades = tradeActions.map { it.buyQuantity }
+            val sellQuantityFromTrades = tradeActions.map { it.sellQuantity.unaryMinus() }
+            val quantityFromWithdraws = withdrawActions.map { it.quantity.unaryMinus() }
 
-            val allActions = amountsFromDeposits + buyAmountsfromTrades + sellAmoountsFromTrades + amountsFromWithdraws
+            val allActions = quantityFromDeposits + buyQuantityfromTrades + sellQuantityFromTrades + quantityFromWithdraws
 
-            val amount = allActions.fold(BigDecimal.ZERO) { x, y -> x.add(y) }
+            val quantity = allActions.fold(BigDecimal.ZERO) { x, y -> x.add(y) }
             Asset(
                     title = title,
-                    amount = amount,
-                    valueCrypto = title.cryptoQuotes.price.toBigDecimal().times(amount),
-                    valueFiat = title.fiatQuotes.price.toBigDecimal().times(amount))
+                    quantity = quantity,
+                    valueCrypto = title.cryptoQuotes.price.toBigDecimal().times(quantity),
+                    valueFiat = title.fiatQuotes.price.toBigDecimal().times(quantity))
         }
     }
 }

@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 data class Asset(//
         val title: Title,
-        val amount: BigDecimal,
+        val quantity: BigDecimal,
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal
 ) {
@@ -17,7 +17,7 @@ data class Asset(//
 
         override fun areContentsTheSame(oldItem: Asset, newItem: Asset): Boolean {
             return oldItem.title.id == newItem.title.id
-                    && oldItem.amount == newItem.amount
+                    && oldItem.quantity == newItem.quantity
                     && oldItem.valueCrypto == newItem.valueCrypto
                     && oldItem.valueFiat == newItem.valueFiat
         }

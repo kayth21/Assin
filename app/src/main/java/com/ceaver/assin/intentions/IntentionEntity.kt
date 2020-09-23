@@ -29,7 +29,7 @@ class IntentionEntity(
         var id: Long = 0,
         val type: IntentionType,
         var titleId: String,
-        var amount: BigDecimal? = null,
+        var quantity: BigDecimal? = null,
         var referenceTitleId: String,
         var referencePrice: BigDecimal,
         var creationDate: LocalDate = LocalDate.now(),

@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentTypeRadioGroup" />
 
     <EditText
-        android:id="@+id/intentionInputFragmentTitleAmountTextView"
+        android:id="@+id/intentionInputFragmentTitleQuantityTextView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -101,7 +101,7 @@
         android:textStyle="bold"
         android:text="Price apiece"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentTitleAmountTextView" />
+        app:layout_constraintTop_toBottomOf="@id/intentionInputFragmentTitleQuantityTextView" />
 
     <EditText
         android:id="@+id/intentionInputFragmentReferencePriceTextView"

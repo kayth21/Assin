@@ -45,7 +45,7 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
             binding.assetImageView.setImageResource(asset.title.getIcon())
             binding.assetNameTextView.text = asset.title.name
-            binding.assetBalanceTextView.text = "${asset.amount} ${asset.title.symbol}"
+            binding.assetBalanceTextView.text = "${asset.quantity} ${asset.title.symbol}"
             binding.assetBtcValueTextView.text = asset.valueCrypto.toCurrencyString(asset.title.symbol) + " " + Preferences.getCryptoTitleSymbol()
             binding.assetUsdValueTextView.text = asset.valueFiat.toCurrencyString(asset.title.symbol) + " " + Preferences.getFiatTitleSymbol()
             binding.asset1hChangeTextView.text = "1h: ${asset.title.getPercentChange1hString()}%"
