@@ -3,7 +3,6 @@ package com.ceaver.assin.markets
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.logging.LogRepository
 
 class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
@@ -24,11 +23,6 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
             val removedTitlesToDelete = removedTitlesPartitioned.first
             val removedTitlesToUpdate = removedTitlesPartitioned.second
             removedTitlesToUpdate.forEach { it.decreaseActiveCounter() }
-            newTitlesToInsert.forEach { println(it.id + " " + it.symbol) }
-            println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-            allLocalTitles.filter { it.category == AssetCategory.FIAT }.forEach {
-                println(it.id + " " + it.symbol)
-            }
 
             TitleRepository.marketUpdate(newTitlesToInsert, (existingTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
 

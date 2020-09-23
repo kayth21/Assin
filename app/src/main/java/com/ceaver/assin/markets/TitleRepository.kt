@@ -2,7 +2,6 @@ package com.ceaver.assin.markets
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.database.Database
 import java.util.*
 
@@ -13,7 +12,7 @@ object TitleRepository {
     }
 
     suspend fun loadAll(): List<Title> {
-        return dao.loadAll().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }.map { it.toTitle() }
+        return dao.loadAll().map { it.toTitle() }
     }
 
     suspend fun loadAllCryptoTitles(): List<Title> {

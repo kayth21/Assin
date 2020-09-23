@@ -50,7 +50,7 @@ object Coinpaprika {
         val resultSet = mutableSetOf<Title>()
 
         val tickers = CoinpaprikaApi().tickers()
-        val fiats = CoinpaprikaApi().fiats()
+        val fiats = CoinpaprikaApi().fiats().filter { it.symbol == "USD" } // TODO Support more fiats
 
         val cryptoEntity = tickers.single { it.symbol == cryptoTitleSymbol }.let { it.quotes!!.get("USD") }!!
         // TODO support fiat other USD
