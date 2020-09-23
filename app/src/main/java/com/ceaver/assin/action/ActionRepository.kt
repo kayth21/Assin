@@ -5,7 +5,6 @@ import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
-import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 
 object ActionRepository {
@@ -114,24 +113,22 @@ object ActionRepository {
 
     suspend fun insertActions(actions: List<Action>) {
         getActionDao().insertActionEntities(actions.map { it.toActionEntity() })
-        EventBus.getDefault().post(ActionEvents.Insert())
     }
 
     private suspend fun insertAction(action: Action) {
         getActionDao().insertActionEntity(action.toActionEntity())
-        EventBus.getDefault().post(ActionEvents.Insert())
     }
 
     suspend fun updateAction(action: Action) {
-        getActionDao().updateActionEntity(action.toActionEntity()); EventBus.getDefault().post(ActionEvents.Update())
+        getActionDao().updateActionEntity(action.toActionEntity())
     }
 
     suspend fun deleteAction(action: Action) {
-        getActionDao().deleteActionEntity(action.toActionEntity()); EventBus.getDefault().post(ActionEvents.Delete())
+        getActionDao().deleteActionEntity(action.toActionEntity())
     }
 
     suspend fun deleteAllActions() {
-        getActionDao().deleteAllActionEntities(); EventBus.getDefault().post(ActionEvents.DeleteAll())
+        getActionDao().deleteAllActionEntities()
     }
 
     private fun getActionDao(): ActionEntityDao {

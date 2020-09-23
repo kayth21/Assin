@@ -3,7 +3,6 @@ package com.ceaver.assin.alerts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
-import org.greenrobot.eventbus.EventBus
 
 object AlertRepository {
 
@@ -24,23 +23,23 @@ object AlertRepository {
     }
 
     suspend fun insertAlert(alert: Alert) {
-        getAlertDao().insertAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Insert())
+        getAlertDao().insertAlert(alert.toEntity())
     }
 
     suspend fun insertAlerts(alerts: List<Alert>) {
-        getAlertDao().insertAlerts(alerts.map { it.toEntity() }); EventBus.getDefault().post(AlertEvents.Insert())
+        getAlertDao().insertAlerts(alerts.map { it.toEntity() })
     }
 
     suspend fun updateAlert(alert: Alert) {
-        getAlertDao().updateAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Update())
+        getAlertDao().updateAlert(alert.toEntity())
     }
 
     suspend fun deleteAlert(alert: Alert) {
-        getAlertDao().deleteAlert(alert.toEntity()); EventBus.getDefault().post(AlertEvents.Delete())
+        getAlertDao().deleteAlert(alert.toEntity())
     }
 
     suspend fun deleteAllAlerts() {
-        getAlertDao().deleteAllAlerts(); EventBus.getDefault().post(AlertEvents.DeleteAll())
+        getAlertDao().deleteAllAlerts()
     }
 
     private fun getAlertDao(): AlertDao {

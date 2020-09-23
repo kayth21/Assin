@@ -2,7 +2,6 @@ package com.ceaver.assin.logging
 
 import androidx.lifecycle.LiveData
 import com.ceaver.assin.database.Database
-import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,7 +17,6 @@ object LogRepository {
 
     suspend fun updateLog(log: Log) {
         getLogDao().updateLog(log)
-        EventBus.getDefault().post(LogEvents.Update())
     }
 
     suspend fun loadLog(identifier: UUID): Log {
@@ -27,7 +25,6 @@ object LogRepository {
 
     suspend fun insertLog(log: Log) {
         getLogDao().insertLog(log)
-        EventBus.getDefault().post(LogEvents.Insert())
     }
 
     suspend fun loadAllLogs(): List<Log> {

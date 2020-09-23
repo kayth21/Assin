@@ -28,27 +28,22 @@ object IntentionRepository {
 
     suspend fun insertIntention(intention: Intention) {
         getIntentionDao().insertIntention(intention.toIntentionEntity())
-        getEventbus().post(IntentionEvents.Insert())
     }
 
     suspend fun insertIntentions(intentions: List<Intention>) {
         getIntentionDao().insertIntentions(intentions.map { it.toIntentionEntity() })
-        getEventbus().post(IntentionEvents.Insert())
     }
 
     suspend fun updateIntention(intention: Intention) {
         getIntentionDao().updateIntention(intention.toIntentionEntity())
-        getEventbus().post(IntentionEvents.Update())
     }
 
     suspend fun deleteIntention(intention: Intention) {
         getIntentionDao().deleteIntention(intention.toIntentionEntity())
-        getEventbus().post(IntentionEvents.Delete())
     }
 
     suspend fun deleteAllIntentions() {
         getIntentionDao().deleteAllIntentions()
-        getEventbus().post(IntentionEvents.DeleteAll())
     }
 
     private fun getIntentionDao(): IntentionDao = getDatabase().intentionDao()
