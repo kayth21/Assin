@@ -29,7 +29,7 @@ object PositionRepository {
     }
 
     fun loadAllPositionsObserved(): LiveData<List<Position>> {
-        val actionsObserved = ActionRepository.loadAllActionsObserved()
+        val actionsObserved = ActionRepository.loadAllObserved()
         val titlesObserved = TitleRepository.loadActiveCryptoTitles()
 
         return MediatorLiveData<List<Position>>()
@@ -114,7 +114,7 @@ object PositionRepository {
     suspend fun loadAllPositions(): List<Position> {
         val positions = mutableListOf<Position>()
         var positionId = BigDecimal.ZERO;
-        ActionRepository.loadAllActions().forEach { action -> // TODO
+        ActionRepository.loadAll().forEach { action -> // TODO
             when (action.getActionType()) {
                 ActionType.DEPOSIT -> {
                     action as Deposit

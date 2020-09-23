@@ -5,7 +5,7 @@ import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.intentions.IntentionRepository
 
 class IntentionListViewModel : ViewModel() {
-    val intentions = IntentionRepository.loadAllIntentionsObserved()
+    val intentions = IntentionRepository.loadAllObserved()
     val loading = AssinWorkers.running
 
     fun refresh() {

@@ -5,5 +5,5 @@ import com.ceaver.assin.action.ActionRepository
 
 class ActionListViewModel :  ViewModel() {
 
-    val titles = ActionRepository.loadAllActionsObserved()
+    val titles = ActionRepository.loadAllObserved()
 }

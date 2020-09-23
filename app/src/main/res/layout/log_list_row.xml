@@ -5,7 +5,7 @@
 
         <variable
             name="log"
-            type="com.ceaver.assin.logging.Log" />
+            type="com.ceaver.assin.logging.LogEntity" />
     </data>
 
     <RelativeLayout

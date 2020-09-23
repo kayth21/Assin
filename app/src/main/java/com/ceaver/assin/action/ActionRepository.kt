@@ -9,26 +9,37 @@ import java.math.BigDecimal
 
 object ActionRepository {
 
-    suspend fun loadAction(id: Long): Action {
-        return getActionDao().loadActionDto(id).toAction()
-    }
+    suspend fun loadById(id: Long): Action =
+            dao.loadById(id).toAction()
 
-    fun loadAllActionsObserved(): LiveData<List<Action>> {
-        return Transformations.map(getActionDao().getActionDtosObserved()) { it.map { it.toAction() } }
-    }
+    suspend fun loadAll(): List<Action> =
+            dao.loadAll().map { it.toAction() }
 
-    suspend fun loadAllActions(): List<Action> {
-        return getActionDao().getActionDtos().map { it.toAction() }
-    }
+    fun loadAllObserved(): LiveData<List<Action>> =
+            Transformations.map(dao.loadAllObserved()) { it.map { it.toAction() } }
 
-    suspend fun insertDeposit(deposit: Deposit) {
-        insertAction(deposit)
-    }
+    suspend fun insert(action: Action) =
+            action.toActionEntity().apply { dao.insert(this) }
+
+    suspend fun insertActions(actions: List<Action>) =
+            actions.map { it.toActionEntity() }.apply { dao.insert(this) }
+
+    suspend fun insertSplit(position: Position, sellQuantity: BigDecimal) =
+            Split.fromPosition(position, sellQuantity).apply { insert(this) }
+
+    suspend fun update(action: Action) =
+            action.toActionEntity().apply { dao.update(this) }
+
+    suspend fun delete(action: Action) =
+            action.toActionEntity().apply { dao.delete(this) }
+
+    suspend fun deleteAll() =
+            dao.deleteAll()
 
     // TODO Remove copy/paste from withdraw
     suspend fun insertTrade(trade: Trade) {
         if (trade.positionId != null) {
-            insertAction(trade)
+            insert(trade)
         } else {
             val positions = PositionRepository.loadPositions(trade.sellTitle).filter { it.isActive() }
             val oldestPosition = positions.first()
@@ -68,7 +79,7 @@ object ActionRepository {
 
     suspend fun insertWithdraw(withdraw: Withdraw) {
         if (withdraw.positionId != null) {
-            insertAction(withdraw)
+            insert(withdraw)
         } else {
             val positions = PositionRepository.loadPositions(withdraw.title).filter { it.isActive() }
             val oldestPosition = positions.first()
@@ -107,35 +118,13 @@ object ActionRepository {
         }
     }
 
-    suspend fun insertSplit(position: Position, sellQuantity: BigDecimal) {
-        insertAction(Split.fromPosition(position, sellQuantity))
-    }
+    private val dao: ActionEntityDao
+        get() {
+            return database.actionDao()
+        }
 
-    suspend fun insertActions(actions: List<Action>) {
-        getActionDao().insertActionEntities(actions.map { it.toActionEntity() })
-    }
-
-    private suspend fun insertAction(action: Action) {
-        getActionDao().insertActionEntity(action.toActionEntity())
-    }
-
-    suspend fun updateAction(action: Action) {
-        getActionDao().updateActionEntity(action.toActionEntity())
-    }
-
-    suspend fun deleteAction(action: Action) {
-        getActionDao().deleteActionEntity(action.toActionEntity())
-    }
-
-    suspend fun deleteAllActions() {
-        getActionDao().deleteAllActionEntities()
-    }
-
-    private fun getActionDao(): ActionEntityDao {
-        return getDatabase().actionDao()
-    }
-
-    private fun getDatabase(): Database {
-        return Database.getInstance()
-    }
+    private val database: Database
+        get() {
+            return Database.getInstance()
+        }
 }

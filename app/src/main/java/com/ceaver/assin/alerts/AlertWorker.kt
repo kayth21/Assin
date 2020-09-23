@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 class AlertWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        AlertRepository.loadAllAlerts().forEach { checkAlert(it) }
+        AlertRepository.loadAll().forEach { checkAlert(it) }
         return Result.success()
     }
 
@@ -22,11 +22,11 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
                 return
             }
             val it = result.get()
-            AlertRepository.updateAlert(it)
+            AlertRepository.update(it)
             checkAlert(it)
             AlertNotification.notify(alert.title, alert.referenceTitle, targetPrice(alert, currentPrice), currentPrice)
         } else {
-            LogRepository.insertLog("Failed to check alert ${alert.title.symbol}/${alert.referenceTitle.symbol} (no path found).")
+            LogRepository.insert("Failed to check alert ${alert.title.symbol}/${alert.referenceTitle.symbol} (no path found).")
         }
     }
 

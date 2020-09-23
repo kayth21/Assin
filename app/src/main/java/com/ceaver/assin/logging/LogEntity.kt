@@ -7,19 +7,19 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity(tableName = "log")
-data class Log(//
+data class LogEntity(//
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
         val timestamp: LocalDateTime,
         val message: String,
         val uuid: UUID) {
 
-    object Difference : DiffUtil.ItemCallback<Log>() {
-        override fun areItemsTheSame(oldItem: Log, newItem: Log): Boolean {
+    object Difference : DiffUtil.ItemCallback<LogEntity>() {
+        override fun areItemsTheSame(oldItem: LogEntity, newItem: LogEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Log, newItem: Log): Boolean {
+        override fun areContentsTheSame(oldItem: LogEntity, newItem: LogEntity): Boolean {
             return oldItem == newItem
         }
     }

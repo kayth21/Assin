@@ -8,61 +8,38 @@ import java.util.*
 
 object TitleRepository {
 
-    suspend fun updateAll(allTitles: Set<Title>) {
-        getTitleDao().updateTitles(allTitles.map { it.toEntity() })
+    suspend fun loadById(id: String): Title? {
+        return dao.loadById(id)?.toTitle()
     }
 
-    suspend fun update(title: Title) {
-        getTitleDao().updateTitle(title.toEntity())
-    }
-
-    suspend fun insertAll(allTitles: Set<Title>) {
-        getTitleDao().insertTitles(allTitles.map { it.toEntity() })
-    }
-
-    suspend fun insert(title: Title) {
-        getTitleDao().insertTitle(title.toEntity())
-    }
-
-    suspend fun loadTitle(id: String): Title? {
-        return getTitleDao().loadTitle(id)?.toTitle()
-    }
-
-    suspend fun loadAllTitles(): List<Title> {
-        return getTitleDao().loadAllTitles().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }.map { it.toTitle() }
+    suspend fun loadAll(): List<Title> {
+        return dao.loadAll().filter { it.category == AssetCategory.CRYPTO || it.symbol == "USD" }.map { it.toTitle() }
     }
 
     suspend fun loadAllCryptoTitles(): List<Title> {
-        return getTitleDao().loadAllCryptoTitles().map { it.toTitle() }
-    }
-
-    suspend fun loadActiveTitles(): List<Title> {
-        return getTitleDao().loadActiveTitles().map { it.toTitle() }
+        return dao.loadAllCryptoTitles().map { it.toTitle() }
     }
 
     fun loadActiveCryptoTitles(): LiveData<List<Title>> {
-        return Transformations.map(getTitleDao().loadActiveCryptoTitles()) { it.map { it.toTitle() } }
+        return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() } }
     }
 
     suspend fun loadTitleBySymbol(symbol: String): Title {
-        return getTitleDao().loadTitleBySymbol(symbol).toTitle();
+        return dao.loadBySymbol(symbol).toTitle();
     }
 
-    suspend fun loadAllCryptoSymbols(): List<String> {
-        return getTitleDao().loadCryptoSymbols()
+    suspend fun insert(title: Title) =
+            title.toEntity().apply { dao.insert(this) }
+
+    suspend fun insert(allTitles: Set<Title>) =
+            allTitles.map { it.toEntity() }.apply { dao.insert(this) }
+
+    suspend fun update(title: Title) {
+        dao.update(title.toEntity())
     }
 
-    suspend fun loadAllFiatSymbols(): List<String> {
-        return getTitleDao().loadFiatSymbols().filter { listOf("USD").contains(it) } // TODO allow more FIAT
-    }
-
-    suspend fun loadAllSymbols(): List<String> {
-        val fiatList = loadAllFiatSymbols()
-        val allCryptoList = loadAllCryptoSymbols()
-        val unionList = mutableListOf<String>()
-        unionList.addAll(fiatList)
-        unionList.addAll(allCryptoList)
-        return unionList
+    suspend fun update(allTitles: Set<Title>) {
+        dao.update(allTitles.map { it.toEntity() })
     }
 
     suspend fun lookupPrice(symbol: Title, reference: Title): Optional<Double> { // TODO no need for Optional?
@@ -84,23 +61,17 @@ object TitleRepository {
         return Optional.of(symbolTitle.cryptoQuotes.price / referenceTitle.cryptoQuotes.price)
     }
 
-    suspend fun deleteTitle(title: Title) {
-        getTitleDao().deleteTitle(title.toEntity())
-    }
-
-    suspend fun deleteTitles(titles: Set<Title>) {
-        getTitleDao().deleteTitles(titles.map { it.toEntity() })
-    }
-
     suspend fun marketUpdate(titlesToInsert: Set<Title>, titlesToUpdate: Set<Title>, titlesToDelete: Set<Title>) {
-        getTitleDao().marketUpdate(titlesToInsert.map { it.toEntity() }, titlesToUpdate.map { it.toEntity() }, titlesToDelete.map { it.toEntity() })
+        dao.marketUpdate(titlesToInsert.map { it.toEntity() }, titlesToUpdate.map { it.toEntity() }, titlesToDelete.map { it.toEntity() })
     }
 
-    private fun getTitleDao(): TitleDao {
-        return getDatabase().titleDao()
-    }
+    private val dao: TitleEntityDao
+        get() {
+            return database.titleDao()
+        }
 
-    private fun getDatabase(): Database {
-        return Database.getInstance()
-    }
+    private val database: Database
+        get() {
+            return Database.getInstance()
+        }
 }

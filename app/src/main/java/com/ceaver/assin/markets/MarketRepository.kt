@@ -13,7 +13,7 @@ object MarketRepository {
 
     suspend fun loadAllTitles(): Set<Title> {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
-        val allLocalTitles = TitleRepository.loadAllTitles()
+        val allLocalTitles = TitleRepository.loadAll()
 
         val cryptoTitle = allRemoteTitles.single { it.symbol == Preferences.getCryptoTitleSymbol() }
         val fiatTitle = allRemoteTitles.single { it.symbol == Preferences.getFiatTitleSymbol() }

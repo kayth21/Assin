@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 
 class IntentionWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        IntentionRepository.loadAllIntentions().forEach { checkIntention(it) }
+        IntentionRepository.loadAll().forEach { checkIntention(it) }
         return Result.success()
     }
 

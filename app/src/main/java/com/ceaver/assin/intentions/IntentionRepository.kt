@@ -3,52 +3,46 @@ package com.ceaver.assin.intentions
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
-import org.greenrobot.eventbus.EventBus
 
 object IntentionRepository {
 
-    suspend fun loadIntentionById(id: Long): Intention {
-        return getIntentionDao().loadIntentionById(id).toIntention()
-    }
+    suspend fun loadById(id: Long): Intention =
+            dao.loadById(id).toIntention()
 
-    fun loadAllIntentions(): List<Intention> {
-        return getIntentionDao().loadAllIntentions().map { it.toIntention() }
-    }
+    fun loadAll(): List<Intention> =
+            dao.loadAll().map { it.toIntention() }
 
-    fun loadAllIntentionsObserved(): LiveData<List<Intention>> {
-        return Transformations.map(getIntentionDao().loadAllIntentionsObserved()) { it.map { it.toIntention() } }
-    }
+    fun loadAllObserved(): LiveData<List<Intention>> =
+            Transformations.map(dao.loadAllObserved()) { it.map { it.toIntention() } }
+
+    suspend fun insert(intention: Intention) =
+            intention.toIntentionEntity().apply { dao.insert(this) }
+
+    suspend fun insert(intentions: List<Intention>) =
+            intentions.map { it.toIntentionEntity() }.apply { dao.insert(this) }
 
     suspend fun saveIntention(intention: Intention) {
         if (intention.id > 0)
             updateIntention(intention)
         else
-            insertIntention(intention)
-    }
-
-    suspend fun insertIntention(intention: Intention) {
-        getIntentionDao().insertIntention(intention.toIntentionEntity())
-    }
-
-    suspend fun insertIntentions(intentions: List<Intention>) {
-        getIntentionDao().insertIntentions(intentions.map { it.toIntentionEntity() })
+            insert(intention)
     }
 
     suspend fun updateIntention(intention: Intention) {
-        getIntentionDao().updateIntention(intention.toIntentionEntity())
+        dao.update(intention.toIntentionEntity())
     }
 
     suspend fun deleteIntention(intention: Intention) {
-        getIntentionDao().deleteIntention(intention.toIntentionEntity())
+        dao.deleteIntention(intention.toIntentionEntity())
     }
 
     suspend fun deleteAllIntentions() {
-        getIntentionDao().deleteAllIntentions()
+        dao.deleteAllIntentions()
     }
 
-    private fun getIntentionDao(): IntentionDao = getDatabase().intentionDao()
+    private val dao: IntentionEntityDao
+        get() = database.intentionDao()
 
-    private fun getDatabase(): Database = Database.getInstance()
-
-    private fun getEventbus() = EventBus.getDefault()
+    private val database: Database
+        get() = Database.getInstance()
 }

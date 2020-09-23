@@ -21,7 +21,7 @@ class ActionInputViewModel(actionEntity: ActionEntity?, title: Title?, actionTyp
 
     init {
         viewModelScope.launch {
-            val titles = TitleRepository.loadAllTitles()
+            val titles = TitleRepository.loadAll()
             _symbols.postValue(titles)
         }
         when {

@@ -56,7 +56,7 @@ class AssinApplication : Application() {
             if (isConnected())
                 AssinWorkers.completeUpdate()
             else
-                LogRepository.insertLog("update skipped because of missing connection")
+                LogRepository.insert("update skipped because of missing connection")
             return Result.success()
         }
     }

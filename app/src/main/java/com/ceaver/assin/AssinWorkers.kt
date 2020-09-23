@@ -59,7 +59,7 @@ object AssinWorkers {
         override suspend fun doWork(): Result {
             running.postValue(true)
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
-            LogRepository.insertLog("Assin workers: starting complete update...", uuid)
+            LogRepository.insert("Assin workers: starting complete update...", uuid)
             return Result.success()
         }
     }
@@ -70,7 +70,7 @@ object AssinWorkers {
             val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
             val log = LogRepository.loadLog(uuid)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
-            LogRepository.updateLog(log.copy(message = log.message + " done. (${duration} ms)"))
+            LogRepository.update(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Complete())
             running.postValue(false)
             return Result.success()

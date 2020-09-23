@@ -23,7 +23,7 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
         viewModelScope.launch {
             val cryptoTitles = TitleRepository.loadAllCryptoTitles()
             _title.postValue(cryptoTitles)
-            val titles = TitleRepository.loadAllTitles()
+            val titles = TitleRepository.loadAll()
             _reference.postValue(titles)
         }
     }
@@ -38,7 +38,7 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
         viewModelScope.launch {
             _status.value = AlertInputStatus.START_SAVE
             val alert = _alert.value!!.copy(title = title, referenceTitle = reference, source = source, target = target)
-            AlertRepository.saveAlert(alert)
+            AlertRepository.save(alert)
             _status.value = AlertInputStatus.END_SAVE
         }
     }

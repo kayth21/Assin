@@ -7,39 +7,34 @@ import java.util.*
 
 object LogRepository {
 
-    suspend fun insertLog(message: String) {
-        insertLog(message, UUID.randomUUID())
-    }
+    suspend fun loadLog(identifier: UUID): LogEntity =
+            dao.loadByUuid(identifier)
 
-    suspend fun insertLog(message: String, uuid: UUID) {
-        insertLog(Log(0, LocalDateTime.now(), message, uuid))
-    }
+    suspend fun loadAllLogs(): List<LogEntity> =
+            dao.loadAll()
 
-    suspend fun updateLog(log: Log) {
-        getLogDao().updateLog(log)
-    }
+    fun loadAllLogsObserved(): LiveData<List<LogEntity>> =
+            dao.loadAllObserved()
 
-    suspend fun loadLog(identifier: UUID): Log {
-        return getLogDao().loadLog(identifier)
-    }
+    suspend fun insert(message: String) =
+            insert(message, UUID.randomUUID())
 
-    suspend fun insertLog(log: Log) {
-        getLogDao().insertLog(log)
-    }
+    suspend fun insert(message: String, uuid: UUID) =
+            insert(LogEntity(0, LocalDateTime.now(), message, uuid))
 
-    suspend fun loadAllLogs(): List<Log> {
-        return getLogDao().loadAllLogs()
-    }
+    suspend fun insert(log: LogEntity) =
+            dao.insert(log)
 
-    fun loadAllLogsObserved(): LiveData<List<Log>> {
-        return getLogDao().loadAllLogsObserved()
-    }
+    suspend fun update(log: LogEntity) =
+            dao.update(log)
 
-    private fun getLogDao(): LogDao {
-        return getDatabase().logDao()
-    }
+    private val dao: LogEntityDao
+        get() {
+            return database.logDao()
+        }
 
-    private fun getDatabase(): Database {
-        return Database.getInstance()
-    }
+    private val database: Database
+        get() {
+            return Database.getInstance()
+        }
 }

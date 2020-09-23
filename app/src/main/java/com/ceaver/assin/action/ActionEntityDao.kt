@@ -1,35 +1,26 @@
 package com.ceaver.assin.action
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
+import com.ceaver.assin.database.BaseEntityDao
 
 @Dao
-interface ActionEntityDao {
+interface ActionEntityDao : BaseEntityDao<ActionEntity> {
 
     @Transaction
-    @Query("SELECT * FROM action")
-    fun getActionDtosObserved(): LiveData<List<ActionDto>>
+    @Query("select * from [action] where id = :id")
+    suspend fun loadById(id: Long): ActionDto
 
     @Transaction
-    @Query("SELECT * FROM action")
-    suspend fun getActionDtos(): List<ActionDto>
+    @Query("SELECT * FROM [action]")
+    suspend fun loadAll(): List<ActionDto>
 
     @Transaction
-    @Query("select * from action where id = :id")
-    suspend fun loadActionDto(id: Long): ActionDto
+    @Query("select * from [action]")
+    fun loadAllObserved(): LiveData<List<ActionDto>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertActionEntity(actionEntity: ActionEntity)
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertActionEntities(actionEntity: List<ActionEntity>)
-
-    @Update
-    suspend fun updateActionEntity(actionEntity: ActionEntity)
-
-    @Delete
-    suspend fun deleteActionEntity(actionEntity: ActionEntity)
-
-    @Query("delete from action")
-    suspend fun deleteAllActionEntities()
+    @Query("delete from [action]")
+    suspend fun deleteAll()
 }

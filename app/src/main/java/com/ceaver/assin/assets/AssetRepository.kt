@@ -21,7 +21,7 @@ object AssetRepository {
     }
 
     fun loadAllAssetsObserved(): LiveData<List<Asset>> {
-        return Transformations.map(ActionRepository.loadAllActionsObserved()) {
+        return Transformations.map(ActionRepository.loadAllObserved()) {
             val actions = it
 
             val depositActions = actions.filterIsInstance<Deposit>()
@@ -50,7 +50,7 @@ object AssetRepository {
 
     // TODO remove code duplication
     suspend fun loadAllAssets(): List<Asset> {
-        val actions = ActionRepository.loadAllActions()
+        val actions = ActionRepository.loadAll()
 
         val depositActions = actions.filterIsInstance<Deposit>()
         val tradeActions = actions.filterIsInstance<Trade>()
@@ -77,7 +77,7 @@ object AssetRepository {
 
     // TODO remove code duplication
     fun loadAssetObserved(title: Title): LiveData<Asset> {
-        return Transformations.map(ActionRepository.loadAllActionsObserved()) {
+        return Transformations.map(ActionRepository.loadAllObserved()) {
             val actions = it
 
             val depositActions = actions.filterIsInstance<Deposit>().filter { it.title == title }

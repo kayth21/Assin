@@ -28,7 +28,7 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
 
     init {
         viewModelScope.launch {
-            val titles = TitleRepository.loadAllTitles()
+            val titles = TitleRepository.loadAll()
             _symbols.postValue(titles)
             if (intention != null)
                 _intention.postValue(intention)

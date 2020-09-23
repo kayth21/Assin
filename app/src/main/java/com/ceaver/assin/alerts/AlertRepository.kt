@@ -6,47 +6,40 @@ import com.ceaver.assin.database.Database
 
 object AlertRepository {
 
-    suspend fun loadAlert(id: Long): Alert {
-        return getAlertDao().loadAlert(id).toAlert()
-    }
+    suspend fun loadById(id: Long): Alert =
+            dao.loadById(id).toAlert()
 
-    fun loadAllAlerts(): List<Alert> {
-        return getAlertDao().loadAllAlerts().map { it.toAlert() }
-    }
+    fun loadAll(): List<Alert> =
+            dao.loadAll().map { it.toAlert() }
 
-    fun loadAllAlertsObserved(): LiveData<List<Alert>> {
-        return Transformations.map(getAlertDao().loadAllAlertsObserved()) { it.map { it.toAlert() } }
-    }
+    fun loadAllObserved(): LiveData<List<Alert>> =
+            Transformations.map(dao.loadAllObserved()) { it.map { it.toAlert() } }
 
-    suspend fun saveAlert(alert: Alert) {
-        if (alert.id > 0) updateAlert(alert) else insertAlert(alert)
-    }
+    suspend fun insert(alert: Alert) =
+            alert.toEntity().apply { dao.insert(this) }
 
-    suspend fun insertAlert(alert: Alert) {
-        getAlertDao().insertAlert(alert.toEntity())
-    }
+    suspend fun insert(alerts: List<Alert>) =
+            alerts.map { it.toEntity() }.apply { dao.insert(this) }
 
-    suspend fun insertAlerts(alerts: List<Alert>) {
-        getAlertDao().insertAlerts(alerts.map { it.toEntity() })
-    }
+    suspend fun update(alert: Alert) =
+            alert.toEntity().apply { dao.update(this) }
 
-    suspend fun updateAlert(alert: Alert) {
-        getAlertDao().updateAlert(alert.toEntity())
-    }
+    suspend fun delete(alert: Alert) =
+            alert.toEntity().apply { dao.delete(this) }
 
-    suspend fun deleteAlert(alert: Alert) {
-        getAlertDao().deleteAlert(alert.toEntity())
-    }
+    suspend fun deleteAll() =
+            dao.deleteAll()
 
-    suspend fun deleteAllAlerts() {
-        getAlertDao().deleteAllAlerts()
-    }
+    suspend fun save(alert: Alert) =
+            if (alert.id > 0) update(alert) else insert(alert)
 
-    private fun getAlertDao(): AlertDao {
-        return getDatabase().alertDao()
-    }
+    private val dao: AlertEntityDao
+        get() {
+            return database.alertDao()
+        }
 
-    private fun getDatabase(): Database {
-        return Database.getInstance()
-    }
+    private val database: Database
+        get() {
+            return Database.getInstance()
+        }
 }

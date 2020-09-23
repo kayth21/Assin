@@ -59,7 +59,7 @@ class ActionListFragment : Fragment() {
             lifecycleScope.launch {
                 val selectedTrade = actionListAdapter.currentLongClickAction!!
                 // TODO Delete... could be tricky meanwhile actions are "linked" to positions. Maybe allow only last element to be deleted.
-                ActionRepository.deleteAction(selectedTrade)
+                ActionRepository.delete(selectedTrade)
             }
         }
         return super.onContextItemSelected(item)

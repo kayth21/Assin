@@ -6,23 +6,23 @@ import androidx.room.TypeConverters
 import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.action.ActionEntity
 import com.ceaver.assin.action.ActionEntityDao
-import com.ceaver.assin.alerts.AlertDao
 import com.ceaver.assin.alerts.AlertEntity
-import com.ceaver.assin.intentions.IntentionDao
+import com.ceaver.assin.alerts.AlertEntityDao
 import com.ceaver.assin.intentions.IntentionEntity
-import com.ceaver.assin.logging.Log
-import com.ceaver.assin.logging.LogDao
-import com.ceaver.assin.markets.TitleDao
+import com.ceaver.assin.intentions.IntentionEntityDao
+import com.ceaver.assin.logging.LogEntity
+import com.ceaver.assin.logging.LogEntityDao
 import com.ceaver.assin.markets.TitleEntity
+import com.ceaver.assin.markets.TitleEntityDao
 
-@androidx.room.Database(entities = arrayOf(ActionEntity::class, TitleEntity::class, IntentionEntity::class, AlertEntity::class, Log::class), version = 1, exportSchema = false)
+@androidx.room.Database(entities = arrayOf(ActionEntity::class, TitleEntity::class, IntentionEntity::class, AlertEntity::class, LogEntity::class), version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun actionDao(): ActionEntityDao
-    abstract fun alertDao(): AlertDao
-    abstract fun intentionDao(): IntentionDao
-    abstract fun logDao(): LogDao
-    abstract fun titleDao(): TitleDao
+    abstract fun alertDao(): AlertEntityDao
+    abstract fun intentionDao(): IntentionEntityDao
+    abstract fun logDao(): LogEntityDao
+    abstract fun titleDao(): TitleEntityDao
 
     companion object {
         @Volatile

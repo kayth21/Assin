@@ -108,39 +108,39 @@ class BackupFragment : Fragment() {
 
     class ActionExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
-            val actions = ActionRepository.loadAllActions()
+            val actions = ActionRepository.loadAll()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ACTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (action in actions) csvPrinter.printRecord(action.toExport())
             csvPrinter.flush()
-            LogRepository.insertLog("Export actions successful to '$filePath'")
+            LogRepository.insert("Export actions successful to '$filePath'")
             return Result.success()
         }
     }
 
     class AlertExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
-            val alerts = AlertRepository.loadAllAlerts()
+            val alerts = AlertRepository.loadAll()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (alert in alerts) csvPrinter.printRecord(alert.title.symbol, alert.referenceTitle.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
             csvPrinter.flush()
-            LogRepository.insertLog("Export alerts successful to '$filePath'")
+            LogRepository.insert("Export alerts successful to '$filePath'")
             return Result.success()
         }
     }
 
     class IntentionExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
-            val intentions = IntentionRepository.loadAllIntentions()
+            val intentions = IntentionRepository.loadAll()
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
             for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.quantityAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
             csvPrinter.flush()
-            LogRepository.insertLog("Export intentions successful to '$filePath'")
+            LogRepository.insert("Export intentions successful to '$filePath'")
             return Result.success()
         }
     }
@@ -160,11 +160,11 @@ class BackupFragment : Fragment() {
                         ActionType.DEPOSIT -> Deposit.fromImport(it)
                     }
                 }.toList()
-                ActionRepository.deleteAllActions()
+                ActionRepository.deleteAll()
                 ActionRepository.insertActions(actions)
-                LogRepository.insertLog("Import actions from '$filePath' successful")
+                LogRepository.insert("Import actions from '$filePath' successful")
             } else {
-                LogRepository.insertLog("Import actions failed. '$filePath' not found")
+                LogRepository.insert("Import actions failed. '$filePath' not found")
             }
             return Result.success()
         }
@@ -178,11 +178,11 @@ class BackupFragment : Fragment() {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
                 val alerts = csvParser.map { Alert(0, TitleRepository.loadTitleBySymbol(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toBigDecimal(), it.get(4).toBigDecimal()) }.toList()
-                AlertRepository.deleteAllAlerts()
-                AlertRepository.insertAlerts(alerts)
-                LogRepository.insertLog("Import alerts from '$filePath' successful")
+                AlertRepository.deleteAll()
+                AlertRepository.insert(alerts)
+                LogRepository.insert("Import alerts from '$filePath' successful")
             } else {
-                LogRepository.insertLog("Import alerts failed. '$filePath' not found")
+                LogRepository.insert("Import alerts failed. '$filePath' not found")
             }
             return Result.success()
         }
@@ -197,10 +197,10 @@ class BackupFragment : Fragment() {
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
                 val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadTitleBySymbol(it.get(1)), it.get(2).toBigDecimalOrNull(), TitleRepository.loadTitleBySymbol(it.get(3)), it.get(4).toBigDecimal(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
                 IntentionRepository.deleteAllIntentions()
-                IntentionRepository.insertIntentions(intentions)
-                LogRepository.insertLog("Import intentions from '$filePath' successful")
+                IntentionRepository.insert(intentions)
+                LogRepository.insert("Import intentions from '$filePath' successful")
             } else {
-                LogRepository.insertLog("Import intentions failed. '$filePath' not found")
+                LogRepository.insert("Import intentions failed. '$filePath' not found")
             }
             return Result.success()
         }

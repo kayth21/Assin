@@ -5,6 +5,6 @@ import com.ceaver.assin.alerts.AlertRepository
 
 class AlertListViewModel : ViewModel() {
 
-    val alerts = AlertRepository.loadAllAlertsObserved()
+    val alerts = AlertRepository.loadAllObserved()
 
 }

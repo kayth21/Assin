@@ -55,7 +55,7 @@ class AlertListFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         lifecycleScope.launch {
             val selectedAlert = alertListAdapter.currentLongClickAlert!!
-            AlertRepository.deleteAlert(selectedAlert)
+            AlertRepository.delete(selectedAlert)
         }
         return super.onContextItemSelected(item)
     }
