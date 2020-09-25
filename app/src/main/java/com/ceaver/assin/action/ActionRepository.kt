@@ -3,6 +3,7 @@ package com.ceaver.assin.action
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.ceaver.assin.database.Database
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionRepository
 import java.math.BigDecimal
@@ -17,6 +18,9 @@ object ActionRepository {
 
     fun loadAllObserved(): LiveData<List<Action>> =
             Transformations.map(dao.loadAllObserved()) { it.map { it.toAction() } }
+
+    fun loadAllOfTitleObserved(title: Title): LiveData<List<Action>> =
+            Transformations.map(dao.loadAllOfTitleObserved(title.id)) { it.map { it.toAction() } }
 
     suspend fun insert(action: Action) =
             action.toActionEntity().let { dao.insert(it) }
