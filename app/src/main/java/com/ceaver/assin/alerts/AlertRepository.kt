@@ -16,16 +16,16 @@ object AlertRepository {
             Transformations.map(dao.loadAllObserved()) { it.map { it.toAlert() } }
 
     suspend fun insert(alert: Alert) =
-            alert.toEntity().apply { dao.insert(this) }
+            alert.toEntity().let { dao.insert(it) }
 
     suspend fun insert(alerts: List<Alert>) =
-            alerts.map { it.toEntity() }.apply { dao.insert(this) }
+            alerts.map { it.toEntity() }.let { dao.insert(it) }
 
     suspend fun update(alert: Alert) =
-            alert.toEntity().apply { dao.update(this) }
+            alert.toEntity().let { dao.update(it) }
 
     suspend fun delete(alert: Alert) =
-            alert.toEntity().apply { dao.delete(this) }
+            alert.toEntity().let { dao.delete(it) }
 
     suspend fun deleteAll() =
             dao.deleteAll()

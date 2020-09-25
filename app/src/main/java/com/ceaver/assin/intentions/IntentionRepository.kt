@@ -16,10 +16,10 @@ object IntentionRepository {
             Transformations.map(dao.loadAllObserved()) { it.map { it.toIntention() } }
 
     suspend fun insert(intention: Intention) =
-            intention.toIntentionEntity().apply { dao.insert(this) }
+            intention.toIntentionEntity().let { dao.insert(it) }
 
     suspend fun insert(intentions: List<Intention>) =
-            intentions.map { it.toIntentionEntity() }.apply { dao.insert(this) }
+            intentions.map { it.toIntentionEntity() }.let { dao.insert(it) }
 
     suspend fun saveIntention(intention: Intention) {
         if (intention.id > 0)

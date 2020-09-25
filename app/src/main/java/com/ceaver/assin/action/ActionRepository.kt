@@ -19,19 +19,19 @@ object ActionRepository {
             Transformations.map(dao.loadAllObserved()) { it.map { it.toAction() } }
 
     suspend fun insert(action: Action) =
-            action.toActionEntity().apply { dao.insert(this) }
+            action.toActionEntity().let { dao.insert(it) }
 
     suspend fun insertActions(actions: List<Action>) =
-            actions.map { it.toActionEntity() }.apply { dao.insert(this) }
+            actions.map { it.toActionEntity() }.let { dao.insert(it) }
 
     suspend fun insertSplit(position: Position, sellQuantity: BigDecimal) =
-            Split.fromPosition(position, sellQuantity).apply { insert(this) }
+            Split.fromPosition(position, sellQuantity).let { insert(it) }
 
     suspend fun update(action: Action) =
-            action.toActionEntity().apply { dao.update(this) }
+            action.toActionEntity().let { dao.update(it) }
 
     suspend fun delete(action: Action) =
-            action.toActionEntity().apply { dao.delete(this) }
+            action.toActionEntity().let { dao.delete(it) }
 
     suspend fun deleteAll() =
             dao.deleteAll()

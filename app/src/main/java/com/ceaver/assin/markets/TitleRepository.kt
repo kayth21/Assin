@@ -28,10 +28,10 @@ object TitleRepository {
     }
 
     suspend fun insert(title: Title) =
-            title.toEntity().apply { dao.insert(this) }
+            title.toEntity().let { dao.insert(it) }
 
     suspend fun insert(allTitles: Set<Title>) =
-            allTitles.map { it.toEntity() }.apply { dao.insert(this) }
+            allTitles.map { it.toEntity() }.let { dao.insert(it) }
 
     suspend fun update(title: Title) {
         dao.update(title.toEntity())
