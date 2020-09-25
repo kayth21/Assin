@@ -1,7 +1,6 @@
 package com.ceaver.assin.markets
 
 import android.os.Parcelable
-import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Embedded
 import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.R
@@ -94,15 +93,5 @@ data class Title(//
                 rank = rank,
                 totalSupply = totalSupply
         )
-    }
-
-    object Difference : DiffUtil.ItemCallback<Title>() {
-        override fun areItemsTheSame(oldItem: Title, newItem: Title): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Title, newItem: Title): Boolean {
-            return oldItem == newItem
-        }
     }
 }

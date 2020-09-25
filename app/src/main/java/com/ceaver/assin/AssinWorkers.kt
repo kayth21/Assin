@@ -19,7 +19,6 @@ object AssinWorkers {
     val running = MutableLiveData<Boolean>()
 
     fun completeUpdate() {
-        WorkManager.getInstance(AssinApplication.appContext!!)
         val identifier = UUID.randomUUID();
         WorkManager.getInstance(AssinApplication.appContext!!)
                 .beginWith(notifyCompleteStart(identifier))
