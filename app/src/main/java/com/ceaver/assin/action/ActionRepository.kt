@@ -19,6 +19,9 @@ object ActionRepository {
     fun loadAllObserved(): LiveData<List<Action>> =
             Transformations.map(dao.loadAllObserved()) { it.map { it.toAction() } }
 
+    fun loadAllOfTitle(title: Title): List<Action> =
+            dao.loadAllOfTitle(title.id).map { it.toAction() }
+
     fun loadAllOfTitleObserved(title: Title): LiveData<List<Action>> =
             Transformations.map(dao.loadAllOfTitleObserved(title.id)) { it.map { it.toAction() } }
 

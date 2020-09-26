@@ -23,6 +23,10 @@ interface ActionEntityDao : BaseEntityDao<ActionEntity> {
 
     @Transaction
     @Query("select * from 'action' where buyTitleId = :titleId or sellTitleId = :titleId or splitTitleId = :titleId")
+    fun loadAllOfTitle(titleId: String):List<ActionDto>
+
+    @Transaction
+    @Query("select * from 'action' where buyTitleId = :titleId or sellTitleId = :titleId or splitTitleId = :titleId")
     fun loadAllOfTitleObserved(titleId: String): LiveData<List<ActionDto>>
 
     @Query("delete from 'action'")
