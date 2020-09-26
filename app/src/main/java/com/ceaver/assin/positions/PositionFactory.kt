@@ -3,46 +3,36 @@ package com.ceaver.assin.positions
 import com.ceaver.assin.action.*
 import com.ceaver.assin.extensions.addZeroDotOneToLastDecimal
 import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
-import java.math.BigDecimal
+import com.ceaver.assin.extensions.replace
 import java.math.MathContext
 
 object PositionFactory {
 
     fun fromActions(actions: List<Action>): List<Position> {
         val positions = mutableListOf<Position>()
-        var positionId = BigDecimal.ZERO;
 
-        actions.forEach { action -> // TODO
+        actions.forEach { action ->
             when (action.getActionType()) {
                 ActionType.DEPOSIT -> {
                     action as Deposit
-                    positionId = positionId.inc()
-                    positions.add(Position(
-                            id = positionId,
-                            title = action.title,
-                            quantity = action.quantity,
-                            openDate = action.date,
-                            openValueCrypto = action.valueCrypto,
-                            openValueFiat = action.valueFiat))
+                    val positionId = positions.size.toBigDecimal().inc()
+                    val newPosition = Position(id = positionId, title = action.title, quantity = action.quantity, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
+                    positions.add(newPosition)
                 }
                 ActionType.WITHDRAW -> {
                     action as Withdraw
                     val originalPosition = positions.find { it.id == action.positionId }!!
                     val modifiedPosition = originalPosition.copy(closeDate = action.date, closeValueCrypto = action.valueCrypto, closeValueFiat = action.valueFiat)
-                    positions.set(positions.indexOf(originalPosition), modifiedPosition)
+                    positions.replace(originalPosition, modifiedPosition)
                 }
-                ActionType.TRADE -> { // TODO avoid copy/paste code
+                ActionType.TRADE -> {
                     action as Trade
-                    val position = positions.find { it.id == action.positionId }!!
-                    positions.set(positions.indexOf(position), position.copy(closeDate = action.date, closeValueCrypto = action.valueCrypto, closeValueFiat = action.valueFiat))
-                    positionId = positionId.inc()
-                    positions.add(Position(
-                            id = positionId,
-                            title = action.buyTitle,
-                            quantity = action.buyQuantity,
-                            openDate = action.date,
-                            openValueCrypto = action.valueCrypto,
-                            openValueFiat = action.valueFiat))
+                    val originalPosition = positions.find { it.id == action.positionId }!!
+                    val modifiedPosition = originalPosition.copy(closeDate = action.date, closeValueCrypto = action.valueCrypto, closeValueFiat = action.valueFiat)
+                    positions.replace(originalPosition, modifiedPosition)
+                    val positionId = positions.size.toBigDecimal().inc()
+                    val newPosition = Position(id = positionId, title = action.buyTitle, quantity = action.buyQuantity, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
+                    positions.add(newPosition)
                 }
                 ActionType.SPLIT -> {
                     action as Split

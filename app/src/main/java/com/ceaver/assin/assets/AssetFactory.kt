@@ -6,7 +6,7 @@ import com.ceaver.assin.action.Trade
 import com.ceaver.assin.action.Withdraw
 
 object AssetFactory {
-    public fun fromActions(actions: List<Action>): List<Asset> {
+    fun fromActions(actions: List<Action>): List<Asset> {
         val depositActions = actions.filterIsInstance<Deposit>()
         val tradeActions = actions.filterIsInstance<Trade>()
         val withdrawActions = actions.filterIsInstance<Withdraw>()
