@@ -7,8 +7,8 @@ import java.util.*
 
 object TitleRepository {
 
-    suspend fun loadById(id: String): Title? {
-        return dao.loadById(id)?.toTitle()
+    suspend fun loadById(id: String): Title {
+        return dao.loadById(id).toTitle()
     }
 
     suspend fun loadBySymbol(symbol: String): Title {

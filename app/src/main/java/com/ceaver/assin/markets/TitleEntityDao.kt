@@ -9,7 +9,7 @@ import com.ceaver.assin.database.BaseEntityDao
 @Dao
 interface TitleEntityDao : BaseEntityDao<TitleEntity> {
     @Query("select * from title where id = :id")
-    suspend fun loadById(id: String): TitleEntity?
+    suspend fun loadById(id: String): TitleEntity
 
     @Query("select * from title where symbol = :symbol")
     suspend fun loadBySymbol(symbol: String): TitleEntity

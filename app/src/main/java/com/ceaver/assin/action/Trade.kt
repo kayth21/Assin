@@ -39,9 +39,9 @@ data class Trade(
             require(ActionType.TRADE.name == csvRecord.get(0))
             return Trade(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    buyTitle = TitleRepository.loadBySymbol(csvRecord.get(2)),
+                    buyTitle = TitleRepository.loadById(csvRecord.get(2)),
                     buyQuantity = csvRecord.get(3).toBigDecimal(),
-                    sellTitle = TitleRepository.loadBySymbol(csvRecord.get(4)),
+                    sellTitle = TitleRepository.loadById(csvRecord.get(4)),
                     sellQuantity = csvRecord.get(5).toBigDecimal(),
                     positionId = csvRecord.get(6).toBigDecimal(),
                     valueCrypto = csvRecord.get(7).toBigDecimal(),
@@ -62,9 +62,9 @@ data class Trade(
         return listOf(
                 ActionType.TRADE.name,
                 date.toString(),
-                buyTitle.symbol,
+                buyTitle.id,
                 buyQuantity.toPlainString(),
-                sellTitle.symbol,
+                sellTitle.id,
                 sellQuantity.toPlainString(),
                 positionId!!.toPlainString(),
                 valueCrypto.toPlainString(),

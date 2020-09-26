@@ -35,7 +35,7 @@ data class Split(
             require(ActionType.SPLIT.name == csvRecord.get(0))
             return Split(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadBySymbol(csvRecord.get(2)),
+                    title = TitleRepository.loadById(csvRecord.get(2)),
                     quantity = csvRecord.get(3).toBigDecimal(),
                     remaining = csvRecord.get(4).toBigDecimal(),
                     positionId = csvRecord.get(5).toBigDecimal(),
@@ -55,7 +55,7 @@ data class Split(
         return listOf(
                 ActionType.SPLIT.name,
                 date.toString(),
-                title.symbol,
+                title.id,
                 quantity.toPlainString(),
                 remaining.toPlainString(),
                 positionId.toPlainString(),
