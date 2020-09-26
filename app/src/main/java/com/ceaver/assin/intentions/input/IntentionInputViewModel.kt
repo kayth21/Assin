@@ -33,8 +33,8 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
             if (intention != null)
                 _intention.postValue(intention)
             else {
-                val symbolTitle = title ?: TitleRepository.loadTitleBySymbol("BTC")
-                val referenceTitle = TitleRepository.loadTitleBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
+                val symbolTitle = title ?: TitleRepository.loadBySymbol("BTC")
+                val referenceTitle = TitleRepository.loadBySymbol(if (symbolTitle.symbol == "BTC") "USD" else "BTC")
                 _intention.postValue(Intention(
                         0,
                         IntentionType.SELL,

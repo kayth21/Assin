@@ -57,7 +57,7 @@ class IntentionListFragment : Fragment() {
         if (item.groupId == 2 && item.itemId == 0) {
             lifecycleScope.launch {
                 val selectedIntention = intentionListAdapter.currentLongClickIntention!!
-                IntentionRepository.deleteIntention(selectedIntention)
+                IntentionRepository.delete(selectedIntention)
             }
         }
         return super.onContextItemSelected(item)

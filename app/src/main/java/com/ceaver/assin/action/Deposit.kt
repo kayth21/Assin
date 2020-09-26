@@ -33,7 +33,7 @@ data class Deposit(
             require(ActionType.DEPOSIT.name == csvRecord.get(0))
             return Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadTitleBySymbol(csvRecord.get(2)),
+                    title = TitleRepository.loadBySymbol(csvRecord.get(2)),
                     quantity = csvRecord.get(3).toBigDecimal(),
                     valueCrypto = csvRecord.get(4).toBigDecimal(),
                     valueFiat = csvRecord.get(5).toBigDecimal(),

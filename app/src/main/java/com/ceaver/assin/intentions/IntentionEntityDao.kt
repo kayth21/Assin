@@ -1,7 +1,9 @@
 package com.ceaver.assin.intentions
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
 import com.ceaver.assin.database.BaseEntityDao
 
 @Dao
@@ -19,12 +21,6 @@ interface IntentionEntityDao : BaseEntityDao<IntentionEntity> {
     @Query("select * from intention")
     fun loadAllObserved(): LiveData<List<IntentionDto>>
 
-    @Update
-    suspend fun update(intentions: List<IntentionEntity>)
-
-    @Delete
-    suspend fun deleteIntention(intention: IntentionEntity)
-
     @Query("delete from intention")
-    suspend fun deleteAllIntentions()
+    suspend fun deleteAll()
 }

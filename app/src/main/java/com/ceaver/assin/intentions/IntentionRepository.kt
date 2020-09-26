@@ -23,21 +23,21 @@ object IntentionRepository {
 
     suspend fun saveIntention(intention: Intention) {
         if (intention.id > 0)
-            updateIntention(intention)
+            update(intention)
         else
             insert(intention)
     }
 
-    suspend fun updateIntention(intention: Intention) {
+    suspend fun update(intention: Intention) {
         dao.update(intention.toIntentionEntity())
     }
 
-    suspend fun deleteIntention(intention: Intention) {
-        dao.deleteIntention(intention.toIntentionEntity())
+    suspend fun delete(intention: Intention) {
+        dao.delete(intention.toIntentionEntity())
     }
 
-    suspend fun deleteAllIntentions() {
-        dao.deleteAllIntentions()
+    suspend fun deleteAll() {
+        dao.deleteAll()
     }
 
     private val dao: IntentionEntityDao

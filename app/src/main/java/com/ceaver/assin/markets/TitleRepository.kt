@@ -11,6 +11,10 @@ object TitleRepository {
         return dao.loadById(id)?.toTitle()
     }
 
+    suspend fun loadBySymbol(symbol: String): Title {
+        return dao.loadBySymbol(symbol).toTitle();
+    }
+
     suspend fun loadAll(): List<Title> {
         return dao.loadAll().map { it.toTitle() }
     }
@@ -21,10 +25,6 @@ object TitleRepository {
 
     fun loadActiveCryptoTitles(): LiveData<List<Title>> {
         return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() } }
-    }
-
-    suspend fun loadTitleBySymbol(symbol: String): Title {
-        return dao.loadBySymbol(symbol).toTitle();
     }
 
     suspend fun insert(title: Title) =
@@ -49,13 +49,13 @@ object TitleRepository {
             TODO("not yet implemented")
         }
         if (reference.symbol == "USD" || reference.symbol == "BTC") {
-            val title = loadTitleBySymbol(symbol.symbol)
+            val title = loadBySymbol(symbol.symbol)
 //            if (!title.isPresent) return Optional.empty()
             return if (reference.symbol == "USD") Optional.of(title.fiatQuotes.price) else Optional.of(title.cryptoQuotes.price)
         }
         // symbol and reference can only be crypto here
-        val symbolTitle = loadTitleBySymbol(symbol.symbol)
-        val referenceTitle = loadTitleBySymbol(reference.symbol)
+        val symbolTitle = loadBySymbol(symbol.symbol)
+        val referenceTitle = loadBySymbol(reference.symbol)
 //        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
         return Optional.of(symbolTitle.cryptoQuotes.price / referenceTitle.cryptoQuotes.price)
     }

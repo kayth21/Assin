@@ -30,7 +30,7 @@ class AlertViewModel(alert: Alert?) : ViewModel() {
 
     private fun createAlert() {
         viewModelScope.launch {
-            _alert.postValue(Alert(title = TitleRepository.loadTitleBySymbol("BTC"), referenceTitle = TitleRepository.loadTitleBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = BigDecimal.ZERO, target = BigDecimal.ZERO))
+            _alert.postValue(Alert(title = TitleRepository.loadBySymbol("BTC"), referenceTitle = TitleRepository.loadBySymbol("USD"), alertType = AlertType.RECURRING_STABLE, source = BigDecimal.ZERO, target = BigDecimal.ZERO))
         }
     }
 

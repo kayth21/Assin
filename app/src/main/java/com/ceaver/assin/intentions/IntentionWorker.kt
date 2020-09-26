@@ -14,7 +14,7 @@ class IntentionWorker(appContext: Context, workerParams: WorkerParameters) : Cor
         val calculatedStatus = intention.calculateState()
         if (calculatedStatus > intention.status) {
             val newIntention = intention.copy(status = calculatedStatus)
-            IntentionRepository.updateIntention(newIntention);
+            IntentionRepository.update(newIntention);
             IntentionNotification.notify(newIntention)
         }
     }
