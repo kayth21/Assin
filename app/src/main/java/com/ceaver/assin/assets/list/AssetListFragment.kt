@@ -47,7 +47,7 @@ class AssetListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Asset) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAssetDetailFragment(item.title))
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAssetDetailFragment(item.title, item.label))
         }
     }
 

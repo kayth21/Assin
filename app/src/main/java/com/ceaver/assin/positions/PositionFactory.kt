@@ -16,7 +16,7 @@ object PositionFactory {
                 ActionType.DEPOSIT -> {
                     action as Deposit
                     val positionId = positions.size.toBigDecimal().inc()
-                    val newPosition = Position(id = positionId, title = action.title, quantity = action.quantity, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
+                    val newPosition = Position(id = positionId, title = action.title, label = action.label, quantity = action.quantity, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
                     positions.add(newPosition)
                 }
                 ActionType.WITHDRAW -> {
@@ -31,7 +31,7 @@ object PositionFactory {
                     val modifiedPosition = originalPosition.copy(closeDate = action.date, closeValueCrypto = action.valueCrypto, closeValueFiat = action.valueFiat)
                     positions.replace(originalPosition, modifiedPosition)
                     val positionId = positions.size.toBigDecimal().inc()
-                    val newPosition = Position(id = positionId, title = action.buyTitle, quantity = action.buyQuantity, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
+                    val newPosition = Position(id = positionId, title = action.buyTitle, quantity = action.buyQuantity, label = action.buyLabel, openDate = action.date, openValueCrypto = action.valueCrypto, openValueFiat = action.valueFiat)
                     positions.add(newPosition)
                 }
                 ActionType.SPLIT -> {

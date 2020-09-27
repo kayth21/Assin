@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.PositionRepository
 
-class PositionListViewModel(val title: Title) : ViewModel() {
+class PositionListViewModel(val title: Title, val label: String?) : ViewModel() {
 
-    val positions = PositionRepository.loadPositionsObserved(title)
+    val positions = PositionRepository.loadPositionsObserved(title, label)
 
-    class Factory(val title: Title) : ViewModelProvider.Factory {
+    class Factory(val title: Title, val label: String?) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PositionListViewModel(title) as T
+            return PositionListViewModel(title, label) as T
         }
     }
 }

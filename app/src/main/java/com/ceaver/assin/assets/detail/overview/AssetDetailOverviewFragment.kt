@@ -11,13 +11,13 @@ import com.ceaver.assin.R
 import com.ceaver.assin.databinding.AssetDetailOverviewFragmentBinding
 import com.ceaver.assin.markets.Title
 
-class AssetDetailOverviewFragment(val title: Title) : Fragment() {
+class AssetDetailOverviewFragment(val title: Title, val label: String?) : Fragment() {
 
     private lateinit var viewModel: AssetDetailOverviewViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = viewModels<AssetDetailOverviewViewModel> { AssetDetailOverviewViewModel.Factory(title) }.value
+        viewModel = viewModels<AssetDetailOverviewViewModel> { AssetDetailOverviewViewModel.Factory(title, label) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

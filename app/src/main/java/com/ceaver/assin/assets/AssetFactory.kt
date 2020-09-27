@@ -11,10 +11,10 @@ object AssetFactory {
         val tradeActions = actions.filterIsInstance<Trade>()
         val withdrawActions = actions.filterIsInstance<Withdraw>()
 
-        val buyPairsFromDeposits = depositActions.map { Pair(it.title, it.quantity) }
-        val buyPairsFromTrades = tradeActions.map { Pair(it.buyTitle, it.buyQuantity) }
-        val sellPairsFromTrades = tradeActions.map { Pair(it.sellTitle, it.sellQuantity.unaryMinus()) }
-        val sellPairsFromWithdraws = withdrawActions.map { Pair(it.title, it.quantity.unaryMinus()) }
+        val buyPairsFromDeposits = depositActions.map { Pair(Pair(it.title, it.label), it.quantity) }
+        val buyPairsFromTrades = tradeActions.map { Pair(Pair(it.buyTitle, it.buyLabel), it.buyQuantity) }
+        val sellPairsFromTrades = tradeActions.map { Pair(Pair(it.sellTitle, it.sellLabel), it.sellQuantity.unaryMinus()) }
+        val sellPairsFromWithdraws = withdrawActions.map { Pair(Pair(it.title, it.label), it.quantity.unaryMinus()) }
 
         val allPairs = buyPairsFromDeposits + buyPairsFromTrades + sellPairsFromTrades + sellPairsFromWithdraws
 
@@ -22,10 +22,11 @@ object AssetFactory {
                 .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
                 .map {
                     Asset(
-                            title = it.first,
+                            title = it.first.first,
+                            label = it.first.second,
                             quantity = it.second,
-                            valueCrypto = it.first.cryptoQuotes.price.toBigDecimal().times(it.second),
-                            valueFiat = it.first.fiatQuotes.price.toBigDecimal().times(it.second))
+                            valueCrypto = it.first.first.cryptoQuotes.price.toBigDecimal().times(it.second),
+                            valueFiat = it.first.first.fiatQuotes.price.toBigDecimal().times(it.second))
                 }
     }
 }

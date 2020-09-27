@@ -10,8 +10,10 @@ data class Trade(
         val id: Long = 0,
         val date: LocalDate = LocalDate.now(),
         val buyTitle: Title,
+        val buyLabel: String?,
         val buyQuantity: BigDecimal,
         val sellTitle: Title,
+        val sellLabel: String?,
         val sellQuantity: BigDecimal,
         val positionId: BigDecimal?,
         val valueCrypto: BigDecimal,
@@ -26,8 +28,10 @@ data class Trade(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
                     buyTitle = actionDto.buyTitle!!.toTitle(),
+                    buyLabel = actionDto.action.buyLabel,
                     buyQuantity = actionDto.action.buyQuantity!!,
                     sellTitle = actionDto.sellTitle!!.toTitle(),
+                    sellLabel = actionDto.action.sellLabel,
                     sellQuantity = actionDto.action.sellQuantity!!,
                     positionId = actionDto.action.positionId,
                     valueCrypto = actionDto.action.valueCrypto!!,
@@ -40,31 +44,27 @@ data class Trade(
             return Trade(
                     date = LocalDate.parse(csvRecord.get(1)),
                     buyTitle = TitleRepository.loadById(csvRecord.get(2)),
-                    buyQuantity = csvRecord.get(3).toBigDecimal(),
-                    sellTitle = TitleRepository.loadById(csvRecord.get(4)),
-                    sellQuantity = csvRecord.get(5).toBigDecimal(),
-                    positionId = csvRecord.get(6).toBigDecimal(),
-                    valueCrypto = csvRecord.get(7).toBigDecimal(),
-                    valueFiat = csvRecord.get(8).toBigDecimal(),
-                    comment = csvRecord.get(9).ifEmpty { null })
+                    buyLabel = csvRecord.get(3).ifEmpty { null },
+                    buyQuantity = csvRecord.get(4).toBigDecimal(),
+                    sellTitle = TitleRepository.loadById(csvRecord.get(5)),
+                    sellLabel = csvRecord.get(6).ifEmpty { null },
+                    sellQuantity = csvRecord.get(7).toBigDecimal(),
+                    positionId = csvRecord.get(8).toBigDecimal(),
+                    valueCrypto = csvRecord.get(9).toBigDecimal(),
+                    valueFiat = csvRecord.get(10).toBigDecimal(),
+                    comment = csvRecord.get(11).ifEmpty { null })
         }
     }
-
-    override fun getEntityId(): Long = id
-    override fun getActionType(): ActionType = ActionType.TRADE
-    override fun getLeftImageResource(): Int = sellTitle.getIcon()
-    override fun getRightImageResource(): Int = buyTitle.getIcon()
-    override fun getActionDate(): LocalDate = date
-    override fun getTitleText(): String = "${sellTitle.name} -> ${buyTitle.name}"
-    override fun getDetailText(): String = "$sellQuantity ${sellTitle.symbol} -> $buyQuantity ${buyTitle.symbol}"
 
     override fun toExport(): List<String> {
         return listOf(
                 ActionType.TRADE.name,
                 date.toString(),
                 buyTitle.id,
+                buyLabel.orEmpty(),
                 buyQuantity.toPlainString(),
                 sellTitle.id,
+                sellLabel.orEmpty(),
                 sellQuantity.toPlainString(),
                 positionId!!.toPlainString(),
                 valueCrypto.toPlainString(),
@@ -78,8 +78,10 @@ data class Trade(
                 id = id,
                 actionDate = date,
                 buyTitleId = buyTitle.id,
+                buyLabel = buyLabel,
                 buyQuantity = buyQuantity,
                 sellTitleId = sellTitle.id,
+                sellLabel = sellLabel,
                 sellQuantity = sellQuantity,
                 positionId = positionId,
                 valueCrypto = valueCrypto,
@@ -87,4 +89,12 @@ data class Trade(
                 comment = comment
         )
     }
+
+    override fun getEntityId(): Long = id
+    override fun getActionType(): ActionType = ActionType.TRADE
+    override fun getLeftImageResource(): Int = sellTitle.getIcon()
+    override fun getRightImageResource(): Int = buyTitle.getIcon()
+    override fun getActionDate(): LocalDate = date
+    override fun getTitleText(): String = "${sellTitle.name} ${if (sellLabel == null) "" else "(${sellLabel})"} -> ${buyTitle.name} ${if (buyLabel == null) "" else "(${buyLabel})"}"
+    override fun getDetailText(): String = "$sellQuantity ${sellTitle.symbol} -> $buyQuantity ${buyTitle.symbol}"
 }

@@ -37,6 +37,10 @@
         <argument
             android:name="title"
             app:argType="com.ceaver.assin.markets.Title" />
+        <argument
+            android:name="label"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/actionInputFragment"

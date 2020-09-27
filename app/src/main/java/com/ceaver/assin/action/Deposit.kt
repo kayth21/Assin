@@ -11,11 +11,13 @@ data class Deposit(
         val id: Long = 0,
         val date: LocalDate = LocalDate.now(),
         val title: Title,
+        val label: String?,
         val quantity: BigDecimal,
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
         val comment: String?
 ) : Action {
+
     companion object Factory {
         fun fromDto(actionDto: ActionDto): Deposit {
             require(ActionType.DEPOSIT == actionDto.action.actionType)
@@ -23,6 +25,7 @@ data class Deposit(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
                     title = actionDto.buyTitle!!.toTitle(),
+                    label = actionDto.action.buyLabel,
                     quantity = actionDto.action.buyQuantity!!,
                     valueCrypto = actionDto.action.valueCrypto!!,
                     valueFiat = actionDto.action.valueFiat!!,
@@ -34,10 +37,11 @@ data class Deposit(
             return Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadById(csvRecord.get(2)),
-                    quantity = csvRecord.get(3).toBigDecimal(),
-                    valueCrypto = csvRecord.get(4).toBigDecimal(),
-                    valueFiat = csvRecord.get(5).toBigDecimal(),
-                    comment = csvRecord.get(6).ifEmpty { null })
+                    label = csvRecord.get(3).ifEmpty { null },
+                    quantity = csvRecord.get(4).toBigDecimal(),
+                    valueCrypto = csvRecord.get(5).toBigDecimal(),
+                    valueFiat = csvRecord.get(6).toBigDecimal(),
+                    comment = csvRecord.get(7).ifEmpty { null })
         }
     }
 
@@ -46,19 +50,12 @@ data class Deposit(
                 ActionType.DEPOSIT.name,
                 date.toString(),
                 title.id,
+                label.orEmpty(),
                 quantity.toPlainString(),
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
                 comment.orEmpty())
     }
-
-    override fun getEntityId(): Long = id
-    override fun getActionType(): ActionType = ActionType.DEPOSIT
-    override fun getLeftImageResource(): Int = R.drawable.deposit
-    override fun getRightImageResource(): Int = title.getIcon()
-    override fun getActionDate(): LocalDate = date
-    override fun getTitleText(): String = "Deposit ${title.name}"
-    override fun getDetailText(): String = "$quantity ${title.symbol}"
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
@@ -66,10 +63,19 @@ data class Deposit(
                 id = id,
                 actionDate = date,
                 buyTitleId = title.id,
+                buyLabel = label,
                 buyQuantity = quantity,
                 valueCrypto = valueCrypto,
                 valueFiat = valueFiat,
                 comment = comment
         )
     }
+
+    override fun getEntityId(): Long = id
+    override fun getActionType(): ActionType = ActionType.DEPOSIT
+    override fun getLeftImageResource(): Int = R.drawable.deposit
+    override fun getRightImageResource(): Int = title.getIcon()
+    override fun getActionDate(): LocalDate = date
+    override fun getTitleText(): String = "Deposit ${title.name} ${if (label == null) "" else "(${label})"}"
+    override fun getDetailText(): String = "$quantity ${title.symbol}"
 }

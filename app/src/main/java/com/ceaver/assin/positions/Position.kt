@@ -9,6 +9,7 @@ import java.time.LocalDate
 data class Position(
         val id: BigDecimal,
         val title: Title,
+        val label: String?,
         val quantity: BigDecimal,
         val openDate: LocalDate,
         val openValueCrypto: BigDecimal,

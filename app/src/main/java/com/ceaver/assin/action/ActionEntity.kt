@@ -14,28 +14,31 @@ import java.time.LocalDate
 @Entity(tableName = "action",
         indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId"])],
         foreignKeys = [
-                ForeignKey(
-                        entity = TitleEntity::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("buyTitleId"),
-                        onDelete = ForeignKey.RESTRICT),
-                ForeignKey(
-                        entity = TitleEntity::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("sellTitleId"),
-                        onDelete = ForeignKey.RESTRICT),
-                ForeignKey(
-                        entity = TitleEntity::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("splitTitleId"),
-                        onDelete = ForeignKey.RESTRICT)]) // TODO but what if..?
+            ForeignKey(
+                    entity = TitleEntity::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("buyTitleId"),
+                    onDelete = ForeignKey.RESTRICT),
+            ForeignKey(
+                    entity = TitleEntity::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("sellTitleId"),
+                    onDelete = ForeignKey.RESTRICT),
+            ForeignKey(
+                    entity = TitleEntity::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("splitTitleId"),
+                    onDelete = ForeignKey.RESTRICT) // TODO but what if..?
+        ])
 data class ActionEntity(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
         var actionDate: LocalDate = LocalDate.now(),
         var buyTitleId: String? = null,
+        var buyLabel: String? = null,
         var buyQuantity: BigDecimal? = null,
         var sellTitleId: String? = null,
+        var sellLabel: String? = null,
         var sellQuantity: BigDecimal? = null,
         var comment: String? = null,
         val actionType: ActionType,
@@ -43,6 +46,9 @@ data class ActionEntity(
         val splitQuantity: BigDecimal? = null,
         val splitRemaining: BigDecimal? = null,
         val splitTitleId: String? = null,
+        val splitLabel: String? = null,
         val valueCrypto: BigDecimal? = null,
         val valueFiat: BigDecimal? = null
-) : Parcelable
+) : Parcelable {
+
+}

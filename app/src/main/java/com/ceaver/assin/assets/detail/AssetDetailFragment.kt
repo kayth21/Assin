@@ -27,8 +27,8 @@ class AssetDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val title = arguments.title
-        insertFragment(R.id.assetDetailOverviewFragment, AssetDetailOverviewFragment(title))
-        insertFragment(R.id.assetDetailPositionsFragment, PositionListFragment(title))
+        insertFragment(R.id.assetDetailOverviewFragment, AssetDetailOverviewFragment(title, arguments.label))
+        insertFragment(R.id.assetDetailPositionsFragment, PositionListFragment(title, arguments.label))
     }
 
     private fun insertFragment(position: Int, fragment: Fragment) {

@@ -7,13 +7,13 @@ import com.ceaver.assin.markets.Title
 
 object PositionRepository {
 
-    suspend fun loadPositions(title: Title): List<Position> =
+    suspend fun loadPositions(title: Title, label: String?): List<Position> =
             // Caution: Generate Positions always out of all actions and filter afterwards, because they need to be in line because of attribute positionId
-            PositionFactory.fromActions(ActionRepository.loadAll()).filter { it.title == title }
+            PositionFactory.fromActions(ActionRepository.loadAll()).filter { it.title == title && it.label == label }
 
-    fun loadPositionsObserved(title: Title): LiveData<List<Position>> =
+    fun loadPositionsObserved(title: Title, label: String?): LiveData<List<Position>> =
             // Caution: Generate Positions always out of all actions and filter afterwards, because they need to be in line because of attribute positionId
-            Transformations.map(ActionRepository.loadAllObserved()) { PositionFactory.fromActions(it).filter { it.title == title } }
+            Transformations.map(ActionRepository.loadAllObserved()) { PositionFactory.fromActions(it).filter { it.title == title && it.label == label } }
 
     suspend fun loadAllPositions(): List<Position> =
             PositionFactory.fromActions(ActionRepository.loadAll())

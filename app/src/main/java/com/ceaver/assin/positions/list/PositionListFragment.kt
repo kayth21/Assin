@@ -20,14 +20,14 @@ import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import kotlinx.coroutines.launch
 
-class PositionListFragment(val title: Title) : Fragment() {
+class PositionListFragment(val title: Title, val label: String?) : Fragment() {
 
     private val positionListAdapter = PositionListAdapter(OnListItemClickListener(), this)
     private lateinit var viewModel: PositionListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = viewModels<PositionListViewModel> { PositionListViewModel.Factory(title) }.value
+        viewModel = viewModels<PositionListViewModel> { PositionListViewModel.Factory(title, label) }.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
