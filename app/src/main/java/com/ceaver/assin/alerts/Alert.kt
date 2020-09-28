@@ -3,7 +3,9 @@ package com.ceaver.assin.alerts
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleRepository
 import kotlinx.android.parcel.Parcelize
+import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
 
 @Parcelize
@@ -28,6 +30,15 @@ data class Alert(//
                     target = dto.alert.target
             )
         }
+
+        suspend fun fromImport(record: CSVRecord): Alert {
+            return Alert(
+                    title = TitleRepository.loadBySymbol(record.get(0)),
+                    referenceTitle = TitleRepository.loadBySymbol(record.get(1)),
+                    alertType = AlertType.valueOf(record.get(2)),
+                    source = record.get(3).toBigDecimal(),
+                    target = record.get(4).toBigDecimal())
+        }
     }
 
     fun toEntity(): AlertEntity {
@@ -39,6 +50,10 @@ data class Alert(//
                 source = source,
                 target = target
         )
+    }
+
+    fun toExport(): List<String> {
+        return listOf(title.symbol, referenceTitle.symbol, alertType.name, source.toPlainString(), target.toPlainString())
     }
 
     object Difference : DiffUtil.ItemCallback<Alert>() {

@@ -2,7 +2,9 @@ package com.ceaver.assin.intentions
 
 import android.os.Parcelable
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.TitleRepository
 import kotlinx.android.parcel.Parcelize
+import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -30,6 +32,18 @@ data class Intention(
                     referenceTitle = dto.referenceTitle.toTitle(),
                     status = dto.intention.status,
                     type = dto.intention.type)
+        }
+
+        suspend fun fromImport(record: CSVRecord): Intention {
+            return Intention(
+                    type = IntentionType.valueOf(record.get(0)),
+                    title = TitleRepository.loadBySymbol(record.get(1)),
+                    quantity = record.get(2).toBigDecimalOrNull(),
+                    referenceTitle = TitleRepository.loadBySymbol(record.get(3)),
+                    referencePrice = record.get(4).toBigDecimal(),
+                    creationDate = LocalDate.parse(record.get(5)),
+                    status = IntentionStatus.valueOf(record.get(6)),
+                    comment = record.get(7).ifEmpty { null })
         }
     }
 
@@ -69,5 +83,9 @@ data class Intention(
             in 80.0..100.0 -> IntentionStatus.NEAR
             else -> IntentionStatus.ACT
         }
+    }
+
+    fun toExport(): List<String> {
+        return listOf(type.name, title.symbol, quantityAsString(), referenceTitle.symbol, referencePrice.toPlainString(), creationDate.toString(), status.name, comment.orEmpty())
     }
 }

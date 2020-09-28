@@ -15,13 +15,9 @@ import androidx.work.*
 import com.ceaver.assin.action.*
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
-import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
-import com.ceaver.assin.intentions.IntentionStatus
-import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.markets.TitleRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.backup_fragment.*
 import org.apache.commons.csv.CSVFormat
@@ -33,7 +29,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.time.LocalDate
 
 private const val READ_EXTERNAL_STORAGE = 0
 private const val WRITE_EXTERNAL_STORAGE = 1
@@ -125,7 +120,7 @@ class BackupFragment : Fragment() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + ALERT_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (alert in alerts) csvPrinter.printRecord(alert.title.symbol, alert.referenceTitle.symbol, alert.alertType, alert.source.toPlainString(), alert.target.toPlainString())
+            for (alert in alerts) csvPrinter.printRecord(alert.toExport())
             csvPrinter.flush()
             LogRepository.insert("Export alerts successful to '$filePath'")
             return Result.success()
@@ -138,7 +133,7 @@ class BackupFragment : Fragment() {
             val targetDirectory = getOrCreateDirectory()
             val filePath = targetDirectory.path + "/" + INTENTION_FILE_NAME
             val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
-            for (intention in intentions) csvPrinter.printRecord(intention.type, intention.title.symbol, intention.quantityAsString(), intention.referenceTitle.symbol, intention.referencePrice.toPlainString(), intention.creationDate, intention.status, intention.comment.orEmpty())
+            for (intention in intentions) csvPrinter.printRecord(intention.toExport())
             csvPrinter.flush()
             LogRepository.insert("Export intentions successful to '$filePath'")
             return Result.success()
@@ -177,7 +172,7 @@ class BackupFragment : Fragment() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val alerts = csvParser.map { Alert(0, TitleRepository.loadBySymbol(it.get(0)), TitleRepository.loadBySymbol(it.get(1)), AlertType.valueOf(it.get(2)), it.get(3).toBigDecimal(), it.get(4).toBigDecimal()) }.toList()
+                val alerts = csvParser.map { Alert.fromImport(it) }.toList()
                 AlertRepository.deleteAll()
                 AlertRepository.insert(alerts)
                 LogRepository.insert("Import alerts from '$filePath' successful")
@@ -195,7 +190,7 @@ class BackupFragment : Fragment() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + INTENTION_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val intentions = csvParser.map { Intention(0, IntentionType.valueOf(it.get(0)), TitleRepository.loadBySymbol(it.get(1)), it.get(2).toBigDecimalOrNull(), TitleRepository.loadBySymbol(it.get(3)), it.get(4).toBigDecimal(), LocalDate.parse(it.get(5)), IntentionStatus.valueOf(it.get(6)), it.get(7).ifEmpty { null }) }.toList()
+                val intentions = csvParser.map { Intention.fromImport(it) }.toList()
                 IntentionRepository.deleteAll()
                 IntentionRepository.insert(intentions)
                 LogRepository.insert("Import intentions from '$filePath' successful")
