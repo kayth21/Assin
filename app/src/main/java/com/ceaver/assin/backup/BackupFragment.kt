@@ -8,7 +8,6 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
@@ -230,7 +229,7 @@ class BackupFragment : Fragment() {
 
     private fun hasPermission(permission: String) = ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
 
-    private fun requestPermission(permission: String, requestCode: Int) = ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
+    private fun requestPermission(permission: String, requestCode: Int) = requestPermissions(arrayOf(permission), requestCode)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
