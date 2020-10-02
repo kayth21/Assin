@@ -40,5 +40,6 @@ fun TextView.setTitle7dChange(title: Title) {
 
 @BindingAdapter("titleRank")
 fun TextView.setTitleRank(title: Title) {
+    title as CryptoTitle // TODO
     text = title.rank.toString()
 }

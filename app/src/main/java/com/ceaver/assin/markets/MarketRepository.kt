@@ -11,21 +11,23 @@ object MarketRepository {
         return Coinpaprika.loadGlobalStats()
     }
 
-    suspend fun loadAllTitles(): Set<Title> {
+    suspend fun loadAllTitles(): Pair<List<CryptoTitle>, List<FiatTitle>> {
         val allRemoteTitles = Coinpaprika.loadAllTitles()
+        val allRemoteCryptoTitles = allRemoteTitles.first
+        val allRemoteFiatTitles = allRemoteTitles.second
         val allLocalTitles = TitleRepository.loadAll()
 
-        val cryptoTitle = allRemoteTitles.single { it.symbol == Preferences.getCryptoTitleSymbol() }
-        val fiatTitle = allRemoteTitles.single { it.symbol == Preferences.getFiatTitleSymbol() }
+        val cryptoTitle = allRemoteCryptoTitles.single { it.symbol == Preferences.getCryptoTitleSymbol() }
+        val fiatTitle = allRemoteFiatTitles.single { it.symbol == Preferences.getFiatTitleSymbol() }
 
         PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).edit()
                 .setTitle(Preferences.CRYPTO_TITLE, cryptoTitle)
                 .setTitle(Preferences.FIAT_TITLE, fiatTitle)
                 .apply()
 
-        return allRemoteTitles.map { remoteTitle ->
-            val localTitle = allLocalTitles.find { localTitle -> remoteTitle.id == localTitle.id }
+        return Pair(allRemoteCryptoTitles.map { remoteTitle ->
+            val localTitle = allLocalTitles.find { localTitle -> remoteTitle.id == localTitle.id } as CryptoTitle?
             remoteTitle.copy(active = localTitle?.active ?: -75)
-        }.toSet()
+        } , allRemoteFiatTitles)
     }
 }

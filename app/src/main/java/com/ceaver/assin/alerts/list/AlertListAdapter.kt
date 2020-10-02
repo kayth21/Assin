@@ -31,7 +31,7 @@ internal class AlertListAdapter(private val onClickListener: AlertListFragment.O
         }
 
         fun bindItem(alert: Alert, onClickListener: AlertListFragment.OnItemClickListener) {
-            binding.alertSymbolTextView.text = alert.title.toString()
+            binding.alertSymbolTextView.text = "${alert.title.symbol} (${alert.title.name})"
             binding.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
             binding.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
             binding.alertRangeTextView.text = "Range (+/-): " + alert.target.toPlainString() + " ${alert.referenceTitle.symbol}"

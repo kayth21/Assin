@@ -18,14 +18,14 @@ data class TitleEntity(//
         val name: String,
         val symbol: String,
         val category: AssetCategory,
-        val active: Int,
+        val active: Int = 100,
         // common crypto
         val rank: Int = -1,
         val circulatingSupply: Long? = null,
         val totalSupply: Long? = null,
         val maxSupply: Long? = null,
         val betaValue: Double? = null,
-        val lastUpdated: LocalDateTime? = null,
+        val lastUpdated: LocalDateTime,
         // primary
         @Embedded(prefix = "crypto")
         val cryptoQuotes: Quotes,
@@ -33,34 +33,10 @@ data class TitleEntity(//
         @Embedded(prefix = "fiat")
         val fiatQuotes: Quotes
 ) : Parcelable {
-    fun toTitle(): Title {
-        return Title(
-                id = id,
-                symbol = symbol,
-                active = active,
-                betaValue = betaValue,
-                category = category,
-                circulatingSupply = circulatingSupply,
-                cryptoQuotes = cryptoQuotes,
-                fiatQuotes = fiatQuotes,
-                lastUpdated = lastUpdated,
-                maxSupply = maxSupply,
-                name = name,
-                rank = rank,
-                totalSupply = totalSupply
-        )
-    }
+        fun toTitle(): Title {
+                return when (category) {
+                        AssetCategory.CRYPTO -> CryptoTitle.fromEntity(this)
+                        AssetCategory.FIAT -> FiatTitle.fromEntity(this)
+                }
+        }
 }
-
-@Parcelize
-data class Quotes(
-        val price: Double,
-        val volume24h: Double? = null,
-        val marketCap: Double? = null,
-        val marketCapChange24h: Double? = null,
-        val percentChange1h: Double? = null,
-        val percentChange24h: Double? = null,
-        val percentChange7d: Double? = null,
-        val percentChange30d: Double? = null,
-        val percentChange1y: Double? = null
-) : Parcelable

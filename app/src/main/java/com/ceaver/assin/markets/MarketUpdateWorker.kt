@@ -9,25 +9,28 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
 
     override suspend fun doWork(): Result {
         val allRemoteTitles = MarketRepository.loadAllTitles()
-        val allRemoteTitleIds = allRemoteTitles.map { it.id }.toSet()
-        val allLocalTitles = TitleRepository.loadAll()
-        val allLocalTitleIds = allLocalTitles.map { it.id }.toSet()
+        val allRemoteCryptoTitles = allRemoteTitles.first
+        val allRemoteFiatTitles = allRemoteTitles.second
+        val allRemoteCryptoTitleIds = allRemoteCryptoTitles.map { it.id }.toSet()
+        val allLocalCryptoTitles = TitleRepository.loadAllCryptoTitles()
+        val allLocalCryptoTitleIds = allLocalCryptoTitles.map { it.id }.toSet()
 
-        if (allLocalTitles.isEmpty()) { // initial load
-            TitleRepository.insert(allRemoteTitles.map { it.copy(active = 50) }.toSet())
+        if (allLocalCryptoTitles.isEmpty()) { // TODO initial load should be done elsewhere and better?
+            TitleRepository.insert((allRemoteCryptoTitles.map { it.copy(active = 50) } + allRemoteFiatTitles).toSet())
         } else {
-            val newTitlesToInsert = allRemoteTitles.filterNot { it.id in allLocalTitleIds }.toSet()
-            val existingTitlesToUpdate = (allRemoteTitles - newTitlesToInsert).map { it.incrementActiveCounter() }
-            val removedTitles = allLocalTitles.filterNot { it.id in allRemoteTitleIds }
+            // TODO needs to be done for Fiat and others as well
+            val newCryptoTitlesToInsert = allRemoteCryptoTitles.filterNot { it.id in allLocalCryptoTitleIds }.toSet()
+            val existingCryptoTitlesToUpdate = (allRemoteCryptoTitles - newCryptoTitlesToInsert).map { it.incrementActiveCounter() }
+            val removedTitles = allLocalCryptoTitles.filterNot { it.id in allLocalCryptoTitleIds }
             val removedTitlesPartitioned = removedTitles.partition { it.inactive() }
             val removedTitlesToDelete = removedTitlesPartitioned.first
             val removedTitlesToUpdate = removedTitlesPartitioned.second
             removedTitlesToUpdate.forEach { it.decreaseActiveCounter() }
 
-            TitleRepository.marketUpdate(newTitlesToInsert, (existingTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
+            TitleRepository.marketUpdate(newCryptoTitlesToInsert, (existingCryptoTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
 
             // TODO Transaction Update
-            existingTitlesToUpdate.filter { it.active == 50 }.forEach { LogRepository.insert("Activated  ${it.name} (${it.symbol}).") }
+            existingCryptoTitlesToUpdate.filter { it.active == 50 }.forEach { LogRepository.insert("Activated  ${it.name} (${it.symbol}).") }
             removedTitlesToDelete.forEach { LogRepository.insert("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }
 

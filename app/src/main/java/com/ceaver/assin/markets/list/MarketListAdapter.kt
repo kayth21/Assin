@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.databinding.MarketListRowBinding
-import com.ceaver.assin.markets.Title
+import com.ceaver.assin.markets.CryptoTitle
 
-internal class MarketListAdapter(private val onClickListener: MarketListFragment.OnItemClickListener) : ListAdapter<Title, MarketListAdapter.ViewHolder>(Difference) {
+internal class MarketListAdapter(private val onClickListener: MarketListFragment.OnItemClickListener) : ListAdapter<CryptoTitle, MarketListAdapter.ViewHolder>(Difference) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,7 +22,7 @@ internal class MarketListAdapter(private val onClickListener: MarketListFragment
 
     class ViewHolder(val binding: MarketListRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItem(title: Title, onClickListener: MarketListFragment.OnItemClickListener) {
+        fun bindItem(title: CryptoTitle, onClickListener: MarketListFragment.OnItemClickListener) {
             binding.title = title
             binding.executePendingBindings()
             itemView.setOnClickListener { onClickListener.onItemClick(title) }
@@ -31,12 +31,12 @@ internal class MarketListAdapter(private val onClickListener: MarketListFragment
 }
 
 // TODO it should only compare what is displayed on screen, so not comparing exact but rounded values
-object Difference : DiffUtil.ItemCallback<Title>() {
-    override fun areItemsTheSame(oldItem: Title, newItem: Title): Boolean {
+object Difference : DiffUtil.ItemCallback<CryptoTitle>() {
+    override fun areItemsTheSame(oldItem: CryptoTitle, newItem: CryptoTitle): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Title, newItem: Title): Boolean {
+    override fun areContentsTheSame(oldItem: CryptoTitle, newItem: CryptoTitle): Boolean {
         return oldItem.rank == newItem.rank &&
                 oldItem.cryptoQuotes == newItem.cryptoQuotes &&
                 oldItem.fiatQuotes == newItem.fiatQuotes

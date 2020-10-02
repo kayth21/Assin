@@ -19,12 +19,12 @@ object TitleRepository {
         return dao.loadAll().map { it.toTitle() }
     }
 
-    suspend fun loadAllCryptoTitles(): List<Title> {
-        return dao.loadAllCryptoTitles().map { it.toTitle() }
+    suspend fun loadAllCryptoTitles(): List<CryptoTitle> {
+        return dao.loadAllCryptoTitles().map { it.toTitle() as CryptoTitle }
     }
 
-    fun loadActiveCryptoTitles(): LiveData<List<Title>> {
-        return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() } }
+    fun loadActiveCryptoTitles(): LiveData<List<CryptoTitle>> {
+        return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() as CryptoTitle } }
     }
 
     suspend fun insert(title: Title) =

@@ -1,6 +1,5 @@
 package com.ceaver.assin.markets
 
-import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.extensions.asFactor
 import com.ceaver.assin.markets.overview.MarketOverview
 import com.ceaver.assin.preferences.Preferences
@@ -11,6 +10,7 @@ import com.coinpaprika.apiclient.entity.QuoteEntity
 import com.coinpaprika.apiclient.entity.TickerEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 object Coinpaprika {
@@ -43,11 +43,9 @@ object Coinpaprika {
         )
     }
 
-    suspend fun loadAllTitles(): Set<Title> {
+    suspend fun loadAllTitles(): Pair<List<CryptoTitle>, List<FiatTitle>> {
         val cryptoTitleSymbol = Preferences.getCryptoTitleSymbol()
         val fiatTitleSymbol = Preferences.getFiatTitleSymbol()
-
-        val resultSet = mutableSetOf<Title>()
 
         val tickers = CoinpaprikaApi().tickers()
         val fiats = CoinpaprikaApi().fiats().filter { it.symbol == "USD" } // TODO Support more fiats
@@ -56,32 +54,30 @@ object Coinpaprika {
         // TODO support fiat other USD
         val fiatEntity = fiats.single { it.symbol == fiatTitleSymbol }.let { QuoteEntity(price = 1.0, athDate = null, athPrice = 1.0, dailyVolume = 1.0, dailyVolumeDailyChange = 1.0, marketCap = 1.0, marketCapDailyChange = 1.0, percentChange1h = 0.0, percentChange1y = 0.0, percentChange7d = 0.0, percentChange12h = 0.0, percentChange24h = 0.0, percentChange30d = 0.0, percentFromPriceAth = 0.0, volumeAdjusted = 0.0, volumeReported = 0.0) }
 
-        tickers.forEach { resultSet.add(transform(it, cryptoEntity, fiatEntity)) }
-        fiats.forEach { resultSet.add(transform(it, cryptoEntity, fiatEntity)) }
+        val cryptoTitles = tickers.map { transform(it, cryptoEntity, fiatEntity) }
+        val fiatTitles = fiats.map { transform(it, cryptoEntity, fiatEntity) }
 
-        return resultSet
+        return Pair(cryptoTitles, fiatTitles)
     }
 
-    private fun transform(fiatEntity: FiatEntity, cryptoQuote: QuoteEntity, fiatQuote: QuoteEntity): Title {
-        return Title(
+    private fun transform(fiatEntity: FiatEntity, cryptoQuote: QuoteEntity, fiatQuote: QuoteEntity): FiatTitle {
+        return FiatTitle(
                 id = fiatEntity.id,
                 name = fiatEntity.name,
                 symbol = fiatEntity.symbol,
-                category = AssetCategory.FIAT,
-                active = 1818,
+                lastUpdated = LocalDateTime.now(),
                 cryptoQuotes = Quotes(1.0 * cryptoQuote.price), // TODO
                 fiatQuotes = Quotes(1.0 * fiatQuote.price)
         )
     }
 
-    private fun transform(ticker: TickerEntity, cryptoQuote: QuoteEntity, fiatQuote: QuoteEntity): Title {
+    private fun transform(ticker: TickerEntity, cryptoQuote: QuoteEntity, fiatQuote: QuoteEntity): CryptoTitle {
         val usdQuotes = ticker.quotes!!.get("USD")!!
 
-        return Title(
+        return CryptoTitle(
                 id = ticker.id,
                 name = ticker.name,
                 symbol = ticker.symbol,
-                category = AssetCategory.CRYPTO,
                 active = 1818,
 
                 rank = ticker.rank,
@@ -89,7 +85,7 @@ object Coinpaprika {
                 totalSupply = ticker.totalSupply,
                 maxSupply = ticker.maxSupply,
                 betaValue = ticker.betaValue,
-                lastUpdated = if (ticker.lastUpdated == null) null else transformTimestamp(ticker.lastUpdated!!),
+                lastUpdated = if (ticker.lastUpdated == null) LocalDateTime.now() else transformTimestamp(ticker.lastUpdated!!), // TODO is nullcheck necessary?
 
                 cryptoQuotes = Quotes(
                         price = usdQuotes.price / cryptoQuote.price,

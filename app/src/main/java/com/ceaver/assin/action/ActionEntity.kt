@@ -49,6 +49,4 @@ data class ActionEntity(
         val splitLabel: String? = null,
         val valueCrypto: BigDecimal? = null,
         val valueFiat: BigDecimal? = null
-) : Parcelable {
-
-}
+) : Parcelable

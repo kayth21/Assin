@@ -35,7 +35,7 @@ object AlertNotification {
         }
     }
 
-    fun notify(symbol: Title, reference: Title, targetPrice: BigDecimal, currentPrice: BigDecimal) {
+    fun notify(title: Title, reference: Title, targetPrice: BigDecimal, currentPrice: BigDecimal) {
 
         val intent = Intent(AssinApplication.appContext!!, MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // TODO back button must end in Markets
@@ -43,8 +43,8 @@ object AlertNotification {
 
         val notification = NotificationCompat.Builder(AssinApplication.appContext!!, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setLargeIcon(BitmapFactory.decodeResource(AssinApplication.appContext!!.resources, symbol.getIcon()))
-                .setContentTitle("$symbol " + (if (targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.toPlainString() + " ${reference.symbol} reached.")
+                .setLargeIcon(BitmapFactory.decodeResource(AssinApplication.appContext!!.resources, title.getIcon()))
+                .setContentTitle("${title.symbol} (${title.name}) " + (if (targetPrice <= currentPrice) "upper" else "lower") + " Target " + targetPrice.toPlainString() + " ${reference.symbol} reached.")
                 .setContentText("Current Price: " + currentPrice.toCurrencyString(reference.symbol) + " ${reference.symbol}")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
