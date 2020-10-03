@@ -48,7 +48,7 @@ object ActionRepository {
         if (trade.positionId != null) {
             insert(trade)
         } else {
-            val positions = PositionRepository.loadPositions(trade.sellTitle, trade.sellLabel).filter { it.isActive() }
+            val positions = PositionRepository.loadByTitle(trade.sellTitle, trade.sellLabel).filter { it.isActive() }
             val oldestPosition = positions.first()
             when (oldestPosition.quantity.compareTo(trade.sellQuantity)) {
                 0 -> {
@@ -88,7 +88,7 @@ object ActionRepository {
         if (withdraw.positionId != null) {
             insert(withdraw)
         } else {
-            val positions = PositionRepository.loadPositions(withdraw.title, withdraw.label).filter { it.isActive() }
+            val positions = PositionRepository.loadByTitle(withdraw.title, withdraw.label).filter { it.isActive() }
             val oldestPosition = positions.first()
             when (oldestPosition.quantity.compareTo(withdraw.quantity)) {
                 0 -> {

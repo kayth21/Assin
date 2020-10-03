@@ -7,7 +7,7 @@ import com.ceaver.assin.positions.PositionRepository
 
 class PositionListViewModel(val title: Title, val label: String?) : ViewModel() {
 
-    val positions = PositionRepository.loadPositionsObserved(title, label)
+    val positions = PositionRepository.loadByTitleObserved(title, label)
 
     class Factory(val title: Title, val label: String?) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
