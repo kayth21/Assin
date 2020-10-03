@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import java.time.LocalDate
 
 interface Action {
-    fun getEntityId(): Long
-    fun getActionDate(): LocalDate
+    val id: Long
+    val date: LocalDate
     fun getLeftImageResource(): Int
     fun getRightImageResource(): Int
     fun getTitleText(): String
@@ -17,7 +17,7 @@ interface Action {
 
     object Difference : DiffUtil.ItemCallback<Action>() {
         override fun areItemsTheSame(oldItem: Action, newItem: Action): Boolean {
-            return oldItem.getEntityId() == newItem.getEntityId()
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Action, newItem: Action): Boolean {

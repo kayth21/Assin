@@ -10,8 +10,8 @@ import java.math.MathContext
 import java.time.LocalDate
 
 data class Withdraw(
-        val id: Long = 0,
-        val date: LocalDate = LocalDate.now(),
+        override val id: Long = 0,
+        override val date: LocalDate = LocalDate.now(),
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
@@ -89,11 +89,9 @@ data class Withdraw(
         )
     }
 
-    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.WITHDRAW
     override fun getLeftImageResource(): Int = title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.withdraw
-    override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "Withdraw ${title.name} ${if (this.label == null) "" else "(${this.label})"}"
     override fun getDetailText(): String = "$quantity ${title.symbol}"
 }

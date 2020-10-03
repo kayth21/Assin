@@ -17,5 +17,5 @@ fun ImageView.setActionTargetImage(action: Action) {
 
 @BindingAdapter("actionDate")
 fun TextView.setActionDate(action: Action) {
-    text = CalendarHelper.convertDate(action.getActionDate())
+    text = CalendarHelper.convertDate(action.date)
 }

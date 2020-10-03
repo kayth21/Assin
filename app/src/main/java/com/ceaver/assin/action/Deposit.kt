@@ -8,8 +8,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Deposit(
-        val id: Long = 0,
-        val date: LocalDate = LocalDate.now(),
+        override val id: Long = 0,
+        override val date: LocalDate = LocalDate.now(),
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
@@ -71,11 +71,9 @@ data class Deposit(
         )
     }
 
-    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.DEPOSIT
     override fun getLeftImageResource(): Int = R.drawable.deposit
     override fun getRightImageResource(): Int = title.getIcon()
-    override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "Deposit ${title.name} ${if (label == null) "" else "(${label})"}"
     override fun getDetailText(): String = "$quantity ${title.symbol}"
 }

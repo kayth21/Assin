@@ -9,8 +9,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Split(
-        val id: Long = 0,
-        val date: LocalDate = LocalDate.now(),
+        override val id: Long = 0,
+        override val date: LocalDate = LocalDate.now(),
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
@@ -81,11 +81,9 @@ data class Split(
         )
     }
 
-    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.SPLIT
     override fun getLeftImageResource(): Int = title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.split
-    override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String =  "Split ${title.name} ${if (label == null) "" else "(${label}) "}Position"
     override fun getDetailText(): String = "${quantity.add(remaining)} ${title.symbol} splitted into $quantity ${title.symbol} and $remaining ${title.symbol}"
 

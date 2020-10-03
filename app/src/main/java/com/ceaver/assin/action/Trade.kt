@@ -7,8 +7,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Trade(
-        val id: Long = 0,
-        val date: LocalDate = LocalDate.now(),
+        override val id: Long = 0,
+        override val date: LocalDate = LocalDate.now(),
         val buyTitle: Title,
         val buyLabel: String?,
         val buyQuantity: BigDecimal,
@@ -90,11 +90,9 @@ data class Trade(
         )
     }
 
-    override fun getEntityId(): Long = id
     override fun getActionType(): ActionType = ActionType.TRADE
     override fun getLeftImageResource(): Int = sellTitle.getIcon()
     override fun getRightImageResource(): Int = buyTitle.getIcon()
-    override fun getActionDate(): LocalDate = date
     override fun getTitleText(): String = "${sellTitle.name} ${if (sellLabel == null) "" else "(${sellLabel})"} -> ${buyTitle.name} ${if (buyLabel == null) "" else "(${buyLabel})"}"
     override fun getDetailText(): String = "$sellQuantity ${sellTitle.symbol} -> $buyQuantity ${buyTitle.symbol}"
 }
