@@ -1,5 +1,7 @@
 package com.ceaver.assin.markets.overview
 
+import com.coinpaprika.apiclient.entity.GlobalStatsEntity
+
 data class MarketOverview(
         val marketCapUsd: Long,
         val dailyMarketCapChange: Double,
@@ -26,5 +28,21 @@ data class MarketOverview(
         val BTC_DOMINANCE_PERCENTAGE = "com.ceaver.assin.markets.overview.MarketOverview.btcDominancePercentage"
         val CRYPTOCURRENCIES_AMOUNT = "com.ceaver.assin.markets.overview.MarketOverview.cryptocurrenciesAmount"
         val LAST_UPDATED = "com.ceaver.assin.markets.overview.MarketOverview.lastUpdated"
+
+        fun fromMarket(globalStatsEntity: GlobalStatsEntity): MarketOverview {
+            return MarketOverview(
+                    marketCapUsd = globalStatsEntity.marketCapUsd,
+                    dailyMarketCapChange = globalStatsEntity.dailyMarketCapChange,
+                    marketCapAthValue = globalStatsEntity.marketCapAthValue,
+                    marketCapAthDate = globalStatsEntity.marketCapAthDate,
+                    dailyVolumeUsd = globalStatsEntity.dailyVolumeUsd,
+                    dailyVolumeChange = globalStatsEntity.dailyVolumeChange,
+                    volumeAthValue = globalStatsEntity.volumeAthValue,
+                    volumeAthDate = globalStatsEntity.volumeAthDate,
+                    btcDominancePercentage = globalStatsEntity.btcDominancePercentage,
+                    cryptocurrenciesAmount = globalStatsEntity.cryptocurrenciesAmount,
+                    lastUpdated = globalStatsEntity.lastUpdated
+            )
+        }
     }
 }

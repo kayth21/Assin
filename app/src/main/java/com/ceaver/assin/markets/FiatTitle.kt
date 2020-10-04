@@ -4,6 +4,8 @@ import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.extensions.resIdByName
+import com.coinpaprika.apiclient.entity.FiatEntity
+import com.coinpaprika.apiclient.entity.QuoteEntity
 import kotlinx.android.parcel.Parcelize
 import java.time.LocalDateTime
 import java.util.*
@@ -27,6 +29,17 @@ data class FiatTitle(
                     lastUpdated = entity.lastUpdated,
                     cryptoQuotes = entity.cryptoQuotes,
                     fiatQuotes = entity.fiatQuotes
+            )
+        }
+
+        fun fromMarket(fiatEntity: FiatEntity, cryptoQuote: QuoteEntity, fiatQuote: QuoteEntity): FiatTitle {
+            return FiatTitle(
+                    id = fiatEntity.id,
+                    name = fiatEntity.name,
+                    symbol = fiatEntity.symbol,
+                    lastUpdated = LocalDateTime.now(),
+                    cryptoQuotes = Quotes(1.0 * cryptoQuote.price), // TODO
+                    fiatQuotes = Quotes(1.0 * fiatQuote.price)
             )
         }
     }
