@@ -170,9 +170,9 @@ class BackupFragment : Fragment() {
                 val localTitles = TitleRepository.loadAllCustomTitles()
                 // TODO minus doesn't work. check alternative
 
-                val deletedTitles = localTitles.filter { csvTitles.map { it.id }.contains(it.id).not() }
-                val newTitles = csvTitles.filter { localTitles.map { it.id }.contains(it.id).not() }
-                val updateTitles = localTitles.intersect(csvTitles)
+                val deletedTitles = localTitles.filterNot { csvTitles.map { it.id }.contains(it.id) }
+                val newTitles = csvTitles.filterNot { localTitles.map { it.id }.contains(it.id) }
+                val updateTitles = localTitles.filter { csvTitles.map { it.id }.contains(it.id) }.toSet()
                 // TODO one tx
                 TitleRepository.delete(deletedTitles)
                 TitleRepository.update(updateTitles)

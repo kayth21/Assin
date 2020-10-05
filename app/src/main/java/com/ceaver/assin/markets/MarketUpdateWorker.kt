@@ -12,17 +12,15 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
         val allRemoteCryptoTitles = allRemoteTitles.first
         val allRemoteFiatTitles = allRemoteTitles.second
         val allRemoteCustomTitles = allRemoteTitles.third
-        val allRemoteCryptoTitleIds = allRemoteCryptoTitles.map { it.id }.toSet()
         val allLocalCryptoTitles = TitleRepository.loadAllCryptoTitles()
-        val allLocalCryptoTitleIds = allLocalCryptoTitles.map { it.id }.toSet()
 
         if (allLocalCryptoTitles.isEmpty()) { // TODO initial load should be done elsewhere and better?
             TitleRepository.insert((allRemoteCryptoTitles.map { it.copy(active = 50) } + allRemoteFiatTitles).toSet())
         } else {
             // TODO needs to be done for Fiat and others as well
-            val newCryptoTitlesToInsert = allRemoteCryptoTitles.filterNot { it.id in allLocalCryptoTitleIds }.toSet()
+            val newCryptoTitlesToInsert = allRemoteCryptoTitles.filterNot { allLocalCryptoTitles.map { it.id }.contains(it.id) }.toSet()
             val existingCryptoTitlesToUpdate = (allRemoteCryptoTitles - newCryptoTitlesToInsert).map { it.incrementActiveCounter() }
-            val removedTitles = allLocalCryptoTitles.filterNot { it.id in allLocalCryptoTitleIds }
+            val removedTitles = allLocalCryptoTitles.filterNot { allRemoteCryptoTitles.map { it.id }.contains(it.id) }.toSet()
             val removedTitlesPartitioned = removedTitles.partition { it.inactive() }
             val removedTitlesToDelete = removedTitlesPartitioned.first
             val removedTitlesToUpdate = removedTitlesPartitioned.second
