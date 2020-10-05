@@ -10,12 +10,12 @@ fun SharedPreferences.getString(key: String): String {
     return if (contains(key)) getString(key, "")!! else throw IllegalStateException()
 }
 
-fun SharedPreferences.getCryptoTitle(key: String) : Title {
+fun SharedPreferences.getCryptoTitle(key: String) : CryptoTitle {
     val json = getString(key)
     return Gson().fromJson(json, CryptoTitle::class.java)
 }
 
-fun SharedPreferences.getFiatTitle(key: String) : Title {
+fun SharedPreferences.getFiatTitle(key: String) : FiatTitle {
     val json = getString(key)
     return Gson().fromJson(json, FiatTitle::class.java)
 }

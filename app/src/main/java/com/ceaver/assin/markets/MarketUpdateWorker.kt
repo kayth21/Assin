@@ -11,6 +11,7 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
         val allRemoteTitles = MarketRepository.loadAllTitles()
         val allRemoteCryptoTitles = allRemoteTitles.first
         val allRemoteFiatTitles = allRemoteTitles.second
+        val allRemoteCustomTitles = allRemoteTitles.third
         val allRemoteCryptoTitleIds = allRemoteCryptoTitles.map { it.id }.toSet()
         val allLocalCryptoTitles = TitleRepository.loadAllCryptoTitles()
         val allLocalCryptoTitleIds = allLocalCryptoTitles.map { it.id }.toSet()
@@ -27,7 +28,7 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
             val removedTitlesToUpdate = removedTitlesPartitioned.second
             removedTitlesToUpdate.forEach { it.decreaseActiveCounter() }
 
-            TitleRepository.marketUpdate(newCryptoTitlesToInsert, (existingCryptoTitlesToUpdate + removedTitlesToUpdate).toSet(), removedTitlesToDelete.toSet())
+            TitleRepository.marketUpdate(newCryptoTitlesToInsert, (existingCryptoTitlesToUpdate + removedTitlesToUpdate + allRemoteCustomTitles).toSet(), removedTitlesToDelete.toSet())
 
             // TODO Transaction Update
             existingCryptoTitlesToUpdate.filter { it.active == 50 }.forEach { LogRepository.insert("Activated  ${it.name} (${it.symbol}).") }

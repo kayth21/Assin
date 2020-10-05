@@ -23,11 +23,11 @@ object MarketRepository {
         return marketOverview
     }
 
-    suspend fun loadAllTitles(): Pair<List<CryptoTitle>, List<FiatTitle>> {
+    suspend fun loadAllTitles(): Triple<List<CryptoTitle>, List<FiatTitle>, List<CustomTitle>> {
         // load remote titles
         val cryptoItems = CoinpaprikaApi().tickers()
         val fiatItems = CoinpaprikaApi().fiats().filter { it.symbol == "USD" } // TODO Support more fiats
-        // val customItems = TitleRepository.loadAllCustomTitles()
+         val customItems = TitleRepository.loadAllCustomTitles()
 
         // find reference titles in remote titles
         val cryptoEntity = cryptoItems.single { it.symbol == Preferences.getCryptoTitleSymbol() }.let { it.quotes!!.get("USD") }!!
@@ -37,7 +37,7 @@ object MarketRepository {
         val localCryptoTitles = TitleRepository.loadAllCryptoTitles()
         val cryptoTitles = cryptoItems.map { CryptoTitle.fromMarket(it, localCryptoTitles.find { localTitle -> it.id == localTitle.id }?.active, cryptoEntity, fiatEntity) }
         val fiatTitles = fiatItems.map { FiatTitle.fromMarket(it, cryptoEntity, fiatEntity) }
-        // val customTitles = customItems.map { CustomTitle.fromMarket(it, cryptoEntity, fiatEntity) }
+         val customTitles = customItems.map { CustomTitle.fromMarket(it, cryptoEntity, fiatEntity) }
 
         // update reference titles
         PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).edit()
@@ -45,6 +45,6 @@ object MarketRepository {
                 .setTitle(Preferences.FIAT_TITLE, fiatTitles.single { it.symbol == Preferences.getFiatTitleSymbol() })
                 .apply()
 
-        return Pair(cryptoTitles, fiatTitles)
+        return Triple(cryptoTitles, fiatTitles, customTitles)
     }
 }

@@ -20,6 +20,9 @@ interface TitleEntityDao : BaseEntityDao<TitleEntity> {
     @Query("select * from title where category = 'CRYPTO' order by rank")
     suspend fun loadAllCryptoTitles(): List<TitleEntity>
 
+    @Query("select * from title where category = 'CUSTOM'")
+    suspend fun loadAllCustomTitles(): List<TitleEntity>
+
     @Query("select * from title where active >= 0 and category = 'CRYPTO' order by rank")
     fun loadAllActiveCryptoTitlesObserved(): LiveData<List<TitleEntity>>
 

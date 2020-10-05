@@ -23,6 +23,10 @@ object TitleRepository {
         return dao.loadAllCryptoTitles().map { it.toTitle() as CryptoTitle }
     }
 
+    suspend fun loadAllCustomTitles(): List<CustomTitle> {
+        return dao.loadAllCustomTitles().map { it.toTitle() as CustomTitle }
+    }
+
     fun loadActiveCryptoTitles(): LiveData<List<CryptoTitle>> {
         return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() as CryptoTitle } }
     }
@@ -39,6 +43,10 @@ object TitleRepository {
 
     suspend fun update(allTitles: Set<Title>) {
         dao.update(allTitles.map { it.toEntity() })
+    }
+
+    suspend fun delete(titles: List<CustomTitle>) {
+        dao.delete(titles.map { it.toEntity() })
     }
 
     suspend fun lookupPrice(symbol: Title, reference: Title): Optional<Double> { // TODO no need for Optional?

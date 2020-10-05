@@ -37,6 +37,7 @@ data class TitleEntity(//
                 return when (category) {
                         AssetCategory.CRYPTO -> CryptoTitle.fromEntity(this)
                         AssetCategory.FIAT -> FiatTitle.fromEntity(this)
+                        AssetCategory.CUSTOM -> CustomTitle.fromEntity(this)
                 }
         }
 }

@@ -17,6 +17,9 @@ import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.logging.LogRepository
+import com.ceaver.assin.markets.CustomTitle
+import com.ceaver.assin.markets.TitleRepository
+import com.ceaver.assin.preferences.Preferences
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.backup_fragment.*
 import org.apache.commons.csv.CSVFormat
@@ -32,6 +35,7 @@ import java.nio.file.Paths
 private const val READ_EXTERNAL_STORAGE = 0
 private const val WRITE_EXTERNAL_STORAGE = 1
 private const val EXPORT_DIRECTORY_NAME = "assin"
+private const val TITLE_FILE_NAME = "titles.csv"
 private const val ACTION_FILE_NAME = "actions.csv"
 private const val ALERT_FILE_NAME = "alerts.csv"
 private const val INTENTION_FILE_NAME = "intentions.csv"
@@ -83,6 +87,7 @@ class BackupFragment : Fragment() {
     private fun startExport() {
         WorkManager.getInstance(requireContext())
                 .beginWith(listOf(
+                        OneTimeWorkRequestBuilder<TitleExportWorker>().build(),
                         OneTimeWorkRequestBuilder<ActionExportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertExportWorker>().build(),
                         OneTimeWorkRequestBuilder<IntentionExportWorker>().build()))
@@ -93,11 +98,25 @@ class BackupFragment : Fragment() {
     private fun startImport() {
         WorkManager.getInstance(requireContext())
                 .beginWith(listOf(
+                        OneTimeWorkRequestBuilder<TitleImportWorker>().build(),
                         OneTimeWorkRequestBuilder<ActionImportWorker>().build(),
                         OneTimeWorkRequestBuilder<AlertImportWorker>().build(),
                         OneTimeWorkRequestBuilder<IntentionImportWorker>().build()))
                 .then(OneTimeWorkRequestBuilder<EnableButtonWorker>().build())
                 .enqueue()
+    }
+
+    class TitleExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
+            val titles = TitleRepository.loadAllCustomTitles()
+            val targetDirectory = getOrCreateDirectory()
+            val filePath = targetDirectory.path + "/" + TITLE_FILE_NAME
+            val csvPrinter = CSVPrinter(Files.newBufferedWriter(Paths.get(filePath)), CSVFormat.DEFAULT)
+            for (title in titles) csvPrinter.printRecord(title.toExport())
+            csvPrinter.flush()
+            LogRepository.insert("Export titles successful to '$filePath'")
+            return Result.success()
+        }
     }
 
     class ActionExportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
@@ -135,6 +154,33 @@ class BackupFragment : Fragment() {
             for (intention in intentions) csvPrinter.printRecord(intention.toExport())
             csvPrinter.flush()
             LogRepository.insert("Export intentions successful to '$filePath'")
+            return Result.success()
+        }
+    }
+
+    class TitleImportWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+        override suspend fun doWork(): Result {
+            val cryptoTitle = Preferences.getCryptoTitle()
+            val sourceDirectory = getOrCreateDirectory()
+            val filePath = sourceDirectory.path + "/" + TITLE_FILE_NAME;
+            if (File(filePath).exists()) {
+                val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + TITLE_FILE_NAME))
+                val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
+                val csvTitles = csvParser.map { CustomTitle.fromImport(it, cryptoTitle) }.toList()
+                val localTitles = TitleRepository.loadAllCustomTitles()
+                // TODO minus doesn't work. check alternative
+
+                val deletedTitles = localTitles.filter { csvTitles.map { it.id }.contains(it.id).not() }
+                val newTitles = csvTitles.filter { localTitles.map { it.id }.contains(it.id).not() }
+                val updateTitles = localTitles.intersect(csvTitles)
+                // TODO one tx
+                TitleRepository.delete(deletedTitles)
+                TitleRepository.update(updateTitles)
+                TitleRepository.insert(newTitles.toSet())
+                LogRepository.insert("Import titles from '$filePath' successful")
+            } else {
+                LogRepository.insert("Import titles failed. '$filePath' not found")
+            }
             return Result.success()
         }
     }
