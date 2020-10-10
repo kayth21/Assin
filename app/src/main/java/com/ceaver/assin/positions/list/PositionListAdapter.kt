@@ -45,9 +45,9 @@ internal class PositionListAdapter(private val onClickListener: PositionListFrag
             binding.positionListRowPositionSize.text = "${position.quantity.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
             binding.positionListRowPositionValuePrimary.text = "${position.currentValuePrimary.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()} (${position.profitLossInPercentToPrimaryTitle.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
             binding.positionListRowPositionValueSecondary.text = "${position.currentValueSecondary.toCurrencyString(Preferences.getFiatTitleSymbol())} ${Preferences.getFiatTitleSymbol()} (${position.profitLossInPercentToSecondaryValue.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
-            binding.positionListRowPositionOpenDate.text = "Open: ${position.openDate.asFormattedDateTime()}"
+            binding.positionListRowPositionOpenDate.text = "Open: ${position.openQuotes.date.asFormattedDateTime()}"
             if (!position.isActive())
-                binding.positionListRowPositionCloseDate.text = "Close: ${position.closeDate!!.asFormattedDateTime()}"
+                binding.positionListRowPositionCloseDate.text = "Close: ${position.closedQuotes!!.date.asFormattedDateTime()}"
 
             itemView.setOnClickListener { onClickListener.onItemClick(position) }
             if (position.isActive())

@@ -35,9 +35,9 @@ class PositionOpenAssert(actual: Position) : AbstractAssert<PositionOpenAssert, 
 
     fun hasOpenValues(date: LocalDate, valueFiat: BigDecimal, valueCrypto: BigDecimal): PositionCloseAssert {
         assertAll(
-                { Assertions.assertThat(actual.openDate).isEqualTo(date) },
-                { Assertions.assertThat(actual.openValueFiat).isEqualTo(valueFiat) },
-                { Assertions.assertThat(actual.openValueCrypto).isEqualTo(valueCrypto) }
+                { Assertions.assertThat(actual.openQuotes.date).isEqualTo(date) },
+                { Assertions.assertThat(actual.openQuotes.valueFiat).isEqualTo(valueFiat) },
+                { Assertions.assertThat(actual.openQuotes.valueCrypto).isEqualTo(valueCrypto) }
         )
         return PositionCloseAssert(actual)
     }
@@ -46,18 +46,15 @@ class PositionOpenAssert(actual: Position) : AbstractAssert<PositionOpenAssert, 
 class PositionCloseAssert(actual: Position) : AbstractAssert<PositionCloseAssert, Position>(actual, PositionCloseAssert::class.java) {
 
     fun hasCloseValues(date: LocalDate, valueFiat: BigDecimal, valueCrypto: BigDecimal) {
+        Assertions.assertThat(actual.closedQuotes).isNotNull
         assertAll(
-                { Assertions.assertThat(actual.closeDate).isEqualTo(date) },
-                { Assertions.assertThat(actual.closeValueFiat).isEqualTo(valueFiat) },
-                { Assertions.assertThat(actual.closeValueCrypto).isEqualTo(valueCrypto) }
+                { Assertions.assertThat(actual.closedQuotes!!.date).isEqualTo(date) },
+                { Assertions.assertThat(actual.closedQuotes!!.valueFiat).isEqualTo(valueFiat) },
+                { Assertions.assertThat(actual.closedQuotes!!.valueCrypto).isEqualTo(valueCrypto) }
         )
     }
 
     fun isNotClosed() {
-        assertAll(
-                { Assertions.assertThat(actual.closeDate).isNull() },
-                { Assertions.assertThat(actual.closeValueFiat).isNull() },
-                { Assertions.assertThat(actual.closeValueCrypto).isNull() }
-        )
+        Assertions.assertThat(actual.closedQuotes).isNull()
     }
 }

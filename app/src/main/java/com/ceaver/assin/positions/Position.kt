@@ -11,16 +11,12 @@ data class Position(
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
-        val openDate: LocalDate,
-        val openValueCrypto: BigDecimal,
-        val openValueFiat: BigDecimal,
-        val closeDate: LocalDate? = null,
-        val closeValueCrypto: BigDecimal? = null,
-        val closeValueFiat: BigDecimal? = null
+        val openQuotes: Quotes,
+        val closedQuotes: Quotes? = null
 ) {
 
     fun isActive(): Boolean {
-        return closeValueCrypto == null && closeValueFiat == null && closeDate == null
+        return closedQuotes == null
     }
 
     val currentValuePrimary: BigDecimal
@@ -35,14 +31,14 @@ data class Position(
 
     val profitLossInPercentToPrimaryTitle: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100).divide(openValueCrypto, MathContext.DECIMAL32))
+            return (BigDecimal.valueOf(100).divide(openQuotes.valueCrypto, MathContext.DECIMAL32))
                     .times(currentValuePrimary)
                     .subtract(BigDecimal.valueOf(100))
         }
 
     val profitLossInPercentToSecondaryValue: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100).divide(openValueFiat, MathContext.DECIMAL32))
+            return (BigDecimal.valueOf(100).divide(openQuotes.valueFiat, MathContext.DECIMAL32))
                     .times(currentValueSecondary)
                     .subtract(BigDecimal.valueOf(100))
         }
@@ -56,5 +52,10 @@ data class Position(
             return oldItem == newItem
         }
     }
-
+    data class Quotes(
+            val date: LocalDate,
+            val valueCrypto: BigDecimal,
+            val valueFiat: BigDecimal
+    )
 }
+
