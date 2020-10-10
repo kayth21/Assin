@@ -6,7 +6,7 @@ import com.ceaver.assin.markets.TitleRepository
 
 class MarketListViewModel : ViewModel() {
 
-    val titles = TitleRepository.loadActiveCryptoTitles()
+    val titles = TitleRepository.loadActiveCryptoTitlesPagedAndObserved()
     val loading = AssinWorkers.running
 
     fun refresh() {

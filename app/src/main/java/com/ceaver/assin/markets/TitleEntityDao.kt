@@ -1,6 +1,6 @@
 package com.ceaver.assin.markets
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -24,7 +24,7 @@ interface TitleEntityDao : BaseEntityDao<TitleEntity> {
     suspend fun loadAllCustomTitles(): List<TitleEntity>
 
     @Query("select * from title where active >= 0 and category = 'CRYPTO' order by rank")
-    fun loadAllActiveCryptoTitlesObserved(): LiveData<List<TitleEntity>>
+    fun loadAllActiveCryptoTitlesPagedAndObserved(): DataSource.Factory<Int, TitleEntity>
 
     @Query("delete from title")
     suspend fun deleteAll()

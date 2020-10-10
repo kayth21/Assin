@@ -1,7 +1,8 @@
 package com.ceaver.assin.markets
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.ceaver.assin.database.Database
 import java.util.*
 
@@ -27,8 +28,10 @@ object TitleRepository {
         return dao.loadAllCustomTitles().map { it.toTitle() as CustomTitle }
     }
 
-    fun loadActiveCryptoTitles(): LiveData<List<CryptoTitle>> {
-        return Transformations.map(dao.loadAllActiveCryptoTitlesObserved()) { it.map { it.toTitle() as CryptoTitle } }
+    fun loadActiveCryptoTitlesPagedAndObserved(): LiveData<PagedList<CryptoTitle>> {
+        val factory = dao.loadAllActiveCryptoTitlesPagedAndObserved().map { it.toTitle() as CryptoTitle }
+        val config = PagedList.Config.Builder().setPageSize(25).setInitialLoadSizeHint(100).setPrefetchDistance(25).setEnablePlaceholders(false).build()
+        return LivePagedListBuilder<Int, CryptoTitle>(factory, config).build()
     }
 
     suspend fun insert(title: Title) =

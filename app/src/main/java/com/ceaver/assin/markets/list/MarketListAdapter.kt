@@ -2,13 +2,13 @@ package com.ceaver.assin.markets.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.databinding.MarketListRowBinding
 import com.ceaver.assin.markets.CryptoTitle
 
-internal class MarketListAdapter(private val onClickListener: MarketListFragment.OnItemClickListener) : ListAdapter<CryptoTitle, MarketListAdapter.ViewHolder>(Difference) {
+internal class MarketListAdapter(private val onClickListener: MarketListFragment.OnItemClickListener) : PagedListAdapter<CryptoTitle, MarketListAdapter.ViewHolder>(Difference) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -17,7 +17,8 @@ internal class MarketListAdapter(private val onClickListener: MarketListFragment
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position), onClickListener)
+        // position is never null because placeholders are disabled in PagedList config
+        holder.bindItem(getItem(position)!!, onClickListener)
     }
 
     class ViewHolder(val binding: MarketListRowBinding) : RecyclerView.ViewHolder(binding.root) {
