@@ -1,7 +1,7 @@
 package com.ceaver.assin.extensions
 
 import com.ceaver.assin.markets.CryptoTitle
-import com.ceaver.assin.markets.Quotes
+import com.ceaver.assin.markets.Title
 import java.time.LocalDateTime
 import kotlin.random.Random
 
@@ -30,7 +30,7 @@ fun CryptoTitle.Factory.fromTestdata(
             maxSupply = maxSupply,
             betaValue = betaValue,
             lastUpdated = lastUpdated,
-            cryptoQuotes = Quotes(fiatPrice), // TODO create a extension factory method with valid values
-            fiatQuotes = Quotes(cryptoPrice) // TODO create a extension factory method with valid values
+            cryptoQuotes = Title.Quotes(fiatPrice), // TODO create a extension factory method with valid values
+            fiatQuotes = Title.Quotes(cryptoPrice) // TODO create a extension factory method with valid values
     )
 }
