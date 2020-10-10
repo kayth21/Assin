@@ -28,7 +28,7 @@ data class CryptoTitle(
         override val fiatQuotes: Quotes
 ) : Title {
 
-    companion object {
+    companion object Factory {
         fun fromEntity(entity: TitleEntity): CryptoTitle {
             return CryptoTitle(
                     id = entity.id,
