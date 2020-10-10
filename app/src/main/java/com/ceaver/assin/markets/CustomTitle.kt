@@ -15,8 +15,8 @@ data class CustomTitle(
         override val symbol: String,
         override val name: String,
         override val lastUpdated: LocalDateTime,
-        override val cryptoQuotes: Quotes,
-        override val fiatQuotes: Quotes
+        override val cryptoQuotes: Title.Quotes,
+        override val fiatQuotes: Title.Quotes
 ) : Title {
 
     companion object {
@@ -37,17 +37,17 @@ data class CustomTitle(
                     symbol = csvRecord.get(1),
                     name = csvRecord.get(2),
                     lastUpdated = LocalDateTime.of(LocalDate.parse(csvRecord.get(3)), LocalTime.NOON),
-                    cryptoQuotes = Quotes(price = csvRecord.get(4).toDouble() / cryptoTitle.fiatQuotes.price),
-                    fiatQuotes = Quotes(price = csvRecord.get(4).toDouble())
+                    cryptoQuotes = Title.Quotes(price = csvRecord.get(4).toDouble() / cryptoTitle.fiatQuotes.price),
+                    fiatQuotes = Title.Quotes(price = csvRecord.get(4).toDouble())
             )
         }
 
         fun fromMarket(it: CustomTitle, cryptoEntity: QuoteEntity, fiatEntity: QuoteEntity): CustomTitle {
             return it.copy(
-                    cryptoQuotes = Quotes(
+                    cryptoQuotes = Title.Quotes(
                             price = it.fiatQuotes.price / cryptoEntity.price
                     ),
-                    fiatQuotes = Quotes(
+                    fiatQuotes = Title.Quotes(
                             price = it.fiatQuotes.price / fiatEntity.price
                     )
             )

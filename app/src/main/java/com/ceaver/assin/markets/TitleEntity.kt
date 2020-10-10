@@ -26,12 +26,11 @@ data class TitleEntity(//
         val maxSupply: Long? = null,
         val betaValue: Double? = null,
         val lastUpdated: LocalDateTime,
-        // primary
+        // quotes
         @Embedded(prefix = "crypto")
-        val cryptoQuotes: Quotes,
-        // secondary
+        val cryptoQuotes: Title.Quotes,
         @Embedded(prefix = "fiat")
-        val fiatQuotes: Quotes
+        val fiatQuotes: Title.Quotes
 ) : Parcelable {
         fun toTitle(): Title {
                 return when (category) {

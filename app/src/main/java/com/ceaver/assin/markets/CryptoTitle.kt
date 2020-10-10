@@ -24,8 +24,8 @@ data class CryptoTitle(
         val maxSupply: Long,
         val betaValue: Double,
         override val lastUpdated: LocalDateTime,
-        override val cryptoQuotes: Quotes,
-        override val fiatQuotes: Quotes
+        override val cryptoQuotes: Title.Quotes,
+        override val fiatQuotes: Title.Quotes
 ) : Title {
 
     companion object Factory {
@@ -62,7 +62,7 @@ data class CryptoTitle(
                     betaValue = ticker.betaValue,
                     lastUpdated = if (ticker.lastUpdated == null) LocalDateTime.now() else transformTimestamp(ticker.lastUpdated!!), // TODO is nullcheck necessary?
 
-                    cryptoQuotes = Quotes(
+                    cryptoQuotes = Title.Quotes(
                             price = usdQuotes.price / cryptoQuote.price,
                             volume24h = usdQuotes.dailyVolume / cryptoQuote.price, // TODO fix as soon as needed
                             marketCap = usdQuotes.marketCap / cryptoQuote.price, // TODO fix as soon as needed
@@ -73,7 +73,7 @@ data class CryptoTitle(
                             percentChange30d = usdQuotes.percentChange30d.asFactor() / cryptoQuote.percentChange30d.asFactor() * 100.0 - 100,
                             percentChange1y = usdQuotes.percentChange1y.asFactor() / cryptoQuote.percentChange1y.asFactor() * 100.0 - 100
                     ),
-                    fiatQuotes = Quotes(
+                    fiatQuotes = Title.Quotes(
                             price = usdQuotes.price / fiatQuote.price,
                             volume24h = usdQuotes.dailyVolume / fiatQuote.price, // TODO fix as soon as needed
                             marketCap = usdQuotes.marketCap / fiatQuote.price, // TODO fix as soon as needed

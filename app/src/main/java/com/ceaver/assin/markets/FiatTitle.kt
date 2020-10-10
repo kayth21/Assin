@@ -16,8 +16,8 @@ data class FiatTitle(
         override val symbol: String,
         override val name: String,
         override val lastUpdated: LocalDateTime,
-        override val cryptoQuotes: Quotes,
-        override val fiatQuotes: Quotes
+        override val cryptoQuotes: Title.Quotes,
+        override val fiatQuotes: Title.Quotes
 ) : Title {
 
     companion object {
@@ -38,8 +38,8 @@ data class FiatTitle(
                     name = fiatEntity.name,
                     symbol = fiatEntity.symbol,
                     lastUpdated = LocalDateTime.now(),
-                    cryptoQuotes = Quotes(1.0 * cryptoQuote.price), // TODO
-                    fiatQuotes = Quotes(1.0 * fiatQuote.price)
+                    cryptoQuotes = Title.Quotes(1.0 * cryptoQuote.price), // TODO
+                    fiatQuotes = Title.Quotes(1.0 * fiatQuote.price)
             )
         }
     }
