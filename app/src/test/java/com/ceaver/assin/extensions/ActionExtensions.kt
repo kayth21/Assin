@@ -1,9 +1,6 @@
 package com.ceaver.assin.extensions
 
-import com.ceaver.assin.action.Deposit
-import com.ceaver.assin.action.Split
-import com.ceaver.assin.action.Trade
-import com.ceaver.assin.action.Withdraw
+import com.ceaver.assin.action.*
 import com.ceaver.assin.markets.CryptoTitle
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
@@ -96,5 +93,33 @@ fun Trade.Factory.fromTestdata(
             valueCrypto = valueCrypto,
             comment = comment,
             positionId = positionId
+    )
+}
+
+fun Merge.Factory.fromTestdata(
+        id: Long = Random.nextLong(),
+        date: LocalDate = LocalDate.now(),
+        title: Title = CryptoTitle.fromTestdata(),
+        label: String? = "Savings",
+        quantityPartA: BigDecimal = 10.toBigDecimal(),
+        quantityPartB: BigDecimal = 10.toBigDecimal(),
+        valueFiat: BigDecimal = 200.toBigDecimal(),
+        valueCrypto: BigDecimal = 2000.toBigDecimal(),
+        comment: String = "Coinbase",
+        sourcePositionA: BigDecimal,
+        sourcePositionB: BigDecimal
+): Merge {
+    return Merge(
+            id = id,
+            date = date,
+            title = title,
+            label = label,
+            quantityPartA = quantityPartA,
+            quantityPartB = quantityPartB,
+            valueFiat = valueFiat,
+            valueCrypto = valueCrypto,
+            comment = comment,
+            sourcePositionA = sourcePositionA,
+            sourcePositionB = sourcePositionB
     )
 }

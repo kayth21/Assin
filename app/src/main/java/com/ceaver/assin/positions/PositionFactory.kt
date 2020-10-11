@@ -61,6 +61,31 @@ object PositionFactory {
                     positions.add(splitPosition)
                     positions.add(remainingPosition)
                 }
+                ActionType.MERGE -> {
+                    action as Merge
+
+                    val sourcePosition1 = positions.find { it.id == action.sourcePositionA }!!
+                    val sourcePosition2 = positions.find { it.id == action.sourcePositionB }!!
+
+                    // close position 1 (same as withdraw, but with factor)
+                    val modifiedSourcePosition1 = sourcePosition1.copy(closedQuotes = Position.Quotes(
+                            date = action.date,
+                            valueCrypto = action.valueCrypto.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition1.quantity),
+                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition1.quantity)))
+                    positions.replace(sourcePosition1, modifiedSourcePosition1)
+
+                    // close position 2 (same as withdraw, but with factor)
+                    val modifiedSourcePosition2 = sourcePosition2.copy(closedQuotes = Position.Quotes(
+                            date = action.date,
+                            valueCrypto = action.valueCrypto.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition2.quantity),
+                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition2.quantity)))
+                    positions.replace(sourcePosition2, modifiedSourcePosition2)
+
+                    // create new position
+                    val positionId = positions.size.toBigDecimal().inc()
+                    val newPosition = Position(id = positionId, title = action.title, quantity = sourcePosition1.quantity + sourcePosition2.quantity, label = action.label, openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
+                    positions.add(newPosition)
+                }
             }
         }
         return positions.toList()

@@ -38,7 +38,7 @@ data class Split(
             return Split(
                     date = LocalDate.parse(csvRecord.get(1)),
                     title = TitleRepository.loadById(csvRecord.get(2)),
-                    label = csvRecord.get(3).orEmpty(),
+                    label = csvRecord.get(3).ifEmpty { null },
                     quantity = csvRecord.get(4).toBigDecimal(),
                     remaining = csvRecord.get(5).toBigDecimal(),
                     positionId = csvRecord.get(6).toBigDecimal(),
@@ -86,5 +86,4 @@ data class Split(
     override fun getRightImageResource(): Int = R.drawable.split
     override fun getTitleText(): String =  "Split ${title.name} ${if (label == null) "" else "(${label}) "}Position"
     override fun getDetailText(): String = "${quantity.add(remaining)} ${title.symbol} splitted into $quantity ${title.symbol} and $remaining ${title.symbol}"
-
 }

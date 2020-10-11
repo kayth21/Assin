@@ -34,6 +34,9 @@ object ActionRepository {
     suspend fun insertSplit(position: Position, sellQuantity: BigDecimal) =
             Split.fromPosition(position, sellQuantity).let { insert(it) }
 
+    suspend fun insertMerge(positionA: Position, positionB: Position) =
+            Merge.fromPositions(positionA, positionB).let { insert(it) }
+
     suspend fun update(action: Action) =
             action.toActionEntity().let { dao.update(it) }
 

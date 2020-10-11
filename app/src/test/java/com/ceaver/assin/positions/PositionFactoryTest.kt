@@ -33,7 +33,7 @@ class PositionFactoryTest {
                 .hasId(BigDecimal.ONE)
                 .hasPosition(deposit.quantity, deposit.title, deposit.label)
                 .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
-                .isNotClosed()
+                .hasNoCloseValues()
     }
 
     @Test
@@ -67,12 +67,12 @@ class PositionFactoryTest {
                 .hasId(1.1.toBigDecimal())
                 .hasPosition(4.toBigDecimal(), deposit.title, deposit.label)
                 .hasOpenValues(deposit.date, 400.toBigDecimal(), 40.toBigDecimal())
-                .isNotClosed()
+                .hasNoCloseValues()
         assertThatPosition(positions[1])
                 .hasId(1.2.toBigDecimal())
                 .hasPosition(6.toBigDecimal(), deposit.title, deposit.label)
                 .hasOpenValues(deposit.date, 600.toBigDecimal(), 60.toBigDecimal())
-                .isNotClosed()
+                .hasNoCloseValues()
     }
 
     @Test
@@ -117,6 +117,34 @@ class PositionFactoryTest {
                 .hasId(2.toBigDecimal())
                 .hasPosition(trade.buyQuantity, trade.buyTitle, trade.buyLabel)
                 .hasOpenValues(trade.date, trade.valueFiat, trade.valueCrypto)
-                .isNotClosed()
+                .hasNoCloseValues()
+    }
+
+    @Test
+    @DisplayName("Merge action lead in closing both origin positions and open new position")
+    fun mergeAction1() {
+        // arrange
+        val deposit1 = Deposit.fromTestdata(quantity = 10.toBigDecimal())
+        val deposit2 = Deposit.fromTestdata(quantity = 20.toBigDecimal())
+        val merge = Merge.fromTestdata(valueFiat = 3000.toBigDecimal(), valueCrypto = 300.toBigDecimal(), sourcePositionA = 1.toBigDecimal(), sourcePositionB = 2.toBigDecimal())
+        // act
+        val positions = PositionFactory.fromActions(listOf(deposit1, deposit2, merge))
+        // assert
+        assertThat(positions).hasSize(3)
+        assertThatPosition(positions[0])
+                .hasId(BigDecimal.ONE)
+                .hasPosition(deposit1.quantity, deposit1.title, deposit1.label)
+                .hasOpenValues(deposit1.date, deposit1.valueFiat, deposit1.valueCrypto)
+                .hasCloseValues(merge.date, 1000.toBigDecimal(), 100.toBigDecimal())
+        assertThatPosition(positions[1])
+                .hasId(2.toBigDecimal())
+                .hasPosition(deposit2.quantity, deposit2.title, deposit2.label)
+                .hasOpenValues(deposit2.date, deposit2.valueFiat, deposit2.valueCrypto)
+                .hasCloseValues(merge.date, 2000.toBigDecimal(), 200.toBigDecimal())
+        assertThatPosition(positions[2])
+                .hasId(3.toBigDecimal())
+                .hasPosition(deposit1.quantity + deposit2.quantity, merge.title, merge.label)
+                .hasOpenValues(merge.date, merge.valueFiat, merge.valueCrypto)
+                .hasNoCloseValues()
     }
 }

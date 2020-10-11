@@ -12,22 +12,27 @@ import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = "action",
-        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId"])],
+        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId", "mergeTitleId"])],
         foreignKeys = [
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
                     childColumns = arrayOf("buyTitleId"),
-                    onDelete = ForeignKey.RESTRICT),
+                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
                     childColumns = arrayOf("sellTitleId"),
-                    onDelete = ForeignKey.RESTRICT),
+                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
                     childColumns = arrayOf("splitTitleId"),
+                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
+            ForeignKey(
+                    entity = TitleEntity::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("mergeTitleId"),
                     onDelete = ForeignKey.RESTRICT) // TODO but what if..?
         ])
 data class ActionEntity(
@@ -47,6 +52,12 @@ data class ActionEntity(
         val splitRemaining: BigDecimal? = null,
         val splitTitleId: String? = null,
         val splitLabel: String? = null,
+        val mergeTitleId: String? = null,
+        val mergeLabel: String? = null,
+        val mergeQuantityA: BigDecimal? = null,
+        val mergeQuantityB: BigDecimal? = null,
+        val mergeSourcePositionA: BigDecimal? = null,
+        val mergeSourcePositionB: BigDecimal? = null,
         val valueCrypto: BigDecimal? = null,
         val valueFiat: BigDecimal? = null
 ) : Parcelable

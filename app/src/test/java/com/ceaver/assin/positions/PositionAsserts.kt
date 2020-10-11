@@ -54,7 +54,7 @@ class PositionCloseAssert(actual: Position) : AbstractAssert<PositionCloseAssert
         )
     }
 
-    fun isNotClosed() {
+    fun hasNoCloseValues() {
         Assertions.assertThat(actual.closedQuotes).isNull()
     }
 }

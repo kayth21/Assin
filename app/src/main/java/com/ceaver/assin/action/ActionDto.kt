@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.ceaver.assin.markets.TitleEntity
 
-data class ActionDto (
+data class ActionDto(
         @Embedded
         val action: ActionEntity,
         @Relation(parentColumn = "buyTitleId", entityColumn = "id")
@@ -12,7 +12,9 @@ data class ActionDto (
         @Relation(parentColumn = "sellTitleId", entityColumn = "id")
         val sellTitle: TitleEntity?,
         @Relation(parentColumn = "splitTitleId", entityColumn = "id")
-        val splitTitle: TitleEntity?
+        val splitTitle: TitleEntity?,
+        @Relation(parentColumn = "mergeTitleId", entityColumn = "id")
+        val mergeTitle: TitleEntity?
 ) {
     fun toAction(): Action {
         return when (action.actionType) {
@@ -20,6 +22,7 @@ data class ActionDto (
             ActionType.SPLIT -> Split.fromDto(this)
             ActionType.WITHDRAW -> Withdraw.fromDto(this)
             ActionType.DEPOSIT -> Deposit.fromDto(this)
+            ActionType.MERGE -> Merge.fromDto(this)
         }
     }
 }
