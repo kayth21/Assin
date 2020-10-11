@@ -14,7 +14,9 @@ data class ActionDto(
         @Relation(parentColumn = "splitTitleId", entityColumn = "id")
         val splitTitle: TitleEntity?,
         @Relation(parentColumn = "mergeTitleId", entityColumn = "id")
-        val mergeTitle: TitleEntity?
+        val mergeTitle: TitleEntity?,
+        @Relation(parentColumn = "moveTitleId", entityColumn = "id")
+        val moveTitle: TitleEntity?
 ) {
     fun toAction(): Action {
         return when (action.actionType) {
@@ -23,6 +25,7 @@ data class ActionDto(
             ActionType.WITHDRAW -> Withdraw.fromDto(this)
             ActionType.DEPOSIT -> Deposit.fromDto(this)
             ActionType.MERGE -> Merge.fromDto(this)
+            ActionType.MOVE -> Move.fromDto(this)
         }
     }
 }

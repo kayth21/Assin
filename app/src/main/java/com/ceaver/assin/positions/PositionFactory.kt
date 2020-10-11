@@ -86,6 +86,12 @@ object PositionFactory {
                     val newPosition = Position(id = positionId, title = action.title, quantity = sourcePosition1.quantity + sourcePosition2.quantity, label = action.label, openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
                     positions.add(newPosition)
                 }
+                ActionType.MOVE -> {
+                    action as Move
+                    val originalPosition = positions.find { it.id == action.positionId }!!
+                    val modifiedPosition = originalPosition.copy(label = action.targetLabel)
+                    positions.replace(originalPosition, modifiedPosition)
+                }
             }
         }
         return positions.toList()

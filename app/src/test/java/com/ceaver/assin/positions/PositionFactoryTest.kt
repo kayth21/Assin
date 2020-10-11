@@ -147,4 +147,21 @@ class PositionFactoryTest {
                 .hasOpenValues(merge.date, merge.valueFiat, merge.valueCrypto)
                 .hasNoCloseValues()
     }
+
+    @Test
+    @DisplayName("Move action lead in updating origin position")
+    fun moveAction() {
+        // arrange
+        val deposit = Deposit.fromTestdata(label = null)
+        val move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = BigDecimal.ONE)
+        // act
+        val positions = PositionFactory.fromActions(listOf(deposit, move))
+        // assert
+        assertThat(positions).hasSize(1)
+        assertThatPosition(positions[0])
+                .hasId(BigDecimal.ONE)
+                .hasPosition(deposit.quantity, deposit.title, move.targetLabel)
+                .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+                .hasNoCloseValues()
+    }
 }

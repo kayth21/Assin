@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = "action",
-        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId", "mergeTitleId"])],
+        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId", "mergeTitleId", "moveTitleId"])],
         foreignKeys = [
             ForeignKey(
                     entity = TitleEntity::class,
@@ -33,6 +33,11 @@ import java.time.LocalDate
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
                     childColumns = arrayOf("mergeTitleId"),
+                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
+            ForeignKey(
+                    entity = TitleEntity::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("moveTitleId"),
                     onDelete = ForeignKey.RESTRICT) // TODO but what if..?
         ])
 data class ActionEntity(
@@ -58,6 +63,10 @@ data class ActionEntity(
         val mergeQuantityB: BigDecimal? = null,
         val mergeSourcePositionA: BigDecimal? = null,
         val mergeSourcePositionB: BigDecimal? = null,
+        val moveTitleId: String? = null,
+        val moveSourceLabel: String? = null,
+        val moveTargetLabel: String? = null,
+        var moveQuantity: BigDecimal? = null,
         val valueCrypto: BigDecimal? = null,
         val valueFiat: BigDecimal? = null
 ) : Parcelable

@@ -123,3 +123,25 @@ fun Merge.Factory.fromTestdata(
             sourcePositionB = sourcePositionB
     )
 }
+
+fun Move.Factory.fromTestdata(
+        id: Long = Random.nextLong(),
+        date: LocalDate = LocalDate.now(),
+        quantity: BigDecimal = 10.toBigDecimal(),
+        title: Title = CryptoTitle.fromTestdata(),
+        sourceLabel: String? = "Savings",
+        targetLabel: String? = "Savings",
+        positionId: BigDecimal,
+        comment: String = "Coinbase"
+): Move {
+    return Move(
+            id = id,
+            date = date,
+            quantity = quantity,
+            title = title,
+            sourceLabel = sourceLabel,
+            targetLabel = targetLabel,
+            positionId = positionId,
+            comment = comment
+    )
+}

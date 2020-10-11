@@ -37,6 +37,9 @@ object ActionRepository {
     suspend fun insertMerge(positionA: Position, positionB: Position) =
             Merge.fromPositions(positionA, positionB).let { insert(it) }
 
+    suspend fun insertMove(position: Position, label: String?) =
+            Move.fromPosition(position, label).let { insert(it) }
+
     suspend fun update(action: Action) =
             action.toActionEntity().let { dao.update(it) }
 

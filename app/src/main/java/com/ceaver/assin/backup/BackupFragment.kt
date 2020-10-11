@@ -199,6 +199,7 @@ class BackupFragment : Fragment() {
                         ActionType.WITHDRAW -> Withdraw.fromImport(it)
                         ActionType.DEPOSIT -> Deposit.fromImport(it)
                         ActionType.MERGE -> Merge.fromImport(it)
+                        ActionType.MOVE -> Move.fromImport(it)
                     }
                 }.toList()
                 ActionRepository.deleteAll()

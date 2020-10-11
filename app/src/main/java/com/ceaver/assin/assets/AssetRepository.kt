@@ -11,9 +11,6 @@ object AssetRepository {
     fun loadAssetOverviewObserved(): LiveData<AssetOverview> =
             Transformations.map(loadAllAssetsObserved()) { AssetOverviewFactory.fromAssets(it) }
 
-    suspend fun loadAllAssets(): List<Asset> =
-            ActionRepository.loadAll().let { AssetFactory.fromActions(it) }
-
     fun loadAllAssetsObserved(): LiveData<List<Asset>> =
             Transformations.map(ActionRepository.loadAllObserved()) { AssetFactory.fromActions(it) }
 
