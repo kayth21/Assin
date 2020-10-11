@@ -30,7 +30,7 @@ object TitleRepository {
 
     fun loadActiveCryptoTitlesPagedAndObserved(): LiveData<PagedList<CryptoTitle>> {
         val factory = dao.loadAllActiveCryptoTitlesPagedAndObserved().map { it.toTitle() as CryptoTitle }
-        val config = PagedList.Config.Builder().setPageSize(25).setInitialLoadSizeHint(100).setPrefetchDistance(25).setEnablePlaceholders(false).build()
+        val config = PagedList.Config.Builder().setPageSize(15).setInitialLoadSizeHint(30).setPrefetchDistance(15).setEnablePlaceholders(false).build()
         return LivePagedListBuilder<Int, CryptoTitle>(factory, config).build()
     }
 
