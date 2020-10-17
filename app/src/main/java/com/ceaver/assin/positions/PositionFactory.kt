@@ -1,99 +1,98 @@
 package com.ceaver.assin.positions
 
 import com.ceaver.assin.action.*
-import com.ceaver.assin.extensions.addZeroDotOneToLastDecimal
-import com.ceaver.assin.extensions.addZeroDotTwoToLastDecimal
 import com.ceaver.assin.extensions.replace
+import java.math.BigDecimal
 import java.math.MathContext
 
 object PositionFactory {
 
     fun fromActions(actions: List<Action>): List<Position> {
+
         val positions = mutableListOf<Position>()
+
+        fun addPosition(position: Position) {
+            positions.add(position)
+        }
+
+        fun replacePosition(sourcePosition: Position, position: Position) {
+            positions.replace(sourcePosition, position)
+        }
+
+        fun removePosition(position: Position) {
+            positions.remove(position)
+        }
+
+        fun findPosition(positionId: Long): Position {
+            return positions.find { it.id == positionId }!!
+        }
+
+        fun splitQuote(quote: Position.Quotes, split: BigDecimal, remaining: BigDecimal): Pair<Position.Quotes, Position.Quotes> {
+            return Pair(
+                    quote.copy(
+                            valueCrypto = quote.valueCrypto.divide(split + remaining, MathContext.DECIMAL32).times(split),
+                            valueFiat = quote.valueFiat.divide(split + remaining, MathContext.DECIMAL32).times(split)),
+                    quote.copy(
+                            valueCrypto = quote.valueCrypto.divide(split + remaining, MathContext.DECIMAL32).times(remaining),
+                            valueFiat = quote.valueFiat.divide(split + remaining, MathContext.DECIMAL32).times(remaining)))
+        }
 
         actions.forEach { action ->
             when (action.getActionType()) {
                 ActionType.DEPOSIT -> {
                     action as Deposit
-                    val positionId = positions.size.toBigDecimal().inc()
-                    val newPosition = Position(id = positionId, title = action.title, label = action.label, quantity = action.quantity, openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
-                    positions.add(newPosition)
+                    val openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat)
+                    val depositPosition = Position(id = action.id, quantity = action.quantity, title = action.title, label = action.label, open = openQuotes)
+                    addPosition(depositPosition)
                 }
                 ActionType.WITHDRAW -> {
                     action as Withdraw
-                    val originalPosition = positions.find { it.id == action.positionId }!!
-                    val modifiedPosition = originalPosition.copy(closedQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
-                    positions.replace(originalPosition, modifiedPosition)
+                    val sourcePosition = findPosition(action.positionId!!)
+                    val closeQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat)
+                    replacePosition(sourcePosition, sourcePosition.copy(close = closeQuotes))
                 }
                 ActionType.TRADE -> {
                     action as Trade
-                    val originalPosition = positions.find { it.id == action.positionId }!!
-                    val modifiedPosition = originalPosition.copy(closedQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
-                    positions.replace(originalPosition, modifiedPosition)
-                    val positionId = positions.size.toBigDecimal().inc()
-                    val newPosition = Position(id = positionId, title = action.buyTitle, quantity = action.buyQuantity, label = action.buyLabel, openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
-                    positions.add(newPosition)
+                    val sourcePosition = findPosition(action.positionId!!)
+                    val quotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat)
+                    replacePosition(sourcePosition, sourcePosition.copy(close = quotes))
+                    addPosition(Position(id = action.id, quantity = action.buyQuantity, title = action.buyTitle, label = action.buyLabel, open = quotes))
                 }
                 ActionType.SPLIT -> {
                     action as Split
-                    val originalPosition = positions.find { it.id == action.positionId }!!
-                    val splitPosition = originalPosition.copy(
-                            id = originalPosition.id.addZeroDotOneToLastDecimal(),
-                            quantity = action.quantity,
-                            openQuotes = originalPosition.openQuotes.copy(
-                                    valueCrypto = originalPosition.openQuotes.valueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity),
-                                    valueFiat = originalPosition.openQuotes.valueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity)),
-                            closedQuotes = if (originalPosition.closedQuotes == null) null else originalPosition.closedQuotes.copy(
-                                    valueCrypto = originalPosition.closedQuotes.valueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity),
-                                    valueFiat = originalPosition.closedQuotes.valueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.quantity)
-                            ))
-                    val remainingPosition = originalPosition.copy(
-                            id = originalPosition.id.addZeroDotTwoToLastDecimal(),
-                            quantity = action.remaining,
-                            openQuotes = originalPosition.openQuotes.copy(
-                                    valueCrypto = originalPosition.openQuotes.valueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining),
-                                    valueFiat = originalPosition.openQuotes.valueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining)),
-                            closedQuotes = if (originalPosition.closedQuotes == null) null else originalPosition.closedQuotes.copy(
-                                    valueCrypto = originalPosition.closedQuotes.valueCrypto.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining),
-                                    valueFiat = originalPosition.closedQuotes.valueFiat.divide(originalPosition.quantity, MathContext.DECIMAL32).times(action.remaining)
-                            ))
-                    positions.remove(originalPosition)
-                    positions.add(splitPosition)
-                    positions.add(remainingPosition)
+                    val sourcePosition = findPosition(action.positionId)
+
+                    removePosition(sourcePosition)
+                    val splittedOpenQuotes = splitQuote(sourcePosition.open, action.quantity, sourcePosition.quantity - action.quantity)
+                    val splittedCloseQuotes = sourcePosition.close?.let { splitQuote(it, action.quantity, sourcePosition.quantity - action.quantity) }
+                    addPosition(Position(id = action.id, quantity = action.quantity, title = sourcePosition.title, label = sourcePosition.label, open = splittedOpenQuotes.first, close = splittedCloseQuotes?.first))
+                    addPosition(Position(id = action.id.inv(), quantity = sourcePosition.quantity - action.quantity, title = sourcePosition.title, label = sourcePosition.label, open = splittedOpenQuotes.second, close = splittedCloseQuotes?.second))
                 }
                 ActionType.MERGE -> {
                     action as Merge
+                    val sourcePosition1 = findPosition(action.sourcePositionA)
+                    val sourcePosition2 = findPosition(action.sourcePositionB)
 
-                    val sourcePosition1 = positions.find { it.id == action.sourcePositionA }!!
-                    val sourcePosition2 = positions.find { it.id == action.sourcePositionB }!!
-
-                    // close position 1 (same as withdraw, but with factor)
-                    val modifiedSourcePosition1 = sourcePosition1.copy(closedQuotes = Position.Quotes(
-                            date = action.date,
+                    val closeQuotes1 = Position.Quotes(date = action.date,
                             valueCrypto = action.valueCrypto.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition1.quantity),
-                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition1.quantity)))
-                    positions.replace(sourcePosition1, modifiedSourcePosition1)
-
-                    // close position 2 (same as withdraw, but with factor)
-                    val modifiedSourcePosition2 = sourcePosition2.copy(closedQuotes = Position.Quotes(
-                            date = action.date,
+                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition1.quantity))
+                    val closeQuotes2 = Position.Quotes(date = action.date,
                             valueCrypto = action.valueCrypto.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition2.quantity),
-                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition2.quantity)))
-                    positions.replace(sourcePosition2, modifiedSourcePosition2)
+                            valueFiat = action.valueFiat.divide(sourcePosition1.quantity + sourcePosition2.quantity, MathContext.DECIMAL32).times(sourcePosition2.quantity))
 
-                    // create new position
-                    val positionId = positions.size.toBigDecimal().inc()
-                    val newPosition = Position(id = positionId, title = action.title, quantity = sourcePosition1.quantity + sourcePosition2.quantity, label = action.label, openQuotes = Position.Quotes(date = action.date, valueCrypto = action.valueCrypto, valueFiat = action.valueFiat))
-                    positions.add(newPosition)
+                    addPosition(Position(id = action.id, title = action.title, label = action.label, quantity = sourcePosition1.quantity + sourcePosition2.quantity, open = Position.Quotes(action.date, action.valueCrypto, action.valueFiat)))
+
+                    replacePosition(sourcePosition1, sourcePosition1.copy(close = closeQuotes1))
+                    replacePosition(sourcePosition2, sourcePosition2.copy(close = closeQuotes2))
                 }
                 ActionType.MOVE -> {
                     action as Move
-                    val originalPosition = positions.find { it.id == action.positionId }!!
-                    val modifiedPosition = originalPosition.copy(label = action.targetLabel)
-                    positions.replace(originalPosition, modifiedPosition)
+                    val sourcePosition = findPosition(action.positionId)
+                    replacePosition(sourcePosition, sourcePosition.copy(label = action.targetLabel))
                 }
             }
+
         }
-        return positions.toList()
+        return positions
     }
 }

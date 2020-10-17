@@ -15,7 +15,7 @@ data class Move(
         val title: Title,
         val sourceLabel: String?,
         val targetLabel: String?,
-        val positionId: BigDecimal,
+        val positionId: Long,
         val comment: String? = null
 ) : Action {
 
@@ -40,7 +40,7 @@ data class Move(
                     title = TitleRepository.loadById(csvRecord.get(2)),
                     sourceLabel = csvRecord.get(3).ifEmpty { null },
                     quantity = csvRecord.get(4).toBigDecimal(),
-                    positionId = csvRecord.get(5).toBigDecimal(),
+                    positionId = csvRecord.get(5).toLong(),
                     targetLabel = csvRecord.get(6).ifEmpty { null },
                     comment = csvRecord.get(7).ifEmpty { null })
         }
@@ -79,7 +79,7 @@ data class Move(
                 title.id,
                 sourceLabel.orEmpty(),
                 quantity.toPlainString(),
-                positionId.toPlainString(),
+                positionId.toString(),
                 targetLabel.orEmpty(),
                 comment.orEmpty())
     }

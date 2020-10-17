@@ -17,8 +17,8 @@ data class Merge(
         val valueFiat: BigDecimal,
         val quantityPartA: BigDecimal,
         val quantityPartB: BigDecimal,
-        val sourcePositionA: BigDecimal,
-        val sourcePositionB: BigDecimal,
+        val sourcePositionA: Long,
+        val sourcePositionB: Long,
         val comment: String? = null
 ) : Action {
 
@@ -47,8 +47,8 @@ data class Merge(
                     label = csvRecord.get(3).ifEmpty { null },
                     quantityPartA = csvRecord.get(4).toBigDecimal(),
                     quantityPartB = csvRecord.get(5).toBigDecimal(),
-                    sourcePositionA = csvRecord.get(6).toBigDecimal(),
-                    sourcePositionB = csvRecord.get(7).toBigDecimal(),
+                    sourcePositionA = csvRecord.get(6).toLong(),
+                    sourcePositionB = csvRecord.get(7).toLong(),
                     valueCrypto = csvRecord.get(8).toBigDecimal(),
                     valueFiat = csvRecord.get(9).toBigDecimal(),
                     comment = csvRecord.get(10).ifEmpty { null })
@@ -57,8 +57,8 @@ data class Merge(
         fun fromPositions(positionA: Position, positionB: Position): Merge {
             require(positionA.title == positionB.title)
             require(positionA.label == positionB.label)
-            require(positionA.closedQuotes == null)
-            require(positionB.closedQuotes == null)
+            require(positionA.close == null)
+            require(positionB.close == null)
             return Merge(
                     date = LocalDate.now(),
                     title = positionA.title,
@@ -81,8 +81,8 @@ data class Merge(
                 label.orEmpty(),
                 quantityPartA.toPlainString(),
                 quantityPartB.toPlainString(),
-                sourcePositionA.toPlainString(),
-                sourcePositionB.toPlainString(),
+                sourcePositionA.toString(),
+                sourcePositionB.toString(),
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
                 comment.orEmpty())

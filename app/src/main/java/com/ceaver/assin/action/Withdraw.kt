@@ -18,7 +18,7 @@ data class Withdraw(
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
         val comment: String? = null,
-        val positionId: BigDecimal?
+        val positionId: Long?
 ) : Action {
 
     companion object Factory {
@@ -46,7 +46,7 @@ data class Withdraw(
                     valueCrypto = csvRecord.get(5).toBigDecimal(),
                     valueFiat = csvRecord.get(6).toBigDecimal(),
                     comment = csvRecord.get(7).ifEmpty { null },
-                    positionId = csvRecord.get(8).toBigDecimal())
+                    positionId = csvRecord.get(8).toLong())
         }
 
         fun fromPosition(position: Position): Withdraw {
@@ -71,7 +71,7 @@ data class Withdraw(
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
                 comment.orEmpty(),
-                positionId!!.toPlainString())
+                positionId!!.toString())
     }
 
     override fun toActionEntity(): ActionEntity {

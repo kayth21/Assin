@@ -29,7 +29,7 @@ fun Withdraw.Factory.fromTestdata(
         valueCrypto: BigDecimal = 101.toBigDecimal(),
         valueFiat: BigDecimal = 1001.toBigDecimal(),
         comment: String = "Coinbase",
-        positionId: BigDecimal
+        positionId: Long
 ): Withdraw {
     return Withdraw(
             id = id,
@@ -52,7 +52,7 @@ fun Split.Factory.fromTestdata(
         quantity: BigDecimal,
         remaining: BigDecimal,
         comment: String = "Coinbase",
-        positionId: BigDecimal
+        positionId: Long
 ): Split {
     return Split(
             id = id,
@@ -78,7 +78,7 @@ fun Trade.Factory.fromTestdata(
         valueCrypto: BigDecimal = BigDecimal.ONE,
         valueFiat: BigDecimal = 10000.toBigDecimal(),
         comment: String = "Coinbase",
-        positionId: BigDecimal
+        positionId: Long
 ): Trade {
     return Trade(
             id = id,
@@ -106,8 +106,8 @@ fun Merge.Factory.fromTestdata(
         valueFiat: BigDecimal = 200.toBigDecimal(),
         valueCrypto: BigDecimal = 2000.toBigDecimal(),
         comment: String = "Coinbase",
-        sourcePositionA: BigDecimal,
-        sourcePositionB: BigDecimal
+        sourcePositionA: Long,
+        sourcePositionB: Long
 ): Merge {
     return Merge(
             id = id,
@@ -131,7 +131,7 @@ fun Move.Factory.fromTestdata(
         title: Title = CryptoTitle.fromTestdata(),
         sourceLabel: String? = "Savings",
         targetLabel: String? = "Savings",
-        positionId: BigDecimal,
+        positionId: Long,
         comment: String = "Coinbase"
 ): Move {
     return Move(

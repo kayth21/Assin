@@ -15,7 +15,7 @@ data class Split(
         val label: String?,
         val quantity: BigDecimal,
         val remaining: BigDecimal,
-        val positionId: BigDecimal,
+        val positionId: Long,
         val comment: String? = null
 ) : Action {
 
@@ -41,7 +41,7 @@ data class Split(
                     label = csvRecord.get(3).ifEmpty { null },
                     quantity = csvRecord.get(4).toBigDecimal(),
                     remaining = csvRecord.get(5).toBigDecimal(),
-                    positionId = csvRecord.get(6).toBigDecimal(),
+                    positionId = csvRecord.get(6).toLong(),
                     comment = csvRecord.get(7).ifEmpty { null })
         }
         fun fromPosition(position: Position, quantity: BigDecimal): Split {
@@ -63,7 +63,7 @@ data class Split(
                 label.orEmpty(),
                 quantity.toPlainString(),
                 remaining.toPlainString(),
-                positionId.toPlainString(),
+                positionId.toString(),
                 comment.orEmpty())
     }
 

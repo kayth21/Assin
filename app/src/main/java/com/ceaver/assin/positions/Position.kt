@@ -7,16 +7,16 @@ import java.math.MathContext
 import java.time.LocalDate
 
 data class Position(
-        val id: BigDecimal,
+        val id: Long,
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
-        val openQuotes: Quotes,
-        val closedQuotes: Quotes? = null
+        val open: Quotes,
+        val close: Quotes? = null
 ) {
 
     fun isActive(): Boolean {
-        return closedQuotes == null
+        return close == null
     }
 
     val currentValuePrimary: BigDecimal
@@ -31,14 +31,14 @@ data class Position(
 
     val profitLossInPercentToPrimaryTitle: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100).divide(openQuotes.valueCrypto, MathContext.DECIMAL32))
+            return (BigDecimal.valueOf(100).divide(open.valueCrypto, MathContext.DECIMAL32))
                     .times(currentValuePrimary)
                     .subtract(BigDecimal.valueOf(100))
         }
 
     val profitLossInPercentToSecondaryValue: BigDecimal
         get() {
-            return (BigDecimal.valueOf(100).divide(openQuotes.valueFiat, MathContext.DECIMAL32))
+            return (BigDecimal.valueOf(100).divide(open.valueFiat, MathContext.DECIMAL32))
                     .times(currentValueSecondary)
                     .subtract(BigDecimal.valueOf(100))
         }

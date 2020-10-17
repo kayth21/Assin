@@ -3,165 +3,670 @@ package com.ceaver.assin.positions
 import com.ceaver.assin.action.*
 import com.ceaver.assin.extensions.fromTestdata
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
 
 class PositionFactoryTest {
 
-    @Test
-    @DisplayName("Zero actions lead to zero position")
-    fun zeroActions() {
-        // arrange
-        val actions = emptyList<Action>()
-        // act
-        val result = PositionFactory.fromActions(actions)
-        // assert
-        assertThat(result).isEmpty()
+    private lateinit var positions: List<Position>
+
+    @Nested
+    @DisplayName("Zero actions lead in:")
+    inner class EmptyActionList {
+
+        @BeforeEach
+        fun setup() {
+            positions = PositionFactory.fromActions(listOf())
+        }
+
+        @Test
+        @DisplayName("empty position result list")
+        fun emptyResultList() {
+            assertThat(positions).isEmpty()
+        }
     }
 
-    @Test
-    @DisplayName("Deposit action lead in open position")
-    fun depositAction() {
-        // arrange
-        val deposit = Deposit.fromTestdata()
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit))
-        // assert
-        assertThat(positions).hasSize(1)
-        assertThatPosition(positions[0])
-                .hasId(BigDecimal.ONE)
-                .hasPosition(deposit.quantity, deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
-                .hasNoCloseValues()
+    @Nested
+    @DisplayName("Deposit action lead in:")
+    inner class DepositAction {
+
+        private lateinit var deposit: Deposit
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata()
+            positions = PositionFactory.fromActions(listOf(deposit))
+        }
+
+        @Test
+        @DisplayName("position result list of size: 1")
+        fun resultListSize() {
+            assertThat(positions).hasSize(1)
+        }
+
+        @Nested
+        @DisplayName("open position with:")
+        inner class OpenPosition {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of deposit action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit.id)
+            }
+
+            @Test
+            @DisplayName("position data of deposit action")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit.quantity, deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("open values of deposit action")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("no closing data")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Withdraw action lead in closing origin position")
-    fun withdrawAction() {
-        // arrange
-        val deposit = Deposit.fromTestdata()
-        val withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = BigDecimal.ONE)
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit, withdraw))
-        // assert
-        assertThat(positions).hasSize(1)
-        assertThatPosition(positions[0])
-                .hasId(BigDecimal.ONE)
-                .hasPosition(deposit.quantity, deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
-                .hasCloseValues(withdraw.date, withdraw.valueFiat, withdraw.valueCrypto)
+    @Nested
+    @DisplayName("Withdraw action lead in:")
+    inner class WithdrawAction {
+
+        private lateinit var deposit: Deposit
+        private lateinit var withdraw: Withdraw
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
+            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
+            positions = PositionFactory.fromActions(listOf(deposit, withdraw))
+        }
+
+        @Test
+        @DisplayName("result list of size: 1")
+        fun resultListSize() {
+            assertThat(positions).hasSize(1)
+        }
+
+        @Nested
+        @DisplayName("closed position with:")
+        inner class ClosedPosition {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of deposit action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(withdraw.quantity, withdraw.title, withdraw.label)
+            }
+
+            @Test
+            @DisplayName("open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("close values of withdraw action")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(withdraw.date, withdraw.valueFiat, withdraw.valueCrypto)
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Split action lead in removing origin position and two new open positions")
-    fun splitAction() {
-        // arrange
-        val deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
-        val split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = BigDecimal.ONE)
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit, split))
-        // assert
-        assertThat(positions).hasSize(2)
-        assertThatPosition(positions[0])
-                .hasId(1.1.toBigDecimal())
-                .hasPosition(4.toBigDecimal(), deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, 400.toBigDecimal(), 40.toBigDecimal())
-                .hasNoCloseValues()
-        assertThatPosition(positions[1])
-                .hasId(1.2.toBigDecimal())
-                .hasPosition(6.toBigDecimal(), deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, 600.toBigDecimal(), 60.toBigDecimal())
-                .hasNoCloseValues()
+    @Nested
+    @DisplayName("Trade action lead in:")
+    inner class TradeAction {
+
+        private lateinit var deposit: Deposit
+        private lateinit var trade: Trade
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(valueFiat = 1000.toBigDecimal(), valueCrypto = 10.toBigDecimal())
+            trade = Trade.fromTestdata(sellQuantity = deposit.quantity, sellTitle = deposit.title, sellLabel = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 20.toBigDecimal())
+            positions = PositionFactory.fromActions(listOf(deposit, trade))
+        }
+
+        @Test
+        @DisplayName("result list of size: 2")
+        fun resultListSize() {
+            assertThat(positions).hasSize(2)
+        }
+
+        @Nested
+        @DisplayName("closed position (0) with:")
+        inner class ClosedPosition0 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of deposit action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit.quantity, deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("close values of trade action")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(trade.date, trade.valueFiat, trade.valueCrypto)
+            }
+        }
+
+        @Nested
+        @DisplayName("open position (1) with:")
+        inner class OpenPosition1 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[1]
+            }
+
+            @Test
+            @DisplayName("id of trade action")
+            fun id() {
+                assertThatPosition(position).hasId(trade.id)
+            }
+
+            @Test
+            @DisplayName("position data of trade action")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(trade.buyQuantity, trade.buyTitle, trade.buyLabel)
+            }
+
+            @Test
+            @DisplayName("open values of trade action")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(trade.date, trade.valueFiat, trade.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("no closing data")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Split action on closed position lead in removing origin position and two new closed positions")
-    fun splitAction2() {
-        // arrange
-        val deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
-        val withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = BigDecimal.ONE, valueFiat = 1111.toBigDecimal(), valueCrypto = 111.toBigDecimal())
-        val split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = BigDecimal.ONE)
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit, withdraw, split))
-        // assert
-        assertThat(positions).hasSize(2)
-        assertThatPosition(positions[0])
-                .hasId(1.1.toBigDecimal())
-                .hasPosition(4.toBigDecimal(), deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, 400.toBigDecimal(), 40.toBigDecimal())
-                .hasCloseValues(withdraw.date, 444.4.toBigDecimal(), 44.4.toBigDecimal())
-        assertThatPosition(positions[1])
-                .hasId(1.2.toBigDecimal())
-                .hasPosition(6.toBigDecimal(), deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, 600.toBigDecimal(), 60.toBigDecimal())
-                .hasCloseValues(withdraw.date, 666.6.toBigDecimal(), 66.6.toBigDecimal())
+
+    @Nested
+    @DisplayName("Split action (40/60) on open position lead in:")
+    inner class SplitActionOnOpenPosition {
+
+        private lateinit var deposit: Deposit
+        private lateinit var split: Split
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
+            split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = deposit.id)
+            positions = PositionFactory.fromActions(listOf(deposit, split))
+        }
+
+        @Test
+        @DisplayName("result list of size: 2")
+        fun resultListSize() {
+            assertThat(positions).hasSize(2)
+        }
+
+        @Nested
+        @DisplayName("adding open position (0) with:")
+        inner class OpenPosition0 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of split action")
+            fun id() {
+                assertThatPosition(position).hasId(split.id)
+            }
+
+            @Test
+            @DisplayName("40% of position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(4.toBigDecimal(), deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("40% of open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, 400.toBigDecimal(), 40.toBigDecimal())
+            }
+
+            @Test
+            @DisplayName("no closing data")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
+
+        @Nested
+        @DisplayName("adding open position (1) with:")
+        inner class OpenPosition1 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[1]
+            }
+
+            @Test
+            @DisplayName("inverted id of split action")
+            fun id() {
+                assertThatPosition(position).hasId(split.id.inv())
+            }
+
+            @Test
+            @DisplayName("60% of position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(6.toBigDecimal(), deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("60% of open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, 600.toBigDecimal(), 60.toBigDecimal())
+            }
+
+            @Test
+            @DisplayName("no closing data")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Trade action lead in closed origin position and new open position")
-    fun tradeAction() {
-        // arrange
-        val deposit = Deposit.fromTestdata()
-        val trade = Trade.fromTestdata(sellQuantity = deposit.quantity, sellTitle = deposit.title, sellLabel = deposit.label, positionId = BigDecimal.ONE)
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit, trade))
-        // assert
-        assertThat(positions).hasSize(2)
-        assertThatPosition(positions[0])
-                .hasId(BigDecimal.ONE)
-                .hasPosition(deposit.quantity, deposit.title, deposit.label)
-                .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
-                .hasCloseValues(trade.date, trade.valueFiat, trade.valueCrypto)
-        assertThatPosition(positions[1])
-                .hasId(2.toBigDecimal())
-                .hasPosition(trade.buyQuantity, trade.buyTitle, trade.buyLabel)
-                .hasOpenValues(trade.date, trade.valueFiat, trade.valueCrypto)
-                .hasNoCloseValues()
+    @Nested
+    @DisplayName("Split action (40/60) on closed position lead in:")
+    inner class SplitActionOnClosedPosition {
+
+        private lateinit var deposit: Deposit
+        private lateinit var withdraw: Withdraw
+        private lateinit var split: Split
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
+            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
+            split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = deposit.id)
+            positions = PositionFactory.fromActions(listOf(deposit, withdraw, split))
+        }
+
+        @Test
+        @DisplayName("result list of size: 2")
+        fun resultListSize() {
+            assertThat(positions).hasSize(2)
+        }
+
+        @Nested
+        @DisplayName("closed position (0) with:")
+        inner class Position0With {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of split action")
+            fun id() {
+                assertThatPosition(position).hasId(split.id)
+            }
+
+            @Test
+            @DisplayName("40% of position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(4.toBigDecimal(), deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("40% of open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, 400.toBigDecimal(), 40.toBigDecimal())
+            }
+
+            @Test
+            @DisplayName("40% of close values of source position")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(withdraw.date, 800.toBigDecimal(), 80.toBigDecimal())
+            }
+        }
+
+        @Nested
+        @DisplayName("closed position (1) with:")
+        inner class Position1With {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[1]
+            }
+
+            @Test
+            @DisplayName("inverted id of split action")
+            fun id() {
+                assertThatPosition(position).hasId(split.id.inv())
+            }
+
+            @Test
+            @DisplayName("60% of position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(6.toBigDecimal(), deposit.title, deposit.label)
+            }
+
+            @Test
+            @DisplayName("60% of open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, 600.toBigDecimal(), 60.toBigDecimal())
+            }
+
+            @Test
+            @DisplayName("60% of close values of source position")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(withdraw.date, 1200.toBigDecimal(), 120.toBigDecimal())
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Merge action lead in closing both origin positions and open new position")
-    fun mergeAction1() {
-        // arrange
-        val deposit1 = Deposit.fromTestdata(quantity = 10.toBigDecimal())
-        val deposit2 = Deposit.fromTestdata(quantity = 20.toBigDecimal())
-        val merge = Merge.fromTestdata(valueFiat = 3000.toBigDecimal(), valueCrypto = 300.toBigDecimal(), sourcePositionA = 1.toBigDecimal(), sourcePositionB = 2.toBigDecimal())
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit1, deposit2, merge))
-        // assert
-        assertThat(positions).hasSize(3)
-        assertThatPosition(positions[0])
-                .hasId(BigDecimal.ONE)
-                .hasPosition(deposit1.quantity, deposit1.title, deposit1.label)
-                .hasOpenValues(deposit1.date, deposit1.valueFiat, deposit1.valueCrypto)
-                .hasCloseValues(merge.date, 1000.toBigDecimal(), 100.toBigDecimal())
-        assertThatPosition(positions[1])
-                .hasId(2.toBigDecimal())
-                .hasPosition(deposit2.quantity, deposit2.title, deposit2.label)
-                .hasOpenValues(deposit2.date, deposit2.valueFiat, deposit2.valueCrypto)
-                .hasCloseValues(merge.date, 2000.toBigDecimal(), 200.toBigDecimal())
-        assertThatPosition(positions[2])
-                .hasId(3.toBigDecimal())
-                .hasPosition(deposit1.quantity + deposit2.quantity, merge.title, merge.label)
-                .hasOpenValues(merge.date, merge.valueFiat, merge.valueCrypto)
-                .hasNoCloseValues()
+    @Nested
+    @DisplayName("Merge action (40/60) lead in:")
+    inner class MergeAction {
+
+        private lateinit var deposit1: Deposit
+        private lateinit var deposit2: Deposit
+        private lateinit var merge: Merge
+
+        @BeforeEach
+        fun setup() {
+            deposit1 = Deposit.fromTestdata(quantity = 40.toBigDecimal())
+            deposit2 = Deposit.fromTestdata(quantity = 60.toBigDecimal(), title = deposit1.title, label = deposit1.label)
+            merge = Merge.fromTestdata(valueFiat = 20000.toBigDecimal(), valueCrypto = 200.toBigDecimal(), sourcePositionA = deposit1.id, sourcePositionB = deposit2.id, title = deposit1.title, label = deposit1.label)
+            positions = PositionFactory.fromActions(listOf(deposit1, deposit2, merge))
+        }
+
+        @Test
+        @DisplayName("result list of size: 3")
+        fun resultListSize() {
+            assertThat(positions).hasSize(3)
+        }
+
+        @Nested
+        @DisplayName("closed position (0) with:")
+        inner class ClosedPosition0 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of deposit1 action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit1.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit1.quantity, deposit1.title, deposit1.label)
+            }
+
+            @Test
+            @DisplayName("open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit1.date, deposit1.valueFiat, deposit1.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("40% from close values of trade action")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(merge.date, 8000.toBigDecimal(), 80.toBigDecimal())
+            }
+        }
+
+        @Nested
+        @DisplayName("closed position (1) with:")
+        inner class ClosedPosition1 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[1]
+            }
+
+            @Test
+            @DisplayName("id of deposit2 action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit2.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit2.quantity, deposit2.title, deposit2.label)
+            }
+
+            @Test
+            @DisplayName("open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit2.date, deposit2.valueFiat, deposit2.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("60% from close values of trade action")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(merge.date, 12000.toBigDecimal(), 120.toBigDecimal())
+            }
+        }
+
+        @Nested
+        @DisplayName("open position (2) with:")
+        inner class OpenPosition2 {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[2]
+            }
+
+            @Test
+            @DisplayName("id of merge action")
+            fun id() {
+                assertThatPosition(position).hasId(merge.id)
+            }
+
+            @Test
+            @DisplayName("position data of accumulated source positions")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit1.quantity + deposit2.quantity, deposit1.title, deposit1.label)
+            }
+
+            @Test
+            @DisplayName("open values of merge action")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(merge.date, merge.valueFiat, merge.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("no closing data")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Move action lead in updating origin position")
-    fun moveAction() {
-        // arrange
-        val deposit = Deposit.fromTestdata(label = null)
-        val move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = BigDecimal.ONE)
-        // act
-        val positions = PositionFactory.fromActions(listOf(deposit, move))
-        // assert
-        assertThat(positions).hasSize(1)
-        assertThatPosition(positions[0])
-                .hasId(BigDecimal.ONE)
-                .hasPosition(deposit.quantity, deposit.title, move.targetLabel)
-                .hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
-                .hasNoCloseValues()
+    @Nested
+    @DisplayName("Move action on open position lead in:")
+    inner class MoveActionOnOpenPosition {
+
+        private lateinit var deposit: Deposit
+        private lateinit var move: Move
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(label = null)
+            move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = deposit.id)
+            positions = PositionFactory.fromActions(listOf(deposit, move))
+        }
+
+        @Test
+        @DisplayName("result list of size: 1")
+        fun resultListSize() {
+            assertThat(positions).hasSize(1)
+        }
+
+        @Nested
+        @DisplayName("position with:")
+        inner class PositionWith {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+            @Test
+            @DisplayName("id of deposit action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position with label of move action")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit.quantity, deposit.title, move.targetLabel)
+            }
+
+            @Test
+            @DisplayName("open values of source position")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("close values of source position")
+            fun closingData() {
+                assertThatPosition(position).hasNoCloseValues()
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Move action on closed position lead in:")
+    inner class MoveActionOnClosedPosition {
+
+        private lateinit var deposit: Deposit
+        private lateinit var withdraw: Withdraw
+        private lateinit var move: Move
+
+        @BeforeEach
+        fun setup() {
+            deposit = Deposit.fromTestdata(label = null)
+            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id)
+            move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = deposit.id)
+            positions = PositionFactory.fromActions(listOf(deposit, withdraw, move))
+        }
+
+        @Test
+        @DisplayName("result list of size: 1")
+        fun resultListSize() {
+            assertThat(positions).hasSize(1)
+        }
+
+        @Nested
+        @DisplayName("adding position with:")
+        inner class AddingPosition {
+
+            private lateinit var position: Position
+
+            @BeforeEach
+            fun setup() {
+                position = positions[0]
+            }
+
+
+            @Test
+            @DisplayName("id of deposit action")
+            fun id() {
+                assertThatPosition(position).hasId(deposit.id)
+            }
+
+            @Test
+            @DisplayName("position data of source position with label of move action")
+            fun positionData() {
+                assertThatPosition(position).hasPosition(deposit.quantity, deposit.title, move.targetLabel)
+            }
+
+            @Test
+            @DisplayName("open values of source position (deposit)")
+            fun openValues() {
+                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+            }
+
+            @Test
+            @DisplayName("close values of source position (withdraw)")
+            fun closingData() {
+                assertThatPosition(position).hasCloseValues(withdraw.date, withdraw.valueFiat, withdraw.valueCrypto)
+            }
+        }
     }
 }

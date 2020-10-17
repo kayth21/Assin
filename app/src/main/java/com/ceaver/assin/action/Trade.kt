@@ -15,7 +15,7 @@ data class Trade(
         val sellTitle: Title,
         val sellLabel: String?,
         val sellQuantity: BigDecimal,
-        val positionId: BigDecimal?,
+        val positionId: Long?,
         val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
         val comment: String?
@@ -49,7 +49,7 @@ data class Trade(
                     sellTitle = TitleRepository.loadById(csvRecord.get(5)),
                     sellLabel = csvRecord.get(6).ifEmpty { null },
                     sellQuantity = csvRecord.get(7).toBigDecimal(),
-                    positionId = csvRecord.get(8).toBigDecimal(),
+                    positionId = csvRecord.get(8).toLong(),
                     valueCrypto = csvRecord.get(9).toBigDecimal(),
                     valueFiat = csvRecord.get(10).toBigDecimal(),
                     comment = csvRecord.get(11).ifEmpty { null })
@@ -66,7 +66,7 @@ data class Trade(
                 sellTitle.id,
                 sellLabel.orEmpty(),
                 sellQuantity.toPlainString(),
-                positionId!!.toPlainString(),
+                positionId!!.toString(),
                 valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
                 comment.orEmpty())
