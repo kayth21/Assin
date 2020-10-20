@@ -9,7 +9,7 @@ import com.ceaver.assin.preferences.Preferences
 
 class AssetDetailOverviewViewModel(val title: Title, val label: String?) : ViewModel() {
 
-    val asset =  Transformations.map(AssetRepository.loadAllAssetsObserved()) {it.filter { it.title == title && it.label == label}.single()}
+    val asset =  Transformations.map(AssetRepository.loadAllAssetsObserved()) { it.single { it.title.id == title.id && it.label == label } }
     val primaryTitle = Preferences.getCryptoTitle()
     val secondaryTitle = Preferences.getFiatTitle()
 
