@@ -7,16 +7,8 @@ import com.ceaver.assin.markets.TitleEntity
 data class ActionDto(
         @Embedded
         val action: ActionEntity,
-        @Relation(parentColumn = "buyTitleId", entityColumn = "id")
-        val buyTitle: TitleEntity?,
-        @Relation(parentColumn = "sellTitleId", entityColumn = "id")
-        val sellTitle: TitleEntity?,
-        @Relation(parentColumn = "splitTitleId", entityColumn = "id")
-        val splitTitle: TitleEntity?,
-        @Relation(parentColumn = "mergeTitleId", entityColumn = "id")
-        val mergeTitle: TitleEntity?,
-        @Relation(parentColumn = "moveTitleId", entityColumn = "id")
-        val moveTitle: TitleEntity?
+        @Relation(parentColumn = "titleId", entityColumn = "id")
+        val title: TitleEntity?
 ) {
     fun toAction(): Action {
         return when (action.actionType) {

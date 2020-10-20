@@ -1,8 +1,6 @@
 package com.ceaver.assin.action
 
 import com.ceaver.assin.R
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
@@ -11,15 +9,13 @@ import java.time.LocalDate
 data class Merge(
         override val id: Long = 0,
         override val date: LocalDate = LocalDate.now(),
-        val title: Title,
-        val label: String?,
-        val valueCrypto: BigDecimal,
+        val sourcePositionIdA: Int,
+        val sourcePositionIdB: Int,
+        val sourcePositionA: Position? = null,
+        val sourcePositionB: Position? = null,
         val valueFiat: BigDecimal,
-        val quantityPartA: BigDecimal,
-        val quantityPartB: BigDecimal,
-        val sourcePositionA: Long,
-        val sourcePositionB: Long,
-        val comment: String? = null
+        val valueCrypto: BigDecimal,
+        override val comment: String? = null
 ) : Action {
 
     companion object Factory {
@@ -28,48 +24,22 @@ data class Merge(
             return Merge(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.mergeTitle!!.toTitle(),
-                    label = actionDto.action.mergeLabel,
-                    valueCrypto = actionDto.action.valueCrypto!!,
+                    sourcePositionIdA = actionDto.action.sourcePositionIds!![0],
+                    sourcePositionIdB = actionDto.action.sourcePositionIds[1],
                     valueFiat = actionDto.action.valueFiat!!,
-                    quantityPartA = actionDto.action.mergeQuantityA!!,
-                    quantityPartB = actionDto.action.mergeQuantityB!!,
-                    sourcePositionA = actionDto.action.mergeSourcePositionA!!,
-                    sourcePositionB = actionDto.action.mergeSourcePositionB!!,
+                    valueCrypto = actionDto.action.valueCrypto!!,
                     comment = actionDto.action.comment)
         }
 
-        suspend fun fromImport(csvRecord: CSVRecord): Merge {
+        fun fromImport(csvRecord: CSVRecord): Merge {
             require(ActionType.MERGE.name == csvRecord.get(0))
             return Merge(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadById(csvRecord.get(2)),
-                    label = csvRecord.get(3).ifEmpty { null },
-                    quantityPartA = csvRecord.get(4).toBigDecimal(),
-                    quantityPartB = csvRecord.get(5).toBigDecimal(),
-                    sourcePositionA = csvRecord.get(6).toLong(),
-                    sourcePositionB = csvRecord.get(7).toLong(),
-                    valueCrypto = csvRecord.get(8).toBigDecimal(),
-                    valueFiat = csvRecord.get(9).toBigDecimal(),
-                    comment = csvRecord.get(10).ifEmpty { null })
-        }
-
-        fun fromPositions(positionA: Position, positionB: Position): Merge {
-            require(positionA.title == positionB.title)
-            require(positionA.label == positionB.label)
-            require(positionA.close == null)
-            require(positionB.close == null)
-            return Merge(
-                    date = LocalDate.now(),
-                    title = positionA.title,
-                    label = positionA.label,
-                    quantityPartA = positionA.quantity,
-                    quantityPartB = positionB.quantity,
-                    sourcePositionA = positionA.id,
-                    sourcePositionB = positionB.id,
-                    valueCrypto = positionA.currentValuePrimary + positionB.currentValuePrimary,
-                    valueFiat = positionB.currentValueSecondary + positionB.currentValueSecondary,
-                    comment = null) // TODO
+                    sourcePositionIdA = csvRecord.get(2).toInt(),
+                    sourcePositionIdB = csvRecord.get(3).toInt(),
+                    valueFiat = csvRecord.get(4).toBigDecimal(),
+                    valueCrypto = csvRecord.get(5).toBigDecimal(),
+                    comment = csvRecord.get(6).ifEmpty { null })
         }
     }
 
@@ -77,38 +47,29 @@ data class Merge(
         return listOf(
                 ActionType.MERGE.name,
                 date.toString(),
-                title.id,
-                label.orEmpty(),
-                quantityPartA.toPlainString(),
-                quantityPartB.toPlainString(),
-                sourcePositionA.toString(),
-                sourcePositionB.toString(),
-                valueCrypto.toPlainString(),
+                sourcePositionIdA.toString(),
+                sourcePositionIdB.toString(),
                 valueFiat.toPlainString(),
+                valueCrypto.toPlainString(),
                 comment.orEmpty())
     }
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
-                actionType = ActionType.MERGE,
                 id = id,
+                actionType = ActionType.MERGE,
                 actionDate = date,
-                mergeTitleId = title.id,
-                mergeLabel = label,
+                sourcePositionIds = listOf(sourcePositionIdA, sourcePositionIdB),
                 valueFiat = valueFiat,
                 valueCrypto = valueCrypto,
-                mergeQuantityA = quantityPartA,
-                mergeQuantityB = quantityPartB,
-                mergeSourcePositionA = sourcePositionA,
-                mergeSourcePositionB = sourcePositionB,
                 comment = comment
         )
     }
 
     override fun getActionType(): ActionType = ActionType.MERGE
-    override fun getLeftImageResource(): Int = title.getIcon()
+    override fun getLeftImageResource(): Int = sourcePositionA!!.title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.mds // TODO
-    override fun getTitleText(): String = "Merge ${title.name} ${if (label == null) "" else "(${label}) "}Position"
-    override fun getDetailText(): String = "$quantityPartA ${title.symbol} and $quantityPartB ${title.symbol} merged into ${quantityPartA.add(quantityPartB)} ${title.symbol}"
+    override fun getTitleText(): String = "Merge ${sourcePositionA!!.title.name} ${if (sourcePositionA.label == null) "" else "(${sourcePositionA.label}) "}Position"
+    override fun getDetailText(): String = "${sourcePositionA!!.quantity} ${sourcePositionA.title.symbol} and ${sourcePositionB!!.quantity} ${sourcePositionB.title.symbol} merged into ${sourcePositionA.quantity.add(sourcePositionB.quantity)} ${sourcePositionA.title.symbol}"
 
 }

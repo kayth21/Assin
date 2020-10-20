@@ -58,9 +58,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test
@@ -93,7 +93,7 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
-            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
+            withdraw = Withdraw.fromTestdata(sourcePosition = Position.fromDeposit(1, deposit), valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
             positions = PositionFactory.fromActions(listOf(deposit, withdraw))
         }
 
@@ -115,21 +115,21 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test
             @DisplayName("position data of source position")
             fun positionData() {
-                assertThatPosition(position).hasPosition(withdraw.quantity, withdraw.title, withdraw.label)
+                assertThatPosition(position).hasPosition(withdraw.sourcePosition!!.quantity, withdraw.sourcePosition!!.title, withdraw.sourcePosition!!.label)
             }
 
             @Test
             @DisplayName("open values of source position")
             fun openValues() {
-                assertThatPosition(position).hasOpenValues(deposit.date, deposit.valueFiat, deposit.valueCrypto)
+                assertThatPosition(position).hasOpenValues(withdraw.sourcePosition!!.open.date, withdraw.sourcePosition!!.open.valueFiat, withdraw.sourcePosition!!.open.valueCrypto)
             }
 
             @Test
@@ -150,7 +150,7 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(valueFiat = 1000.toBigDecimal(), valueCrypto = 10.toBigDecimal())
-            trade = Trade.fromTestdata(sellQuantity = deposit.quantity, sellTitle = deposit.title, sellLabel = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 20.toBigDecimal())
+            trade = Trade.fromTestdata(sellPosition = Position.fromDeposit(1, deposit), valueFiat = 2000.toBigDecimal(), valueCrypto = 20.toBigDecimal())
             positions = PositionFactory.fromActions(listOf(deposit, trade))
         }
 
@@ -172,9 +172,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test
@@ -208,9 +208,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of trade action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(trade.id)
+                assertThatPosition(position).hasId(2)
             }
 
             @Test
@@ -244,7 +244,7 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
-            split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = deposit.id)
+            split = Split.fromTestdata(quantity = 4.toBigDecimal(), splitPosition = Position.fromDeposit(1, deposit))
             positions = PositionFactory.fromActions(listOf(deposit, split))
         }
 
@@ -266,9 +266,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of split action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(split.id)
+                assertThatPosition(position).hasId(2)
             }
 
             @Test
@@ -302,9 +302,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("inverted id of split action")
+            @DisplayName("id equals inverted index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(split.id.inv())
+                assertThatPosition(position).hasId(2.inv())
             }
 
             @Test
@@ -338,8 +338,8 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(quantity = 10.toBigDecimal(), valueFiat = 1000.toBigDecimal(), valueCrypto = 100.toBigDecimal())
-            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id, valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
-            split = Split.fromTestdata(quantity = 4.toBigDecimal(), remaining = 6.toBigDecimal(), title = deposit.title, label = deposit.label, positionId = deposit.id)
+            withdraw = Withdraw.fromTestdata(sourcePosition = Position.fromDeposit(1, deposit), valueFiat = 2000.toBigDecimal(), valueCrypto = 200.toBigDecimal())
+            split = Split.fromTestdata(quantity = 4.toBigDecimal(), splitPosition = Position.fromDeposit(1, deposit))
             positions = PositionFactory.fromActions(listOf(deposit, withdraw, split))
         }
 
@@ -361,9 +361,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of split action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(split.id)
+                assertThatPosition(position).hasId(3)
             }
 
             @Test
@@ -397,9 +397,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("inverted id of split action")
+            @DisplayName("id equals inverted index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(split.id.inv())
+                assertThatPosition(position).hasId(3.inv())
             }
 
             @Test
@@ -434,7 +434,7 @@ class PositionFactoryTest {
         fun setup() {
             deposit1 = Deposit.fromTestdata(quantity = 40.toBigDecimal())
             deposit2 = Deposit.fromTestdata(quantity = 60.toBigDecimal(), title = deposit1.title, label = deposit1.label)
-            merge = Merge.fromTestdata(valueFiat = 20000.toBigDecimal(), valueCrypto = 200.toBigDecimal(), sourcePositionA = deposit1.id, sourcePositionB = deposit2.id, title = deposit1.title, label = deposit1.label)
+            merge = Merge.fromTestdata(valueFiat = 20000.toBigDecimal(), valueCrypto = 200.toBigDecimal(), mergePositionA = Position.fromDeposit(1, deposit1), mergePositionB = Position.fromDeposit(2, deposit2))
             positions = PositionFactory.fromActions(listOf(deposit1, deposit2, merge))
         }
 
@@ -456,9 +456,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit1 action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit1.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test
@@ -492,9 +492,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit2 action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit2.id)
+                assertThatPosition(position).hasId(2)
             }
 
             @Test
@@ -528,9 +528,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of merge action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(merge.id)
+                assertThatPosition(position).hasId(3)
             }
 
             @Test
@@ -563,7 +563,7 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(label = null)
-            move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = deposit.id)
+            move = Move.fromTestdata(movePosition = Position.fromDeposit(1, deposit), targetLabel = "Savings")
             positions = PositionFactory.fromActions(listOf(deposit, move))
         }
 
@@ -585,9 +585,9 @@ class PositionFactoryTest {
             }
 
             @Test
-            @DisplayName("id of deposit action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test
@@ -621,8 +621,8 @@ class PositionFactoryTest {
         @BeforeEach
         fun setup() {
             deposit = Deposit.fromTestdata(label = null)
-            withdraw = Withdraw.fromTestdata(quantity = deposit.quantity, title = deposit.title, label = deposit.label, positionId = deposit.id)
-            move = Move.fromTestdata(sourceLabel = null, targetLabel = "Savings", positionId = deposit.id)
+            withdraw = Withdraw.fromTestdata(sourcePosition = Position.fromDeposit(1, deposit))
+            move = Move.fromTestdata(movePosition = Position.fromDeposit(1, deposit), targetLabel = "Savings")
             positions = PositionFactory.fromActions(listOf(deposit, withdraw, move))
         }
 
@@ -645,9 +645,9 @@ class PositionFactoryTest {
 
 
             @Test
-            @DisplayName("id of deposit action")
+            @DisplayName("id equals index of action which created this position")
             fun id() {
-                assertThatPosition(position).hasId(deposit.id)
+                assertThatPosition(position).hasId(1)
             }
 
             @Test

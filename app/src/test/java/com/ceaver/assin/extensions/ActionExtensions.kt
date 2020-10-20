@@ -3,6 +3,7 @@ package com.ceaver.assin.extensions
 import com.ceaver.assin.action.*
 import com.ceaver.assin.markets.CryptoTitle
 import com.ceaver.assin.markets.Title
+import com.ceaver.assin.positions.Position
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.random.Random
@@ -23,46 +24,36 @@ fun Deposit.Factory.fromTestdata(
 fun Withdraw.Factory.fromTestdata(
         id: Long = Random.nextLong(),
         date: LocalDate = LocalDate.now().plusDays(1),
-        title: Title,
-        label: String?,
-        quantity: BigDecimal,
         valueCrypto: BigDecimal = 101.toBigDecimal(),
         valueFiat: BigDecimal = 1001.toBigDecimal(),
         comment: String = "Coinbase",
-        positionId: Long
+        sourcePosition: Position
 ): Withdraw {
     return Withdraw(
             id = id,
             date = date,
-            title = title,
-            label = label,
-            quantity = quantity,
             valueCrypto = valueCrypto,
             valueFiat = valueFiat,
             comment = comment,
-            positionId = positionId
+            sourcePositionId = sourcePosition.id,
+            sourcePosition = sourcePosition
     )
 }
 
 fun Split.Factory.fromTestdata(
         id: Long = Random.nextLong(),
         date: LocalDate = LocalDate.now().plusDays(2),
-        title: Title,
-        label: String?,
         quantity: BigDecimal,
-        remaining: BigDecimal,
         comment: String = "Coinbase",
-        positionId: Long
+        splitPosition: Position
 ): Split {
     return Split(
             id = id,
             date = date,
-            title = title,
-            label = label,
             quantity = quantity,
-            remaining = remaining,
             comment = comment,
-            positionId = positionId
+            sourcePositionId = splitPosition.id,
+            sourcePosition = splitPosition
     )
 }
 
@@ -72,13 +63,10 @@ fun Trade.Factory.fromTestdata(
         buyTitle: Title = CryptoTitle.fromTestdata(id = "crypto_ETH", symbol = "ETH", name = "Ethereum", rank = 2),
         buyLabel: String? = "Trading",
         buyQuantity: BigDecimal = BigDecimal.TEN,
-        sellTitle: Title,
-        sellLabel: String?,
-        sellQuantity: BigDecimal,
         valueCrypto: BigDecimal = BigDecimal.ONE,
         valueFiat: BigDecimal = 10000.toBigDecimal(),
         comment: String = "Coinbase",
-        positionId: Long
+        sellPosition: Position
 ): Trade {
     return Trade(
             id = id,
@@ -86,62 +74,49 @@ fun Trade.Factory.fromTestdata(
             buyTitle = buyTitle,
             buyLabel = buyLabel,
             buyQuantity = buyQuantity,
-            sellTitle = sellTitle,
-            sellLabel = sellLabel,
-            sellQuantity = sellQuantity,
             valueFiat = valueFiat,
             valueCrypto = valueCrypto,
             comment = comment,
-            positionId = positionId
+            sellPositionId = sellPosition.id,
+            sellPosition = sellPosition
     )
 }
 
 fun Merge.Factory.fromTestdata(
         id: Long = Random.nextLong(),
         date: LocalDate = LocalDate.now(),
-        title: Title = CryptoTitle.fromTestdata(),
-        label: String? = "Savings",
-        quantityPartA: BigDecimal = 10.toBigDecimal(),
-        quantityPartB: BigDecimal = 10.toBigDecimal(),
         valueFiat: BigDecimal = 200.toBigDecimal(),
         valueCrypto: BigDecimal = 2000.toBigDecimal(),
         comment: String = "Coinbase",
-        sourcePositionA: Long,
-        sourcePositionB: Long
+        mergePositionA: Position,
+        mergePositionB: Position
 ): Merge {
     return Merge(
             id = id,
             date = date,
-            title = title,
-            label = label,
-            quantityPartA = quantityPartA,
-            quantityPartB = quantityPartB,
             valueFiat = valueFiat,
             valueCrypto = valueCrypto,
             comment = comment,
-            sourcePositionA = sourcePositionA,
-            sourcePositionB = sourcePositionB
+            sourcePositionIdA = mergePositionA.id,
+            sourcePositionIdB = mergePositionB.id,
+            sourcePositionA = mergePositionA,
+            sourcePositionB = mergePositionB
     )
 }
 
 fun Move.Factory.fromTestdata(
         id: Long = Random.nextLong(),
         date: LocalDate = LocalDate.now(),
-        quantity: BigDecimal = 10.toBigDecimal(),
-        title: Title = CryptoTitle.fromTestdata(),
-        sourceLabel: String? = "Savings",
         targetLabel: String? = "Savings",
-        positionId: Long,
+        movePosition: Position,
         comment: String = "Coinbase"
 ): Move {
     return Move(
             id = id,
             date = date,
-            quantity = quantity,
-            title = title,
-            sourceLabel = sourceLabel,
             targetLabel = targetLabel,
-            positionId = positionId,
+            sourcePositionId = movePosition.id,
+            sourcePosition = movePosition,
             comment = comment
     )
 }

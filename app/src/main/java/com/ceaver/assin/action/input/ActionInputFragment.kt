@@ -155,30 +155,30 @@ class ActionInputFragment() : Fragment() {
     }
 
     private fun updateSpinnerFields(actionEntity: ActionEntity) {
-        if (actionEntity.buyTitleId != null) {
+//        if (actionEntity.buyTitleId != null) {
 //            actionInputFragmentBuySymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.buyTitle!!))
-        }
-        if (actionEntity.sellTitleId != null) {
+//        }
+//        if (actionEntity.sellTitleId != null) {
 //            actionInputFragmentSellSymbolSpinner.setSelection(viewModel.symbols.value!!.indexOf(actionEntity.sellTitle!!))
-        }
+//        }
     }
 
     private fun publishFields(actionEntity: ActionEntity) {
-        actionInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(actionEntity.actionDate))
-        actionInputFragmentCommentTextView.setText(actionEntity.comment.orEmpty())
-        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
-            ActionType.TRADE -> {
-                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
-                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
-            }
-            ActionType.DEPOSIT -> {
-                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
-            }
-            ActionType.WITHDRAW -> {
-                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
-            }
-            else -> throw IllegalStateException()
-        }
+//        actionInputFragmentTradeDateTextView.setText(CalendarHelper.convertDate(actionEntity.actionDate))
+//        actionInputFragmentCommentTextView.setText(actionEntity.comment.orEmpty())
+//        when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
+//            ActionType.TRADE -> {
+//                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
+//                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
+//            }
+//            ActionType.DEPOSIT -> {
+//                actionInputFragmentBuyAmountTextView.setText(if (actionEntity.buyQuantity != null) actionEntity.buyQuantity.toString() else "")
+//            }
+//            ActionType.WITHDRAW -> {
+//                actionInputFragmentSellAmountTextView.setText(if (actionEntity.sellQuantity != null) actionEntity.sellQuantity.toString() else "")
+//            }
+//            else -> throw IllegalStateException()
+//        }
     }
 
     private fun observeStatus() {

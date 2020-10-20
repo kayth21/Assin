@@ -1,8 +1,6 @@
 package com.ceaver.assin.action
 
 import com.ceaver.assin.R
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
@@ -11,12 +9,10 @@ import java.time.LocalDate
 data class Split(
         override val id: Long = 0,
         override val date: LocalDate = LocalDate.now(),
-        val title: Title,
-        val label: String?,
+        val sourcePositionId: Int,
+        val sourcePosition: Position? = null,
         val quantity: BigDecimal,
-        val remaining: BigDecimal,
-        val positionId: Long,
-        val comment: String? = null
+        override val comment: String? = null
 ) : Action {
 
     companion object Factory {
@@ -25,11 +21,8 @@ data class Split(
             return Split(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.splitTitle!!.toTitle(),
-                    label = actionDto.action.splitLabel,
-                    quantity = actionDto.action.splitQuantity!!,
-                    remaining = actionDto.action.splitRemaining!!,
-                    positionId = actionDto.action.positionId!!,
+                    sourcePositionId = actionDto.action.sourcePositionIds!![0],
+                    quantity = actionDto.action.quantity!!,
                     comment = actionDto.action.comment)
         }
 
@@ -37,21 +30,9 @@ data class Split(
             require(ActionType.SPLIT.name == csvRecord.get(0))
             return Split(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadById(csvRecord.get(2)),
-                    label = csvRecord.get(3).ifEmpty { null },
-                    quantity = csvRecord.get(4).toBigDecimal(),
-                    remaining = csvRecord.get(5).toBigDecimal(),
-                    positionId = csvRecord.get(6).toLong(),
-                    comment = csvRecord.get(7).ifEmpty { null })
-        }
-        fun fromPosition(position: Position, quantity: BigDecimal): Split {
-            return Split(
-                    quantity = quantity,
-                    remaining = position.quantity.minus(quantity),
-                    title = position.title,
-                    label = position.label,
-                    positionId = position.id
-            )
+                    sourcePositionId = csvRecord.get(2).toInt(),
+                    quantity = csvRecord.get(3).toBigDecimal(),
+                    comment = csvRecord.get(4).ifEmpty { null })
         }
     }
 
@@ -59,11 +40,8 @@ data class Split(
         return listOf(
                 ActionType.SPLIT.name,
                 date.toString(),
-                title.id,
-                label.orEmpty(),
+                sourcePositionId.toString(),
                 quantity.toPlainString(),
-                remaining.toPlainString(),
-                positionId.toString(),
                 comment.orEmpty())
     }
 
@@ -72,18 +50,15 @@ data class Split(
                 actionType = ActionType.SPLIT,
                 id = id,
                 actionDate = date,
-                splitTitleId = title.id,
-                splitLabel = label,
-                splitQuantity = quantity,
-                splitRemaining = remaining,
-                positionId = positionId,
+                sourcePositionIds = listOf(sourcePositionId),
+                quantity = quantity,
                 comment = comment
         )
     }
 
     override fun getActionType(): ActionType = ActionType.SPLIT
-    override fun getLeftImageResource(): Int = title.getIcon()
+    override fun getLeftImageResource(): Int = sourcePosition!!.title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.split
-    override fun getTitleText(): String =  "Split ${title.name} ${if (label == null) "" else "(${label}) "}Position"
-    override fun getDetailText(): String = "${quantity.add(remaining)} ${title.symbol} splitted into $quantity ${title.symbol} and $remaining ${title.symbol}"
+    override fun getTitleText(): String = "Split ${sourcePosition!!.title.name} ${if (sourcePosition.label == null) "" else "(${sourcePosition.label}) "}Position"
+    override fun getDetailText(): String = "${quantity.add(sourcePosition!!.quantity - quantity)} ${sourcePosition.title.symbol} splitted into $quantity ${sourcePosition.title.symbol} and ${sourcePosition.quantity - quantity} ${sourcePosition.title.symbol}"
 }

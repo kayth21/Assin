@@ -65,7 +65,7 @@ class PositionListFragment(val title: Title, val label: String?) : Fragment() {
 
     private fun withdraw(selectedPosition: Position) {
         lifecycleScope.launch {
-            ActionRepository.insertWithdraw(Withdraw.fromPosition(selectedPosition))
+            ActionRepository.insert(Withdraw.fromPosition(selectedPosition))
         }
     }
 }

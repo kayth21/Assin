@@ -6,6 +6,7 @@ import java.time.LocalDate
 interface Action {
     val id: Long
     val date: LocalDate
+    val comment: String?
     fun getLeftImageResource(): Int
     fun getRightImageResource(): Int
     fun getTitleText(): String

@@ -6,11 +6,14 @@ import com.ceaver.assin.alerts.AlertType
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.intentions.IntentionStatus
 import com.ceaver.assin.intentions.IntentionType
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.*
+
 
 class Converters {
 
@@ -67,4 +70,10 @@ class Converters {
 
     @TypeConverter
     fun toActionType(string: String?): ActionType? = string?.let { ActionType.valueOf(it) }
+
+    @TypeConverter
+    fun toIntList(string: String?): List<Int>? = string?.let { Gson().fromJson(it, object : TypeToken<List<Int>>() {}.type) }
+
+    @TypeConverter
+    fun fromIntList(listOfInt: List<Int>?): String? = listOfInt.let { Gson().toJson(it) }
 }

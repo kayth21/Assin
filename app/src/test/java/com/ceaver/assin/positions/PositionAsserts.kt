@@ -13,7 +13,7 @@ fun assertThatPosition(actual: Position): PositionIdAssert {
 
 class PositionIdAssert(actual: Position) : AbstractAssert<PositionIdAssert, Position>(actual, PositionIdAssert::class.java) {
 
-    fun hasId(positionId: Long) {
+    fun hasId(positionId: Int) {
         Assertions.assertThat(actual.id).isEqualTo(positionId)
     }
 

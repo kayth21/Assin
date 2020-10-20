@@ -1,22 +1,17 @@
 package com.ceaver.assin.action
 
 import com.ceaver.assin.R
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
-import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Move(
         override val id: Long = 0,
         override val date: LocalDate = LocalDate.now(),
-        val quantity: BigDecimal,
-        val title: Title,
-        val sourceLabel: String?,
+        val sourcePositionId: Int,
+        val sourcePosition: Position? = null,
         val targetLabel: String?,
-        val positionId: Long,
-        val comment: String? = null
+        override val comment: String? = null
 ) : Action {
 
     companion object Factory {
@@ -25,49 +20,28 @@ data class Move(
             return Move(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.moveTitle!!.toTitle(),
-                    sourceLabel = actionDto.action.moveSourceLabel,
-                    targetLabel = actionDto.action.moveTargetLabel,
-                    quantity = actionDto.action.moveQuantity!!,
-                    positionId = actionDto.action.positionId!!,
+                    sourcePositionId = actionDto.action.sourcePositionIds!![0],
+                    targetLabel = actionDto.action.label,
                     comment = actionDto.action.comment)
         }
 
-        suspend fun fromImport(csvRecord: CSVRecord): Move {
+        fun fromImport(csvRecord: CSVRecord): Move {
             require(ActionType.MOVE.name == csvRecord.get(0))
             return Move(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadById(csvRecord.get(2)),
-                    sourceLabel = csvRecord.get(3).ifEmpty { null },
-                    quantity = csvRecord.get(4).toBigDecimal(),
-                    positionId = csvRecord.get(5).toLong(),
-                    targetLabel = csvRecord.get(6).ifEmpty { null },
-                    comment = csvRecord.get(7).ifEmpty { null })
-        }
-
-        fun fromPosition(position: Position, label: String?): Move {
-            require(position.label != label)
-            return Move(
-                    date = LocalDate.now(),
-                    title = position.title,
-                    sourceLabel = position.label,
-                    targetLabel = label,
-                    quantity = position.quantity,
-                    positionId = position.id,
-                    comment = null) // TODO
+                    sourcePositionId = csvRecord.get(2).toInt(),
+                    targetLabel = csvRecord.get(3).ifEmpty { null },
+                    comment = csvRecord.get(4).ifEmpty { null })
         }
     }
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
-                actionType = ActionType.MOVE,
                 id = id,
+                actionType = ActionType.MOVE,
                 actionDate = date,
-                moveTitleId = title.id,
-                moveSourceLabel = sourceLabel,
-                moveTargetLabel = targetLabel,
-                moveQuantity = quantity,
-                positionId = positionId,
+                sourcePositionIds = listOf(sourcePositionId),
+                label = targetLabel,
                 comment = comment
         )
     }
@@ -76,18 +50,15 @@ data class Move(
         return listOf(
                 ActionType.MOVE.name,
                 date.toString(),
-                title.id,
-                sourceLabel.orEmpty(),
-                quantity.toPlainString(),
-                positionId.toString(),
+                sourcePositionId.toString(),
                 targetLabel.orEmpty(),
                 comment.orEmpty())
     }
 
     override fun getActionType(): ActionType = ActionType.MOVE
-    override fun getLeftImageResource(): Int = title.getIcon()
+    override fun getLeftImageResource(): Int = sourcePosition!!.title.getIcon()
     override fun getRightImageResource(): Int = R.drawable.mds // TODO
-    override fun getTitleText(): String = "Move ${title.name} Position"
-    override fun getDetailText(): String = "$quantity ${title.symbol} moved from ${if (sourceLabel == null) "Default" else "$sourceLabel "} to ${if (targetLabel == null) "Default" else "$targetLabel "}"
+    override fun getTitleText(): String = "Move ${sourcePosition!!.title.name} Position"
+    override fun getDetailText(): String = "${sourcePosition!!.quantity} ${sourcePosition.title.symbol} moved from ${if (sourcePosition.label == null) "Default" else "${sourcePosition.label} "} to ${if (targetLabel == null) "Default" else "$targetLabel "}"
 
 }

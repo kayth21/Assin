@@ -10,12 +10,12 @@ import java.time.LocalDate
 data class Deposit(
         override val id: Long = 0,
         override val date: LocalDate = LocalDate.now(),
+        val quantity: BigDecimal,
         val title: Title,
         val label: String?,
-        val quantity: BigDecimal,
-        val valueCrypto: BigDecimal,
         val valueFiat: BigDecimal,
-        val comment: String?
+        val valueCrypto: BigDecimal,
+        override val comment: String? = null
 ) : Action {
 
     companion object Factory {
@@ -24,11 +24,11 @@ data class Deposit(
             return Deposit(
                     id = actionDto.action.id,
                     date = actionDto.action.actionDate,
-                    title = actionDto.buyTitle!!.toTitle(),
-                    label = actionDto.action.buyLabel,
-                    quantity = actionDto.action.buyQuantity!!,
-                    valueCrypto = actionDto.action.valueCrypto!!,
+                    quantity = actionDto.action.quantity!!,
+                    title = actionDto.title!!.toTitle(),
+                    label = actionDto.action.label,
                     valueFiat = actionDto.action.valueFiat!!,
+                    valueCrypto = actionDto.action.valueCrypto!!,
                     comment = actionDto.action.comment)
         }
 
@@ -36,11 +36,11 @@ data class Deposit(
             require(ActionType.DEPOSIT.name == csvRecord.get(0))
             return Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
-                    title = TitleRepository.loadById(csvRecord.get(2)),
-                    label = csvRecord.get(3).ifEmpty { null },
-                    quantity = csvRecord.get(4).toBigDecimal(),
-                    valueCrypto = csvRecord.get(5).toBigDecimal(),
-                    valueFiat = csvRecord.get(6).toBigDecimal(),
+                    quantity = csvRecord.get(2).toBigDecimal(),
+                    title = TitleRepository.loadById(csvRecord.get(3)),
+                    label = csvRecord.get(4).ifEmpty { null },
+                    valueFiat = csvRecord.get(5).toBigDecimal(),
+                    valueCrypto = csvRecord.get(6).toBigDecimal(),
                     comment = csvRecord.get(7).ifEmpty { null })
         }
     }
@@ -49,24 +49,24 @@ data class Deposit(
         return listOf(
                 ActionType.DEPOSIT.name,
                 date.toString(),
+                quantity.toPlainString(),
                 title.id,
                 label.orEmpty(),
-                quantity.toPlainString(),
-                valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
+                valueCrypto.toPlainString(),
                 comment.orEmpty())
     }
 
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
-                actionType = ActionType.DEPOSIT,
                 id = id,
+                actionType = ActionType.DEPOSIT,
                 actionDate = date,
-                buyTitleId = title.id,
-                buyLabel = label,
-                buyQuantity = quantity,
-                valueCrypto = valueCrypto,
+                quantity = quantity,
+                titleId = title.id,
+                label = label,
                 valueFiat = valueFiat,
+                valueCrypto = valueCrypto,
                 comment = comment
         )
     }

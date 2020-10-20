@@ -203,7 +203,7 @@ class BackupFragment : Fragment() {
                     }
                 }.toList()
                 ActionRepository.deleteAll()
-                ActionRepository.insertActions(actions)
+                ActionRepository.insertAll(actions)
                 LogRepository.insert("Import actions from '$filePath' successful")
             } else {
                 LogRepository.insert("Import actions failed. '$filePath' not found")

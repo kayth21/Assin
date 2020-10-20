@@ -12,61 +12,24 @@ import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = "action",
-        indices = [Index(value = ["buyTitleId", "sellTitleId", "splitTitleId", "mergeTitleId", "moveTitleId"])],
+        indices = [Index(value = ["titleId"])],
         foreignKeys = [
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("buyTitleId"),
-                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
-            ForeignKey(
-                    entity = TitleEntity::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("sellTitleId"),
-                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
-            ForeignKey(
-                    entity = TitleEntity::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("splitTitleId"),
-                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
-            ForeignKey(
-                    entity = TitleEntity::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("mergeTitleId"),
-                    onDelete = ForeignKey.RESTRICT), // TODO but what if..?
-            ForeignKey(
-                    entity = TitleEntity::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("moveTitleId"),
+                    childColumns = arrayOf("titleId"),
                     onDelete = ForeignKey.RESTRICT) // TODO but what if..?
         ])
 data class ActionEntity(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
-        var actionDate: LocalDate = LocalDate.now(),
-        var buyTitleId: String? = null,
-        var buyLabel: String? = null,
-        var buyQuantity: BigDecimal? = null,
-        var sellTitleId: String? = null,
-        var sellLabel: String? = null,
-        var sellQuantity: BigDecimal? = null,
-        var comment: String? = null,
         val actionType: ActionType,
-        val positionId: Long? = null,
-        val splitQuantity: BigDecimal? = null,
-        val splitRemaining: BigDecimal? = null,
-        val splitTitleId: String? = null,
-        val splitLabel: String? = null,
-        val mergeTitleId: String? = null,
-        val mergeLabel: String? = null,
-        val mergeQuantityA: BigDecimal? = null,
-        val mergeQuantityB: BigDecimal? = null,
-        val mergeSourcePositionA: Long? = null,
-        val mergeSourcePositionB: Long? = null,
-        val moveTitleId: String? = null,
-        val moveSourceLabel: String? = null,
-        val moveTargetLabel: String? = null,
-        var moveQuantity: BigDecimal? = null,
+        var actionDate: LocalDate = LocalDate.now(),
+        val sourcePositionIds: List<Int>? = null,
+        var quantity: BigDecimal? = null,
+        var titleId: String? = null,
+        var label: String? = null,
+        val valueFiat: BigDecimal? = null,
         val valueCrypto: BigDecimal? = null,
-        val valueFiat: BigDecimal? = null
+        var comment: String? = null
 ) : Parcelable
