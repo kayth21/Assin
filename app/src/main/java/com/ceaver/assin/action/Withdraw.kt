@@ -30,6 +30,14 @@ data class Withdraw(
             )
         }
 
+        fun fromPosition(position: Position): Withdraw {
+            return Withdraw(
+                    sourcePositionId = position.id,
+                    valueFiat = position.title.fiatQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.quantity),
+                    valueCrypto = position.title.cryptoQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.quantity)
+            )
+        }
+
         fun fromImport(csvRecord: CSVRecord): Withdraw {
             require(ActionType.WITHDRAW.name == csvRecord.get(0))
             return Withdraw(
@@ -38,14 +46,6 @@ data class Withdraw(
                     valueFiat = csvRecord.get(3).toBigDecimal(),
                     valueCrypto = csvRecord.get(4).toBigDecimal(),
                     comment = csvRecord.get(5).ifEmpty { null }
-            )
-        }
-
-        fun fromPosition(position: Position): Withdraw {
-            return Withdraw(
-                    sourcePositionId = position.id,
-                    valueFiat = position.title.fiatQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.quantity),
-                    valueCrypto = position.title.cryptoQuotes.price.toBigDecimal(MathContext.DECIMAL32).times(position.quantity)
             )
         }
     }

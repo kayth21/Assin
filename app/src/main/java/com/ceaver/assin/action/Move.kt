@@ -35,6 +35,15 @@ data class Move(
         }
     }
 
+    override fun toExport(): List<String> {
+        return listOf(
+                ActionType.MOVE.name,
+                date.toString(),
+                sourcePositionId.toString(),
+                targetLabel.orEmpty(),
+                comment.orEmpty())
+    }
+
     override fun toActionEntity(): ActionEntity {
         return ActionEntity(
                 id = id,
@@ -44,15 +53,6 @@ data class Move(
                 label = targetLabel,
                 comment = comment
         )
-    }
-
-    override fun toExport(): List<String> {
-        return listOf(
-                ActionType.MOVE.name,
-                date.toString(),
-                sourcePositionId.toString(),
-                targetLabel.orEmpty(),
-                comment.orEmpty())
     }
 
     override fun getActionType(): ActionType = ActionType.MOVE

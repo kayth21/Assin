@@ -53,12 +53,12 @@ data class Trade(
         return listOf(
                 ActionType.TRADE.name,
                 date.toString(),
-                sellPositionId!!.toString(),
+                sellPositionId.toString(),
+                buyQuantity.toPlainString(),
                 buyTitle.id,
                 buyLabel.orEmpty(),
-                buyQuantity.toPlainString(),
-                valueCrypto.toPlainString(),
                 valueFiat.toPlainString(),
+                valueCrypto.toPlainString(),
                 comment.orEmpty())
     }
 

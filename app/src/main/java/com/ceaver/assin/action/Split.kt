@@ -26,7 +26,7 @@ data class Split(
                     comment = actionDto.action.comment)
         }
 
-        suspend fun fromImport(csvRecord: CSVRecord): Split {
+        fun fromImport(csvRecord: CSVRecord): Split {
             require(ActionType.SPLIT.name == csvRecord.get(0))
             return Split(
                     date = LocalDate.parse(csvRecord.get(1)),
