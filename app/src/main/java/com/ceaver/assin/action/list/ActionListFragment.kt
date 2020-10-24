@@ -1,5 +1,6 @@
 package com.ceaver.assin.action.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,16 +9,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.databinding.ActionListFragmentBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.action_list_fragment.*
 import kotlinx.coroutines.launch
 
 
@@ -35,11 +38,17 @@ class ActionListFragment : Fragment() {
         val binding: ActionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.action_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.actionList.adapter = actionListAdapter
-        binding.createTradeButton.setOnClickListener { findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE)) }
-        binding.actionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        binding.actionListFragmentRecyclerView.adapter = actionListAdapter
+        binding.actionListFragmentRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        binding.actionListFragmentAddActionFloatingButton.setOnClickListener { findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE)) }
 
-        viewModel.titles.observe(viewLifecycleOwner, Observer { actionListAdapter.submitList(it.reversed()) })
+        viewModel.titles.observe(viewLifecycleOwner) { actionListAdapter.submitList(it.reversed()) }
+
+        actionListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                actionListFragmentRecyclerView.scrollToPosition(0) // to scroll to the top on undo action
+            }
+        })
 
         return binding.root
     }
@@ -55,13 +64,26 @@ class ActionListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        if (item.groupId == 3 && item.itemId == 0) {
-            lifecycleScope.launch {
-                val selectedTrade = actionListAdapter.currentLongClickAction!!
-                // TODO Delete... could be tricky meanwhile actions are "linked" to positions. Maybe allow only last element to be deleted.
-                ActionRepository.delete(selectedTrade)
-            }
+        if (item.itemId == ActionListAdapter.MENU_ITEM_DELETE) {
+            onDeleteItemClick()
         }
         return super.onContextItemSelected(item)
+    }
+
+    private fun onDeleteItemClick() {
+        lifecycleScope.launch {
+            val selectedTrade = actionListAdapter.currentLongClickAction!!
+            if (ActionRepository.isLatest(selectedTrade)) {
+                ActionRepository.delete(selectedTrade)
+                Snackbar.make(actionListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
+                        .setAction("Undo") { lifecycleScope.launch { ActionRepository.insert(selectedTrade) } }
+                        .show()
+            } else
+                AlertDialog.Builder(requireContext())
+                        .setTitle("Cannot remove this action")
+                        .setMessage("Actions are stacked on top of each other, that's why it is always only possible to remove the top action.")
+                        .setPositiveButton("Got it", null)
+                        .show()
+        }
     }
 }

@@ -1,15 +1,14 @@
 package com.ceaver.assin.action.list
 
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.databinding.ActionListRowBinding
+import kotlin.random.Random
 
-internal class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : ListAdapter<Action, ActionListAdapter.ViewHolder>(Action.Difference) {
+class ActionListAdapter(private val onClickListener: ActionListFragment.OnItemClickListener) : ListAdapter<Action, ActionListAdapter.ViewHolder>(Difference) {
 
     var currentLongClickAction: Action? = null
 
@@ -27,7 +26,7 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
     class ViewHolder(val binding: ActionListRowBinding) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(3, 0, 0, "Delete")
+            menu!!.add(Menu.NONE, MENU_ITEM_DELETE, Menu.NONE, "Remove")
         }
 
         fun bindItem(action: Action, onClickListener: ActionListFragment.OnItemClickListener) {
@@ -36,5 +35,17 @@ internal class ActionListAdapter(private val onClickListener: ActionListFragment
             itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(action) }
         }
+    }
+
+    object Difference : DiffUtil.ItemCallback<Action>() {
+        override fun areItemsTheSame(oldItem: Action, newItem: Action): Boolean =
+                oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Action, newItem: Action): Boolean =
+                oldItem.equals(newItem)
+    }
+
+    companion object {
+        val MENU_ITEM_DELETE = Random.nextInt()
     }
 }

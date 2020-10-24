@@ -50,6 +50,9 @@ object ActionRepository {
     suspend fun deleteAll() =
             dao.deleteAll()
 
+    suspend fun isLatest(selectedTrade: Action) =
+            dao.loadAll().maxByOrNull { it.action.id }!!.action.id == selectedTrade.id
+
     private val dao: ActionEntityDao
         get() {
             return database.actionDao()
