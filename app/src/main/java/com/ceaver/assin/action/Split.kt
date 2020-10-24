@@ -1,6 +1,5 @@
 package com.ceaver.assin.action
 
-import com.ceaver.assin.R
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
@@ -58,7 +57,7 @@ data class Split(
 
     override fun getActionType(): ActionType = ActionType.SPLIT
     override fun getLeftImageResource(): Int = sourcePosition!!.title.getIcon()
-    override fun getRightImageResource(): Int = R.drawable.split
+    override fun getRightImageResource(): Int = sourcePosition!!.title.getIcon()
     override fun getTitleText(): String = "Split ${sourcePosition!!.title.name} ${if (sourcePosition.label == null) "" else "(${sourcePosition.label}) "}Position"
     override fun getDetailText(): String = "${quantity.add(sourcePosition!!.quantity - quantity)} ${sourcePosition.title.symbol} splitted into $quantity ${sourcePosition.title.symbol} and ${sourcePosition.quantity - quantity} ${sourcePosition.title.symbol}"
 }

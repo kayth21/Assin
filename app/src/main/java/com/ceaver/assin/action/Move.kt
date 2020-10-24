@@ -1,6 +1,5 @@
 package com.ceaver.assin.action
 
-import com.ceaver.assin.R
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.time.LocalDate
@@ -57,7 +56,7 @@ data class Move(
 
     override fun getActionType(): ActionType = ActionType.MOVE
     override fun getLeftImageResource(): Int = sourcePosition!!.title.getIcon()
-    override fun getRightImageResource(): Int = R.drawable.mds // TODO
+    override fun getRightImageResource(): Int = sourcePosition!!.title.getIcon()
     override fun getTitleText(): String = "Move ${sourcePosition!!.title.name} Position"
     override fun getDetailText(): String = "${sourcePosition!!.quantity} ${sourcePosition.title.symbol} moved from ${if (sourcePosition.label == null) "Default" else "${sourcePosition.label} "} to ${if (targetLabel == null) "Default" else "$targetLabel "}"
 

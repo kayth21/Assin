@@ -14,17 +14,17 @@ object ActionRepository {
     suspend fun loadAll(): List<Action> {
         val actions = dao.loadAll().map { it.toAction() }
         val positions = PositionFactory.fromActions(actions, true)
-        return actions.map { addPosition(it, positions) }
+        return actions.map { mapToActionWithPosition(it, positions) }
     }
 
     fun loadAllObserved(): LiveData<List<Action>> =
             Transformations.map(dao.loadAllObserved()) {
                 val actions = it.map { it.toAction() }
                 val positions = PositionFactory.fromActions(actions, true)
-                actions.map { addPosition(it, positions) }
+                actions.map { mapToActionWithPosition(it, positions) }
             }
 
-    private fun addPosition(action: Action, positions: List<Position>): Action {
+    private fun mapToActionWithPosition(action: Action, positions: List<Position>): Action {
         return when (action.getActionType()) {
             ActionType.DEPOSIT -> action
             ActionType.WITHDRAW -> (action as Withdraw).copy(sourcePosition = positions.single { it.id == action.sourcePositionId })

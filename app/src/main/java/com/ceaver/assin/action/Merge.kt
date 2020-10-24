@@ -1,6 +1,5 @@
 package com.ceaver.assin.action
 
-import com.ceaver.assin.R
 import com.ceaver.assin.positions.Position
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
@@ -68,7 +67,7 @@ data class Merge(
 
     override fun getActionType(): ActionType = ActionType.MERGE
     override fun getLeftImageResource(): Int = sourcePositionA!!.title.getIcon()
-    override fun getRightImageResource(): Int = R.drawable.mds // TODO
+    override fun getRightImageResource(): Int = sourcePositionB!!.title.getIcon()
     override fun getTitleText(): String = "Merge ${sourcePositionA!!.title.name} ${if (sourcePositionA.label == null) "" else "(${sourcePositionA.label}) "}Position"
     override fun getDetailText(): String = "${sourcePositionA!!.quantity} ${sourcePositionA.title.symbol} and ${sourcePositionB!!.quantity} ${sourcePositionB.title.symbol} merged into ${sourcePositionA.quantity.add(sourcePositionB.quantity)} ${sourcePositionA.title.symbol}"
 
