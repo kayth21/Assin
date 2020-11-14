@@ -6,43 +6,44 @@
     <!--<group android:checkableBehavior="single">-->
     <item
         android:id="@+id/nav_actions"
-        android:icon="@drawable/ic_menu_manage"
+        android:icon="@drawable/action_icon"
         android:title="Action Log" />
     <item
         android:id="@+id/nav_alerts"
-        android:icon="@drawable/ic_menu_camera"
+        android:icon="@drawable/alert_icon"
         android:title="Alerts" />
     <item
-        android:id="@+id/nav_settings"
-        android:icon="@drawable/ic_menu_manage"
-        android:title="Settings" />
-    <item
         android:id="@+id/nav_backup"
-        android:icon="@drawable/ic_menu_slideshow"
+        android:icon="@drawable/backup_icon"
         android:title="Import/Export" />
     <item
-        android:id="@+id/nav_chat"
-        android:icon="@drawable/ic_menu_send"
-        android:title="Chat" />
+        android:id="@+id/nav_logging"
+        android:icon="@drawable/logging_icon"
+        android:title="Logging" />
     <item
-        android:id="@+id/nav_forum"
-        android:icon="@drawable/ic_menu_share"
-        android:title="Forum" />
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/settings_icon"
+        android:title="Settings" />
+
+    <item android:title="Community">
+        <menu>
+            <item
+                android:id="@+id/nav_chat"
+                android:icon="@drawable/chat_icon"
+                android:title="Chat" />
+        </menu>
+    </item>
+
     <item android:title="Development Team">
         <menu>
             <item
                 android:id="@+id/nav_contact"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/contact_icon"
                 android:title="Contact" />
             <item
                 android:id="@+id/nav_donate"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/donate_icon"
                 android:title="Donate" />
-            <item
-                android:id="@+id/nav_logging"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Logging" />
         </menu>
     </item>
-    <!--</group>-->
 </menu>

@@ -1,51 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="Alert"
+            name="alert"
             type="com.ceaver.assin.alerts.Alert" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical"
-        android:paddingBottom="10sp"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        android:paddingTop="10sp">
+        android:layout_height="46dp">
 
-        <TextView
-            android:id="@+id/alertSymbolTextView"
+        <ImageView
+            android:id="@+id/alertListRowImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/cred"
+            app:alertImageResource="@{alert}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:textSize="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/alertListRowAlertTitle"
+            app:layout_constraintStart_toEndOf="@+id/alertListRowImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Bitcoin (BTC)"
+            android:text="@{alert.titleText}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/alertRangeTextView"
+            android:id="@+id/alertListRowAlertSubtitle"
+            app:layout_constraintStart_toStartOf="@+id/alertListRowAlertTitle"
+            app:layout_constraintTop_toBottomOf="@+id/alertListRowAlertTitle"
+            tools:text="Price Alert"
+            android:text="@{alert.subtitleText}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alertSymbolTextView" />
+            android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/alertUpperTargetTextView"
+            android:id="@+id/alertListRowTargetTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="100000 USD"
+            android:text="@{alert.typeText}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/alertLowerTargetTextView"
+            android:id="@+id/alertListRowTargetSubtitle"
+            app:layout_constraintEnd_toEndOf="@+id/alertListRowTargetTitle"
+            app:layout_constraintTop_toBottomOf="@+id/alertListRowTargetTitle"
+            tools:text="active"
+            android:text="@{alert.targetText}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alertUpperTargetTextView"
-            android:layout_alignParentRight="true" />
+            android:layout_marginBottom="6dp"
+            android:textAlignment="viewEnd"
+            android:textSize="13sp" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_settings -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             R.id.nav_backup -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToBackupFragment())
             R.id.nav_chat -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
-            R.id.nav_forum -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             R.id.nav_contact -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             R.id.nav_donate -> Toast.makeText(applicationContext, "No Implementation", Toast.LENGTH_SHORT).show()
             R.id.nav_logging -> navController.navigate(HomeFragmentDirections.actionHomeFragmentToLogListFragment())

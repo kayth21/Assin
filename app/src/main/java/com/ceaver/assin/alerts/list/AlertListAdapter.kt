@@ -1,15 +1,14 @@
 package com.ceaver.assin.alerts.list
 
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.databinding.AlertListRowBinding
+import kotlin.random.Random
 
-internal class AlertListAdapter(private val onClickListener: AlertListFragment.OnItemClickListener) : ListAdapter<Alert, AlertListAdapter.ViewHolder>(Alert.Difference) {
+class AlertListAdapter(private val onClickListener: AlertListFragment.OnItemClickListener) : ListAdapter<Alert, AlertListAdapter.ViewHolder>(Difference) {
 
     var currentLongClickAlert: Alert? = null
 
@@ -27,16 +26,26 @@ internal class AlertListAdapter(private val onClickListener: AlertListFragment.O
     class ViewHolder(val binding: AlertListRowBinding) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(0, v!!.id, 0, "Delete")
+            menu!!.add(Menu.NONE, MENU_ITEM_DELETE, Menu.NONE, "Remove")
         }
 
         fun bindItem(alert: Alert, onClickListener: AlertListFragment.OnItemClickListener) {
-            binding.alertSymbolTextView.text = "${alert.title.symbol} (${alert.title.name})"
-            binding.alertLowerTargetTextView.text = "Lower Target: " + alert.source.minus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
-            binding.alertUpperTargetTextView.text = "Upper Target: " + alert.source.plus(alert.target).toPlainString() + " ${alert.referenceTitle.symbol}"
-            binding.alertRangeTextView.text = "Range (+/-): " + alert.target.toPlainString() + " ${alert.referenceTitle.symbol}"
+            binding.alert = alert
+            binding.executePendingBindings()
             itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(alert) }
         }
+    }
+
+    object Difference : DiffUtil.ItemCallback<Alert>() {
+        override fun areItemsTheSame(oldItem: Alert, newItem: Alert): Boolean =
+                oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Alert, newItem: Alert): Boolean =
+                oldItem.equals(newItem)
+    }
+
+    companion object {
+        val MENU_ITEM_DELETE = Random.nextInt()
     }
 }

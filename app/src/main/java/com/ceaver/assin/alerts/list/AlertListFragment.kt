@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceaver.assin.R
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.databinding.AlertListFragmentBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.alert_list_fragment.*
 import kotlinx.coroutines.launch
 
 class AlertListFragment : Fragment() {
@@ -33,11 +33,11 @@ class AlertListFragment : Fragment() {
         val binding: AlertListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.alert_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.alertList.adapter = alertListAdapter
-        binding.alertList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
-        binding.createAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
+        binding.alertListFragmentRecyclerView.adapter = alertListAdapter
+        binding.alertListFragmentRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        // binding.alertListFragmentAddAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
 
-        viewModel.alerts.observe(viewLifecycleOwner, Observer { alertListAdapter.submitList(it) })
+        viewModel.alerts.observe(viewLifecycleOwner) { alertListAdapter.submitList(it.sortedBy { alert -> alert.getTitleText() }) }
 
         return binding.root
     }
@@ -48,15 +48,24 @@ class AlertListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(alert: Alert) {
-            findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment(alert))
+            // findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment(alert))
         }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == AlertListAdapter.MENU_ITEM_DELETE) {
+            onDeleteItemClick()
+        }
+        return super.onContextItemSelected(item)
+    }
+
+    private fun onDeleteItemClick() {
         lifecycleScope.launch {
             val selectedAlert = alertListAdapter.currentLongClickAlert!!
             AlertRepository.delete(selectedAlert)
+            Snackbar.make(alertListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") { lifecycleScope.launch { AlertRepository.insert(selectedAlert) } }
+                    .show()
         }
-        return super.onContextItemSelected(item)
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.ceaver.assin.database.Database
-import java.util.*
 
 object TitleRepository {
 
@@ -50,25 +49,6 @@ object TitleRepository {
 
     suspend fun delete(titles: List<CustomTitle>) {
         dao.delete(titles.map { it.toEntity() })
-    }
-
-    suspend fun lookupPrice(symbol: Title, reference: Title): Optional<Double> { // TODO no need for Optional?
-        if (reference.symbol == "EUR" || reference.symbol == "CHF") {
-            TODO("not yet implemented")
-        }
-        if (symbol.symbol == "USD" || symbol.symbol == "EUR" || symbol.symbol == "CHF") {
-            TODO("not yet implemented")
-        }
-        if (reference.symbol == "USD" || reference.symbol == "BTC") {
-            val title = loadBySymbol(symbol.symbol)
-//            if (!title.isPresent) return Optional.empty()
-            return if (reference.symbol == "USD") Optional.of(title.fiatQuotes.price) else Optional.of(title.cryptoQuotes.price)
-        }
-        // symbol and reference can only be crypto here
-        val symbolTitle = loadBySymbol(symbol.symbol)
-        val referenceTitle = loadBySymbol(reference.symbol)
-//        if (!symbolTitle.isPresent || !referenceTitle.isPresent) return Optional.empty()
-        return Optional.of(symbolTitle.cryptoQuotes.price / referenceTitle.cryptoQuotes.price)
     }
 
     suspend fun marketUpdate(titlesToInsert: Set<Title>, titlesToUpdate: Set<Title>, titlesToDelete: Set<Title>) {

@@ -3,38 +3,24 @@ package com.ceaver.assin.alerts
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.ceaver.assin.logging.LogRepository
-import com.ceaver.assin.markets.TitleRepository
-import java.math.BigDecimal
 
 class AlertWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        AlertRepository.loadAll().forEach { checkAlert(it) }
+        AlertRepository.loadAll().forEach {
+            checkAlert(it)
+        }
         return Result.success()
     }
 
     private suspend fun checkAlert(alert: Alert) {
-        val price = TitleRepository.lookupPrice(alert.title, alert.referenceTitle)
-        if (price.isPresent) {
-            val currentPrice = BigDecimal.valueOf(price.get())
-            val result = alert.alertType.check(alert, currentPrice)
-            if (result.isPresent.not()) {
-                return
-            }
-            val it = result.get()
-            AlertRepository.update(it)
-            checkAlert(it)
-            AlertNotification.notify(alert.title, alert.referenceTitle, targetPrice(alert, currentPrice), currentPrice)
-        } else {
-            LogRepository.insert("Failed to check alert ${alert.title.symbol}/${alert.referenceTitle.symbol} (no path found).")
-        }
-    }
+        val result = alert.update()
+        val alert = result.first
+        val notification = result.second
 
-    private fun targetPrice(alert: Alert, currentPrice: BigDecimal): BigDecimal {
-        return when {
-            currentPrice <= (alert.source - alert.target) -> alert.source - alert.target
-            currentPrice >= (alert.source + alert.target) -> alert.source + alert.target
-            else -> throw IllegalStateException("Current Price: $currentPrice, Source: ${alert.source}, Target: ${alert.target}")
+        AlertRepository.update(alert)
+        if (notification != null) {
+            notification.push()
+            checkAlert(alert)
         }
     }
 }

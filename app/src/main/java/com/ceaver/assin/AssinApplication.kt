@@ -1,9 +1,15 @@
 package com.ceaver.assin
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.preference.PreferenceManager
+import androidx.core.content.ContextCompat
 import androidx.work.*
+import com.ceaver.assin.alerts.AlertNotification
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.preferences.Preferences
 import com.ceaver.assin.util.isConnected
@@ -36,6 +42,7 @@ class AssinApplication : Application() {
         applicationScope.launch {
             Timber.plant(Timber.DebugTree())
             setupRecurringWork()
+            setupNotificationChannels()
         }
     }
 
@@ -43,6 +50,22 @@ class AssinApplication : Application() {
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).setRequiresBatteryNotLow(true).build()
         val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).setConstraints(constraints).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(ASSIN_WORKER_ID, ExistingPeriodicWorkPolicy.REPLACE, backgroundProcess)
+    }
+
+    private fun setupNotificationChannels() {
+        // Create the NotificationChannel only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Alert Channel"
+            val description = "Notification if an alert reaches target"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val notificationChannel = NotificationChannel(AlertNotification.CHANNEL_ID, name, importance).also {
+                it.description = description
+                it.enableLights(true)
+                it.lightColor = Color.BLUE
+            }
+            // Register the channel with the system; you can't change the importance or other notification behaviors after this
+            ContextCompat.getSystemService(appContext!!, NotificationManager::class.java)!!.createNotificationChannel(notificationChannel)
+        }
     }
 
     companion object {

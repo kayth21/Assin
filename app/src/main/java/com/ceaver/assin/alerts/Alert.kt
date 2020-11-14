@@ -1,68 +1,23 @@
 package com.ceaver.assin.alerts
 
-import android.os.Parcelable
-import androidx.recyclerview.widget.DiffUtil
-import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitleRepository
-import kotlinx.android.parcel.Parcelize
-import org.apache.commons.csv.CSVRecord
+import com.ceaver.assin.notification.AssinNotification
 import java.math.BigDecimal
 
-@Parcelize
-data class Alert(//
-        val id: Long = 0,
-        val title: Title,
-        val referenceTitle: Title,
-        val alertType: AlertType,
-        val source: BigDecimal,
-        val target: BigDecimal) : Parcelable {
+interface Alert {
+    val id: Long
+    val active: Boolean
+    val last: BigDecimal
+    val target: BigDecimal
+    val diff: BigDecimal?
 
-    fun isNew(): Boolean = this.id == 0L;
+    fun update(): Pair<Alert, AssinNotification?>
 
-    companion object Factory {
-        fun fromDto(dto: AlertDto): Alert {
-            return Alert(
-                    id = dto.alert.id,
-                    title = dto.title.toTitle(),
-                    referenceTitle = dto.referenceTitle.toTitle(),
-                    alertType = dto.alert.alertType,
-                    source = dto.alert.source,
-                    target = dto.alert.target
-            )
-        }
+    fun toEntity(): AlertEntity
+    fun toExport(): List<String>
 
-        suspend fun fromImport(record: CSVRecord): Alert {
-            return Alert(
-                    title = TitleRepository.loadBySymbol(record.get(0)),
-                    referenceTitle = TitleRepository.loadBySymbol(record.get(1)),
-                    alertType = AlertType.valueOf(record.get(2)),
-                    source = record.get(3).toBigDecimal(),
-                    target = record.get(4).toBigDecimal())
-        }
-    }
-
-    fun toEntity(): AlertEntity {
-        return AlertEntity(
-                id = id,
-                titleId = title.id,
-                referenceTitleId = referenceTitle.id,
-                alertType = alertType,
-                source = source,
-                target = target
-        )
-    }
-
-    fun toExport(): List<String> {
-        return listOf(title.symbol, referenceTitle.symbol, alertType.name, source.toPlainString(), target.toPlainString())
-    }
-
-    object Difference : DiffUtil.ItemCallback<Alert>() {
-        override fun areItemsTheSame(oldItem: Alert, newItem: Alert): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Alert, newItem: Alert): Boolean {
-            return oldItem == newItem
-        }
-    }
+    fun getImageResource(): Int
+    fun getTitleText(): String
+    fun getSubtitleText(): String
+    fun getTypeText(): String
+    fun getTargetText(): String
 }

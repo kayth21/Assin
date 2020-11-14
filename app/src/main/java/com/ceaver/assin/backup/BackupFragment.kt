@@ -14,6 +14,8 @@ import androidx.work.*
 import com.ceaver.assin.action.*
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
+import com.ceaver.assin.alerts.AlertType
+import com.ceaver.assin.alerts.PriceAlert
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.logging.LogRepository
@@ -219,7 +221,15 @@ class BackupFragment : Fragment() {
             if (File(filePath).exists()) {
                 val reader = Files.newBufferedReader(Paths.get(sourceDirectory.path + "/" + ALERT_FILE_NAME))
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-                val alerts = csvParser.map { Alert.fromImport(it) }.toList()
+                val alerts: List<Alert> = csvParser.map {
+                    when (AlertType.valueOf(it.get(0))) {
+                        AlertType.PRICE -> PriceAlert.fromImport(it)
+                        AlertType.MARKETCAP -> TODO()
+                        AlertType.DOMINANCE -> TODO()
+                        AlertType.PORTFOLIO -> TODO()
+                        AlertType.RANKING -> TODO()
+                    }
+                }.toList()
                 AlertRepository.deleteAll()
                 AlertRepository.insert(alerts)
                 LogRepository.insert("Import alerts from '$filePath' successful")

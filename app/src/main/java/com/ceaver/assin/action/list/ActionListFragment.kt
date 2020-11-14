@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.action_list_fragment.*
 import kotlinx.coroutines.launch
 
-
 class ActionListFragment : Fragment() {
 
     private val actionListAdapter = ActionListAdapter(OnListItemClickListener())
@@ -59,7 +58,7 @@ class ActionListFragment : Fragment() {
 
     private inner class OnListItemClickListener : OnItemClickListener {
         override fun onItemClick(item: Action) {
-            findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(item.getActionType(), item.toActionEntity()))
+            // findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(item.getActionType(), item.toActionEntity()))
         }
     }
 

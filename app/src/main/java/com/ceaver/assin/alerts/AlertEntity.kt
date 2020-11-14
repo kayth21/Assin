@@ -11,26 +11,27 @@ import java.math.BigDecimal
 
 @Parcelize
 @Entity(tableName = "alert",
-        indices = [Index(value = ["titleId", "referenceTitleId"])],
+        indices = [Index(value = ["baseTitleId", "quoteTitleId"])],
         foreignKeys = [
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("titleId"),
+                    childColumns = arrayOf("baseTitleId"),
                     onDelete = ForeignKey.CASCADE),
             ForeignKey(
                     entity = TitleEntity::class,
                     parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("referenceTitleId"),
+                    childColumns = arrayOf("quoteTitleId"),
                     onDelete = ForeignKey.CASCADE)])
 data class AlertEntity(//
         @PrimaryKey(autoGenerate = true)
         val id: Long = 0,
-        val titleId: String,
-        val referenceTitleId: String,
-        val alertType: AlertType,
-        val source: BigDecimal,
-        val target: BigDecimal) : Parcelable {
-
-    fun isNew(): Boolean = this.id == 0L;
+        val type: AlertType,
+        val active: Boolean,
+        val baseTitleId: String? = null,
+        val quoteTitleId: String? = null,
+        val last: BigDecimal,
+        val target: BigDecimal,
+        val diff: BigDecimal? = null
+) : Parcelable {
 }
