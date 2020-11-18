@@ -8,6 +8,12 @@ import com.ceaver.assin.assets.overview.AssetOverviewFactory
 
 object AssetRepository {
 
+    suspend fun loadAssetOverview(): AssetOverview =
+            AssetOverviewFactory.fromAssets(loadAllAssets())
+
+    suspend fun loadAllAssets(): List<Asset> =
+            AssetFactory.fromActions(ActionRepository.loadAll())
+
     fun loadAssetOverviewObserved(): LiveData<AssetOverview> =
             Transformations.map(loadAllAssetsObserved()) { AssetOverviewFactory.fromAssets(it) }
 

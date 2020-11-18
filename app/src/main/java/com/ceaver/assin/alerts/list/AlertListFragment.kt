@@ -37,7 +37,7 @@ class AlertListFragment : Fragment() {
         binding.alertListFragmentRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
         // binding.alertListFragmentAddAlertButton.setOnClickListener { findNavController().navigate(AlertListFragmentDirections.actionAlertListActivityToAlertInputFragment()) }
 
-        viewModel.alerts.observe(viewLifecycleOwner) { alertListAdapter.submitList(it.sortedBy { alert -> alert.getTitleText() }) }
+        viewModel.alerts.observe(viewLifecycleOwner) { alertListAdapter.submitList(it.sortedBy { alert -> alert.getListRowTitleText() }) }
 
         return binding.root
     }

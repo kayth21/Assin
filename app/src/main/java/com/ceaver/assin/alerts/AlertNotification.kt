@@ -1,9 +1,7 @@
 package com.ceaver.assin.alerts
 
 import com.ceaver.assin.R
-import com.ceaver.assin.markets.Title
 import com.ceaver.assin.notification.AssinNotification
-import java.math.BigDecimal
 
 class AlertNotification(private val smallImage: Int, private val largeImage: Int, private val title: String, private val text: String) : AssinNotification() {
     override fun getSmallIcon(): Int = smallImage
@@ -15,20 +13,16 @@ class AlertNotification(private val smallImage: Int, private val largeImage: Int
     companion object {
         val CHANNEL_ID = AlertNotification::class.simpleName!!
 
-        fun upperTarget(baseTitle: Title, targetPrice: BigDecimal, quoteTitle: Title): AssinNotification {
-            return target(R.drawable.uptrend_notification_icon, baseTitle, targetPrice, quoteTitle, "up")
+        fun upperTarget(largeIcon: Int, title: String, text: String): AssinNotification {
+            return target(R.drawable.uptrend_notification_icon, largeIcon, title, text)
         }
 
-        fun lowerTarget(baseTitle: Title, targetPrice: BigDecimal, quoteTitle: Title): AssinNotification {
-            return target(R.drawable.downtrend_notification_icon, baseTitle, targetPrice, quoteTitle, "down")
+        fun lowerTarget(largeIcon: Int, title: String, text: String): AssinNotification {
+            return target(R.drawable.downtrend_notification_icon, largeIcon, title, text)
         }
 
-        private fun target(smallIcon: Int, baseTitle: Title, targetPrice: BigDecimal, quoteTitle: Title, upOrDown: String): AssinNotification {
-            return AlertNotification(
-                    smallIcon,
-                    baseTitle.getIcon(),
-                    "${baseTitle.name} is $upOrDown!",
-                    "Price target of $targetPrice ${quoteTitle.symbol} reached.")
+        private fun target(smallIcon: Int, largeIcon: Int, title: String, text: String): AssinNotification {
+            return AlertNotification(smallIcon, largeIcon, title, text)
         }
     }
 }

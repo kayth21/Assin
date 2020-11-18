@@ -6,6 +6,6 @@ import com.ceaver.assin.extensions.setInactive
 
 @BindingAdapter("alertImageResource")
 fun ImageView.setAlertImageResource(alert: Alert) {
-    setImageResource(alert.getImageResource())
+    setImageResource(alert.getBaseImageResource())
     setInactive(!alert.active)
 }

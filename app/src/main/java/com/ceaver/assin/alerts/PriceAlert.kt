@@ -4,7 +4,6 @@ import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitlePrice
 import com.ceaver.assin.markets.TitleRepository
-import com.ceaver.assin.notification.AssinNotification
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
 
@@ -70,45 +69,20 @@ data class PriceAlert(
         )
     }
 
-    override fun update(): Pair<Alert, AssinNotification?> {
-        val currentPrice = TitlePrice.lookupPrice(baseTitle, quoteTitle).toBigDecimal()
-
-        if (!active)
-            return Pair(copy(last = currentPrice), null)
-
-        return when (diff) {
-            null -> { // one time alerts
-                when {
-                    last < target && currentPrice >= target ->
-                        Pair(copy(last = currentPrice, active = false), AlertNotification.upperTarget(baseTitle, target, quoteTitle))
-                    last > target && currentPrice <= target ->
-                        Pair(copy(last = currentPrice, active = false), AlertNotification.lowerTarget(baseTitle, target, quoteTitle))
-                    else ->
-                        Pair(copy(last = currentPrice), null)
-                }
-            }
-            else -> { // recurring alerts
-                val upperTarget = target + diff
-                val lowerTarget = target - diff
-                when {
-                    currentPrice >= upperTarget ->
-                        Pair(copy(last = currentPrice, target = upperTarget), AlertNotification.upperTarget(baseTitle, upperTarget, quoteTitle))
-                    currentPrice <= (lowerTarget) ->
-                        Pair(copy(last = currentPrice, target = lowerTarget), AlertNotification.lowerTarget(baseTitle, lowerTarget, quoteTitle))
-                    else ->
-                        Pair(copy(last = currentPrice), null)
-                }
-            }
-        }
+    override suspend fun lookupCurrent(): BigDecimal {
+        return TitlePrice.lookupPrice(baseTitle, quoteTitle).toBigDecimal()
     }
 
-    override fun getImageResource(): Int = baseTitle.getIcon()
+    override fun getBaseImageResource(): Int = baseTitle.getIcon()
+    override fun getBaseName(): String = baseTitle.name
+    override fun getQuoteNameShort(): String = quoteTitle.symbol
 
-    override fun getTitleText(): String = "${baseTitle.name} (${baseTitle.symbol})${if (active) "" else " (inactive)"}"
+    override fun getListRowTitleText(): String = "${baseTitle.name} (${baseTitle.symbol})${if (active) "" else " (inactive)"}"
+    override fun getListRowSubtitleText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    override fun getListRowTypeText(): String = "Target Price"
+    override fun getListRowTargetText(): String = "${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
 
-    override fun getTypeText(): String = "Target Price"
-
-    override fun getTargetText(): String = "${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
-
-    override fun getSubtitleText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    override fun copyWithCurrent(current: BigDecimal): Alert = copy(last = current)
+    override fun copyWithCurrentAndDeactivated(current: BigDecimal): Alert = copy(last = current, active = false)
+    override fun copyWithCurrentAndTarget(current: BigDecimal, target: BigDecimal): Alert = copy(last = current, target = target)
 }

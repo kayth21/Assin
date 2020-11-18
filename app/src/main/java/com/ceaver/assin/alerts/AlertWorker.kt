@@ -13,7 +13,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
     }
 
     private suspend fun checkAlert(alert: Alert) {
-        val result = alert.update()
+        val result = alert.evaluate()
         val alert = result.first
         val notification = result.second
 

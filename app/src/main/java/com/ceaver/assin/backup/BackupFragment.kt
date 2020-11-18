@@ -12,10 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
 import com.ceaver.assin.action.*
-import com.ceaver.assin.alerts.Alert
-import com.ceaver.assin.alerts.AlertRepository
-import com.ceaver.assin.alerts.AlertType
-import com.ceaver.assin.alerts.PriceAlert
+import com.ceaver.assin.alerts.*
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.logging.LogRepository
@@ -226,7 +223,7 @@ class BackupFragment : Fragment() {
                         AlertType.PRICE -> PriceAlert.fromImport(it)
                         AlertType.MARKETCAP -> TODO()
                         AlertType.DOMINANCE -> TODO()
-                        AlertType.PORTFOLIO -> TODO()
+                        AlertType.PORTFOLIO -> PortfolioAlert.fromImport(it)
                         AlertType.RANKING -> TODO()
                     }
                 }.toList()
