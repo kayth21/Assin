@@ -15,11 +15,21 @@
         android:layout_height="46dp">
 
         <ImageView
-            android:id="@+id/alertListRowImageView"
+            android:id="@+id/actionListRowQuoteImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            tools:src="@drawable/usd"
+            app:alertQuoteImageResource="@{alert}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/alertListRowBaseImageView" />
+
+        <ImageView
+            android:id="@+id/alertListRowBaseImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/cred"
-            app:alertImageResource="@{alert}"
+            app:alertBaseImageResource="@{alert}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -27,7 +37,7 @@
 
         <TextView
             android:id="@+id/alertListRowAlertTitle"
-            app:layout_constraintStart_toEndOf="@+id/alertListRowImageView"
+            app:layout_constraintStart_toEndOf="@+id/actionListRowQuoteImageView"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Bitcoin (BTC)"
             android:text="@{alert.listRowTitleText}"
@@ -59,8 +69,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="8dp"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/alertListRowTargetSubtitle"

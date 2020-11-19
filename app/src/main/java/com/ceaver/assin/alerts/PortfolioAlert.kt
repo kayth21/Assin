@@ -1,5 +1,6 @@
 package com.ceaver.assin.alerts
 
+import com.ceaver.assin.R
 import com.ceaver.assin.assets.overview.AssetOverviewValue
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
@@ -69,14 +70,15 @@ data class PortfolioAlert(
         return AssetOverviewValue.lookupPrice(quoteTitle)
     }
 
-    override fun getBaseImageResource(): Int = quoteTitle.getIcon() // TODO portfolio icon
+    override fun getBaseImageResource(): Int = R.drawable.polis
+    override fun getQuoteImageResource(): Int = quoteTitle.getIcon()
     override fun getBaseName(): String = "Portfolio"
     override fun getQuoteNameShort(): String = quoteTitle.symbol
 
-    override fun getListRowTitleText(): String = "${getBaseName()}${if (active) "" else " (inactive)"}"
-    override fun getListRowSubtitleText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
-    override fun getListRowTypeText(): String = "Target Price"
-    override fun getListRowTargetText(): String = "${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
+    override fun getListRowTitleText(): String = "${getBaseName()}/${quoteTitle.symbol}${if (active) "" else " (inactive)"}"
+    override fun getListRowSubtitleText(): String = "Portfolio Alert"
+    override fun getListRowTypeText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    override fun getListRowTargetText(): String = "Target: ${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
 
     override fun copyWithCurrent(current: BigDecimal): Alert = copy(last = current)
     override fun copyWithCurrentAndDeactivated(current: BigDecimal): Alert = copy(last = current, active = false)

@@ -221,10 +221,8 @@ class BackupFragment : Fragment() {
                 val alerts: List<Alert> = csvParser.map {
                     when (AlertType.valueOf(it.get(0))) {
                         AlertType.PRICE -> PriceAlert.fromImport(it)
-                        AlertType.MARKETCAP -> TODO()
-                        AlertType.DOMINANCE -> TODO()
+                        AlertType.MARKETCAP -> MarketcapAlert.fromImport(it)
                         AlertType.PORTFOLIO -> PortfolioAlert.fromImport(it)
-                        AlertType.RANKING -> TODO()
                     }
                 }.toList()
                 AlertRepository.deleteAll()

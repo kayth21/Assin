@@ -74,13 +74,14 @@ data class PriceAlert(
     }
 
     override fun getBaseImageResource(): Int = baseTitle.getIcon()
+    override fun getQuoteImageResource(): Int = quoteTitle.getIcon()
     override fun getBaseName(): String = baseTitle.name
     override fun getQuoteNameShort(): String = quoteTitle.symbol
 
-    override fun getListRowTitleText(): String = "${baseTitle.name} (${baseTitle.symbol})${if (active) "" else " (inactive)"}"
-    override fun getListRowSubtitleText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
-    override fun getListRowTypeText(): String = "Target Price"
-    override fun getListRowTargetText(): String = "${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
+    override fun getListRowTitleText(): String = "${baseTitle.symbol}/${quoteTitle.symbol}${if (active) "" else " (inactive)"}"
+    override fun getListRowSubtitleText(): String = "Price Alert"
+    override fun getListRowTypeText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    override fun getListRowTargetText(): String = "Target: ${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
 
     override fun copyWithCurrent(current: BigDecimal): Alert = copy(last = current)
     override fun copyWithCurrentAndDeactivated(current: BigDecimal): Alert = copy(last = current, active = false)

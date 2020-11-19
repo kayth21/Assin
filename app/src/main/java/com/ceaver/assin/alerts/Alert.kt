@@ -14,6 +14,7 @@ interface Alert {
     fun toExport(): List<String>
 
     fun getBaseImageResource(): Int
+    fun getQuoteImageResource(): Int
     fun getBaseName(): String
     fun getQuoteNameShort(): String
 

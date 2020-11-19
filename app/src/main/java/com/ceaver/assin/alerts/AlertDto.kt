@@ -16,9 +16,7 @@ data class AlertDto(
         return when (alert.type) {
             AlertType.PRICE -> PriceAlert.fromDto(this)
             AlertType.PORTFOLIO -> PortfolioAlert.fromDto(this)
-            AlertType.MARKETCAP -> TODO()
-            AlertType.DOMINANCE -> TODO()
-            AlertType.RANKING -> TODO()
+            AlertType.MARKETCAP -> MarketcapAlert.fromDto(this)
         }
     }
 }

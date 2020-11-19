@@ -14,7 +14,19 @@ object TitlePrice {
                 baseTitle.fiatQuotes.price / quoteTitle.fiatQuotes.price
             else ->
                 TODO("no implementation for market pair ${baseTitle.symbol}/${quoteTitle.symbol}.")
+        }
+    }
 
+    fun lookupMarketcap(baseTitle: Title, quoteTitle: Title): Double {
+        return when {
+            quoteTitle.symbol == Preferences.getFiatTitleSymbol() ->
+                baseTitle.fiatQuotes.marketCap!!
+            quoteTitle.symbol == Preferences.getCryptoTitleSymbol() ->
+                baseTitle.cryptoQuotes.marketCap!!
+            baseTitle::class == quoteTitle::class ->
+                baseTitle.fiatQuotes.marketCap!! / quoteTitle.fiatQuotes.marketCap!!
+            else ->
+                TODO("no implementation for market pair ${baseTitle.symbol}/${quoteTitle.symbol}.")
         }
     }
 }
