@@ -1,6 +1,5 @@
 package com.ceaver.assin.alerts
 
-import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitlePrice
 import com.ceaver.assin.markets.TitleRepository
@@ -11,7 +10,7 @@ data class PriceAlert(
         override val id: Long = 0,
         override val active: Boolean = true,
         val baseTitle: Title,
-        val quoteTitle: Title,
+        override val quoteTitle: Title,
         override val last: BigDecimal,
         override val target: BigDecimal,
         override val diff: BigDecimal?
@@ -69,19 +68,16 @@ data class PriceAlert(
         )
     }
 
-    override suspend fun lookupCurrent(): BigDecimal {
-        return TitlePrice.lookupPrice(baseTitle, quoteTitle).toBigDecimal()
-    }
+    override suspend fun lookupCurrent(): BigDecimal = TitlePrice.lookupPrice(baseTitle, quoteTitle).toBigDecimal()
 
     override fun getBaseImageResource(): Int = baseTitle.getIcon()
     override fun getQuoteImageResource(): Int = quoteTitle.getIcon()
-    override fun getBaseName(): String = baseTitle.name
-    override fun getQuoteNameShort(): String = quoteTitle.symbol
 
-    override fun getListRowTitleText(): String = "${baseTitle.symbol}/${quoteTitle.symbol}${if (active) "" else " (inactive)"}"
-    override fun getListRowSubtitleText(): String = "Price Alert"
-    override fun getListRowTypeText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
-    override fun getListRowTargetText(): String = "Target: ${if (diff == null) "$target" else "${target - diff} / ${target + diff}"} ${quoteTitle.symbol}"
+    override fun getNotificationTitle(direction: String): String = "${baseTitle.name} Price $direction"
+    override fun getNotificationContent(): String = "Target of $target ${quoteTitle.symbol} reached."
+
+    override fun getBaseText(): String = baseTitle.symbol
+    override fun getAlertType(): String = "Price"
 
     override fun copyWithCurrent(current: BigDecimal): Alert = copy(last = current)
     override fun copyWithCurrentAndDeactivated(current: BigDecimal): Alert = copy(last = current, active = false)

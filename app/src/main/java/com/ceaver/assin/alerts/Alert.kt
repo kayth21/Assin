@@ -1,11 +1,14 @@
 package com.ceaver.assin.alerts
 
+import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.markets.Title
 import com.ceaver.assin.notification.AssinNotification
 import java.math.BigDecimal
 
 interface Alert {
     val id: Long
     val active: Boolean
+    val quoteTitle: Title
     val last: BigDecimal
     val target: BigDecimal
     val diff: BigDecimal?
@@ -15,19 +18,23 @@ interface Alert {
 
     fun getBaseImageResource(): Int
     fun getQuoteImageResource(): Int
-    fun getBaseName(): String
-    fun getQuoteNameShort(): String
 
-    fun getListRowTitleText(): String
-    fun getListRowSubtitleText(): String
-    fun getListRowTypeText(): String
-    fun getListRowTargetText(): String
+    fun getNotificationTitle(direction: String): String
+    fun getNotificationContent(): String
 
-    suspend fun lookupCurrent(): BigDecimal
+    fun getAlertType() : String
+    fun getBaseText() : String
+
+    fun getListRowTitleText(): String = "${getBaseText()}/${quoteTitle.symbol}${if (active) "" else " (inactive)"}"
+    fun getListRowSubtitleText(): String = "${getAlertType()} Alert"
+    fun getListRowLastText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    fun getListRowTargetText(): String = "Target: ${if (diff == null) "$target" else "${target - diff!!} / ${target + diff!!}"} ${quoteTitle.symbol}"
 
     fun copyWithCurrent(current: BigDecimal): Alert
     fun copyWithCurrentAndTarget(current: BigDecimal, target: BigDecimal): Alert
     fun copyWithCurrentAndDeactivated(current: BigDecimal): Alert
+
+    suspend fun lookupCurrent(): BigDecimal
 
     suspend fun evaluate(): Pair<Alert, AssinNotification?> {
         val current = lookupCurrent()
@@ -36,10 +43,10 @@ interface Alert {
             return Pair(copyWithCurrent(current), null)
 
         fun createUpperNotification(target: BigDecimal) =
-                AlertNotification.upperTarget(getBaseImageResource(), "${getBaseName()} up", "Target of $target ${getQuoteNameShort()} reached.")
+                AlertNotification.upperTarget(getBaseImageResource(), getNotificationTitle("Up"), getNotificationContent())
 
         fun createLowerNotification(target: BigDecimal) =
-                AlertNotification.lowerTarget(getBaseImageResource(), "${getBaseName()} down", "Target of $target ${getQuoteNameShort()} reached.")
+                AlertNotification.lowerTarget(getBaseImageResource(), getNotificationTitle("Down"), getNotificationContent())
 
         return when (diff) {
             null -> { // one time alerts
@@ -60,6 +67,4 @@ interface Alert {
             }
         }
     }
-
-
 }
