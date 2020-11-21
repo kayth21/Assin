@@ -1,7 +1,6 @@
 package com.ceaver.assin.alerts
 
 import com.ceaver.assin.markets.Title
-import com.ceaver.assin.markets.TitlePrice
 import com.ceaver.assin.markets.TitleRepository
 import org.apache.commons.csv.CSVRecord
 import java.math.BigDecimal
@@ -68,7 +67,7 @@ data class PriceAlert(
         )
     }
 
-    override suspend fun lookupCurrent(): BigDecimal = TitlePrice.lookupPrice(baseTitle, quoteTitle).toBigDecimal()
+    override suspend fun lookupCurrent(): BigDecimal = baseTitle.lookupPrice(quoteTitle).toBigDecimal()
 
     override fun getBaseImageResource(): Int = baseTitle.getIcon()
     override fun getQuoteImageResource(): Int = quoteTitle.getIcon()

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,7 +35,7 @@ class AssetListFragment : Fragment() {
         binding.assetDepositButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT)) }
         binding.assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
-        viewModel.assets.observe(viewLifecycleOwner, Observer { assetListAdapter.submitList(it.sortedBy { it.valueCrypto }.reversed()) })
+        viewModel.assets.observe(viewLifecycleOwner) { assetListAdapter.submitList(it.sortedBy { it.valueCrypto }.reversed()) }
 
         return binding.root
     }
@@ -52,22 +51,20 @@ class AssetListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        if (item.groupId == AssetListAdapter.CONTEXT_MENU_GROUP_ID) {
-            val selectedAsset = assetListAdapter.currentLongClickAsset!!
-            when {
-                item.itemId in setOf(AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID, AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID) -> {
-                    val actionType = when (item.itemId) {
-                        AssetListAdapter.CONTEXT_MENU_DEPOSIT_ITEM_ID -> ActionType.DEPOSIT
-                        AssetListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> ActionType.WITHDRAW
-                        else -> throw IllegalStateException()
-                    }
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(actionType, null, selectedAsset.title))
+        val selectedAsset = assetListAdapter.currentLongClickAsset!!
+        when (item.itemId) {
+            in setOf(AssetListAdapter.MENU_ITEM_DEPOSIT, AssetListAdapter.MENU_ITEM_WITHDRAW) -> {
+                val actionType = when (item.itemId) {
+                    AssetListAdapter.MENU_ITEM_DEPOSIT -> ActionType.DEPOSIT
+                    AssetListAdapter.MENU_ITEM_WITHDRAW -> ActionType.WITHDRAW
+                    else -> throw IllegalStateException()
                 }
-                item.itemId == AssetListAdapter.CONTEXT_MENU_INTENTION_ITEM_ID -> {
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.quantity))
-                }
-                else -> throw IllegalStateException()
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(actionType, null, selectedAsset.title))
             }
+            AssetListAdapter.MENU_ITEM_INTENTION -> {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.quantity))
+            }
+            else -> throw IllegalStateException()
         }
         return super.onContextItemSelected(item)
     }

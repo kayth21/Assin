@@ -1,9 +1,7 @@
 package com.ceaver.assin.assets.list
 
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.assets.Asset
@@ -12,14 +10,7 @@ import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.preferences.Preferences
 import kotlin.random.Random
 
-class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClickListener) : ListAdapter<Asset, AssetListAdapter.ViewHolder>(Asset.Difference) {
-
-    companion object {
-        val CONTEXT_MENU_GROUP_ID = Random.nextInt()
-        val CONTEXT_MENU_DEPOSIT_ITEM_ID = Random.nextInt()
-        val CONTEXT_MENU_WITHDRAW_ITEM_ID = Random.nextInt()
-        val CONTEXT_MENU_INTENTION_ITEM_ID = Random.nextInt()
-    }
+class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClickListener) : ListAdapter<Asset, AssetListAdapter.ViewHolder>(Difference) {
 
     var currentLongClickAsset: Asset? = null
 
@@ -37,9 +28,9 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
     class ViewHolder(val binding: AssetListRowBinding) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_DEPOSIT_ITEM_ID, 0, "Deposit")
-            menu.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_WITHDRAW_ITEM_ID, 1, "Withdraw")
-            menu.add(CONTEXT_MENU_GROUP_ID, CONTEXT_MENU_INTENTION_ITEM_ID, 2, "Intention")
+            menu!!.add(Menu.NONE, MENU_ITEM_DEPOSIT, Menu.NONE, "Deposit")
+            menu.add(Menu.NONE, MENU_ITEM_WITHDRAW, Menu.NONE, "Withdraw")
+            menu.add(Menu.NONE, MENU_ITEM_INTENTION, Menu.NONE, "Intention")
         }
 
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
@@ -55,5 +46,26 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
             itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(asset) }
         }
+    }
+
+    object Difference : DiffUtil.ItemCallback<Asset>() {
+        override fun areItemsTheSame(oldItem: Asset, newItem: Asset): Boolean {
+            return oldItem.title.id == newItem.title.id && oldItem.label == newItem.label
+        }
+
+        override fun areContentsTheSame(oldItem: Asset, newItem: Asset): Boolean {
+            return oldItem.quantity == newItem.quantity
+                    && oldItem.valueCrypto == newItem.valueCrypto
+                    && oldItem.valueFiat == newItem.valueFiat
+                    && oldItem.title.getPercentChange1hString() == newItem.title.getPercentChange1hString()
+                    && oldItem.title.getPercentChange24hString() == newItem.title.getPercentChange24hString()
+                    && oldItem.title.getPercentChange7dString() == newItem.title.getPercentChange7dString()
+        }
+    }
+
+    companion object {
+        val MENU_ITEM_DEPOSIT = Random.nextInt()
+        val MENU_ITEM_WITHDRAW = Random.nextInt()
+        val MENU_ITEM_INTENTION = Random.nextInt()
     }
 }

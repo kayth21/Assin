@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{"Value in " + viewModel.primaryTitle.name}'
+            android:text='@{"Value in " + viewModel.cryptoTitle.name}'
             app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText"
             app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText" />
 
@@ -70,7 +70,7 @@
             android:id="@+id/assetDetailOverviewFragmentValueInBtcValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueCrypto, viewModel.primaryTitle.symbol) + " " + viewModel.primaryTitle.symbol}'
+            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueCrypto, viewModel.cryptoTitle.symbol) + " " + viewModel.cryptoTitle.symbol}'
             app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentTotalPositionSizeValue"
             app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
 
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{"Value in " + viewModel.secondaryTitle.name}'
+            android:text='@{"Value in " + viewModel.fiatTitle.name}'
             app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentValueInBtcText"
             app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
 
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueFiat, viewModel.secondaryTitle.symbol) + " " + viewModel.secondaryTitle.symbol}'
+            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueFiat, viewModel.fiatTitle.symbol) + " " + viewModel.fiatTitle.symbol}'
             app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentValueInBtcValue"
             app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcValue" />
 

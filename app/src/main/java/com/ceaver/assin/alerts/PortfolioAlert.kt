@@ -1,7 +1,7 @@
 package com.ceaver.assin.alerts
 
 import com.ceaver.assin.R
-import com.ceaver.assin.assets.overview.AssetOverviewValue
+import com.ceaver.assin.assets.AssetRepository
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import org.apache.commons.csv.CSVRecord
@@ -64,7 +64,7 @@ data class PortfolioAlert(
         )
     }
 
-    override suspend fun lookupCurrent(): BigDecimal = AssetOverviewValue.lookupPrice(quoteTitle)
+    override suspend fun lookupCurrent(): BigDecimal = AssetRepository.loadAssetOverview().lookupValue(quoteTitle)
 
     override fun getBaseImageResource(): Int = R.drawable.polis
     override fun getQuoteImageResource(): Int = quoteTitle.getIcon()

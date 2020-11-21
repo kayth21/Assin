@@ -10,8 +10,8 @@ import com.ceaver.assin.preferences.Preferences
 class AssetDetailOverviewViewModel(val title: Title, val label: String?) : ViewModel() {
 
     val asset =  Transformations.map(AssetRepository.loadAllAssetsObserved()) { it.single { it.title.id == title.id && it.label == label } }
-    val primaryTitle = Preferences.getCryptoTitle()
-    val secondaryTitle = Preferences.getFiatTitle()
+    val cryptoTitle = Preferences.getCryptoTitle()
+    val fiatTitle = Preferences.getFiatTitle()
 
     class Factory(val title: Title, val label: String?) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
