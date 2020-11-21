@@ -20,7 +20,7 @@ interface Alert {
     fun getQuoteImageResource(): Int
 
     fun getNotificationTitle(direction: String): String
-    fun getNotificationContent(): String
+    fun getNotificationContent(target: BigDecimal): String
 
     fun getAlertType() : String
     fun getBaseText() : String
@@ -43,10 +43,10 @@ interface Alert {
             return Pair(copyWithCurrent(current), null)
 
         fun createUpperNotification(target: BigDecimal) =
-                AlertNotification.upperTarget(getBaseImageResource(), getNotificationTitle("Up"), getNotificationContent())
+                AlertNotification.upperTarget(getBaseImageResource(), getNotificationTitle("Up"), getNotificationContent(target))
 
         fun createLowerNotification(target: BigDecimal) =
-                AlertNotification.lowerTarget(getBaseImageResource(), getNotificationTitle("Down"), getNotificationContent())
+                AlertNotification.lowerTarget(getBaseImageResource(), getNotificationTitle("Down"), getNotificationContent(target))
 
         return when (diff) {
             null -> { // one time alerts

@@ -17,6 +17,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
         val alert = result.first
         val notification = result.second
 
+        // TODO instead of updating alerts one by one, update all by one. But be aware that an alert can be in that list more than once, store only latest.
         AlertRepository.update(alert)
         if (notification != null) {
             notification.push()

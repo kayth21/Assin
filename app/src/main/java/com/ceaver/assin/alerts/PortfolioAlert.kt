@@ -70,7 +70,7 @@ data class PortfolioAlert(
     override fun getQuoteImageResource(): Int = quoteTitle.getIcon()
 
     override fun getNotificationTitle(direction: String): String = "Portfolio $direction"
-    override fun getNotificationContent(): String = "Target of $target ${quoteTitle.symbol} reached."
+    override fun getNotificationContent(target: BigDecimal): String = "Target of $target ${quoteTitle.symbol} reached."
 
     override fun getBaseText(): String = getAlertType()
     override fun getAlertType(): String = "Portfolio"
