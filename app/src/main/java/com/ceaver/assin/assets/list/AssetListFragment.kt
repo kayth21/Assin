@@ -51,7 +51,6 @@ class AssetListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val selectedAsset = assetListAdapter.currentLongClickAsset!!
         when (item.itemId) {
             in setOf(AssetListAdapter.MENU_ITEM_DEPOSIT, AssetListAdapter.MENU_ITEM_WITHDRAW) -> {
                 val actionType = when (item.itemId) {
@@ -59,10 +58,12 @@ class AssetListFragment : Fragment() {
                     AssetListAdapter.MENU_ITEM_WITHDRAW -> ActionType.WITHDRAW
                     else -> throw IllegalStateException()
                 }
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(actionType, null, selectedAsset.title))
+                // val selectedAsset = assetListAdapter.currentLongClickAsset!!
+                // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(actionType, null, selectedAsset.title))
             }
             AssetListAdapter.MENU_ITEM_INTENTION -> {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.quantity))
+                // val selectedAsset = assetListAdapter.currentLongClickAsset!!
+                // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.quantity))
             }
             else -> throw IllegalStateException()
         }

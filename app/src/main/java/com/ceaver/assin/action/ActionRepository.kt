@@ -35,7 +35,7 @@ object ActionRepository {
         }
     }
 
-    suspend fun insert(action: Action) =
+    suspend fun insert(action: Action) : Long =
             action.toActionEntity().let { dao.insert(it) }
 
     suspend fun insertAll(actions: List<Action>) =

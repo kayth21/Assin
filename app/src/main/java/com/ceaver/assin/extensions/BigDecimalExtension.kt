@@ -18,12 +18,18 @@ fun BigDecimal.addZeroDotOneToLastDecimal(): BigDecimal {
     val string = this.stripTrailingZeros().toPlainString()
     val index = string.indexOf(".")
     val i = if (index < 0) 0 else string.length - index - 1
-    return this.add(BigDecimal.ONE.movePointLeft(i +1), MathContext.DECIMAL128)
+    return this.add(BigDecimal.ONE.movePointLeft(i + 1), MathContext.DECIMAL128)
 }
 
 fun BigDecimal.addZeroDotTwoToLastDecimal(): BigDecimal {
     val string = this.stripTrailingZeros().toPlainString()
     val index = string.indexOf(".")
     val i = if (index < 0) 0 else string.length - index - 1
-    return this.add(BigDecimal.valueOf(2).movePointLeft(i +1), MathContext.DECIMAL128)
+    return this.add(BigDecimal.valueOf(2).movePointLeft(i + 1), MathContext.DECIMAL128)
+}
+
+fun BigDecimal.asPercentOf(other: BigDecimal): BigDecimal {
+    return (BigDecimal.valueOf(100).divide(other, MathContext.DECIMAL32))
+            .times(this)
+            .subtract(BigDecimal.valueOf(100))
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +17,8 @@ import com.ceaver.assin.action.Withdraw
 import com.ceaver.assin.databinding.PositionListFragmentBinding
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.position_list_fragment.*
 import kotlinx.coroutines.launch
 
 class PositionListFragment(val title: Title, val label: String?) : Fragment() {
@@ -30,14 +31,14 @@ class PositionListFragment(val title: Title, val label: String?) : Fragment() {
         viewModel = viewModels<PositionListViewModel> { PositionListViewModel.Factory(title, label) }.value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding: PositionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.position_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.positionListFragmentPositionList.adapter = positionListAdapter
-        binding.positionListFragmentPositionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL)) // TODO seriously?
+        binding.positionListFragmentPositionList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
-        viewModel.positions.observe(viewLifecycleOwner, Observer { positionListAdapter.submitList(it.sortedByDescending { it.id }) })
+        viewModel.positions.observe(viewLifecycleOwner) { positionListAdapter.submitList(it.sortedByDescending { it.id }) }
 
         return binding.root
     }
@@ -53,19 +54,25 @@ class PositionListFragment(val title: Title, val label: String?) : Fragment() {
     }
 
     override fun onContextItemSelected(menuItem: MenuItem): Boolean {
-        if (menuItem.groupId == PositionListAdapter.CONTEXT_MENU_GROUP_ID) {
-            val selectedPosition = positionListAdapter.currentLongClickPosition!!
-            when (menuItem.itemId) {
-                PositionListAdapter.CONTEXT_MENU_WITHDRAW_ITEM_ID -> withdraw(selectedPosition)
-                else -> throw IllegalStateException()
-            }
+        when (menuItem.itemId) {
+            PositionListAdapter.MENU_ITEM_WITHDRAW -> onWithdrawClick()
         }
         return super.onContextItemSelected(menuItem)
     }
 
-    private fun withdraw(selectedPosition: Position) {
+    private fun onWithdrawClick() {
+        val selectedPosition = positionListAdapter.currentLongClickPosition!!
         lifecycleScope.launch {
-            ActionRepository.insert(Withdraw.fromPosition(selectedPosition))
+            val withdrawId = ActionRepository.insert(Withdraw.fromPosition(selectedPosition))
+            Snackbar.make(positionListFragmentCoordinatorLayout, "Position closed", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        lifecycleScope.launch {
+                            val withdrawAction = ActionRepository.loadById(withdrawId)
+                            if (ActionRepository.isLatest(withdrawAction))
+                                ActionRepository.delete(withdrawAction)
+                        }
+                    }
+                    .show()
         }
     }
 }

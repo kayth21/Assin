@@ -63,8 +63,8 @@ class ActionListFragment : Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == ActionListAdapter.MENU_ITEM_DELETE) {
-            onDeleteItemClick()
+        when (item.itemId) {
+            ActionListAdapter.MENU_ITEM_DELETE -> onDeleteItemClick()
         }
         return super.onContextItemSelected(item)
     }

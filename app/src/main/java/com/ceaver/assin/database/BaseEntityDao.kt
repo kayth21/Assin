@@ -8,7 +8,7 @@ import androidx.room.Update
 interface BaseEntityDao<T> {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(entity: T)
+    suspend fun insert(entity: T) : Long
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(vararg entities: T)

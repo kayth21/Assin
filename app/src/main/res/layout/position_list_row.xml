@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -14,56 +16,82 @@
         android:layout_height="wrap_content"
         android:padding="6dp">
 
-        <TextView
-            android:id="@+id/positionListRowPositionSize"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/positionListRowImageView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textStyle="bold"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:positionImageResource="@{position}"
+            tools:src="@drawable/btc" />
 
         <TextView
-            android:id="@+id/position_list_row_position_value_primary"
+            android:id="@+id/positionListRowPositionSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/positionListRowImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:positionListRowPositionSize="@{position}"
+            tools:text="2 BTC" />
 
         <TextView
-            android:id="@+id/position_list_row_position_value_secondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/position_list_row_position_value_primary" />
-
-        <TextView
-            android:id="@+id/positionListRowPositionOpenDate"
+            android:id="@+id/positionListRowPositionDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:positionListRowPositionDate="@{position}"
+            tools:text="2020/11/02 - 2021/05/03" />
 
         <TextView
-            android:id="@+id/positionListRowPositionCloseDate"
+            android:id="@+id/positionListRowOpenPositionValueFiat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="2dp"
             android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/positionListRowPositionOpenDate" />
+            app:layout_constraintStart_toStartOf="@id/positionListRowPositionSize"
+            app:layout_constraintTop_toBottomOf="@id/positionListRowPositionSize"
+            app:positionListRowOpenPositionValueFiat="@{position}"
+            tools:text="Open: 12500 USD" />
+
+        <TextView
+            android:id="@+id/positionListRowOpenPositionValueCrypto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/positionListRowOpenPositionValueFiat"
+            app:layout_constraintTop_toBottomOf="@id/positionListRowOpenPositionValueFiat"
+            app:positionListRowOpenPositionValueCrypto="@{position}"
+            tools:text="Open: 0.532 BTC" />
+
+        <TextView
+            android:id="@+id/positionListRowClosePositionValueFiat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@id/positionListRowPositionDate"
+            app:layout_constraintTop_toTopOf="@id/positionListRowOpenPositionValueFiat"
+            app:positionListRowClosePositionValueFiat="@{position}"
+            tools:text="Close: 35500 USD (+232%)" />
+
+        <TextView
+            android:id="@+id/positionListRowClosePositionValueCrypto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@id/positionListRowPositionDate"
+            app:layout_constraintTop_toTopOf="@id/positionListRowOpenPositionValueCrypto"
+            app:positionListRowClosePositionValueCrypto="@{position}"
+            tools:text="Close: 0.532 BTC (0%)" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

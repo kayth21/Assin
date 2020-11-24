@@ -9,7 +9,9 @@
             name="viewModel"
             type="com.ceaver.assin.positions.list.PositionListViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/positionListFragmentCoordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,5 +21,5 @@
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

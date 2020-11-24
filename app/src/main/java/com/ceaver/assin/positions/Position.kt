@@ -1,7 +1,7 @@
 package com.ceaver.assin.positions
 
-import androidx.recyclerview.widget.DiffUtil
 import com.ceaver.assin.action.*
+import com.ceaver.assin.extensions.asPercentOf
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
@@ -14,12 +14,34 @@ data class Position(
         val label: String?,
         val open: Quotes,
         val close: Quotes? = null,
-        val expired: Boolean = false
+        val expired: Boolean = false,
 ) {
 
-    fun isActive(): Boolean {
-        return close == null
-    }
+    val current: Quotes
+        get() = Quotes(LocalDate.now(), quantity * title.cryptoQuotes.price.toBigDecimal(), quantity * title.fiatQuotes.price.toBigDecimal())
+
+    val profitLossInPercentToCryptoTitle: BigDecimal
+        get() {
+            return current.valueCrypto.asPercentOf(open.valueCrypto)
+        }
+
+    val profitLossInPercentToFiatValue: BigDecimal
+        get() {
+            return current.valueFiat.asPercentOf(open.valueFiat)
+        }
+
+    val profitLossInPercentToClosedCryptoTitle: BigDecimal
+        get() {
+            return close!!.valueCrypto.asPercentOf(open.valueCrypto)
+        }
+
+    val profitLossInPercentToClosedFiatValue: BigDecimal
+        get() {
+            return close!!.valueFiat.asPercentOf(open.valueFiat)
+        }
+
+    fun isOpen(): Boolean = close == null
+    fun isClosed(): Boolean = !isOpen()
 
     fun withdraw(withdraw: Withdraw): Position {
         val closeQuotes = Quotes(date = withdraw.date, valueCrypto = withdraw.valueCrypto, valueFiat = withdraw.valueFiat)
@@ -68,45 +90,10 @@ data class Position(
         return copy(label = move.targetLabel)
     }
 
-    val currentValuePrimary: BigDecimal
-        get() {
-            return quantity * title.cryptoQuotes.price.toBigDecimal()
-        }
-
-    val currentValueSecondary: BigDecimal
-        get() {
-            return quantity * title.fiatQuotes.price.toBigDecimal()
-        }
-
-    val profitLossInPercentToPrimaryTitle: BigDecimal
-        get() {
-            return (BigDecimal.valueOf(100).divide(open.valueCrypto, MathContext.DECIMAL32))
-                    .times(currentValuePrimary)
-                    .subtract(BigDecimal.valueOf(100))
-        }
-
-    val profitLossInPercentToSecondaryValue: BigDecimal
-        get() {
-            return (BigDecimal.valueOf(100).divide(open.valueFiat, MathContext.DECIMAL32))
-                    .times(currentValueSecondary)
-                    .subtract(BigDecimal.valueOf(100))
-        }
-
-    object Difference : DiffUtil.ItemCallback<Position>() {
-        override fun areItemsTheSame(oldItem: Position, newItem: Position): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Position, newItem: Position): Boolean {
-            return oldItem == newItem
-        }
-    }
-
     data class Quotes(
             val date: LocalDate,
             val valueCrypto: BigDecimal,
-            val valueFiat: BigDecimal
-    )
+            val valueFiat: BigDecimal)
 
     companion object Factory {
         fun fromDeposit(id: Int, deposit: Deposit): Position {

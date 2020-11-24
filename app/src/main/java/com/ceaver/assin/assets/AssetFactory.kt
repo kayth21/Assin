@@ -8,7 +8,7 @@ object AssetFactory {
     fun fromActions(actions: List<Action>): List<Asset> {
         return PositionFactory.fromActions(actions)
                 .asSequence()
-                .map { Pair(Pair(it.title, it.label), if(it.isActive()) it.quantity else BigDecimal.ZERO) }.groupBy { it.first }
+                .map { Pair(Pair(it.title, it.label), if (it.isOpen()) it.quantity else BigDecimal.ZERO) }.groupBy { it.first }
                 .map { Pair(it.key, it.value.map { it.second }.reduce { x, y -> x + y }) }
                 .map {
                     Asset(
