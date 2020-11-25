@@ -21,7 +21,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#3F51B5"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
@@ -32,7 +31,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Crypto Assets: "
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueCrypto, assetOverviewViewModel.cryptoTitleSymbol) + " " + assetOverviewViewModel.cryptoTitleSymbol}'
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/assetOverviewFragmentTotalCryptoLabel"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
                 android:text="Total Fiat Assets:"
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/assetOverviewFragmentTotalFiatValue"
@@ -66,7 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text='@{assetOverviewViewModel.assetOverview == null ? "" : BigDecimalExtensionKt.toCurrencyString(assetOverviewViewModel.assetOverview.valueFiat, assetOverviewViewModel.fiatTitleSymbol) + " " + assetOverviewViewModel.fiatTitleSymbol}'
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

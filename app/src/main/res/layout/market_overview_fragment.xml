@@ -17,7 +17,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#3F51B5"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
@@ -28,7 +27,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Crypto Market Cap:"
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:text="@{@string/market_overview_marketcap_usd(marketOverviewViewModel.marketOverview.marketCapUsd / 1000000000, marketOverviewViewModel.marketOverview.dailyMarketCapChange)}"
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/marketOverviewFragmentMarketCapUsdLabel"
                 app:layout_constraintTop_toTopOf="@id/marketOverviewFragmentMarketCapUsdLabel" />
@@ -51,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
                 android:text="Bitcoin Dominance:"
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/marketOverviewFragmentBtcDominanceValue"
@@ -62,7 +58,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{@string/market_overview_bitcoin_dominance(marketOverviewViewModel.marketOverview.btcDominancePercentage)}"
-                android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/marketOverviewFragmentBtcDominanceLabel" />
