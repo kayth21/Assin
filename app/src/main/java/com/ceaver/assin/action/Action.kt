@@ -1,8 +1,9 @@
 package com.ceaver.assin.action
 
+import com.ceaver.assin.common.Exportable
 import java.time.LocalDate
 
-interface Action {
+interface Action : Exportable {
     val id: Long
     val date: LocalDate
     val comment: String?
@@ -12,5 +13,5 @@ interface Action {
     fun getDetailText(): String
     fun getActionType(): ActionType
     fun toActionEntity(): ActionEntity
-    fun toExport(): List<String>
+    override fun toExport(): List<String>
 }

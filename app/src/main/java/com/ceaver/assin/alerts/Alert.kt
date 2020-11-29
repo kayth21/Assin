@@ -1,11 +1,12 @@
 package com.ceaver.assin.alerts
 
+import com.ceaver.assin.common.Exportable
 import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.notification.AssinNotification
 import java.math.BigDecimal
 
-interface Alert {
+interface Alert : Exportable {
     val id: Long
     val active: Boolean
     val quoteTitle: Title
@@ -14,7 +15,7 @@ interface Alert {
     val diff: BigDecimal?
 
     fun toEntity(): AlertEntity
-    fun toExport(): List<String>
+    override fun toExport(): List<String>
 
     fun getBaseImageResource(): Int
     fun getQuoteImageResource(): Int

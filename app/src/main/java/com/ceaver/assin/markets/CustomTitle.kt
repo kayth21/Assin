@@ -2,6 +2,7 @@ package com.ceaver.assin.markets
 
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
+import com.ceaver.assin.common.Exportable
 import com.coinpaprika.apiclient.entity.QuoteEntity
 import kotlinx.android.parcel.Parcelize
 import org.apache.commons.csv.CSVRecord
@@ -17,7 +18,7 @@ data class CustomTitle(
         override val lastUpdated: LocalDateTime,
         override val cryptoQuotes: Title.Quotes,
         override val fiatQuotes: Title.Quotes
-) : Title {
+) : Title, Exportable {
 
     companion object {
         fun fromEntity(entity: TitleEntity): CustomTitle {
@@ -82,7 +83,7 @@ data class CustomTitle(
         return "%.1f".format(cryptoQuotes.percentChange7d) // TODO let the user decide if primary or secondary
     }
 
-    fun toExport(): List<String> {
+    override fun toExport(): List<String> {
         return listOf(
                 id,
                 symbol,

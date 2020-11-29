@@ -65,7 +65,6 @@ class AssetListFragment : Fragment() {
                 // val selectedAsset = assetListAdapter.currentLongClickAsset!!
                 // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToIntentionInputFragment(null, selectedAsset.title, selectedAsset.quantity))
             }
-            else -> throw IllegalStateException()
         }
         return super.onContextItemSelected(item)
     }

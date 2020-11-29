@@ -1,6 +1,7 @@
 package com.ceaver.assin.intentions
 
 import android.os.Parcelable
+import com.ceaver.assin.common.Exportable
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import kotlinx.android.parcel.Parcelize
@@ -18,7 +19,7 @@ data class Intention(
         var referencePrice: BigDecimal,
         var creationDate: LocalDate = LocalDate.now(),
         val status: IntentionStatus = IntentionStatus.WAIT,
-        var comment: String? = null) : Parcelable {
+        var comment: String? = null) : Parcelable, Exportable {
 
     companion object Factory {
         fun fromDto(dto: IntentionDto): Intention {
@@ -85,7 +86,7 @@ data class Intention(
         }
     }
 
-    fun toExport(): List<String> {
+    override fun toExport(): List<String> {
         return listOf(type.name, title.symbol, quantityAsString(), referenceTitle.symbol, referencePrice.toPlainString(), creationDate.toString(), status.name, comment.orEmpty())
     }
 }

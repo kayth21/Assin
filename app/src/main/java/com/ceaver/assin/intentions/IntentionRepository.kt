@@ -9,7 +9,7 @@ object IntentionRepository {
     suspend fun loadById(id: Long): Intention =
             dao.loadById(id).toIntention()
 
-    fun loadAll(): List<Intention> =
+    suspend fun loadAll(): List<Intention> =
             dao.loadAll().map { it.toIntention() }
 
     fun loadAllObserved(): LiveData<List<Intention>> =

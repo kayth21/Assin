@@ -1,0 +1,52 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ceaver.assin.backup.create.BackupCreateViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/backupCreateFragmentRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@={viewModel.radioChecked}">
+
+            <RadioButton
+                android:id="@+id/backupCreateFragmenNewBackupRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="create new backup"
+                android:textStyle="italic" />
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/backupCreateFragmentNewBackupEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+            android:ems="12"
+            android:enabled="false"
+            android:hint="new backup name"
+            android:inputType="textFilter"
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/backupCreateFragmentCreateBackupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:enabled="false"
+            android:text="Create Backup" />
+
+    </LinearLayout>
+
+</layout>

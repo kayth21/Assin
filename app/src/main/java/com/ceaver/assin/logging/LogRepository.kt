@@ -7,6 +7,9 @@ import java.util.*
 
 object LogRepository {
 
+    suspend fun loadLog(id: Long): LogEntity =
+            dao.loadById(id)
+
     suspend fun loadLog(identifier: UUID): LogEntity =
             dao.loadByUuid(identifier)
 

@@ -95,10 +95,32 @@
     <fragment
         android:id="@+id/backupFragment"
         android:name="com.ceaver.assin.backup.BackupFragment"
-        android:label="Backup and Restore" />
+        android:label="Backup and Restore" >
+        <action
+            android:id="@+id/action_backupFragment_to_backupCreateFragment"
+            app:destination="@id/backupCreateFragment" />
+        <action
+            android:id="@+id/action_backupFragment_to_backupRestoreFragment"
+            app:destination="@id/backupRestoreFragment" />
+        <action
+            android:id="@+id/action_backupFragment_to_backupDeleteFragment"
+            app:destination="@id/backupDeleteFragment" />
+    </fragment>
     <fragment
         android:id="@+id/logListFragment"
         android:name="com.ceaver.assin.logging.LogListFragment"
         android:label="Log Entries"
         tools:layout="@layout/log_list_fragment" />
+    <fragment
+        android:id="@+id/backupCreateFragment"
+        android:name="com.ceaver.assin.backup.create.BackupCreateFragment"
+        android:label="Create Backup" />
+    <fragment
+        android:id="@+id/backupRestoreFragment"
+        android:name="com.ceaver.assin.backup.restore.BackupRestoreFragment"
+        android:label="Restore Backup" />
+    <fragment
+        android:id="@+id/backupDeleteFragment"
+        android:name="com.ceaver.assin.backup.delete.BackupDeleteFragment"
+        android:label="Delete Backup" />
 </navigation>

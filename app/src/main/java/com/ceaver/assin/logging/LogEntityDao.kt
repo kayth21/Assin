@@ -10,7 +10,7 @@ import java.util.*
 interface LogEntityDao : BaseEntityDao<LogEntity> {
 
     @Query("select * from log where id = :id")
-    suspend fun loadByUuid(id: Long): LogEntity
+    suspend fun loadById(id: Long): LogEntity
 
     @Query("select * from log where uuid = :uuid")
     suspend fun loadByUuid(uuid: UUID): LogEntity
