@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.ceaver.assin.R
@@ -31,7 +30,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel.assinWorkerRunning.observe(viewLifecycleOwner, Observer { if (it == false) Toast.makeText(activity, "Data refreshed", Toast.LENGTH_SHORT).show(); })
+        viewModel.assinWorkerRunning.observe(viewLifecycleOwner) { if (it == false) Toast.makeText(activity, "Data refreshed", Toast.LENGTH_SHORT).show() }
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
