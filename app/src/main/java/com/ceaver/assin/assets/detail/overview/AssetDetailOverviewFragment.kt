@@ -20,7 +20,7 @@ class AssetDetailOverviewFragment(val title: Title, val label: String?) : Fragme
         viewModel = viewModels<AssetDetailOverviewViewModel> { AssetDetailOverviewViewModel.Factory(title, label) }.value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding: AssetDetailOverviewFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.asset_detail_overview_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner

@@ -7,6 +7,10 @@ data class Asset(//
         val title: Title,
         val label: String?,
         val quantity: BigDecimal,
-        val valueCrypto: BigDecimal,
-        val valueFiat: BigDecimal
-)
+        val open: Quotes,
+        val current: Quotes
+) {
+    data class Quotes(
+            val valueCrypto: BigDecimal,
+            val valueFiat: BigDecimal)
+}

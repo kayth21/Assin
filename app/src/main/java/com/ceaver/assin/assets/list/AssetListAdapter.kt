@@ -37,8 +37,8 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
             binding.assetImageView.setImageResource(asset.title.getIcon())
             binding.assetNameTextView.text = "${asset.title.name} ${if (asset.label == null) "" else "(${asset.label})"}"
             binding.assetBalanceTextView.text = "${asset.quantity} ${asset.title.symbol}"
-            binding.assetBtcValueTextView.text = asset.valueCrypto.toCurrencyString(asset.title.symbol) + " " + Preferences.getCryptoTitleSymbol()
-            binding.assetUsdValueTextView.text = asset.valueFiat.toCurrencyString(asset.title.symbol) + " " + Preferences.getFiatTitleSymbol()
+            binding.assetBtcValueTextView.text = asset.current.valueCrypto.toCurrencyString(asset.title.symbol) + " " + Preferences.getCryptoTitleSymbol()
+            binding.assetUsdValueTextView.text = asset.current.valueFiat.toCurrencyString(asset.title.symbol) + " " + Preferences.getFiatTitleSymbol()
             binding.asset1hChangeTextView.text = "1h: ${asset.title.getPercentChange1hString()}%"
             binding.asset24hChangeTextView.text = "24h: ${asset.title.getPercentChange24hString()}%"
             binding.asset7dChangeTextView.text = "7d: ${asset.title.getPercentChange7dString()}%"
@@ -55,8 +55,10 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
 
         override fun areContentsTheSame(oldItem: Asset, newItem: Asset): Boolean {
             return oldItem.quantity == newItem.quantity
-                    && oldItem.valueCrypto == newItem.valueCrypto
-                    && oldItem.valueFiat == newItem.valueFiat
+                    && oldItem.current.valueCrypto == newItem.current.valueCrypto
+                    && oldItem.current.valueFiat == newItem.current.valueFiat
+                    && oldItem.open.valueCrypto == newItem.open.valueCrypto
+                    && oldItem.open.valueFiat == newItem.open.valueFiat
                     && oldItem.title.getPercentChange1hString() == newItem.title.getPercentChange1hString()
                     && oldItem.title.getPercentChange24hString() == newItem.title.getPercentChange24hString()
                     && oldItem.title.getPercentChange7dString() == newItem.title.getPercentChange7dString()

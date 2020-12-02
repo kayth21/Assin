@@ -1,8 +1,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.ceaver.assin.extensions.BigDecimalExtensionKt"/>
+
+        <import type="com.ceaver.assin.extensions.BigDecimalExtensionKt" />
+
         <variable
             name="viewModel"
             type="com.ceaver.assin.assets.detail.overview.AssetDetailOverviewViewModel" />
@@ -13,8 +16,6 @@
         android:layout_height="match_parent"
         android:padding="16dp">
 
-        <!-- TITLE -->
-
         <ImageView
             android:id="@+id/assetDetailOverviewFragmentAssetImage"
             android:layout_width="wrap_content"
@@ -24,7 +25,8 @@
             android:contentDescription="@string/assetDetailOverviewFragmentAssetImageDescription"
             app:imageResource="@{viewModel.asset.title.getIcon()}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/btc" />
 
         <TextView
             android:id="@+id/assetDetailOverviewFragmentAssetTitle"
@@ -36,61 +38,57 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/assetDetailOverviewFragmentAssetImage"
             app:layout_constraintStart_toEndOf="@+id/assetDetailOverviewFragmentAssetImage"
-            app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentAssetImage" />
-
-        <TextView
-            android:id="@+id/assetDetailOverviewFragmentTotalPositionSizeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Total position size"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentAssetTitle" />
+            app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentAssetImage"
+            tools:text="Bitcoin" />
 
         <TextView
             android:id="@+id/assetDetailOverviewFragmentTotalPositionSizeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:text='@{viewModel.asset.quantity.toPlainString() + " " + viewModel.asset.title.symbol}'
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/assetDetailOverviewFragmentAssetImage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText" />
+            app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentAssetImage"
+            tools:text="6.05433 BTC" />
 
         <TextView
-            android:id="@+id/assetDetailOverviewFragmentValueInBtcText"
+            android:id="@+id/assetDetailOverviewFragmentTotalOpenInFiat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{"Value in " + viewModel.cryptoTitle.name}'
-            app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText"
-            app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentTotalPositionSizeText" />
+            app:layout_constraintStart_toStartOf="@id/assetDetailOverviewFragmentAssetImage"
+            app:layout_constraintTop_toBottomOf="@id/assetDetailOverviewFragmentAssetImage"
+            app:totalInFiatOpen="@{viewModel.asset}"
+            tools:text="Total Open: 32000 USD" />
 
         <TextView
-            android:id="@+id/assetDetailOverviewFragmentValueInBtcValue"
+            android:id="@+id/assetDetailOverviewFragmentTotalOpenInCrypto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueCrypto, viewModel.cryptoTitle.symbol) + " " + viewModel.cryptoTitle.symbol}'
-            app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentTotalPositionSizeValue"
-            app:layout_constraintTop_toTopOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
+            app:layout_constraintStart_toStartOf="@id/assetDetailOverviewFragmentTotalOpenInFiat"
+            app:layout_constraintTop_toBottomOf="@id/assetDetailOverviewFragmentTotalOpenInFiat"
+            app:totalInCryptoOpen="@{viewModel.asset}"
+            tools:text="Total Open: 6.05433 BTC" />
 
         <TextView
-            android:id="@+id/assetDetailOverviewFragmentValueInUsdText"
+            android:id="@+id/assetDetailOverviewFragmentTotalTodayInFiat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text='@{"Value in " + viewModel.fiatTitle.name}'
-            app:layout_constraintStart_toStartOf="@+id/assetDetailOverviewFragmentValueInBtcText"
-            app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcText" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/assetDetailOverviewFragmentTotalOpenInFiat"
+            app:totalInFiatCurrent="@{viewModel.asset}"
+            tools:text="Total Today: 6.05433 BTC (0%)" />
 
         <TextView
-            android:id="@+id/assetDetailOverviewFragmentValueInUsdValue"
+            android:id="@+id/assetDetailOverviewFragmentTotalTodayInCrypto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text='@{viewModel.asset == null ? "" : BigDecimalExtensionKt.toCurrencyString(viewModel.asset.valueFiat, viewModel.fiatTitle.symbol) + " " + viewModel.fiatTitle.symbol}'
-            app:layout_constraintEnd_toEndOf="@+id/assetDetailOverviewFragmentValueInBtcValue"
-            app:layout_constraintTop_toBottomOf="@+id/assetDetailOverviewFragmentValueInBtcValue" />
+            app:layout_constraintEnd_toEndOf="@id/assetDetailOverviewFragmentTotalTodayInFiat"
+            app:layout_constraintTop_toBottomOf="@id/assetDetailOverviewFragmentTotalTodayInFiat"
+            app:totalInCryptoCurrent="@{viewModel.asset}"
+            tools:text="Total Today: 82000 USD (430%)" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
