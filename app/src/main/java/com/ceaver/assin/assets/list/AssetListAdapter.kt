@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.assets.Asset
 import com.ceaver.assin.databinding.AssetListRowBinding
-import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.extensions.asCurrencyString
 import com.ceaver.assin.preferences.Preferences
 import kotlin.random.Random
 
@@ -36,9 +36,9 @@ class AssetListAdapter(private val onClickListener: AssetListFragment.OnItemClic
         fun bindItem(asset: Asset, onClickListener: AssetListFragment.OnItemClickListener) {
             binding.assetImageView.setImageResource(asset.title.getIcon())
             binding.assetNameTextView.text = "${asset.title.name} ${if (asset.label == null) "" else "(${asset.label})"}"
-            binding.assetBalanceTextView.text = "${asset.quantity} ${asset.title.symbol}"
-            binding.assetBtcValueTextView.text = asset.current.valueCrypto.toCurrencyString(asset.title.symbol) + " " + Preferences.getCryptoTitleSymbol()
-            binding.assetUsdValueTextView.text = asset.current.valueFiat.toCurrencyString(asset.title.symbol) + " " + Preferences.getFiatTitleSymbol()
+            binding.assetBalanceTextView.text = asset.quantity.asCurrencyString(asset.title)
+            binding.assetUsdValueTextView.text = asset.current.valueFiat.asCurrencyString(Preferences.getFiatTitle())
+            binding.assetBtcValueTextView.text = asset.current.valueCrypto.asCurrencyString(Preferences.getCryptoTitle())
             binding.asset1hChangeTextView.text = "1h: ${asset.title.getPercentChange1hString()}%"
             binding.asset24hChangeTextView.text = "24h: ${asset.title.getPercentChange24hString()}%"
             binding.asset7dChangeTextView.text = "7d: ${asset.title.getPercentChange7dString()}%"

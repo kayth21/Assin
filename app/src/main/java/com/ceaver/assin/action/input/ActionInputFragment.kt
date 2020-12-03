@@ -14,8 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.R
 import com.ceaver.assin.action.ActionEntity
 import com.ceaver.assin.action.ActionType
-import com.ceaver.assin.extensions.afterTextChanged
-import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.util.CalendarHelper
 import kotlinx.android.synthetic.main.action_input_fragment.*
@@ -224,18 +222,18 @@ class ActionInputFragment() : Fragment() {
     private fun registerInputValidation() {
         when (ActionInputFragmentArgs.fromBundle(requireArguments()).actionType) {
             ActionType.TRADE -> {
-                actionInputFragmentBuyAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-                actionInputFragmentSellAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-                actionInputFragmentBuyAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
-                actionInputFragmentSellAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//                actionInputFragmentBuyAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+//                actionInputFragmentSellAmountTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+//                actionInputFragmentBuyAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//                actionInputFragmentSellAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
             }
             ActionType.DEPOSIT -> {
-                actionInputFragmentBuyAmountTextView.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
-                actionInputFragmentBuyAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//                actionInputFragmentBuyAmountTextView.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
+//                actionInputFragmentBuyAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
             }
             ActionType.WITHDRAW -> {
-                actionInputFragmentSellAmountTextView.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
-                actionInputFragmentSellAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//                actionInputFragmentSellAmountTextView.registerInputValidator({ s -> (s.isNotEmpty()) }, "Please enter amount")
+//                actionInputFragmentSellAmountTextView.afterTextChanged { actionInputFragmentSaveButton.isEnabled = checkSaveButton() }
             }
             else -> throw IllegalStateException()
         }

@@ -65,11 +65,11 @@ data class Intention(
     val percentToReferencePrice: BigDecimal
         get() {
             val currentValue = title.cryptoQuotes.price
-            val desiredValue = referenceTitle.cryptoQuotes.price * referencePrice.toDouble()
+            val desiredValue = referencePrice.toDouble()
 
             return when (type) {
-                IntentionType.SELL -> (100.div(desiredValue)).times(currentValue).toBigDecimal()
-                IntentionType.BUY -> (100.div(currentValue)).times(desiredValue).toBigDecimal()
+                IntentionType.SELL -> currentValue.div(desiredValue).toBigDecimal()
+                IntentionType.BUY -> desiredValue.div(currentValue).toBigDecimal()
             }
         }
 

@@ -1,7 +1,7 @@
 package com.ceaver.assin.alerts
 
 import com.ceaver.assin.common.Exportable
-import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.extensions.asCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.notification.AssinNotification
 import java.math.BigDecimal
@@ -23,12 +23,12 @@ interface Alert : Exportable {
     fun getNotificationTitle(direction: String): String
     fun getNotificationContent(target: BigDecimal): String
 
-    fun getAlertType() : String
-    fun getBaseText() : String
+    fun getAlertType(): String
+    fun getBaseText(): String
 
     fun getListRowTitleText(): String = "${getBaseText()}/${quoteTitle.symbol}${if (active) "" else " (inactive)"}"
     fun getListRowSubtitleText(): String = "${getAlertType()} Alert"
-    fun getListRowLastText(): String = "Last: ${last.toCurrencyString(quoteTitle.symbol)} ${quoteTitle.symbol}"
+    fun getListRowLastText(): String = "Last: ${last.asCurrencyString(quoteTitle)}"
     fun getListRowTargetText(): String = "Target: ${if (diff == null) "$target" else "${target - diff!!} / ${target + diff!!}"} ${quoteTitle.symbol}"
 
     fun copyWithCurrent(current: BigDecimal): Alert

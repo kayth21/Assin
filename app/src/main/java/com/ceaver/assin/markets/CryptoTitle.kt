@@ -115,15 +115,15 @@ data class CryptoTitle(
     }
 
     override fun getPercentChange1hString(): String {
-        return "%.1f".format(cryptoQuotes.percentChange1h) // TODO let the user decide if primary or secondary
+        return "%.0f".format(cryptoQuotes.percentChange1h) // TODO let the user decide if primary or secondary
     }
 
     override fun getPercentChange24hString(): String {
-        return "%.1f".format(cryptoQuotes.percentChange24h) // TODO let the user decide if primary or secondary
+        return "%.0f".format(cryptoQuotes.percentChange24h) // TODO let the user decide if primary or secondary
     }
 
     override fun getPercentChange7dString(): String {
-        return "%.1f".format(cryptoQuotes.percentChange7d) // TODO let the user decide if primary or secondary
+        return "%.0f".format(cryptoQuotes.percentChange7d) // TODO let the user decide if primary or secondary
     }
 
     override fun getIcon(): Int {

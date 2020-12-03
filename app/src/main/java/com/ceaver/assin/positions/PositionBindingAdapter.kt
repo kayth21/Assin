@@ -3,11 +3,10 @@ package com.ceaver.assin.positions
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.ceaver.assin.extensions.asCurrencyString
 import com.ceaver.assin.extensions.asFormattedDateTime
 import com.ceaver.assin.extensions.setInactive
-import com.ceaver.assin.extensions.toCurrencyString
 import com.ceaver.assin.preferences.Preferences
-import java.math.RoundingMode
 
 @BindingAdapter("positionImageResource")
 fun ImageView.setPositionImageResource(position: Position) {
@@ -17,7 +16,7 @@ fun ImageView.setPositionImageResource(position: Position) {
 
 @BindingAdapter("positionListRowPositionSize")
 fun TextView.setPositionListRowPositionSize(position: Position) {
-    text = "${position.quantity.toCurrencyString(position.title.symbol)} ${position.title.symbol}"
+    text = position.quantity.asCurrencyString(position.title)
 }
 
 @BindingAdapter("positionListRowPositionDate")
@@ -27,28 +26,28 @@ fun TextView.setPositionListRowPositionDate(position: Position) {
 
 @BindingAdapter("positionListRowOpenPositionValueFiat")
 fun TextView.setPositionListRowOpenPositionValueFiat(position: Position) {
-    text = "Open: ${position.open.valueFiat.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getFiatTitleSymbol()}"
+    text = "Open: ${position.open.valueFiat.asCurrencyString(Preferences.getFiatTitle())}"
 }
 
 @BindingAdapter("positionListRowOpenPositionValueCrypto")
 fun TextView.setPositionListRowOpenPositionValueCrypto(position: Position) {
-    text = "Open: ${position.open.valueCrypto.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()}"
+    text = "Open: ${position.open.valueCrypto.asCurrencyString(Preferences.getCryptoTitle())}"
 }
 
 @BindingAdapter("positionListRowClosePositionValueFiat")
 fun TextView.setPositionListRowClosePositionValueFiat(position: Position) {
     text = if (position.isClosed()) {
-        "Close: ${position.close!!.valueFiat.toCurrencyString(Preferences.getFiatTitleSymbol())} ${Preferences.getFiatTitleSymbol()} (${position.profitLossInPercentToClosedFiatValue.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
+        "Close: ${position.close!!.valueFiat.asCurrencyString(Preferences.getFiatTitle())} (${position.profitLossInPercentToClosedFiatValue})"
     } else {
-        "Today: ${position.current.valueFiat.toCurrencyString(Preferences.getFiatTitleSymbol())} ${Preferences.getFiatTitleSymbol()} (${position.profitLossInPercentToFiatValue.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
+        "Today: ${position.current.valueFiat.asCurrencyString(Preferences.getFiatTitle())} (${position.profitLossInPercentToFiatValue})"
     }
 }
 
 @BindingAdapter("positionListRowClosePositionValueCrypto")
 fun TextView.setPositionListRowClosePositionValueCrypto(position: Position) {
     text = if (position.isClosed()) {
-        "Close: ${position.close!!.valueCrypto.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()} (${position.profitLossInPercentToClosedCryptoTitle.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
+        "Close: ${position.close!!.valueCrypto.asCurrencyString(Preferences.getCryptoTitle())} (${position.profitLossInPercentToClosedCryptoTitle})"
     } else {
-        "Today: ${position.current.valueCrypto.toCurrencyString(Preferences.getCryptoTitleSymbol())} ${Preferences.getCryptoTitleSymbol()} (${position.profitLossInPercentToCryptoTitle.setScale(0, RoundingMode.HALF_UP).toPlainString()}%)"
+        "Today: ${position.current.valueCrypto.asCurrencyString(Preferences.getCryptoTitle())} (${position.profitLossInPercentToCryptoTitle})"
     }
 }

@@ -7,6 +7,6 @@ import com.ceaver.assin.preferences.Preferences
 class AssetOverviewViewModel() : ViewModel() {
 
     val assetOverview = AssetRepository.loadAssetOverviewObserved()
-    val cryptoTitleSymbol = Preferences.getCryptoTitleSymbol()
-    val fiatTitleSymbol = Preferences.getFiatTitleSymbol()
+    val cryptoTitle = Preferences.getCryptoTitle()
+    val fiatTitle = Preferences.getFiatTitle()
 }

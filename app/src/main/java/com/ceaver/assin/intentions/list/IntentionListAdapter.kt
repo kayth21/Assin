@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
-import com.ceaver.assin.extensions.toCurrencyString
+import com.ceaver.assin.extensions.asPercentString
 import com.ceaver.assin.intentions.Intention
 import kotlinx.android.synthetic.main.intention_list_row.view.*
 
@@ -40,7 +40,7 @@ internal class IntentionListAdapter(private val onClickListener: IntentionListFr
             view.intentionListRowAssetTextView.text = "${intention.type} ${intention.quantityAsString()} ${intention.title.symbol} (${intention.title.name})"
             view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
             view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            view.intentionListRowPercentTextView.text = "${intention.percentToReferencePrice.toCurrencyString("abc")}%"
+            view.intentionListRowPercentTextView.text = intention.percentToReferencePrice.asPercentString()
             view.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }

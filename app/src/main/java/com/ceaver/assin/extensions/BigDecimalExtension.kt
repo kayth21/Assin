@@ -1,35 +1,22 @@
 package com.ceaver.assin.extensions
 
+import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
-fun BigDecimal.toCurrencyString(symbol: String): String {
-    return if (symbol == "USD" || symbol == "EUR" || symbol == "CHF") {
-        val s = "%.2f".format(this.round(MathContext(3)))
-        val b = if (!s.contains(".")) s else if ((s.indexOf(".") < s.length - 2) && !s.endsWith("00")) s else s.replace(Regex("0*$"), "").replace(Regex("\\.$"), "")
-        b.toBigDecimal(MathContext(3)).toPlainString()
-    } else {
-        val s = "%.8f".format(this.round(MathContext(3)))
-        if (!s.contains(".")) s else s.replace(Regex("0*$"), "").replace(Regex("\\.$"), "")
-    }
+fun BigDecimal.asCurrencyString(title: Title): String {
+    val value = this.round(MathContext(3))
+    val format = DecimalFormat("#,###.########");
+    return "${format.format(value)} ${title.symbol}"
 }
 
-fun BigDecimal.addZeroDotOneToLastDecimal(): BigDecimal {
-    val string = this.stripTrailingZeros().toPlainString()
-    val index = string.indexOf(".")
-    val i = if (index < 0) 0 else string.length - index - 1
-    return this.add(BigDecimal.ONE.movePointLeft(i + 1), MathContext.DECIMAL128)
+fun BigDecimal.asPercentString(): String {
+    return NumberFormat.getPercentInstance().format(this.round(MathContext(0, RoundingMode.HALF_UP)))
 }
 
-fun BigDecimal.addZeroDotTwoToLastDecimal(): BigDecimal {
-    val string = this.stripTrailingZeros().toPlainString()
-    val index = string.indexOf(".")
-    val i = if (index < 0) 0 else string.length - index - 1
-    return this.add(BigDecimal.valueOf(2).movePointLeft(i + 1), MathContext.DECIMAL128)
-}
-
-fun BigDecimal.asPercentOf(other: BigDecimal): BigDecimal {
-    return (BigDecimal.valueOf(100).divide(other, MathContext.DECIMAL32))
-            .times(this)
-            .subtract(BigDecimal.valueOf(100))
+fun BigDecimal.asPercentStringOf(other: BigDecimal): String {
+    return this.divide(other, RoundingMode.HALF_UP).minus(BigDecimal.ONE).asPercentString()
 }

@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.ceaver.assin.extensions.afterTextChanged
-import com.ceaver.assin.extensions.registerInputValidator
 import com.ceaver.assin.intentions.IntentionType
 import com.ceaver.assin.markets.Title
 import kotlinx.android.synthetic.main.intention_input_fragment.*
@@ -120,9 +118,9 @@ class IntentionInputFragment : Fragment() {
     }
 
     private fun registerInputValidation() {
-        intentionInputFragmentReferencePriceTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
-        intentionInputFragmentTitleQuantityTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
-        intentionInputFragmentReferencePriceTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//        intentionInputFragmentReferencePriceTextView.registerInputValidator({ s -> s.isNotEmpty() }, "Please enter amount")
+//        intentionInputFragmentTitleQuantityTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
+//        intentionInputFragmentReferencePriceTextView.afterTextChanged { intentionInputFragmentSaveButton.isEnabled = checkSaveButton() }
     }
 
     private fun checkSaveButton(): Boolean {

@@ -15,7 +15,7 @@ import com.ceaver.assin.logging.LogEntityDao
 import com.ceaver.assin.markets.TitleEntity
 import com.ceaver.assin.markets.TitleEntityDao
 
-@androidx.room.Database(entities = arrayOf(ActionEntity::class, TitleEntity::class, IntentionEntity::class, AlertEntity::class, LogEntity::class), version = 1, exportSchema = false)
+@androidx.room.Database(entities = [ActionEntity::class, TitleEntity::class, IntentionEntity::class, AlertEntity::class, LogEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun actionDao(): ActionEntityDao

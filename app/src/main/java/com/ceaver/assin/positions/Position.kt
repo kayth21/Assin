@@ -1,7 +1,7 @@
 package com.ceaver.assin.positions
 
 import com.ceaver.assin.action.*
-import com.ceaver.assin.extensions.asPercentOf
+import com.ceaver.assin.extensions.asPercentStringOf
 import com.ceaver.assin.markets.Title
 import java.math.BigDecimal
 import java.math.MathContext
@@ -20,24 +20,24 @@ data class Position(
     val current: Quotes
         get() = Quotes(LocalDate.now(), quantity * title.cryptoQuotes.price.toBigDecimal(), quantity * title.fiatQuotes.price.toBigDecimal())
 
-    val profitLossInPercentToCryptoTitle: BigDecimal
+    val profitLossInPercentToCryptoTitle: String
         get() {
-            return current.valueCrypto.asPercentOf(open.valueCrypto)
+            return current.valueCrypto.asPercentStringOf(open.valueCrypto)
         }
 
-    val profitLossInPercentToFiatValue: BigDecimal
+    val profitLossInPercentToFiatValue: String
         get() {
-            return current.valueFiat.asPercentOf(open.valueFiat)
+            return current.valueFiat.asPercentStringOf(open.valueFiat)
         }
 
-    val profitLossInPercentToClosedCryptoTitle: BigDecimal
+    val profitLossInPercentToClosedCryptoTitle: String
         get() {
-            return close!!.valueCrypto.asPercentOf(open.valueCrypto)
+            return close!!.valueCrypto.asPercentStringOf(open.valueCrypto)
         }
 
-    val profitLossInPercentToClosedFiatValue: BigDecimal
+    val profitLossInPercentToClosedFiatValue: String
         get() {
-            return close!!.valueFiat.asPercentOf(open.valueFiat)
+            return close!!.valueFiat.asPercentStringOf(open.valueFiat)
         }
 
     fun isOpen(): Boolean = close == null
