@@ -3,7 +3,7 @@ package com.ceaver.assin.action.input
 import androidx.lifecycle.*
 import com.ceaver.assin.action.ActionEntity
 import com.ceaver.assin.action.ActionType
-import com.ceaver.assin.common.SingleLiveEvent
+import com.ceaver.assin.common.SingleMutableLiveData
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ class ActionInputViewModel(actionEntity: ActionEntity?, title: Title?, actionTyp
     private val _action = MutableLiveData<ActionEntity>()
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._action, _symbols)
-    private val _status = SingleLiveEvent<ActionInputStatus>()
+    private val _status = SingleMutableLiveData<ActionInputStatus>()
     val actionEntity: LiveData<ActionEntity> get() = _action
     val symbols: LiveData<List<Title>> get() = _symbols
     val status: LiveData<ActionInputStatus> get() = _status

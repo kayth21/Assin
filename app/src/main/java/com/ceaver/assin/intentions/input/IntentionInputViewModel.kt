@@ -1,7 +1,7 @@
 package com.ceaver.assin.intentions.input
 
 import androidx.lifecycle.*
-import com.ceaver.assin.common.SingleLiveEvent
+import com.ceaver.assin.common.SingleMutableLiveData
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.ceaver.assin.intentions.IntentionType
@@ -21,7 +21,7 @@ class IntentionInputViewModel(intention: Intention?, title: Title?, amount: BigD
     private val _intention = MutableLiveData<Intention>()
     private val _symbols = MutableLiveData<List<Title>>()
     val dataReady = zipLiveData(this._intention, _symbols)
-    private val _status = SingleLiveEvent<IntentionInputStatus>()
+    private val _status = SingleMutableLiveData<IntentionInputStatus>()
     val intention: LiveData<Intention> get() = _intention
     val symbols: LiveData<List<Title>> get() = _symbols
     val status: LiveData<IntentionInputStatus> get() = _status
