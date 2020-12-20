@@ -13,6 +13,11 @@ fun BigDecimal.asCurrencyString(title: Title): String {
     return "${format.format(value)} ${title.symbol}"
 }
 
+fun BigDecimal.asQuantityString(): String {
+    val format = DecimalFormat("#,###.########");
+    return format.format(this)
+}
+
 fun BigDecimal.asPercentString(): String {
     return NumberFormat.getPercentInstance().format(this.round(MathContext(0, RoundingMode.HALF_UP)))
 }

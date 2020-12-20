@@ -10,7 +10,6 @@ fun ImageView.setAlertBaseImageResource(alert: Alert) {
     setInactive(!alert.active)
 }
 
-
 @BindingAdapter("alertQuoteImageResource")
 fun ImageView.setAlertQuoteImageResource(alert: Alert) {
     setImageResource(alert.getQuoteImageResource())

@@ -34,12 +34,9 @@ object AlertRepository {
             if (alert.id > 0) update(alert) else insert(alert)
 
     private val dao: AlertEntityDao
-        get() {
-            return database.alertDao()
-        }
+        get() = database.alertDao()
 
     private val database: Database
-        get() {
-            return Database.getInstance()
-        }
+        get() =
+            Database.getInstance()
 }

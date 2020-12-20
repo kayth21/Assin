@@ -10,14 +10,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
-import com.ceaver.assin.action.ActionType
 import com.ceaver.assin.databinding.ActionListFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.action_list_fragment.*
@@ -39,7 +37,7 @@ class ActionListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.actionListFragmentRecyclerView.adapter = actionListAdapter
         binding.actionListFragmentRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
-        binding.actionListFragmentAddActionFloatingButton.setOnClickListener { findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE)) }
+        // binding.actionListFragmentAddActionFloatingButton.setOnClickListener { findNavController().navigate(ActionListFragmentDirections.actionActionListFragmentToActionInputFragment(ActionType.TRADE)) }
 
         viewModel.titles.observe(viewLifecycleOwner) { actionListAdapter.submitList(it.reversed()) }
 

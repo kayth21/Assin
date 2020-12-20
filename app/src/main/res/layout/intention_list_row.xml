@@ -1,46 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="46dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/intentionListRowLeftImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <TextView
-        android:id="@+id/intentionListRowAssetTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/intentionListRowLeftImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="intention"
+            type="com.ceaver.assin.intentions.Intention" />
+    </data>
 
-    <TextView
-        android:id="@+id/intentionListRowReferenceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/intentionListRowAssetTextView"
-        app:layout_constraintTop_toBottomOf="@+id/intentionListRowAssetTextView" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp">
 
-    <TextView
-        android:id="@+id/intentionListRowPercentTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/intentionListRowQuoteImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            app:intentionQuoteImageResource="@{intention}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/intentionListRowBaseImageView"
+            tools:src="@drawable/usd" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/intentionListRowBaseImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:intentionBaseImageResource="@{intention}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/btc" />
+
+        <TextView
+            android:id="@+id/intentionListRowTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:intentionTitleText="@{intention}"
+            app:layout_constraintStart_toEndOf="@+id/intentionListRowQuoteImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Sell 1 Bitcoin" />
+
+        <TextView
+            android:id="@+id/intentionListRowSubtitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textSize="13sp"
+            app:intentionSubtitleText="@{intention}"
+            app:layout_constraintStart_toStartOf="@+id/intentionListRowTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/intentionListRowTitleTextView"
+            tools:text="Target Price: 100000 USD" />
+
+        <TextView
+            android:id="@+id/intentionListRowPercentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:textSize="15sp"
+            app:intentionPercentText="@{intention}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="85%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

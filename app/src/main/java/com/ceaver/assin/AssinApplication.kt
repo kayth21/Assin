@@ -10,6 +10,7 @@ import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertNotification
+import com.ceaver.assin.intentions.IntentionNotification
 import com.ceaver.assin.logging.LogRepository
 import com.ceaver.assin.preferences.Preferences
 import com.ceaver.assin.util.isConnected
@@ -53,12 +54,15 @@ class AssinApplication : Application() {
     }
 
     private fun setupNotificationChannels() {
+        setupNotificationChannel(AlertNotification.CHANNEL_ID, "Alert Channel", "Notification if an alert reaches target")
+        setupNotificationChannel(IntentionNotification.CHANNEL_ID, "Intention Channel", "Notification if an intention reaches target")
+    }
+
+    private fun setupNotificationChannel(channelId: String, name: String, description: String) {
         // Create the NotificationChannel only on API 26+ because the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Alert Channel"
-            val description = "Notification if an alert reaches target"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val notificationChannel = NotificationChannel(AlertNotification.CHANNEL_ID, name, importance).also {
+            val notificationChannel = NotificationChannel(channelId, name, importance).also {
                 it.description = description
                 it.enableLights(true)
                 it.lightColor = Color.BLUE

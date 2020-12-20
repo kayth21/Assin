@@ -7,10 +7,10 @@ import com.ceaver.assin.markets.TitleEntity
 data class IntentionDto(
         @Embedded
         val intention: IntentionEntity,
-        @Relation(parentColumn = "titleId", entityColumn = "id")
-        val title: TitleEntity,
-        @Relation(parentColumn = "referenceTitleId", entityColumn = "id")
-        val referenceTitle: TitleEntity
+        @Relation(parentColumn = "baseTitleId", entityColumn = "id")
+        val baseTitle: TitleEntity,
+        @Relation(parentColumn = "quoteTitleId", entityColumn = "id")
+        val quoteTitle: TitleEntity
 ) {
     fun toIntention(): Intention {
         return Intention.fromDto(this)

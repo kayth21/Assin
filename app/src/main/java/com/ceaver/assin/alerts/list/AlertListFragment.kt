@@ -29,7 +29,7 @@ class AlertListFragment : Fragment() {
         viewModel = viewModels<AlertListViewModel>().value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding: AlertListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.alert_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner

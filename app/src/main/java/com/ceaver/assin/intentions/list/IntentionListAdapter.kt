@@ -1,48 +1,51 @@
 package com.ceaver.assin.intentions.list
 
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.R
-import com.ceaver.assin.extensions.asPercentString
+import com.ceaver.assin.databinding.IntentionListRowBinding
 import com.ceaver.assin.intentions.Intention
-import kotlinx.android.synthetic.main.intention_list_row.view.*
+import kotlin.random.Random
 
-internal class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : RecyclerView.Adapter<IntentionListAdapter.IntentionViewHolder>() {
+class IntentionListAdapter(private val onClickListener: IntentionListFragment.OnItemClickListener) : ListAdapter<Intention, IntentionListAdapter.ViewHolder>(Difference) {
 
-    var intentions = listOf<Intention>()
-        set(value) {
-            field = value.sortedBy { it.percentToReferencePrice }.reversed()
-            notifyDataSetChanged();
-        }
     var currentLongClickIntention: Intention? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntentionViewHolder {
-        return IntentionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.intention_list_row, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = IntentionListRowBinding.inflate(layoutInflater, parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = intentions.size
-
-    override fun onBindViewHolder(holder: IntentionViewHolder, position: Int) {
-        holder.bindItem(intentions[position], onClickListener)
-        holder.itemView.setOnLongClickListener { currentLongClickIntention = intentions[position]; false }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindItem(getItem(position), onClickListener)
+        holder.itemView.setOnLongClickListener { currentLongClickIntention = getItem(holder.layoutPosition); false }
     }
 
-    class IntentionViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+    class ViewHolder(val binding: IntentionListRowBinding) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
+
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-            menu!!.add(2, 0, 0, "Delete")
+            menu!!.add(Menu.NONE, MENU_ITEM_DELETE, Menu.NONE, "Remove")
         }
 
         fun bindItem(intention: Intention, onClickListener: IntentionListFragment.OnItemClickListener) {
-            view.intentionListRowLeftImageView.setImageResource(intention.title.getIcon())
-            view.intentionListRowAssetTextView.text = "${intention.type} ${intention.quantityAsString()} ${intention.title.symbol} (${intention.title.name})"
-            view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            view.intentionListRowReferenceTextView.text = "Target Price: ${intention.referencePrice.toPlainString()} ${intention.referenceTitle.symbol}"
-            view.intentionListRowPercentTextView.text = intention.percentToReferencePrice.asPercentString()
-            view.setOnCreateContextMenuListener(this)
+            binding.intention = intention
+            binding.executePendingBindings()
+            itemView.setOnCreateContextMenuListener(this)
             itemView.setOnClickListener { onClickListener.onItemClick(intention) }
         }
+    }
+
+    object Difference : DiffUtil.ItemCallback<Intention>() {
+        override fun areItemsTheSame(oldItem: Intention, newItem: Intention): Boolean =
+                oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Intention, newItem: Intention): Boolean =
+                oldItem == newItem && oldItem.factorToReferencePrice == newItem.factorToReferencePrice
+    }
+
+    companion object {
+        val MENU_ITEM_DELETE = Random.nextInt()
     }
 }

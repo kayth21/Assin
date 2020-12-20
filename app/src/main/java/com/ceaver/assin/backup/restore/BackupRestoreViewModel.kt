@@ -33,7 +33,7 @@ class BackupRestoreViewModel : BackupViewModel() {
         val csvParser = CSVParser(inputStreamReader, CSVFormat.DEFAULT)
         val cryptoTitle = Preferences.getCryptoTitle()
 
-        val csvTitles = csvParser.map { CustomTitle.fromImport(it, cryptoTitle) }.toList()
+        val csvTitles = csvParser.filterNot { it.get(0).startsWith("#") }.map { CustomTitle.fromImport(it, cryptoTitle) }.toList()
         val localTitles = TitleRepository.loadAllCustomTitles()
 
         val deletedTitles = localTitles.filterNot { csvTitles.map { it.id }.contains(it.id) }
@@ -54,7 +54,7 @@ class BackupRestoreViewModel : BackupViewModel() {
         val file = File(directory, filename)
         val inputStreamReader = InputStreamReader(file.inputStream())
         val csvParser = CSVParser(inputStreamReader, CSVFormat.DEFAULT)
-        val actions: List<Action> = csvParser.map {
+        val actions: List<Action> = csvParser.filterNot { it.get(0).startsWith("#") }.map {
             when (ActionType.valueOf(it.get(0))) {
                 ActionType.TRADE -> Trade.fromImport(it)
                 ActionType.SPLIT -> Split.fromImport(it)
@@ -77,7 +77,7 @@ class BackupRestoreViewModel : BackupViewModel() {
         val file = File(directory, filename)
         val inputStreamReader = InputStreamReader(file.inputStream())
         val csvParser = CSVParser(inputStreamReader, CSVFormat.DEFAULT)
-        val alerts: List<Alert> = csvParser.map {
+        val alerts: List<Alert> = csvParser.filterNot { it.get(0).startsWith("#") }.map {
             when (AlertType.valueOf(it.get(0))) {
                 AlertType.PRICE -> PriceAlert.fromImport(it)
                 AlertType.MARKETCAP -> MarketcapAlert.fromImport(it)
@@ -97,7 +97,9 @@ class BackupRestoreViewModel : BackupViewModel() {
         val file = File(directory, filename)
         val inputStreamReader = InputStreamReader(file.inputStream())
         val csvParser = CSVParser(inputStreamReader, CSVFormat.DEFAULT)
-        val intentions = csvParser.map { Intention.fromImport(it) }.toList()
+        val intentions = csvParser.filterNot { it.get(0).startsWith("#") }.map {
+            Intention.fromImport(it)
+        }.toList()
         IntentionRepository.deleteAll()
         IntentionRepository.insert(intentions)
 

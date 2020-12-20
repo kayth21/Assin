@@ -6,16 +6,20 @@ import androidx.work.WorkerParameters
 
 class IntentionWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        IntentionRepository.loadAll().forEach { checkIntention(it) }
+        IntentionRepository.loadAll().forEach {
+            checkIntention(it)
+        }
         return Result.success()
     }
 
     private suspend fun checkIntention(intention: Intention) {
-        val calculatedStatus = intention.calculateState()
-        if (calculatedStatus > intention.status) {
-            val newIntention = intention.copy(status = calculatedStatus)
-            IntentionRepository.update(newIntention);
-            IntentionNotification.notify(newIntention)
-        }
+        val result = intention.evaluate() ?: return
+
+        val updatedIntention = result.first
+        val notification = result.second
+
+        // TODO instead of updating intentions one by one, update all by one. Btw. Do not update if nothing changed...
+        IntentionRepository.update(updatedIntention);
+        notification?.push()
     }
 }

@@ -15,7 +15,6 @@ interface Alert : Exportable {
     val diff: BigDecimal?
 
     fun toEntity(): AlertEntity
-    override fun toExport(): List<String>
 
     fun getBaseImageResource(): Int
     fun getQuoteImageResource(): Int

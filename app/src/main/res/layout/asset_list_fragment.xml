@@ -11,20 +11,19 @@
     </data>
 
     <FrameLayout
-        android:id="@+id/assetFrameLayout"
+        android:id="@+id/assetListFragmentFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/assetSwipeRefreshLayout"
+            android:id="@+id/assetListFragmentSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:onRefreshListener="@{() -> viewModel.refresh()}"
             app:refreshing="@{viewModel.loading}">
-            >
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/assetList"
+                android:id="@+id/assetListFragmentRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -32,7 +31,7 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/assetDepositButton"
+            android:id="@+id/assetListFragmentAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

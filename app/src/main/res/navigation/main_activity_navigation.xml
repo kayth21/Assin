@@ -12,9 +12,6 @@
             android:id="@+id/action_homeFragment_to_assetDetailFragment"
             app:destination="@id/assetDetailFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_intentionInputFragment"
-            app:destination="@id/intentionInputFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_actionListFragment"
             app:destination="@id/actionListFragment" />
         <action
@@ -26,9 +23,6 @@
         <action
             android:id="@+id/action_homeFragment_to_logListFragment"
             app:destination="@id/logListFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_actionInputFragment"
-            app:destination="@id/actionInputFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -43,51 +37,9 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:id="@+id/actionInputFragment"
-        android:name="com.ceaver.assin.action.input.ActionInputFragment"
-        android:label="Action Input" >
-        <argument
-            android:name="actionType"
-            app:argType="com.ceaver.assin.action.ActionType" />
-        <argument
-            android:name="actionEntity"
-            app:argType="com.ceaver.assin.action.ActionEntity"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="title"
-            app:argType="com.ceaver.assin.markets.Title"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
-    <fragment
-        android:id="@+id/intentionInputFragment"
-        android:name="com.ceaver.assin.intentions.input.IntentionInputFragment"
-        android:label="Intention Input" >
-        <argument
-            android:name="intention"
-            app:argType="com.ceaver.assin.intentions.Intention"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="title"
-            app:argType="com.ceaver.assin.markets.Title"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="amount"
-            app:argType="java.math.BigDecimal"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
-    <fragment
         android:id="@+id/actionListFragment"
         android:name="com.ceaver.assin.action.list.ActionListFragment"
-        android:label="Action List" >
-        <action
-            android:id="@+id/action_actionListFragment_to_actionInputFragment"
-            app:destination="@id/actionInputFragment" />
-    </fragment>
+        android:label="Action List" />
     <fragment
         android:id="@+id/alertListFragment"
         android:name="com.ceaver.assin.alerts.list.AlertListFragment"

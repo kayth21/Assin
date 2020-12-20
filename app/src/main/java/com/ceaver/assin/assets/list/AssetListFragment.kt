@@ -31,9 +31,9 @@ class AssetListFragment : Fragment() {
         val binding: AssetListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.asset_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.assetList.adapter = assetListAdapter
-        binding.assetDepositButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT)) }
-        binding.assetList.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
+        binding.assetListFragmentRecyclerView.adapter = assetListAdapter
+        // binding.assetListFragmentAddButton.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToActionInputFragment(ActionType.DEPOSIT)) }
+        binding.assetListFragmentRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity().application, LinearLayoutManager.VERTICAL))
 
         viewModel.assets.observe(viewLifecycleOwner) { assetListAdapter.submitList(it.sortedBy { it.current.valueCrypto }.reversed()) }
 
