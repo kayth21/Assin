@@ -1,5 +1,6 @@
 package com.ceaver.assin.alerts
 
+import com.ceaver.assin.extensions.asCurrencyString
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import org.apache.commons.csv.CSVRecord
@@ -73,7 +74,7 @@ data class PriceAlert(
     override fun getQuoteImageResource(): Int = quoteTitle.getIcon()
 
     override fun getNotificationTitle(direction: String): String = "${baseTitle.name} Price $direction"
-    override fun getNotificationContent(target: BigDecimal): String = "Target of $target ${quoteTitle.symbol} reached."
+    override fun getNotificationContent(target: BigDecimal): String = "Target of ${target.asCurrencyString(quoteTitle)} reached."
 
     override fun getBaseText(): String = baseTitle.symbol
     override fun getAlertType(): String = "Price"
