@@ -9,6 +9,6 @@ class MarketOverviewUpdateWorker(appContext: Context, workerParams: WorkerParame
     override  suspend fun doWork(): Result {
         val marketOverview = MarketRepository.loadMarketOverview()
         MarketOverviewRepository.insertMarketOverview(marketOverview)
-        return Result.success()
+        return Result.success(inputData)
     }
 }

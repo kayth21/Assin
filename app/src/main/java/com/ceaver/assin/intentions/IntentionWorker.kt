@@ -9,7 +9,7 @@ class IntentionWorker(appContext: Context, workerParams: WorkerParameters) : Cor
         IntentionRepository.loadAll().forEach {
             checkIntention(it)
         }
-        return Result.success()
+        return Result.success(inputData)
     }
 
     private suspend fun checkIntention(intention: Intention) {

@@ -12,30 +12,28 @@ import com.ceaver.assin.system.SystemRepository
 import org.greenrobot.eventbus.EventBus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+
 
 object AssinWorkers {
 
     val running = MutableLiveData<Boolean>()
 
     fun completeUpdate() {
-        val identifier = UUID.randomUUID();
+        running.postValue(true)
         WorkManager.getInstance(AssinApplication.appContext!!)
-                .beginWith(notifyCompleteStart(identifier))
+                .beginWith(notifyCompleteStart())
                 .then(listOf(updateAllTitles(), updateMarketOverview()))
                 .then(listOf(checkAlerts(), checkIntentions()))
-                .then(notifyCompleteEnd(identifier))
+                .then(notifyCompleteEnd())
                 .enqueue()
     }
 
-    private fun notifyCompleteStart(identifier: UUID): OneTimeWorkRequest {
-        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
-        return OneTimeWorkRequestBuilder<StartCompleteNotificationWorker>().setInputData(data).build()
+    private fun notifyCompleteStart(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<StartCompleteNotificationWorker>().build()
     }
 
-    private fun notifyCompleteEnd(identifier: UUID): OneTimeWorkRequest {
-        val data = Data.Builder().putString(AssinWorkers.toString(), identifier.toString()).build()
-        return OneTimeWorkRequestBuilder<EndCompleteNotificationWorker>().setInputData(data).build()
+    private fun notifyCompleteEnd(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<EndCompleteNotificationWorker>().build()
     }
 
     private fun checkIntentions(): OneTimeWorkRequest {
@@ -57,17 +55,17 @@ object AssinWorkers {
     class StartCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
             running.postValue(true)
-            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
-            LogRepository.insert("Assin workers: starting complete update...", uuid)
-            return Result.success()
+            val logId = LogRepository.insert("Assin workers: starting complete update...")
+            val outputData: Data = workDataOf(AssinWorkers.toString() to logId)
+            return Result.success(outputData)
         }
     }
 
     class EndCompleteNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
         override suspend fun doWork(): Result {
             SystemRepository.setInitialized(true)
-            val uuid = UUID.fromString(inputData.getString(AssinWorkers.toString()))
-            val log = LogRepository.loadLog(uuid)
+            val logId = inputData.getLong(AssinWorkers.toString(), -1) // TODO
+            val log = LogRepository.loadLog(logId)
             val duration = log.timestamp.until(LocalDateTime.now(), ChronoUnit.MILLIS)
             LogRepository.update(log.copy(message = log.message + " done. (${duration} ms)"))
             EventBus.getDefault().post(AssinWorkerEvents.Complete())

@@ -9,7 +9,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) : Corouti
         AlertRepository.loadAll().forEach {
             checkAlert(it)
         }
-        return Result.success()
+        return Result.success(inputData)
     }
 
     private suspend fun checkAlert(alert: Alert) {

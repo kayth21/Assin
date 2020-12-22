@@ -33,6 +33,6 @@ class MarketUpdateWorker(appContext: Context, workerParams: WorkerParameters) : 
             removedTitlesToDelete.forEach { LogRepository.insert("Removed  ${it.name} (${it.symbol}) from local database due to long time inactivity.") }
         }
 
-        return Result.success()
+        return Result.success(inputData)
     }
 }

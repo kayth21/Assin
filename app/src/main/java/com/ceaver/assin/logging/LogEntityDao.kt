@@ -4,16 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.ceaver.assin.database.BaseEntityDao
-import java.util.*
 
 @Dao
 interface LogEntityDao : BaseEntityDao<LogEntity> {
 
     @Query("select * from log where id = :id")
     suspend fun loadById(id: Long): LogEntity
-
-    @Query("select * from log where uuid = :uuid")
-    suspend fun loadByUuid(uuid: UUID): LogEntity
 
     @Query("select * from log")
     suspend fun loadAll(): List<LogEntity>
@@ -23,6 +19,5 @@ interface LogEntityDao : BaseEntityDao<LogEntity> {
 
     @Query("delete from log")
     suspend fun deleteAllLog()
-
 
 }
