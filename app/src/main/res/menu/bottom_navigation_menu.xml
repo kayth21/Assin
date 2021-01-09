@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottomNavigationMenuMarkets"
+        android:enabled="true"
+        android:icon="@drawable/markets_icon"
+        android:title="Markets"/>
+    <item
+        android:id="@+id/bottomNavigationMenuPortfolio"
+        android:enabled="true"
+        android:icon="@drawable/portfolio_icon"
+        android:title="Portfolio"/>
+    <item
+        android:id="@+id/bottomNavigationMenuIntention"
+        android:enabled="true"
+        android:icon="@drawable/intention_icon"
+        android:title="Intentions"/>
+</menu>

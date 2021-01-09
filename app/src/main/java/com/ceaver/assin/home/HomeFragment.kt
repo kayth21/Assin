@@ -8,20 +8,16 @@ import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetFragment
 import com.ceaver.assin.intentions.list.IntentionListFragment
 import com.ceaver.assin.markets.MarketFragment
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
 
 
 class HomeFragment : Fragment() {
 
-    private lateinit var viewPager: ViewPager2
     private lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,19 +33,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val stateAdapter = HomeFragmentStateAdapter(this)
-        viewPager = home_fragment_view_pager
-        viewPager.adapter = stateAdapter
+        val marketFragment = MarketFragment()
+        val portfolioFragment = AssetFragment()
+        val intentionListFragment = IntentionListFragment()
 
-        TabLayoutMediator(home_fragment_tab_layout, viewPager) { currentTab, currentPosition ->
-            currentTab.text = when (currentPosition) {
-                0 -> "Markets"
-                1 -> "Assets"
-                2 -> "Intentions"
+        setCurrentFragment(marketFragment)
+
+        homeFragmentBottomNavigationView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.bottomNavigationMenuMarkets -> setCurrentFragment(marketFragment)
+                R.id.bottomNavigationMenuPortfolio -> setCurrentFragment(portfolioFragment)
+                R.id.bottomNavigationMenuIntention -> setCurrentFragment(intentionListFragment)
                 else -> throw IllegalStateException()
             }
-        }.attach()
+            true
+        }
     }
+
+    private fun setCurrentFragment(fragment: Fragment) =
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.homeFragmentFrameLayout, fragment)
+                commit()
+            }
 
     override fun onStart() {
         super.onStart()
@@ -59,19 +64,5 @@ class HomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    }
-}
-
-class HomeFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-
-    override fun getItemCount(): Int = 3
-
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MarketFragment()
-            1 -> AssetFragment()
-            2 -> IntentionListFragment()
-            else -> throw IllegalStateException()
-        }
     }
 }
