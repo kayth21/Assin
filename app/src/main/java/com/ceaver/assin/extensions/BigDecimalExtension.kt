@@ -23,5 +23,5 @@ fun BigDecimal.asPercentString(): String {
 }
 
 fun BigDecimal.asPercentStringOf(other: BigDecimal): String {
-    return this.divide(other, RoundingMode.HALF_UP).minus(BigDecimal.ONE).asPercentString()
+    return this.divide(other,2, RoundingMode.HALF_UP).minus(BigDecimal.ONE).asPercentString()
 }
