@@ -34,8 +34,8 @@ class AssinApplication : Application() {
 
     private fun initPreferences() {
         PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
-                .putString(Preferences.CRYPTO_TITLE_SYMBOL, "BTC")
-                .putString(Preferences.FIAT_TITLE_SYMBOL, "USD")
+                .putString(Preferences.CRYPTO_TITLE_ID, "btc-bitcoin")
+                .putString(Preferences.FIAT_TITLE_ID, "usd-us-dollars")
                 .apply()
     }
 

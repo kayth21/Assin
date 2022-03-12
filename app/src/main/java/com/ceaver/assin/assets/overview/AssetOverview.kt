@@ -9,10 +9,10 @@ data class AssetOverview(
         val valueFiat: BigDecimal = BigDecimal.ZERO
 ) {
     fun lookupValue(quoteTitle: Title): BigDecimal {
-        return when (quoteTitle.symbol) {
-            Preferences.getFiatTitleSymbol() -> valueFiat
-            Preferences.getCryptoTitleSymbol() -> valueCrypto
-            else -> TODO("no implementation for quote title ${quoteTitle.symbol}.")
+        return when (quoteTitle.id) {
+            Preferences.getFiatTitleId() -> valueFiat
+            Preferences.getCryptoTitleId() -> valueCrypto
+            else -> TODO("no implementation for quote title ${quoteTitle.id}.")
         }
     }
 }

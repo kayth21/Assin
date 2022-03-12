@@ -33,8 +33,8 @@ interface Title : Parcelable {
 
     fun lookupPrice(quoteTitle: Title): Double {
         return when {
-            quoteTitle.symbol == Preferences.getFiatTitleSymbol() -> fiatQuotes.price
-            quoteTitle.symbol == Preferences.getCryptoTitleSymbol() -> cryptoQuotes.price
+            quoteTitle.id == Preferences.getFiatTitleId() -> fiatQuotes.price
+            quoteTitle.id == Preferences.getCryptoTitleId() -> cryptoQuotes.price
             this::class == quoteTitle::class -> fiatQuotes.price / quoteTitle.fiatQuotes.price
             else -> TODO("no implementation for market pair ${symbol}/${quoteTitle.symbol}.")
         }
@@ -42,8 +42,8 @@ interface Title : Parcelable {
 
     fun lookupMarketcap(quoteTitle: Title): Double {
         return when {
-            quoteTitle.symbol == Preferences.getFiatTitleSymbol() -> fiatQuotes.marketCap!!
-            quoteTitle.symbol == Preferences.getCryptoTitleSymbol() -> cryptoQuotes.marketCap!!
+            quoteTitle.id == Preferences.getFiatTitleId() -> fiatQuotes.marketCap!!
+            quoteTitle.id == Preferences.getCryptoTitleId() -> cryptoQuotes.marketCap!!
             this::class == quoteTitle::class -> fiatQuotes.marketCap!! / quoteTitle.fiatQuotes.marketCap!!
             else -> TODO("no implementation for market pair ${symbol}/${quoteTitle.symbol}.")
         }

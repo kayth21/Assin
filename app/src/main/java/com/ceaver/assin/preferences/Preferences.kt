@@ -10,11 +10,11 @@ object Preferences {
     const val CRYPTO_TITLE = "cryptoTitle"
     const val FIAT_TITLE = "fiatTitle"
 
-    const val CRYPTO_TITLE_SYMBOL = "cryptoTitleSymbol"
-    const val FIAT_TITLE_SYMBOL = "fiatTitleSymbol"
+    const val CRYPTO_TITLE_ID = "cryptoTitleId"
+    const val FIAT_TITLE_ID = "fiatTitleId"
 
-    fun getCryptoTitleSymbol() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getString(CRYPTO_TITLE_SYMBOL)
-    fun getFiatTitleSymbol() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getString(FIAT_TITLE_SYMBOL)
+    fun getCryptoTitleId() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getString(CRYPTO_TITLE_ID)
+    fun getFiatTitleId() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getString(FIAT_TITLE_ID)
 
     fun getCryptoTitle() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getCryptoTitle(CRYPTO_TITLE)
     fun getFiatTitle() = PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).getFiatTitle(FIAT_TITLE)

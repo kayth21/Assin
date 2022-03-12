@@ -30,8 +30,8 @@ object MarketRepository {
          val customItems = TitleRepository.loadAllCustomTitles()
 
         // find reference titles in remote titles
-        val cryptoEntity = cryptoItems.single { it.symbol == Preferences.getCryptoTitleSymbol() }.let { it.quotes!!.get("USD") }!!
-        val fiatEntity = fiatItems.single { it.symbol == Preferences.getFiatTitleSymbol() }.let { QuoteEntity(price = 1.0, athDate = null, athPrice = 1.0, dailyVolume = 1.0, dailyVolumeDailyChange = 1.0, marketCap = 1.0, marketCapDailyChange = 1.0, percentChange1h = 0.0, percentChange1y = 0.0, percentChange7d = 0.0, percentChange12h = 0.0, percentChange24h = 0.0, percentChange30d = 0.0, percentFromPriceAth = 0.0, volumeAdjusted = 0.0, volumeReported = 0.0) }         // TODO support fiat other USD
+        val cryptoEntity = cryptoItems.single { it.id == Preferences.getCryptoTitleId() }.let { it.quotes!!.get("USD") }!!
+        val fiatEntity = fiatItems.single { it.id == Preferences.getFiatTitleId() }.let { QuoteEntity(price = 1.0, athDate = null, athPrice = 1.0, dailyVolume = 1.0, dailyVolumeDailyChange = 1.0, marketCap = 1.0, marketCapDailyChange = 1.0, percentChange1h = 0.0, percentChange1y = 0.0, percentChange7d = 0.0, percentChange12h = 0.0, percentChange24h = 0.0, percentChange30d = 0.0, percentFromPriceAth = 0.0, volumeAdjusted = 0.0, volumeReported = 0.0) }         // TODO support fiat other USD
 
         // transform remote items to assin titles
         val localCryptoTitles = TitleRepository.loadAllCryptoTitles()
@@ -41,8 +41,8 @@ object MarketRepository {
 
         // update reference titles
         PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).edit()
-                .setTitle(Preferences.CRYPTO_TITLE, cryptoTitles.single { it.symbol == Preferences.getCryptoTitleSymbol() })
-                .setTitle(Preferences.FIAT_TITLE, fiatTitles.single { it.symbol == Preferences.getFiatTitleSymbol() })
+                .setTitle(Preferences.CRYPTO_TITLE, cryptoTitles.single { it.id == Preferences.getCryptoTitleId() })
+                .setTitle(Preferences.FIAT_TITLE, fiatTitles.single { it.id == Preferences.getFiatTitleId() })
                 .apply()
 
         return Triple(cryptoTitles, fiatTitles, customTitles)
