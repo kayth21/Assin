@@ -2,7 +2,7 @@ package com.ceaver.assin.markets
 
 import android.os.Parcelable
 import com.ceaver.assin.preferences.Preferences
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
 interface Title : Parcelable {

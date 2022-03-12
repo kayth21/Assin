@@ -23,7 +23,7 @@ abstract class AssinNotification() {
     fun push() {
         val intent = Intent(AssinApplication.appContext!!, MainActivity::class.java)
         // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // TODO back button must end in Markets
-        val pendingIntent = PendingIntent.getActivity(AssinApplication.appContext!!, REQUEST_CODE, intent, FLAGS)
+        val pendingIntent = PendingIntent.getActivity(AssinApplication.appContext!!, REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE) // TODO WHAT?
 
         val notification = NotificationCompat.Builder(AssinApplication.appContext!!, getChannelId())
                 .setSmallIcon(getSmallIcon())

@@ -8,26 +8,28 @@ import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.ceaver.assin.MainActivity
 import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetFragment
+import com.ceaver.assin.databinding.HomeFragmentBinding
 import com.ceaver.assin.intentions.list.IntentionListFragment
 import com.ceaver.assin.markets.MarketFragment
-import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.android.synthetic.main.main_activity.*
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var binding: HomeFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = viewModels<HomeViewModel>().value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewModel.assinWorkerRunning.observe(viewLifecycleOwner) { if (it == false) Toast.makeText(activity, "Data refreshed", Toast.LENGTH_SHORT).show() }
-        return inflater.inflate(R.layout.home_fragment, container, false)
+        binding = HomeFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +41,7 @@ class HomeFragment : Fragment() {
 
         setCurrentFragment(marketFragment)
 
-        homeFragmentBottomNavigationView.setOnNavigationItemSelectedListener {
+        binding.homeFragmentBottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.bottomNavigationMenuMarkets -> setCurrentFragment(marketFragment)
                 R.id.bottomNavigationMenuPortfolio -> setCurrentFragment(portfolioFragment)
@@ -58,11 +60,11 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        (requireActivity() as MainActivity).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
     override fun onStop() {
         super.onStop()
-        requireActivity().main_activity_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        (requireActivity() as MainActivity).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 }

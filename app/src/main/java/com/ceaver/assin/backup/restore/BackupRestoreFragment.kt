@@ -6,19 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.ceaver.assin.R
 import com.ceaver.assin.databinding.BackupRestoreFragmentBinding
-import kotlinx.android.synthetic.main.backup_restore_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BackupRestoreFragment : Fragment() {
     private lateinit var viewModel: BackupRestoreViewModel
+    private lateinit var binding: BackupRestoreFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +24,7 @@ class BackupRestoreFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: BackupRestoreFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.backup_restore_fragment, container, false)
+        binding = BackupRestoreFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
@@ -36,19 +34,19 @@ class BackupRestoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (viewModel.existingBackups.isEmpty()) {
-            backupRestoreFragmentRestoreBackupButton.text = "No backups found"
+            binding.backupRestoreFragmentRestoreBackupButton.text = "No backups found"
         } else {
             viewModel.existingBackups.forEach {
                 val radioButton = RadioButton(requireContext()).also { radioButton -> radioButton.text = it }
-                backupRestoreFragmentRadioGroup.addView(radioButton, 0)
+                binding.backupRestoreFragmentRadioGroup.addView(radioButton, 0)
             }
 
-            backupRestoreFragmentRestoreBackupButton.setOnClickListener {
+            binding.backupRestoreFragmentRestoreBackupButton.setOnClickListener {
                 onRestoreBackupClick()
             }
 
             viewModel.radioChecked.observe(viewLifecycleOwner) {
-                backupRestoreFragmentRestoreBackupButton.isEnabled = it != 0
+                binding.backupRestoreFragmentRestoreBackupButton.isEnabled = it != 0
             }
         }
     }
@@ -63,9 +61,9 @@ class BackupRestoreFragment : Fragment() {
     }
 
     private fun createBackup() {
-        backupRestoreFragmentRestoreBackupButton.isEnabled = false
-        for (i in 0 until backupRestoreFragmentRadioGroup.childCount) {
-            backupRestoreFragmentRadioGroup.getChildAt(i).isEnabled = false
+        binding.backupRestoreFragmentRestoreBackupButton.isEnabled = false
+        for (i in 0 until binding.backupRestoreFragmentRadioGroup.childCount) {
+            binding.backupRestoreFragmentRadioGroup.getChildAt(i).isEnabled = false
         }
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.restoreBackup(getBackupName(), requireContext())
@@ -80,6 +78,6 @@ class BackupRestoreFragment : Fragment() {
     }
 
     private fun getBackupName(): String {
-        return backupRestoreFragmentRadioGroup.findViewById<RadioButton>(backupRestoreFragmentRadioGroup.checkedRadioButtonId).text.toString()
+        return binding.backupRestoreFragmentRadioGroup.findViewById<RadioButton>(binding.backupRestoreFragmentRadioGroup.checkedRadioButtonId).text.toString()
     }
 }

@@ -5,24 +5,22 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.R
 import com.ceaver.assin.databinding.IntentionListFragmentBinding
 import com.ceaver.assin.intentions.Intention
 import com.ceaver.assin.intentions.IntentionRepository
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.intention_list_fragment.*
 import kotlinx.coroutines.launch
 
 class IntentionListFragment : Fragment() {
 
     private val intentionListAdapter = IntentionListAdapter(OnListItemClickListener())
     private lateinit var viewModel: IntentionListViewModel
+    private lateinit var binding: IntentionListFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +28,7 @@ class IntentionListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: IntentionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.intention_list_fragment, container, false)
+        binding = IntentionListFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.intentionListFragmentIntentionList.adapter = intentionListAdapter
@@ -63,7 +61,7 @@ class IntentionListFragment : Fragment() {
         lifecycleScope.launch {
             val selectedIntention = intentionListAdapter.currentLongClickIntention!!
             IntentionRepository.delete(selectedIntention)
-            Snackbar.make(intentionListFragmentCoordinatorLayout, "Intention removed", Snackbar.LENGTH_LONG)
+            Snackbar.make(binding.intentionListFragmentCoordinatorLayout, "Intention removed", Snackbar.LENGTH_LONG)
                     .setAction("Undo") { lifecycleScope.launch { IntentionRepository.insert(selectedIntention) } }
                     .show()
         }

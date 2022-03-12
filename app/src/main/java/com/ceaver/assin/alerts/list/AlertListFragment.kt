@@ -5,24 +5,23 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.R
 import com.ceaver.assin.alerts.Alert
 import com.ceaver.assin.alerts.AlertRepository
 import com.ceaver.assin.databinding.AlertListFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.alert_list_fragment.*
 import kotlinx.coroutines.launch
 
 class AlertListFragment : Fragment() {
 
     private val alertListAdapter = AlertListAdapter(OnListItemClickListener())
     private lateinit var viewModel: AlertListViewModel
+    private lateinit var binding: AlertListFragmentBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +29,7 @@ class AlertListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: AlertListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.alert_list_fragment, container, false)
+        val binding = AlertListFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alertListFragmentRecyclerView.adapter = alertListAdapter
@@ -63,7 +62,7 @@ class AlertListFragment : Fragment() {
         lifecycleScope.launch {
             val selectedAlert = alertListAdapter.currentLongClickAlert!!
             AlertRepository.delete(selectedAlert)
-            Snackbar.make(alertListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
+            Snackbar.make(binding.alertListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
                     .setAction("Undo") { lifecycleScope.launch { AlertRepository.insert(selectedAlert) } }
                     .show()
         }

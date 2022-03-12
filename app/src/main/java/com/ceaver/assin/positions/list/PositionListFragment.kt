@@ -5,26 +5,24 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ceaver.assin.R
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.action.Withdraw
 import com.ceaver.assin.databinding.PositionListFragmentBinding
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.positions.Position
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.position_list_fragment.*
 import kotlinx.coroutines.launch
 
 class PositionListFragment(val title: Title, val label: String?) : Fragment() {
 
     private val positionListAdapter = PositionListAdapter(OnListItemClickListener(), this)
     private lateinit var viewModel: PositionListViewModel
+    private lateinit var binding: PositionListFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +30,7 @@ class PositionListFragment(val title: Title, val label: String?) : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: PositionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.position_list_fragment, container, false)
+        binding = PositionListFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.positionListFragmentPositionList.adapter = positionListAdapter
@@ -64,7 +62,7 @@ class PositionListFragment(val title: Title, val label: String?) : Fragment() {
         val selectedPosition = positionListAdapter.currentLongClickPosition!!
         lifecycleScope.launch {
             val withdrawId = ActionRepository.insert(Withdraw.fromPosition(selectedPosition))
-            Snackbar.make(positionListFragmentCoordinatorLayout, "Position closed", Snackbar.LENGTH_LONG)
+            Snackbar.make(binding.positionListFragmentCoordinatorLayout, "Position closed", Snackbar.LENGTH_LONG)
                     .setAction("Undo") {
                         lifecycleScope.launch {
                             val withdrawAction = ActionRepository.loadById(withdrawId)

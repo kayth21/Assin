@@ -6,7 +6,7 @@ import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.extensions.resIdByName
 import com.coinpaprika.apiclient.entity.FiatEntity
 import com.coinpaprika.apiclient.entity.QuoteEntity
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 import java.util.*
 

@@ -10,17 +10,20 @@ import com.ceaver.assin.AssinWorkerEvents
 import com.ceaver.assin.AssinWorkers
 import com.ceaver.assin.MainActivity
 import com.ceaver.assin.R
+import com.ceaver.assin.databinding.SplashActivityBinding
 import com.ceaver.assin.system.SystemRepository
 import com.ceaver.assin.util.isConnected
-import kotlinx.android.synthetic.main.splash_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class SplashActivity : AppCompatActivity() {
 
+    private lateinit var binding: SplashActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = SplashActivityBinding.inflate(layoutInflater)
         modifyView()
     }
 
@@ -51,16 +54,16 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun bindActions() {
-        splashActivityRetryButton.setOnClickListener { splashActivityRetryButton.visibility = INVISIBLE; loadMarketData() }
+        binding.splashActivityRetryButton.setOnClickListener { binding.splashActivityRetryButton.visibility = INVISIBLE; loadMarketData() }
     }
 
     private fun loadMarketData() {
         if (isConnected()) {
-            splashActivityActionTextView.setText("Loading data...")
+            binding.splashActivityActionTextView.setText("Loading data...")
             AssinWorkers.completeUpdate()
         } else {
-            splashActivityActionTextView.setText("No internet connection available...")
-            splashActivityRetryButton.visibility = VISIBLE
+            binding.splashActivityActionTextView.setText("No internet connection available...")
+            binding.splashActivityRetryButton.visibility = VISIBLE
         }
     }
 

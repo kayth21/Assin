@@ -9,26 +9,28 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.ceaver.assin.databinding.MainActivityBinding
 import com.ceaver.assin.home.HomeFragmentDirections
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
+    private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        binding = MainActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        drawerLayout = main_activity_drawer_layout
+        drawerLayout = binding.mainActivityDrawerLayout
         navController = this.findNavController(R.id.main_activity_nav_host_fragment)
 
-        NavigationUI.setupWithNavController(main_activity_navigation_view, navController)
+        NavigationUI.setupWithNavController(binding.mainActivityNavigationView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
-        main_activity_navigation_view.setNavigationItemSelectedListener(this)
+        binding.mainActivityNavigationView.setNavigationItemSelectedListener(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -60,5 +62,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun setDrawerLockMode(drawerLockMode: Int) {
+        binding.mainActivityDrawerLayout.setDrawerLockMode(drawerLockMode)
     }
 }

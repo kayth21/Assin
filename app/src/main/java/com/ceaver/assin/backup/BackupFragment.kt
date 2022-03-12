@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.backup_fragment.*
+import com.ceaver.assin.databinding.BackupFragmentBinding
 
 const val TITLE_FILE_NAME = "titles"
 const val ACTION_FILE_NAME = "actions"
@@ -15,21 +15,24 @@ const val INTENTION_FILE_NAME = "intentions"
 
 class BackupFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.ceaver.assin.R.layout.backup_fragment, container, false)
+    private lateinit var binding: BackupFragmentBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = BackupFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        backupFragmentCreateBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupCreateFragment()) }
-        backupFragmentRestoreBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupRestoreFragment()) }
-        backupFragmentDeleteBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupDeleteFragment()) }
+        binding.backupFragmentCreateBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupCreateFragment()) }
+        binding.backupFragmentRestoreBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupRestoreFragment()) }
+        binding.backupFragmentDeleteBackupButton.setOnClickListener { findNavController().navigate(BackupFragmentDirections.actionBackupFragmentToBackupDeleteFragment()) }
     }
 
     override fun onStop() {
         super.onStop()
-        backupFragmentCreateBackupButton.setOnClickListener(null)
-        backupFragmentRestoreBackupButton.setOnClickListener(null)
-        backupFragmentDeleteBackupButton.setOnClickListener(null)
+        binding.backupFragmentCreateBackupButton.setOnClickListener(null)
+        binding.backupFragmentRestoreBackupButton.setOnClickListener(null)
+        binding.backupFragmentDeleteBackupButton.setOnClickListener(null)
     }
 }

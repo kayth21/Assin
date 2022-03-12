@@ -27,7 +27,7 @@ class AssetListFragment : Fragment() {
         viewModel = viewModels<AssetListViewModel>().value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding: AssetListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.asset_list_fragment, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner

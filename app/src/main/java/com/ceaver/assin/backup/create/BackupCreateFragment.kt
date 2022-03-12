@@ -9,20 +9,19 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.core.widget.addTextChangedListener
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ceaver.assin.R
 import com.ceaver.assin.databinding.BackupCreateFragmentBinding
-import kotlinx.android.synthetic.main.backup_create_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 class BackupCreateFragment : Fragment() {
     private lateinit var viewModel: BackupCreateViewModel
+    private lateinit var binding: BackupCreateFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +29,7 @@ class BackupCreateFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: BackupCreateFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.backup_create_fragment, container, false)
+        binding  = BackupCreateFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
@@ -41,20 +40,20 @@ class BackupCreateFragment : Fragment() {
 
         viewModel.existingBackups.forEach {
             val radioButton = RadioButton(requireContext()).also { radioButton -> radioButton.text = it }
-            backupCreateFragmentRadioGroup.addView(radioButton, 0)
+            binding.backupCreateFragmentRadioGroup.addView(radioButton, 0)
         }
 
-        backupCreateFragmentCreateBackupButton.setOnClickListener {
+        binding.backupCreateFragmentCreateBackupButton.setOnClickListener {
             onCreateBackupClick()
         }
 
         viewModel.radioChecked.observe(viewLifecycleOwner) {
-            backupCreateFragmentNewBackupEditText.isEnabled = it == R.id.backupCreateFragmenNewBackupRadioButton
-            backupCreateFragmentCreateBackupButton.isEnabled = it != 0 && (it != R.id.backupCreateFragmenNewBackupRadioButton || backupCreateFragmentNewBackupEditText.text.isNotEmpty())
+            binding.backupCreateFragmentNewBackupEditText.isEnabled = it == R.id.backupCreateFragmenNewBackupRadioButton
+            binding.backupCreateFragmentCreateBackupButton.isEnabled = it != 0 && (it != R.id.backupCreateFragmenNewBackupRadioButton || binding.backupCreateFragmentNewBackupEditText.text.isNotEmpty())
         }
 
-        backupCreateFragmentNewBackupEditText.addTextChangedListener {
-            backupCreateFragmentCreateBackupButton.isEnabled = backupCreateFragmentNewBackupEditText.text.isNotEmpty()
+        binding.backupCreateFragmentNewBackupEditText.addTextChangedListener {
+            binding.backupCreateFragmentCreateBackupButton.isEnabled = binding.backupCreateFragmentNewBackupEditText.text.isNotEmpty()
         }
     }
 
@@ -74,9 +73,9 @@ class BackupCreateFragment : Fragment() {
     }
 
     private fun createBackup() {
-        backupCreateFragmentCreateBackupButton.isEnabled = false
-        for (i in 0 until backupCreateFragmentRadioGroup.childCount) {
-            backupCreateFragmentRadioGroup.getChildAt(i).isEnabled = false
+        binding.backupCreateFragmentCreateBackupButton.isEnabled = false
+        for (i in 0 until binding.backupCreateFragmentRadioGroup.childCount) {
+            binding.backupCreateFragmentRadioGroup.getChildAt(i).isEnabled = false
         }
         lifecycleScope.launch(Dispatchers.IO) {
             val result = viewModel.createBackup(getBackupName(), requireContext())
@@ -98,10 +97,10 @@ class BackupCreateFragment : Fragment() {
     }
 
     private fun getBackupName(): String {
-        return when (backupCreateFragmentRadioGroup.checkedRadioButtonId) {
-            backupCreateFragmenNewBackupRadioButton.id -> backupCreateFragmentNewBackupEditText.text.toString().toUpperCase(Locale.ROOT)
+        return when (binding.backupCreateFragmentRadioGroup.checkedRadioButtonId) {
+            binding.backupCreateFragmenNewBackupRadioButton.id -> binding.backupCreateFragmentNewBackupEditText.text.toString().toUpperCase(Locale.ROOT)
             else -> {
-                backupCreateFragmentRadioGroup.findViewById<RadioButton>(backupCreateFragmentRadioGroup.checkedRadioButtonId).text.toString()
+                binding.backupCreateFragmentRadioGroup.findViewById<RadioButton>(binding.backupCreateFragmentRadioGroup.checkedRadioButtonId).text.toString()
             }
         }
     }

@@ -4,7 +4,7 @@ import com.ceaver.assin.R
 import com.ceaver.assin.assets.AssetCategory
 import com.ceaver.assin.common.Exportable
 import com.coinpaprika.apiclient.entity.QuoteEntity
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.apache.commons.csv.CSVRecord
 import java.time.LocalDate
 import java.time.LocalDateTime

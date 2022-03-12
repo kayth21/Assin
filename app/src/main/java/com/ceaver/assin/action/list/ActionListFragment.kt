@@ -6,33 +6,31 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ceaver.assin.R
 import com.ceaver.assin.action.Action
 import com.ceaver.assin.action.ActionRepository
 import com.ceaver.assin.databinding.ActionListFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.action_list_fragment.*
 import kotlinx.coroutines.launch
 
 class ActionListFragment : Fragment() {
 
     private val actionListAdapter = ActionListAdapter(OnListItemClickListener())
     private lateinit var viewModel: ActionListViewModel
+    private lateinit var binding: ActionListFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = viewModels<ActionListViewModel>().value
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: ActionListFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.action_list_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = ActionListFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.actionListFragmentRecyclerView.adapter = actionListAdapter
@@ -43,7 +41,7 @@ class ActionListFragment : Fragment() {
 
         actionListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                actionListFragmentRecyclerView.scrollToPosition(0) // to scroll to the top on undo action
+                binding.actionListFragmentRecyclerView.scrollToPosition(0) // to scroll to the top on undo action
             }
         })
 
@@ -72,7 +70,7 @@ class ActionListFragment : Fragment() {
             val selectedTrade = actionListAdapter.currentLongClickAction!!
             if (ActionRepository.isLatest(selectedTrade)) {
                 ActionRepository.delete(selectedTrade)
-                Snackbar.make(actionListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
+                Snackbar.make(binding.actionListFragmentCoordinatorLayout, "Action removed", Snackbar.LENGTH_LONG)
                         .setAction("Undo") { lifecycleScope.launch { ActionRepository.insert(selectedTrade) } }
                         .show()
             } else
