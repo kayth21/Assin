@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ceaver.assin.databinding.LogListRowBinding
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 class LogListAdapter : ListAdapter<LogEntity, LogListAdapter.ViewHolder>(Difference) {
 
@@ -24,7 +23,7 @@ class LogListAdapter : ListAdapter<LogEntity, LogListAdapter.ViewHolder>(Differe
     class ViewHolder(val binding: LogListRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindItem(log: LogEntity) {
-            binding.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+            binding.logTimestampTextView.text = log.timestamp.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy HH:mm:ss"))
             binding.logIdTextView.text = "#${log.id}"
             binding.logMessageTextView.text = log.message
         }
