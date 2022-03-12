@@ -6,8 +6,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.work.*
 import com.ceaver.assin.alerts.AlertNotification
 import com.ceaver.assin.intentions.IntentionNotification

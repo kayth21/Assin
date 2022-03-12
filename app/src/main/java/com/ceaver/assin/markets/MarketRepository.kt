@@ -1,6 +1,6 @@
 package com.ceaver.assin.markets
 
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.ceaver.assin.AssinApplication
 import com.ceaver.assin.extensions.setTitle
 import com.ceaver.assin.markets.overview.MarketOverview
@@ -40,7 +40,7 @@ object MarketRepository {
          val customTitles = customItems.map { CustomTitle.fromMarket(it, cryptoEntity, fiatEntity) }
 
         // update reference titles
-        PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext).edit()
+        PreferenceManager.getDefaultSharedPreferences(AssinApplication.appContext!!).edit()
                 .setTitle(Preferences.CRYPTO_TITLE, cryptoTitles.single { it.id == Preferences.getCryptoTitleId() })
                 .setTitle(Preferences.FIAT_TITLE, fiatTitles.single { it.id == Preferences.getFiatTitleId() })
                 .apply()
