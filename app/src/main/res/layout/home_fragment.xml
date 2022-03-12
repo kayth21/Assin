@@ -17,10 +17,9 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/homeFragmentBottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="56dp"
+        android:layout_gravity="start"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
