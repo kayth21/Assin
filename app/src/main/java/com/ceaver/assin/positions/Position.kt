@@ -69,7 +69,7 @@ data class Position(
 
         return copy(expired = true) to Pair(
                 Position(id = id, quantity = split.quantity, title = title, label = label, open = splittedOpenQuotes.first, close = splittedCloseQuotes?.first),
-                Position(id = id.inv(), quantity = quantity - split.quantity, title = title, label = label, open = splittedOpenQuotes.second, close = splittedCloseQuotes?.second)
+                Position(id =  id * -1, quantity = quantity - split.quantity, title = title, label = label, open = splittedOpenQuotes.second, close = splittedCloseQuotes?.second)
         )
     }
 
