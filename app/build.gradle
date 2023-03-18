@@ -72,8 +72,8 @@ dependencies {
     // APACHE COMMONS CSV
     implementation 'org.apache.commons:commons-csv:1.9.0'
 
-    // COINPAPRIKA MODULE
-    implementation project(':coinpaprika-api-kotlin-client')
+    // COINPAPRIKA
+    implementation 'com.github.coinpaprika:coinpaprika-api-kotlin-client:0.5.3'
 
     // RETROFIT
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -92,8 +92,8 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
     // COROUTINES
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // PREFERENCES
     implementation 'androidx.preference:preference-ktx:1.2.0'

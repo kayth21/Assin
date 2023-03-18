@@ -4,4 +4,4 @@ pluginManagement {
         id 'com.autonomousapps.dependency-analysis' version '0.80.0'
     }
 }
-include ':app', ':coinpaprika-api-kotlin-client'
+include ':app'
