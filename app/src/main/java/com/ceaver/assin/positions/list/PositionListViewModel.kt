@@ -10,7 +10,7 @@ class PositionListViewModel(val title: Title, val label: String?) : ViewModel() 
     val positions = PositionRepository.loadByTitleObserved(title, label)
 
     class Factory(val title: Title, val label: String?) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return PositionListViewModel(title, label) as T
         }

@@ -34,6 +34,7 @@ data class Deposit(
 
         suspend fun fromImport(csvRecord: CSVRecord): Deposit {
             require(ActionType.DEPOSIT.name == csvRecord.get(0))
+            println("TK" + csvRecord)
             return Deposit(
                     date = LocalDate.parse(csvRecord.get(1)),
                     quantity = csvRecord.get(2).toBigDecimal(),

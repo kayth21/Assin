@@ -101,7 +101,7 @@ class ActionInputViewModel(actionEntity: ActionEntity?, title: Title?, actionTyp
     }
 
     class Factory(val actionEntity: ActionEntity?, val title: Title?, val actionType: ActionType) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return ActionInputViewModel(actionEntity, title, actionType) as T
         }

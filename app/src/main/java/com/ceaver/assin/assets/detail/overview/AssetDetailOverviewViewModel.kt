@@ -11,7 +11,7 @@ class AssetDetailOverviewViewModel(val title: Title, val label: String?) : ViewM
     val asset = Transformations.map(AssetRepository.loadAllAssetsObserved()) { it.single { it.title.id == title.id && it.label == label } }
 
     class Factory(val title: Title, val label: String?) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return AssetDetailOverviewViewModel(title, label) as T
         }
