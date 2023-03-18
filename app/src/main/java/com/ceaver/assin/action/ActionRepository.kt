@@ -1,7 +1,7 @@
 package com.ceaver.assin.action
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.ceaver.assin.database.Database
 import com.ceaver.assin.positions.Position
 import com.ceaver.assin.positions.PositionFactory
@@ -18,7 +18,7 @@ object ActionRepository {
     }
 
     fun loadAllObserved(): LiveData<List<Action>> =
-            Transformations.map(dao.loadAllObserved()) {
+            dao.loadAllObserved().map {
                 val actions = it.map { it.toAction() }
                 val positions = PositionFactory.fromActions(actions, true)
                 actions.map { mapToActionWithPosition(it, positions) }

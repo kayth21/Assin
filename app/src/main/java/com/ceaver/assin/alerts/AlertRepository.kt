@@ -1,7 +1,7 @@
 package com.ceaver.assin.alerts
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.ceaver.assin.database.Database
 
 object AlertRepository {
@@ -12,8 +12,7 @@ object AlertRepository {
     fun loadAll(): List<Alert> =
             dao.loadAll().map { it.toAlert() }
 
-    fun loadAllObserved(): LiveData<List<Alert>> =
-            Transformations.map(dao.loadAllObserved()) { it.map { it.toAlert() } }
+    fun loadAllObserved(): LiveData<List<Alert>> = dao.loadAllObserved().map { it.map { it.toAlert() } }
 
     suspend fun insert(alert: Alert) =
             alert.toEntity().let { dao.insert(it) }
