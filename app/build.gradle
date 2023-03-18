@@ -41,18 +41,18 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'com.google.android.material:material:1.8.0'
 
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.assertj:assertj-core:3.22.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    testImplementation 'org.json:json:20211205'
+    testImplementation 'org.json:json:20230227'
 
     // ROOM
     implementation 'androidx.room:room-ktx:2.5.0'
@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.8.0'
 
     // APACHE COMMONS CSV
-    implementation 'org.apache.commons:commons-csv:1.9.0'
+    implementation 'org.apache.commons:commons-csv:1.10.0'
 
     // COINPAPRIKA
     implementation 'com.github.coinpaprika:coinpaprika-api-kotlin-client:0.5.3'
@@ -80,8 +80,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
     // MOSHI (Json Library)
-    implementation 'com.squareup.moshi:moshi:1.12.0'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.12.0'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
 
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
 
