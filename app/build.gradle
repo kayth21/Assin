@@ -31,6 +31,7 @@ android {
         dataBinding true // TODO: still used or is everything done with viewBinding now?
         viewBinding true
     }
+    namespace 'com.ceaver.assin'
 }
 
 dependencies {
