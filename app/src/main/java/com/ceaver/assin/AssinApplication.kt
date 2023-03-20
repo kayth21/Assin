@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.work.*
@@ -48,7 +47,8 @@ class AssinApplication : Application() {
     }
 
     private fun setupRecurringWork() {
-        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).setRequiresBatteryNotLow(true).build()
+        // TODO Constraints should be options in the app
+        val constraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
         val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).setConstraints(constraints).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(ASSIN_WORKER_ID, ExistingPeriodicWorkPolicy.REPLACE, backgroundProcess)
     }
@@ -59,17 +59,14 @@ class AssinApplication : Application() {
     }
 
     private fun setupNotificationChannel(channelId: String, name: String, description: String) {
-        // Create the NotificationChannel only on API 26+ because the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val notificationChannel = NotificationChannel(channelId, name, importance).also {
-                it.description = description
-                it.enableLights(true)
-                it.lightColor = Color.BLUE
-            }
-            // Register the channel with the system; you can't change the importance or other notification behaviors after this
-            ContextCompat.getSystemService(appContext!!, NotificationManager::class.java)!!.createNotificationChannel(notificationChannel)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val notificationChannel = NotificationChannel(channelId, name, importance).also {
+            it.description = description
+            it.enableLights(true)
+            it.lightColor = Color.BLUE
         }
+        // Register the channel with the system; you can't change the importance or other notification behaviors after this
+        ContextCompat.getSystemService(appContext!!, NotificationManager::class.java)!!.createNotificationChannel(notificationChannel)
     }
 
     companion object {
