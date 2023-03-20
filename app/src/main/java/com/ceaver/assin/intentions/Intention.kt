@@ -1,15 +1,18 @@
 package com.ceaver.assin.intentions
 
+import android.os.Parcelable
 import com.ceaver.assin.common.Exportable
+import com.ceaver.assin.intentions.input.IntentionUiState
 import com.ceaver.assin.markets.Title
 import com.ceaver.assin.markets.TitleRepository
 import com.ceaver.assin.notification.AssinNotification
+import kotlinx.parcelize.Parcelize
 import org.apache.commons.csv.CSVRecord
 import timber.log.Timber
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
-
+@Parcelize
 data class Intention(
         val id: Long = 0,
         val type: IntentionType,
@@ -22,7 +25,7 @@ data class Intention(
         val snoozeNear: LocalDateTime = LocalDateTime.now(),
         val snoozeAct: LocalDateTime = LocalDateTime.now(),
         var comment: String?
-) : Exportable {
+) : Exportable, Parcelable {
 
     val factorToReferencePrice: BigDecimal
         get() {
@@ -54,6 +57,18 @@ data class Intention(
                 else -> IntentionStatus.ACT
             }
         }
+
+    fun copy(uiState: IntentionUiState) : Intention {
+        return copy(
+            type = uiState.type,
+            active = uiState.active,
+            quantity = uiState.quantity.toBigDecimalOrNull(),
+            baseTitle = uiState.baseTitle!!,
+            quoteTitle = uiState.quoteTitle!!,
+            target = uiState.target.toBigDecimal(),
+            comment = uiState.comment
+        )
+    }
 
     companion object Factory {
         fun fromDto(intentionDto: IntentionDto): Intention {

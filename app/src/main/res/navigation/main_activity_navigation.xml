@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homeFragment_to_logListFragment"
             app:destination="@id/logListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_intentionFragment"
+            app:destination="@id/intentionFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetDetailFragment"
@@ -75,4 +78,10 @@
         android:id="@+id/backupDeleteFragment"
         android:name="com.ceaver.assin.backup.delete.BackupDeleteFragment"
         android:label="Delete Backup" />
+    <fragment
+        android:id="@+id/intentionFragment"
+        android:name="com.ceaver.assin.intentions.input.IntentionFragment"
+        android:label="Intention" >
+        <argument android:name="intention" app:argType="com.ceaver.assin.intentions.Intention" />
+    </fragment>
 </navigation>
