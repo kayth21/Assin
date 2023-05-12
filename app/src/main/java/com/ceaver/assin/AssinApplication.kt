@@ -48,7 +48,7 @@ class AssinApplication : Application() {
 
     private fun setupRecurringWork() {
         // TODO Constraints should be options in the app
-        val constraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).setRequiresBatteryNotLow(true).build()
         val backgroundProcess = PeriodicWorkRequestBuilder<StartWorker>(15, TimeUnit.MINUTES, 5, TimeUnit.MINUTES).setConstraints(constraints).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(ASSIN_WORKER_ID, ExistingPeriodicWorkPolicy.REPLACE, backgroundProcess)
     }

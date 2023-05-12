@@ -1,9 +1,14 @@
 package com.ceaver.assin
 
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -31,6 +36,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
         binding.mainActivityNavigationView.setNavigationItemSelectedListener(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(AssinApplication.appContext!!.applicationContext, POST_NOTIFICATIONS) != PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(POST_NOTIFICATIONS), 3)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
